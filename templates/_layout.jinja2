@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gibolt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css" media="screen" />
+    {% block head %}{% endblock head %}
+  </head>
+  <body>
+    <header>
+      <h1>Gibolt</h1>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <aside class="flash {{ category }}">
+          {{ message }}
+        </aside>
+      {% endfor %}
+    {% endwith %}
+    <nav>
+    </nav>
+
+    <main>
+      {% block main %}{% endblock main %}
+    </main>
+
+    <footer>
+      <ul>
+        <li><a href="http://community.kozea.org/">A Kozea Project</a></li>
+      </ul>
+    </footer>
+  </body>
+</html>

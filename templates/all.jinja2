@@ -1,0 +1,21 @@
+{% extends '_layout.jinja2' %}
+
+{% block main %}
+    <ul>
+    {% for month, stones in milestones_by_month %}
+      <li class="month">
+        {{month}}
+        <ul>
+          {% for stone in stones %}
+            <li class="stone {{stone['repo']}}">
+              {{stone['title']}}
+              <progress value="{{stone['progress']}}" max="100">
+                {{ stone['closed_issues']}} / {{stone['closed_issues'] + stone['open_issues']}}
+              </progress>
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+    </ul>
+{% endblock main %}
