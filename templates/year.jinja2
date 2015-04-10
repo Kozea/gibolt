@@ -2,13 +2,17 @@
 
 {% block main %}
     <ul>
-    {% for month, stones in milestones_by_month %}
+    {% for month, stones in stones_by_step %}
       <li class="month">
-        {{month}}
+        <a href="{{url_for('show_month', month_start=month.strftime('%Y-%m-%dT%XZ'))}}">
+			{{month.strftime('%B')}}
+		</a>
         <ul>
           {% for stone in stones %}
             <li class="stone {{stone['repo']}}">
-              {{stone['title']}}
+              <a href="{{stone['html_url']}}">
+                {{stone['title']}}
+              </a>
               <progress value="{{stone['progress']}}" max="100">
                 {{ stone['closed_issues']}} / {{stone['closed_issues'] + stone['open_issues']}}
               </progress>
