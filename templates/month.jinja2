@@ -1,25 +1,22 @@
 {% extends '_layout.jinja2' %}
 
 {% block main %}
-	
-	<h2>{{start.strftime('%B %Y')}}</h2>
-    <ul>
+  <h2>Timeline for {{ start.strftime('%B %Y') }}</h2>
+  <article>
     {% for day, stones in stones_by_step %}
-      <li class="day">
-        {{day.strftime('%d')}}
-        <ul>
-          {% for stone in stones %}
-            <li class="stone {{stone['repo']}}">
-              <a href="{{stone['html_url']}}">
-                {{stone['title']}}
-              </a>
-              <progress value="{{stone['progress']}}" max="100">
-                {{ stone['closed_issues']}} / {{stone['closed_issues'] + stone['open_issues']}}
-              </progress>
-            </li>
-          {% endfor %}
-        </ul>
-      </li>
+      <h3>{{ day.strftime('%d') }}</h3>
+      <ul>
+        {% for stone in stones %}
+          <li>
+            <a href="{{ stone['html_url'] }}">
+              {{ stone['title'] }}
+            </a>
+            <progress value="{{ stone['progress'] }}">
+              {{ stone['closed_issues'] }} / {{ stone['closed_issues'] + stone['open_issues'] }}
+            </progress>
+          </li>
+        {% endfor %}
+      </ul>
     {% endfor %}
-    </ul>
+  </article>
 {% endblock main %}

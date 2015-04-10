@@ -1,25 +1,31 @@
 {% extends '_layout.jinja2' %}
 
 {% block main %}
-    <ul>
-    {% for month, stones in stones_by_step %}
-      <li class="month">
-        <a href="{{url_for('show_month', month_start=month.strftime('%Y-%m-%dT%XZ'))}}">
-			{{month.strftime('%B')}}
-		</a>
+  <h2>
+    Timeline from {{ stones_by_step[0][0].strftime('%x') }}
+    to {{ stones_by_step[-1][0].strftime('%x') }}
+  </h2>
+  {% for month, stones in stones_by_step %}
+    <article>
+      <h3>
+        <a href="{{ url_for('show_month', month_start=month.isoformat()) }}">
+          {{ month.strftime('%B %Y') }}
+        </a>
+      </h3>
+      {% if stones %}
         <ul>
           {% for stone in stones %}
-            <li class="stone {{stone['repo']}}">
-              <a href="{{stone['html_url']}}">
+            <li>
+              <a href="{{ stone['html_url'] }}">
                 {{stone['title']}}
               </a>
-              <progress value="{{stone['progress']}}" max="100">
-                {{ stone['closed_issues']}} / {{stone['closed_issues'] + stone['open_issues']}}
+              <progress value="{{ stone['progress'] }}">
+                {{ stone['closed_issues']}} / {{ stone['closed_issues'] + stone['open_issues'] }}
               </progress>
             </li>
           {% endfor %}
         </ul>
-      </li>
-    {% endfor %}
-    </ul>
+      {% endif %}
+    </article>
+  {% endfor %}
 {% endblock main %}
