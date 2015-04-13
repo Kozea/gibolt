@@ -1,0 +1,16 @@
+{% extends '_layout.jinja2' %}
+{% block main %}
+	<h2>Issues for the sprint</h2>
+  <ul>
+    {% for issue in issues %}
+		<li class="{{ issue['state'] }}">
+			<a href="{{ issue['html_url']}}">{{ issue['title'] }}</a>
+			{{issue}}
+		</li>
+	{% endfor %}
+  </ul>
+  <h2>Sprint progress</h2>
+		<progress value="{{ closed  / closed + opened }}">
+			 {{ closed }} / {{ closed + opened }}">
+		</progress>
+{% endblock main %}
