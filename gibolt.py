@@ -2,15 +2,44 @@
 
 from datetime import date
 
-import requests
 from dateutil.relativedelta import relativedelta
+from flask.ext.github import GitHub, GitHubError
 from flask import (
-    Flask, request, session, render_template, redirect, url_for)
+    Flask, request, session, render_template, redirect, url_for, flash)
+
+
+# monkey patch to manage pagination
+def patched_github_request(self, method, resource, **kwargs):
+    response = self.raw_request(method, resource, **kwargs)
+    status_code = str(response.status_code)
+    if not status_code.startswith('2'):
+        raise GitHubError(response)
+    if response.headers['Content-Type'].startswith('application/json'):
+        result = response.json()
+        while response.links.get('next'):
+            response = self.session.request(
+                    method, response.links['next']['url'], **kwargs)
+            if not status_code.startswith('2'):
+                raise GitHubError(response)
+            if response.headers['Content-Type'].startswith('application/json'):
+                result += response.json()
+            else:
+                raise GitHubError(response)
+        return result
+    else:
+        return response
+
+
+GitHub.request = patched_github_request
 
 app = Flask(__name__)
 app.secret_key = 'secret'
 app.config['ORGANISATION'] = 'Kozea'
+app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
+app.config['GITHUB_CLIENT_SECRET'] = 'bcfee82e06c41d22cd324b33a86c1e82a372c403'
 app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
+
+github = GitHub(app)
 
 cache = {'users': {}, 'repos': {}}
 
@@ -21,66 +50,60 @@ def date_from_iso(iso_date):
 
 @app.route('/')
 def index():
-    if session.get('username'):
-        return redirect(url_for('show', display='year'))
+    if session.get('user'):
+        return redirect(url_for('show_now', display='year'))
     else:
         return redirect(url_for('login'))
 
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
-    if request.method == 'POST':
-        repos = get_allowed_repos(
-            request.form['username'], request.form['password'])
-        if repos is not None:
-            session['username'] = request.form['username']
-            session['password'] = request.form['password']
-            cache.get('users')[request.form['username']] = repos
-            return redirect(url_for('show_now', display='year'))
-    return render_template('login.jinja2')
+    return github.authorize(scope="repo")
+
+
+@github.access_token_getter
+def token_getter():
+    return session.get('user')
+
+
+@app.route('/callback')
+@github.authorized_handler
+def authorized(oauth_token):
+    next_url = request.args.get('next') or url_for('index')
+    if oauth_token is None:
+        flash("Authorization failed.")
+        return redirect(next_url)
+    session['user'] = oauth_token
+    cache['users'][oauth_token] = get_allowed_repos()
+    return redirect(next_url)
 
 
 @app.route('/logout')
 def logout():
-    del session['username']
+    del session['user']
     return redirect(url_for('login'))
 
 
-def get_allowed_repos(username, password):
-    """Return a list of repo names allowed for this user."""
-    # retrive all repositories from github
-    response = requests.get(
-        'https://api.github.com/orgs/{0}/repos?type=all'.format(
-            app.config['ORGANISATION']),
-        auth=(username, password))
-    if response.status_code != 200:
-        return None
-    repos = response.json()
-    while response.links.get('next'):
-        response = requests.get(
-            response.links['next']['url'], auth=(username, password))
-        repos += response.json()
+def get_allowed_repos():
+    repos = github.get(
+        'orgs/{0}/repos?type=all'.format(app.config['ORGANISATION']))
     return [repo['name'] for repo in repos]
 
 
 @app.route('/refresh')
 def refresh_all_milestones():
     """Refresh milstones for all repositories of the current users."""
-    repo_names = cache.get('users').get(session['username'])
+    repo_names = cache.get('users').get(session['user'])
     for repo_name in repo_names:
         refresh_repo_milestones(repo_name)
     return redirect(url_for('show_now', display='year'))
 
 
 def refresh_repo_milestones(repo_name):
-    """Refresh all milestones for a repository."""
-    username = session.get('username')
-    password = session.get('password')
     repo = {}
-    url = 'https://api.github.com/repos/{0}/{1}/milestones'.format(
+    url = 'repos/{0}/{1}/milestones'.format(
         app.config['ORGANISATION'], repo_name)
-    response = requests.get(url, auth=(username, password))
-    repo['milestones'] = response.json()
+    repo['milestones'] = github.get(url)
     for milestone in repo['milestones']:
         if milestone['due_on'] is not None:
             milestone['due_on'] = date_from_iso(milestone['due_on'])
@@ -112,7 +135,7 @@ def show(display, start, stop):
         relativedelta(months=1) if display == 'year'
         else relativedelta(days=1))
 
-    repos_name = cache['users'].get(session['username'])
+    repos_name = cache['users'].get(session['user'])
     if repos_name is None:
         return redirect(url_for('login'))
     milestones = []
@@ -120,7 +143,6 @@ def show(display, start, stop):
         if name not in cache.get('repos'):
             refresh_repo_milestones(name)
         milestones += cache.get('repos').get(name).get('milestones')
-    print(milestones)
     stones = get_stones_by_step(
         milestones, date_from_iso(start), date_from_iso(stop), display_step)
     return render_template(
