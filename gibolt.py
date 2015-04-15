@@ -9,14 +9,14 @@ from flask import (
 
 
 # monkey patch to manage pagination in github-flask
-def patched_github_request(self, method, resource, **kwargs):
+def patched_github_request(self, method, resource, all_pages=False, **kwargs):
     response = self.raw_request(method, resource, **kwargs)
     status_code = str(response.status_code)
     if not status_code.startswith('2'):
         raise GitHubError(response)
     if response.headers['Content-Type'].startswith('application/json'):
         result = response.json()
-        while response.links.get('next'):
+        while response.links.get('next') and all_pages:
             response = self.session.request(
                     method, response.links['next']['url'], **kwargs)
             if not status_code.startswith('2'):
@@ -85,7 +85,7 @@ def authorized(oauth_token):
 
 def get_allowed_repos():
     repos = github.get(
-        'orgs/{0}/repos?type=all'.format(app.config['ORGANISATION']))
+        'orgs/{0}/repos?type=all'.format(app.config['ORGANISATION']), all_pages=True)
     return [repo['name'] for repo in repos]
 
 
@@ -96,25 +96,15 @@ def refresh_all():
         refresh_repo_milestones(repo_name)
     url = 'orgs/{0}/issues?filter=all&state=all&labels=sprint'.format(
             app.config['ORGANISATION'])
-    cache['issues'] = github.get(url)
     flash('cache is fresh as a peppermint candy')
     return redirect(url_for('index'))
-
-
-@app.route('/refresh/milestones')
-def refresh_all_milestones():
-    """Refresh milstones for all repositories of the current users."""
-    repo_names = cache.get('users').get(session['user'])
-    for repo_name in repo_names:
-        refresh_repo_milestones(repo_name)
-    return redirect(url_for('show_now', display='year'))
 
 
 def refresh_repo_milestones(repo_name):
     repo = {}
     url = 'repos/{0}/{1}/milestones'.format(
         app.config['ORGANISATION'], repo_name)
-    repo['milestones'] = github.get(url)
+    repo['milestones'] = github.get(url, all_pages=True)
     for milestone in repo['milestones']:
         if milestone['due_on'] is not None:
             milestone['due_on'] = date_from_iso(milestone['due_on'])
@@ -125,19 +115,11 @@ def refresh_repo_milestones(repo_name):
     cache['repos'][repo_name] = repo
 
 
-@app.route('/refresh/sprint_issues')
-def refresh_sprint_issues():
-    url = 'orgs/{0}/issues?filter=all&state=all&labels=sprint'.format(
-            app.config['ORGANISATION'])
-    cache['issues'] = github.get(url)
-    return redirect(url_for('show_sprint_issues'))
-
-
 @app.route('/issues/sprint')
 def show_sprint_issues():
-    issues = filter_by_allowed_repos(cache.get('issues'))
-    if issues is None:
-        return redirect(url_for('refresh_sprint_issues'))
+    url = 'orgs/{0}/issues?filter=all&state=all&labels=sprint'.format(
+            app.config['ORGANISATION'])
+    issues = github.get(url, all_pages=True)
     opened = len([issue for issue in issues if issue['state'] == 'open'])
     closed = len([issue for issue in issues if issue['state'] == 'closed'])
     return render_template(
@@ -176,14 +158,6 @@ def show(display, start, stop):
     return render_template(
         '{0}.jinja2'.format(display), start=date_from_iso(start),
         stones_by_step=stones)
-
-
-def filter_by_allowed_repos(items):
-    if items is None:
-        return None
-    return [item for item in items if
-            (item.get('repository').get('name') in cache['users'].get(
-                    session['user']))]
 
 
 def get_stones_by_step(all_stones, start, end, step):
