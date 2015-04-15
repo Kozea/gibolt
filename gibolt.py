@@ -117,11 +117,22 @@ def refresh_repo_milestones(repo_name):
 
 @app.route('/issues/sprint')
 def show_sprint_issues():
-    url = 'orgs/{0}/issues?filter=all&state=all&labels=sprint'.format(
+    filters = {'filter': 'all', 'state': 'all', 'labels': 'sprint'}
+    return redirect(url_for('show_issues', **filters))
+
+@app.route('/issues')
+def show_issues():
+    filters = request.args
+    url = 'orgs/{0}/issues'.format(
             app.config['ORGANISATION'])
     issues = github.get(url, all_pages=True)
+    end_url='?'
+    for key, value in filters.items():
+        end_url += "{0}={1}&".format(key, value)
+    end_url = end_url[:-1]
+    issues = github.get(url + end_url, all_pages=True)
     opened = len([issue for issue in issues if issue['state'] == 'open'])
-    closed = len([issue for issue in issues if issue['state'] == 'closed'])
+    closed = len([issue for issue in issues if issue['state'] == 'closed']) or float('inf')
     return render_template(
         'issues.jinja2', issues=issues, opened=opened, closed=closed)
 
