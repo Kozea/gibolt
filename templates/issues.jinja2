@@ -1,0 +1,38 @@
+{% extends '_layout.jinja2' %}
+{% block sidenav %}
+<h2>sprint menu</h2>
+<nav>
+	<ul>
+		<li><a href="{{url_for("show_sprint_issues")}}">All Sprint Issues</a></li>
+		<li><a href="{{url_for("show_issues", filter='all',state='open',labels='sprint') | safe}}">Sprint open issue</a></li>
+		<li><a href="{{url_for("show_issues", filter='all',state='closed',labels='sprint') | safe}}">Sprint closed issue</a></li>
+		<li><a href="{{url_for("show_issues", filter='all',state='all',labels='sprint,feature') | safe}}">Sprint Features</a></li>
+		<li><a href="{{url_for("show_issues", filter='all',state='all',labels='sprint,document') | safe}}">Sprint Documents</a></li>
+	</ul>
+	<form action="{{url_for("show_issues_query")}}" method="get">
+		<label>custom query</label>
+		<input value="{{query}}" size="50" type="text" class="text" name="query">
+	</form>
+	
+
+
+</nav>
+{% endblock sidenav %}
+{% block main %}
+	<h2>Issues for the sprint</h2>
+	{{ issues | length }} issues
+  <ul>
+    {% for issue in issues %}
+			<li class="{{ issue['state'] }}">
+				<a href="{{ issue['html_url']}}">{{ issue['title'] }}</a>
+			</li>
+			{% if loop.last %}
+				{{ issue }}
+			{% endif %}
+	{% endfor %}
+  </ul>
+  <h2>Progress</h2>
+		<progress value="{{ closed  / ((closed + opened) or 999999)}}">
+			 {{ closed }} / {{ closed + opened }}">
+		</progress>
+{% endblock main %}
