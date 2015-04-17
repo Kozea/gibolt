@@ -13,11 +13,27 @@
 <h2>sprint menu</h2>
 <nav>
 	<ul>
-		<li><a href="{{url_for("show_sprint_issues")}}">All Sprint Issues</a></li>
-		<li><a href="{{url_for("show_issues", filter='all',state='open',labels='sprint') | safe}}">Sprint open issue</a></li>
-		<li><a href="{{url_for("show_issues", filter='all',state='closed',labels='sprint') | safe}}">Sprint closed issue</a></li>
-		<li><a href="{{url_for("show_issues", filter='all',state='all',labels='sprint,feature') | safe}}">Sprint Features</a></li>
-		<li><a href="{{url_for("show_issues", filter='all',state='all',labels='sprint,document') | safe}}">Sprint Documents</a></li>
+		<li><a href="{{ url_for("show_sprint_issues") }}">All Sprint Issues</a></li >
+		<li><a href="{{ url_for(
+				"show_issues", filter='all',state='open',labels='sprint',
+				groupby='assignee.login') }}">
+				All sprint Issues grouped by assignee</a></li>
+		<li><a href="{{ url_for(
+				"show_issues", filter='all',state='open',labels='sprint',
+				groupby='milestone.title') }}">
+				All sprint Issues grouped by milestone</a></li>
+		<li><a href="{{ url_for(
+				"show_issues", filter='all',state='open',labels='sprint') }}">
+				Sprint open issue</a></li>
+		<li><a href="{{ url_for(
+				"show_issues", filter='all',state='closed',labels='sprint') }}">
+				Sprint closed issue</a></li>
+		<li><a href="{{ url_for(
+				"show_issues", filter='all',state='all',labels='sprint,feature') }}">
+				Sprint Features</a></li>
+		<li><a href="{{ url_for(
+				"show_issues", filter='all',state='all',labels='sprint,document') }}">
+				Sprint Documents</a></li>
 	</ul>
 	<form action="{{url_for("show_issues_query")}}" method="get">
 		<label>custom query</label>
@@ -42,9 +58,6 @@
 				<li class="{{ issue['state'] }}">
 					<a href="{{ issue['html_url']}}">{{ issue['title'] }}</a>
 				</li>
-				{% if loop.last %}
-					{{ issue }}
-				{% endif %}
 		{% endfor %}
 		</ul>
 	{% endif %}
