@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 from datetime import date
 from functools import wraps
 
@@ -129,7 +128,11 @@ def show_sprint_issues():
 @app.route('/issues')
 @autologin
 def show_issues():
-    filters = request.args
+    filters = dict((key, value) for (key, value) in request.args.items())
+    groupby = filters.get('groupby')
+    if groupby:
+        del filters['groupby']
+
     url = 'orgs/{0}/issues'.format(
             app.config['ORGANISATION'])
     end_url = '?'
@@ -141,9 +144,37 @@ def show_issues():
     issues = github.get(url + end_url, all_pages=True)
     opened = len([issue for issue in issues if issue['state'] == 'open'])
     closed = len([issue for issue in issues if issue['state'] == 'closed'])
+
+    if groupby:
+        grouped_issues = {}
+        query += "groupby:{0} ".format(groupby)
+        if '.' in groupby:
+            groupby = groupby.split('.')
+            first_key = groupby[0]
+            second_key = groupby[1]
+            first_list = [issue[first_key] for issue in issues]
+            keys = set([key[second_key] for key in first_list if key or None])
+            for key in keys:
+                grouped_issues[key] = [
+                    issue for issue in issues if
+                    issue[first_key] and issue[first_key][second_key] == key]
+            grouped_issues[None] = [
+                issue for issue in issues if not issue[first_key]]
+
+        else:
+            keys = set([issue[groupby] for issue in issues])
+            for key in keys:
+                grouped_issues[key] = [
+                    issue for issue in issues if issue[groupby] == key]
+        none_issues = grouped_issues[None]
+        del(grouped_issues[None])
+        issues = sorted(
+                grouped_issues.items(), key=lambda issue: str.lower(issue[0]))
+        issues.append((None, none_issues))
+
     return render_template(
         'issues.jinja2', issues=issues,
-        opened=opened, closed=closed, query=query)
+        opened=opened, closed=closed, query=query, groupby=groupby)
 
 
 @app.route('/issues/custom_query')

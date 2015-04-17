@@ -1,4 +1,14 @@
 {% extends '_layout.jinja2' %}
+{% macro present_issues(issues) -%}
+	{{ issues | length }} issues
+	<ul>
+		{% for issue in issues %}
+			<li class="{{ issue['state'] }}">
+				<a href="{{ issue['html_url']}}">{{ issue['title'] | striptags }}</a>
+			</li>
+	{% endfor %}
+	</ul>
+{%- endmacro %}
 {% block sidenav %}
 <h2>sprint menu</h2>
 <nav>
@@ -13,26 +23,34 @@
 		<label>custom query</label>
 		<input value="{{query}}" size="50" type="text" class="text" name="query">
 	</form>
-	
-
-
 </nav>
 {% endblock sidenav %}
 {% block main %}
-	<h2>Issues for the sprint</h2>
-	{{ issues | length }} issues
-  <ul>
-    {% for issue in issues %}
-			<li class="{{ issue['state'] }}">
-				<a href="{{ issue['html_url']}}">{{ issue['title'] }}</a>
-			</li>
-			{% if loop.last %}
-				{{ issue }}
-			{% endif %}
-	{% endfor %}
-  </ul>
+  {% if groupby %}
+		<h2>Issues for the sprint grouped by {{ groupby }}</h2>
+		{% for group, issues_list in issues %}
+			<article>
+				<h3>{{ group }}</h3>
+				{{present_issues(issues_list)}}
+			</article>
+		{% endfor %}
+	{% else %}
+		<h2>Issues for the sprint</h2>
+		{{ issues | length }} issues
+		<ul>
+			{% for issue in issues %}
+				<li class="{{ issue['state'] }}">
+					<a href="{{ issue['html_url']}}">{{ issue['title'] }}</a>
+				</li>
+				{% if loop.last %}
+					{{ issue }}
+				{% endif %}
+		{% endfor %}
+		</ul>
+	{% endif %}
   <h2>Progress</h2>
 		<progress value="{{ closed  / ((closed + opened) or 999999)}}">
 			 {{ closed }} / {{ closed + opened }}">
 		</progress>
+				{{ issues }}
 {% endblock main %}
