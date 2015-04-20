@@ -14,7 +14,7 @@
       </h3>
       {% if stones %}
         <ul>
-          {% for stone in stones %}
+          {% for stone in stones | sort(attribute='due_on')%}
             <li>
 							{{ stone['due_on'] }}
               <a href="{{ stone['html_url'] }}">
