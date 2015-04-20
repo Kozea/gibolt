@@ -128,7 +128,8 @@ def show_sprint_issues():
 @app.route('/issues')
 @autologin
 def show_issues():
-    filters = dict((key, value) for (key, value) in request.args.items())
+    filters = dict(
+            (key, ','.join(values)) for (key, values) in request.args.lists())
     groupby = filters.get('groupby')
     if groupby:
         del filters['groupby']
@@ -142,39 +143,19 @@ def show_issues():
         query += "{0}:{1} ".format(key, value)
     end_url = end_url[:-1]
     issues = github.get(url + end_url, all_pages=True)
+    noned_issues = None
     opened = len([issue for issue in issues if issue['state'] == 'open'])
     closed = len([issue for issue in issues if issue['state'] == 'closed'])
 
-    if groupby:
-        grouped_issues = {}
-        query += "groupby:{0} ".format(groupby)
-        if '.' in groupby:
-            groupby = groupby.split('.')
-            first_key = groupby[0]
-            second_key = groupby[1]
-            first_list = [issue[first_key] for issue in issues]
-            keys = set([key[second_key] for key in first_list if key or None])
-            for key in keys:
-                grouped_issues[key] = [
-                    issue for issue in issues if
-                    issue[first_key] and issue[first_key][second_key] == key]
-            grouped_issues[None] = [
-                issue for issue in issues if not issue[first_key]]
-
-        else:
-            keys = set([issue[groupby] for issue in issues])
-            for key in keys:
-                grouped_issues[key] = [
-                    issue for issue in issues if issue[groupby] == key]
-        none_issues = grouped_issues[None]
-        del(grouped_issues[None])
-        issues = sorted(
-                grouped_issues.items(), key=lambda issue: str.lower(issue[0]))
-        issues.append((None, none_issues))
+    if groupby and '.' in groupby:
+        first_group = groupby.split('.')[0]
+        noned_issues = [issue for issue in issues if not issue[first_group]]
+        issues = [issue for issue in issues if issue[first_group]]
 
     return render_template(
-        'issues.jinja2', issues=issues,
-        opened=opened, closed=closed, query=query, groupby=groupby)
+        'issues.jinja2', issues=issues, noned_issues=noned_issues,
+        opened=opened, closed=closed, query=query, groupby=groupby,
+        filters=filters)
 
 
 @app.route('/issues/custom_query')
@@ -189,6 +170,13 @@ def show_issues_query():
             key, value = arg.split(':')
             filters[key] = value
     return redirect(url_for('show_issues', **filters))
+
+
+@app.route('/issues/form_query')
+@autologin
+def show_form_query():
+    # parse form then redirect to show issues
+    return redirect(url_for('show_issues', **request.args))
 
 
 @app.route('/stones/<display>')

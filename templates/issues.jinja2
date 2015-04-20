@@ -1,4 +1,6 @@
 {% extends '_layout.jinja2' %}
+
+
 {% macro present_issues(issues) -%}
 	{{ issues | length }} issues
 	<ul>
@@ -9,6 +11,21 @@
 	{% endfor %}
 	</ul>
 {%- endmacro %}
+
+
+{% macro mk_input(type, name, value) -%}
+	<input type="{{ type }}" name="{{ name }}" value="{{ value }}"
+		{{'checked="checked"' if value in filters[name]}}>
+{%- endmacro %}
+
+
+{% macro mk_option(value, label) -%}
+	<option value="{{ value }}"{{ ' selected="selected"' if value == groupby }}>
+		{{ label }}
+	</option>
+{% endmacro %}
+
+
 {% block sidenav %}
 <h2>sprint menu</h2>
 <nav>
@@ -35,7 +52,81 @@
 				"show_issues", filter='all',state='all',labels='sprint,document') }}">
 				Sprint Documents</a></li>
 	</ul>
-	<form action="{{url_for("show_issues_query")}}" method="get">
+	<form action="{{url_for("show_form_query")}}" method="get">
+		<fieldset>
+			<label>
+				open
+				{{ mk_input('radio', 'state', 'open') }}
+			</label>
+			<label>
+				closed
+				{{ mk_input('radio', 'state', 'closed') }}
+			</label>
+			<label>
+				all
+				{{ mk_input('radio', 'state', 'all') }}
+			</label>
+		</fieldset>
+		<fieldset>
+			<label>
+				sprint
+				{{ mk_input('checkbox', 'labels', 'sprint') }}
+			</label>
+			<label>
+				must
+				{{ mk_input('checkbox', 'labels', 'must') }}
+			</label>
+			<label>
+				nice
+				{{ mk_input('checkbox', 'labels', 'nice') }}
+			</label>
+			<label>
+				later
+				{{ mk_input('checkbox', 'labels', 'later') }}
+			</label>
+		</fieldset>
+		<fieldset>
+			<label>
+				feature
+				{{ mk_input('checkbox', 'labels', 'feature') }}
+			</label>
+			<label>
+				bug
+				{{ mk_input('checkbox', 'labels', 'bug') }}
+			</label>
+			<label>
+				doc
+				{{ mk_input('checkbox', 'labels', 'document') }}
+			</label>
+			<label>
+				design
+				{{ mk_input('checkbox', 'labels', 'design') }}
+			</label>
+			<label>
+				tool
+				{{ mk_input('checkbox', 'labels', 'tool') }}
+			</label>
+			<label>
+				debt
+				{{ mk_input('checkbox', 'labels', 'debt') }}
+			</label>
+		</fieldset>
+		<fieldset>
+			group by
+			<select name="groupby">
+				{{ mk_option('', 'no group') }}
+				{{ mk_option('assignee.login', 'assignee') }}
+				{{ mk_option('milestone.title', 'milestone') }}
+				{{ mk_option('state', 'state') }}
+			</select>
+		</fieldset>
+		<input type="hidden"  name="filter" value="all">
+
+
+		<button type="submit">submit</button>
+		
+	</form>
+	<form method="get" action={{ url_for('show_issues_query') }}>
 		<label>custom query</label>
 		<input value="{{query}}" size="50" type="text" class="text" name="query">
 	</form>
@@ -43,15 +134,21 @@
 {% endblock sidenav %}
 {% block main %}
   {% if groupby %}
-		<h2>Issues for the sprint grouped by {{ groupby }}</h2>
-		{% for group, issues_list in issues %}
+		<h2>Issues grouped by {{ groupby }}</h2>
+		{% for issue in issues | groupby(groupby) %}
 			<article>
-				<h3>{{ group }}</h3>
-				{{present_issues(issues_list)}}
+				<h3>{{ issue.grouper }}</h3>
+				{{present_issues(issue.list)}}
 			</article>
 		{% endfor %}
+		{% if noned_issues %}
+			<article>
+				<h3>None</h3>
+				{{present_issues(noned_issues)}}
+			</article>
+		{% endif %}
 	{% else %}
-		<h2>Issues for the sprint</h2>
+		<h2>Issues</h2>
 		{{ issues | length }} issues
 		<ul>
 			{% for issue in issues %}
@@ -65,5 +162,4 @@
 		<progress value="{{ closed  / ((closed + opened) or 999999)}}">
 			 {{ closed }} / {{ closed + opened }}">
 		</progress>
-				{{ issues }}
 {% endblock main %}
