@@ -50,7 +50,6 @@ def date_from_iso(iso_date):
 def autologin(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print('test')
         if session.get('user') is None:
             return redirect(url_for('login'))
         if cache['users'].get(session['user']) is None:
@@ -156,6 +155,44 @@ def show_issues():
         'issues.jinja2', issues=issues, noned_issues=noned_issues,
         opened=opened, closed=closed, query=query, groupby=groupby,
         filters=filters)
+
+
+@app.route('/assigned/<start>/<stop>')
+@app.route('/assigned')
+@autologin
+def show_assigned_issues(start=None, stop=None):
+    today = date.today()
+    if start is None:
+        start = request.args.get('start')
+    if start is None:
+        start = date(today.year, today.month, 1)
+    else:
+        start = date_from_iso(start)
+
+    if stop is None:
+        stop = request.args.get('stop')
+    if stop is None:
+        stop = today
+    else:
+        stop = date_from_iso(stop)
+
+    since = start.strftime("%Y-%m-%dT00:00:00Z")
+    url = 'orgs/{0}/issues?state=closed&filter=all&since={1}'.format(
+            app.config['ORGANISATION'], since)
+    issues = github.get(url, all_pages=True)
+    ok_issues = []
+    assignees = []
+    for issue in issues:
+        if (issue.get('assignee') and
+                start < date_from_iso(issue['closed_at']) < stop):
+            issue['closed_month'] = issue['closed_at'][:7]
+            issue['repository']['short_name'] = (
+                    issue['repository']['full_name'].split('/')[1])
+            ok_issues.append(issue)
+            assignees.append(issue['assignee']['login'])
+    users = set(assignees)
+    return render_template('assigned_issues.jinja2', issues=ok_issues,
+                           start=start, stop=stop, users=users)
 
 
 @app.route('/issues/custom_query')
