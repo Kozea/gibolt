@@ -13,9 +13,10 @@
 {%- endmacro %}
 
 
-{% macro mk_input(type, name, value) -%}
-	<input type="{{ type }}" name="{{ name }}" value="{{ value }}"
-		{{'checked="checked"' if value in filters[name]}}>
+{% macro mk_labeled_input(type, name, value, label) -%}
+	<input type="{{ type }}" name="{{ name }}" id="{{ name }}_{{ value }}" value="{{ value }}"
+		{{'checked="checked"' if value in filters[name]}} onChange="this.form.submit()">
+	<label for="{{ name }}_{{ value }}">{{ label }}</label>
 {%- endmacro %}
 
 
@@ -54,70 +55,35 @@
 	</ul>
 	<form action="{{url_for("show_form_query")}}" method="get">
 		<fieldset>
-			<label>
-				open
-				{{ mk_input('radio', 'state', 'open') }}
-			</label>
-			<label>
-				closed
-				{{ mk_input('radio', 'state', 'closed') }}
-			</label>
-			<label>
-				all
-				{{ mk_input('radio', 'state', 'all') }}
-			</label>
+			<legend>State</legend>
+			{{ mk_labeled_input('radio', 'state', 'open', 'open') }}
+			{{ mk_labeled_input('radio', 'state', 'closed', 'closed') }}
+			{{ mk_labeled_input('radio', 'state', 'all', 'all') }}
 		</fieldset>
 		<fieldset>
-			<label>
-				sprint
-				{{ mk_input('checkbox', 'labels', 'sprint') }}
-			</label>
-			<label>
-				must
-				{{ mk_input('checkbox', 'labels', 'must') }}
-			</label>
-			<label>
-				nice
-				{{ mk_input('checkbox', 'labels', 'nice') }}
-			</label>
-			<label>
-				later
-				{{ mk_input('checkbox', 'labels', 'later') }}
-			</label>
+			<legend>Priority</legend>
+				{{ mk_labeled_input('checkbox', 'labels', 'sprint','sprint') }}
+				{{ mk_labeled_input('checkbox', 'labels', 'must', 'must') }}
+				{{ mk_labeled_input('checkbox', 'labels', 'nice', 'nice') }}
+				{{ mk_labeled_input('checkbox', 'labels', 'later', 'later') }}
 		</fieldset>
 		<fieldset>
-			<label>
-				feature
-				{{ mk_input('checkbox', 'labels', 'feature') }}
-			</label>
-			<label>
-				bug
-				{{ mk_input('checkbox', 'labels', 'bug') }}
-			</label>
-			<label>
-				doc
-				{{ mk_input('checkbox', 'labels', 'document') }}
-			</label>
-			<label>
-				design
-				{{ mk_input('checkbox', 'labels', 'design') }}
-			</label>
-			<label>
-				tool
-				{{ mk_input('checkbox', 'labels', 'tool') }}
-			</label>
-			<label>
-				debt
-				{{ mk_input('checkbox', 'labels', 'debt') }}
-			</label>
+			<legend>Type</legend>
+				{{ mk_labeled_input('checkbox', 'labels', 'feature','feature') }}
+				{{ mk_labeled_input('checkbox', 'labels', 'bug', 'bug') }}
+				{{ mk_labeled_input('checkbox', 'labels', 'document', 'doc') }}
+				{{ mk_labeled_input('checkbox', 'labels', 'design', 'design') }}
+				{{ mk_labeled_input('checkbox', 'labels', 'tool', 'tool') }}
+				{{ mk_labeled_input('checkbox', 'labels', 'debt', 'debt') }}
 		</fieldset>
 		<fieldset>
-			group by
-			<select name="groupby">
+			<legend>group by</legend>
+			<select name="groupby" onChange="this.form.submit()">
 				{{ mk_option('', 'no group') }}
-				{{ mk_option('assignee.login', 'assignee') }}
-				{{ mk_option('milestone.title', 'milestone') }}
+				{{ mk_option('assignee.login', 'Assignee') }}
+				{{ mk_option('milestone.title', 'Milestone') }}
 				{{ mk_option('state', 'state') }}
+				{{ mk_option('repository.full_name', 'Project') }}
 			</select>
 		</fieldset>
 		<input type="hidden"  name="filter" value="all">
