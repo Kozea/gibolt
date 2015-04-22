@@ -22,7 +22,7 @@
 			{% for issues_by_month in issues_by_user.list  | groupby('closed_month') %}
 				<h4> {{ issues_by_month.grouper }} </h4>
 				<ul>
-					{% for issues_by_project in issues_by_month.list | groupby('repository.short_name') %}
+					{% for issues_by_project in issues_by_month.list | groupby('repository.short_name') | sort_by_len(reverse=True) %}
 						<li>
 							{{ issues_by_project.grouper }}
 							{{ (issues_by_project.list | length / issues_by_month.list | length * 100) | round}} %
@@ -37,4 +37,18 @@
 			{% endfor %}
 		</article>
 	{% endfor %}
+	<article>
+		<h3> All </h3>
+		<ul>
+			{% for issues_by_month in issues  | groupby('closed_month') %}
+				<h4> {{ issues_by_month.grouper }} </h4>
+				{% for issues_by_project in issues_by_month.list | groupby('repository.short_name') | sort_by_len(reverse=True) %}
+					<li>
+						{{ issues_by_project.grouper }}
+						{{ (issues_by_project.list | length / issues_by_month.list | length * 100) | round}} %
+					</li>
+				{% endfor %}
+			{% endfor %}
+		</ul>
+	</article>
 {% endblock main %}
