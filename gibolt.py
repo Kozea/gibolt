@@ -6,10 +6,16 @@ from dateutil.relativedelta import relativedelta
 from flask.ext.github import GitHub, GitHubError
 from flask import (
     Flask, request, session, render_template, redirect, url_for, flash)
+import requests
+from cachecontrol import CacheControl
+
+sess = requests.session()
+cached_sess = CacheControl(sess)
 
 
-# monkey patch to manage pagination in github-flask
+# monkey patch to manage pagination in github-flask and use cache
 def patched_github_request(self, method, resource, all_pages=False, **kwargs):
+    self.session = cached_sess
     response = self.raw_request(method, resource, **kwargs)
     status_code = str(response.status_code)
     if not status_code.startswith('2'):
@@ -33,6 +39,13 @@ def patched_github_request(self, method, resource, all_pages=False, **kwargs):
 GitHub.request = patched_github_request
 
 app = Flask(__name__)
+
+
+# custom filter for order project by closed ticket
+@app.template_filter('sort_by_len')
+def sort_by_list_number(values, reverse=False):
+    return sorted(values, key=lambda item: len(item[1]), reverse=reverse)
+
 app.secret_key = 'secret'
 app.config['ORGANISATION'] = 'Kozea'
 app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
@@ -87,7 +100,7 @@ def authorized(oauth_token):
 
 def get_allowed_repos():
     repos = github.get(
-        'orgs/{0}/repos?type=all'.format(
+        'orgs/{0}/repos?type=all&per_page=100'.format(
             app.config['ORGANISATION']), all_pages=True)
     return [repo['name'] for repo in repos]
 
@@ -104,7 +117,7 @@ def refresh_all():
 
 def refresh_repo_milestones(repo_name):
     repo = {}
-    url = 'repos/{0}/{1}/milestones'.format(
+    url = 'repos/{0}/{1}/milestones?per_page=100'.format(
         app.config['ORGANISATION'], repo_name)
     repo['milestones'] = github.get(url, all_pages=True)
     for milestone in repo['milestones']:
@@ -135,7 +148,7 @@ def show_issues():
 
     url = 'orgs/{0}/issues'.format(
             app.config['ORGANISATION'])
-    end_url = '?'
+    end_url = '?per_page=100&'
     query = ''
     for key, value in filters.items():
         end_url += "{0}={1}&".format(key, value)
@@ -177,8 +190,8 @@ def show_assigned_issues(start=None, stop=None):
         stop = date_from_iso(stop)
 
     since = start.strftime("%Y-%m-%dT00:00:00Z")
-    url = 'orgs/{0}/issues?state=closed&filter=all&since={1}'.format(
-            app.config['ORGANISATION'], since)
+    url = 'orgs/{0}/issues?per_page=100&state=closed&filter=all&since={1}'\
+        .format(app.config['ORGANISATION'], since)
     issues = github.get(url, all_pages=True)
     ok_issues = []
     assignees = []
