@@ -100,8 +100,8 @@
 {% endblock sidenav %}
 {% block main %}
   {% if groupby %}
-		<h2>Issues grouped by {{ groupby }}</h2>
-		{% for issue in issues | groupby(groupby) %}
+		<h2>{{ issues | length }} Issues grouped by {{ groupby }}</h2>
+		{% for issue in issues | groupby(groupby) | sort_by_len(reverse=True) %}
 			<article>
 				<h3>{{ issue.grouper }}</h3>
 				{{present_issues(issue.list)}}
@@ -114,8 +114,8 @@
 			</article>
 		{% endif %}
 	{% else %}
-		<h2>Issues</h2>
-		{{ issues | length }} issues
+		<h2>{{ issues | length }} Issues</h2>
+		
 		<ul>
 			{% for issue in issues %}
 				<li class="{{ issue['state'] }}">
