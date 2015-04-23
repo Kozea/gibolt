@@ -9,13 +9,9 @@ from flask import (
 import requests
 from cachecontrol import CacheControl
 
-sess = requests.session()
-cached_sess = CacheControl(sess)
-
 
 # monkey patch to manage pagination in github-flask and use cache
 def patched_github_request(self, method, resource, all_pages=False, **kwargs):
-    self.session = cached_sess
     response = self.raw_request(method, resource, **kwargs)
     status_code = str(response.status_code)
     if not status_code.startswith('2'):
@@ -38,6 +34,7 @@ def patched_github_request(self, method, resource, all_pages=False, **kwargs):
 
 GitHub.request = patched_github_request
 
+
 app = Flask(__name__)
 
 
@@ -46,6 +43,16 @@ app = Flask(__name__)
 def sort_by_list_number(values, reverse=False):
     return sorted(values, key=lambda item: len(item[1]), reverse=reverse)
 
+
+# custom filter for order project by closed ticket
+@app.template_filter('format_date')
+def format_date_filter(isodate, dateformat):
+    numbers = [int(number) for number in isodate.split('-')]
+    while len(numbers) < 3:
+        numbers.append(1)
+    return date(*numbers).strftime(dateformat)
+
+
 app.secret_key = 'secret'
 app.config['ORGANISATION'] = 'Kozea'
 app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
@@ -53,6 +60,9 @@ app.config['GITHUB_CLIENT_SECRET'] = 'bcfee82e06c41d22cd324b33a86c1e82a372c403'
 app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
 
 github = GitHub(app)
+sess = requests.session()
+cached_sess = CacheControl(sess, cache_etags=False)
+github.session = cached_sess
 cache = {'users': {}, 'repos': {}}
 
 
