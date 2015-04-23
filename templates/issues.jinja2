@@ -6,6 +6,7 @@
 	<ul>
 		{% for issue in issues %}
 			<li class="{{ issue['state'] }}">
+				<span class="project">{{ issue.repository.full_name | short_name }}</span>
 				<a href="{{ issue['html_url']}}">{{ issue['title'] | striptags }}</a>
 			</li>
 	{% endfor %}
@@ -104,25 +105,18 @@
 		{% for issue in issues | groupby(groupby) | sort_by_len(reverse=True) %}
 			<article>
 				<h3>{{ issue.grouper }}</h3>
-				{{present_issues(issue.list)}}
+				{{ present_issues(issue.list) }}
 			</article>
 		{% endfor %}
 		{% if noned_issues %}
 			<article>
 				<h3>None</h3>
-				{{present_issues(noned_issues)}}
+				{{ present_issues(noned_issues) }}
 			</article>
 		{% endif %}
 	{% else %}
 		<h2>{{ issues | length }} Issues</h2>
-		
-		<ul>
-			{% for issue in issues %}
-				<li class="{{ issue['state'] }}">
-					<a href="{{ issue['html_url']}}">{{ issue['title'] }}</a>
-				</li>
-		{% endfor %}
-		</ul>
+		{{ present_issues(issues) }}
 	{% endif %}
   <h2>Progress</h2>
 		<progress value="{{ closed  / ((closed + opened) or 999999)}}">

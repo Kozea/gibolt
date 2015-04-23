@@ -38,13 +38,13 @@ GitHub.request = patched_github_request
 app = Flask(__name__)
 
 
-# custom filter for order project by closed ticket
+# order by len(list)
 @app.template_filter('sort_by_len')
 def sort_by_list_number(values, reverse=False):
     return sorted(values, key=lambda item: len(item[1]), reverse=reverse)
 
 
-# custom filter for order project by closed ticket
+# order project by closed ticket
 @app.template_filter('format_date')
 def format_date_filter(isodate, dateformat):
     numbers = [int(number) for number in isodate.split('-')]
@@ -52,6 +52,11 @@ def format_date_filter(isodate, dateformat):
         numbers.append(1)
     return date(*numbers).strftime(dateformat)
 
+
+# split a full name after a / to display only the projet name
+@app.template_filter('short_name')
+def short_name(full_name):
+    return full_name.split('/')[1]
 
 app.secret_key = 'secret'
 app.config['ORGANISATION'] = 'Kozea'
@@ -209,8 +214,6 @@ def show_assigned_issues(start=None, stop=None):
         if (issue.get('assignee') and
                 start < date_from_iso(issue['closed_at']) < stop):
             issue['closed_month'] = issue['closed_at'][:7]
-            issue['repository']['short_name'] = (
-                    issue['repository']['full_name'].split('/')[1])
             ok_issues.append(issue)
             assignees.append(issue['assignee']['login'])
     users = set(assignees)
