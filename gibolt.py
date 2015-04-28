@@ -132,7 +132,7 @@ def refresh_all():
 
 def refresh_repo_milestones(repo_name):
     repo = {}
-    url = 'repos/{0}/{1}/milestones?per_page=100'.format(
+    url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
         app.config['ORGANISATION'], repo_name)
     repo['milestones'] = github.get(url, all_pages=True)
     for milestone in repo['milestones']:
