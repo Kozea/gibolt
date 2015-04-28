@@ -101,7 +101,7 @@
 {% endblock sidenav %}
 {% block main %}
   {% if groupby %}
-		<h2>{{ issues | length }} Issues grouped by {{ groupby }}</h2>
+		<h2>{{ issues | length + noned_issues | length }} Issues grouped by {{ groupby }}</h2>
 		{% for issue in issues | groupby(groupby) | sort_by_len(reverse=True) %}
 			<article>
 				<h3>{{ issue.grouper }}</h3>
