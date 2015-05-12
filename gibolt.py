@@ -58,6 +58,16 @@ def format_date_filter(isodate, dateformat):
 def short_name(full_name):
     return full_name.split('/')[1]
 
+
+@app.template_filter('nice_name')
+def nice_name(name):
+    names = {
+            'assignee.login': 'Assignee',
+            'milestone.title': 'Milestone',
+            'state': 'State',
+            'repository.full_name': 'Project'}
+    return names.get(name, name)
+
 app.secret_key = 'secret'
 app.config['ORGANISATION'] = 'Kozea'
 app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
