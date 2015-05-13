@@ -119,6 +119,7 @@
     {% for issue in issues | groupby(groupby) | sort_by_len(reverse=True) %}
       <article>
         <h3>{{ issue.grouper }}</h3>
+        <img class="user-avatar" src="{{ issue.list[0].assignee.avatar_url }}" alt="avatar" />
         {{ present_issues(issue.list) }}
       </article>
     {% endfor %}
