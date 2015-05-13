@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-from datetime import date
+from datetime import date, datetime
 from functools import wraps
 
+import pytz
 from dateutil.relativedelta import relativedelta
 from flask.ext.github import GitHub, GitHubError
 from flask import (
@@ -73,6 +74,7 @@ app.config['ORGANISATION'] = 'Kozea'
 app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
 app.config['GITHUB_CLIENT_SECRET'] = 'bcfee82e06c41d22cd324b33a86c1e82a372c403'
 app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
+app.config['TIMEZONE'] = 'Europe/Paris'
 
 github = GitHub(app)
 sess = requests.session()
@@ -82,6 +84,13 @@ cache = {'users': {}, 'repos': {}}
 
 
 def date_from_iso(iso_date):
+    if len(iso_date) > 10:
+        localzone = pytz.timezone(app.config['TIMEZONE'])
+        utczone = pytz.timezone('Etc/UTC')
+        absolutedate = utczone.localize(
+                datetime.strptime(iso_date, '%Y-%m-%dT%H:%M:%SZ'))
+        localdate = absolutedate.astimezone(localzone)
+        return localdate.date()
     return date(*[int(value) for value in iso_date[:10].split('-')])
 
 
