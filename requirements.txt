@@ -7,3 +7,4 @@ Werkzeug==0.10.4
 GitHub-Flask==2.0.1
 CacheControl==0.11.2
 python-dateutil
+pytz
