@@ -51,4 +51,9 @@ footer {
 .user-avatar {
   width: 50px;
 }
+.issues-label {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 0 5px;
+}
 
