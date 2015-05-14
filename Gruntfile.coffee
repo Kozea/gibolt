@@ -8,9 +8,10 @@ module.exports = (grunt) ->
     sass:
       dist:
         options:
+          loadPath: require('node-bourbon').includePaths
           style: 'expanded'
         files:
-          'static/css/main.css': ['generators/sass/*.scss']
+          'static/css/main.css': 'generators/sass/main.scss'
     watch:
       scripts:
         files: ['**/*.coffee']

@@ -1,58 +1,91 @@
+@import "bourbon";
+@import "reset";
+@import "colors";
+
+// Default HTML
+
 body {
-  margin: 0 30px;
+    background-color: $dark-primary-color;
+    color: $primary-text-color;
+
+    h1 {
+        color: $text-color;
+    }
+
+    ul {
+        list-style-type: none;
+    }
 }
-nav {
-  background-color:#ccc;
+
+
+// Navigation menu
+
+#main-navigation-menu {
+    display: block;
+    width: 100%;
+
+    ul {
+        padding: 0;
+        margin: 0;
+        
+        li {
+            display: inline-block;
+            margin: 0 10px;
+
+            &:first-child{
+                margin: 0;
+            }
+            
+            a {
+                display: block;
+                color: $text-color;
+
+                &:hover {
+                    color: $accent-color;
+                }
+            }
+        }
+    }
 }
-nav ul li {
-  background-color:#ddd;
-  display: inline-block;
-  margin: 10px;
-  padding: 5px;
+
+// Main
+
+header {
+    background-color: $primary-color;
+    display: block;
+    padding: 20px;
+    margin-top: 20px;
+    position:relative;
+    box-shadow: 0 5px 5px $light-primary-color;
+
+    #logo {
+        img {
+            margin: 0 10px 0 0;
+            vertical-align: middle;
+            width: 50px;
+        }
+
+    }
 }
-h2 {
-  clear:both;
+
+main {
+    background-color: $white;
+    display: block;
+    padding: 20px;
 }
-article {
-  background-color:#eee;
-  width: 400px;
-  margin: 20px;
-  vertical-align: top;
-  display: inline-block;
-  vertical-align: middle;
-}
-nav form fieldset {
-  display:inline-block;
-}
-li.closed {
-  color: red;
-}
-li.open {
-  color: green;
-}
-nav form input[type=checkbox],
-nav form input[type=radio] {
-  display:none;
-}
-nav form input[type=checkbox] + label,
-nav form input[type=radio] + label{
-  display:inline-block;
-  background-color:#cce;
-  padding: 5px;
-  border: 2px outset ;
-}
-nav form input:checked + label {
-  border: 2px inset;
-  background-color:#ddf;
-}
+
 footer {
-  clear:both;
+    a {
+        color: $text-color;
+    }
+
+    #kozea-logo {
+        margin-right: 5px;
+        vertical-align: middle;
+        width: 50px;
+    }
 }
+
 .user-avatar {
-  width: 50px;
-}
-.issues-label {
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 0 5px;
+    width: 50px;
 }

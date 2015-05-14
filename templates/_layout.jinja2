@@ -7,8 +7,9 @@
   </head>
 
   <body>
-		<a name="top"></a>
-    <h1>Gibolt</h1>
+    <a name="top"></a>
+    <header>
+    <h1 id="logo"><img src="{{ url_for('static', filename='images/nut.png')}}" alt='logo' />Gibolt</h1>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% for category, message in messages %}
@@ -18,7 +19,7 @@
       {% endfor %}
     {% endwith %}
 
-    <nav>
+    <nav id="main-navigation-menu">
       <ul>
         <li><a href="{{ url_for('show_now', display='year') }}">Timeline</a></li>
         <li><a href="{{ url_for('show_sprint_issues') }}">Issues for sprint</a></li>
@@ -26,6 +27,7 @@
         <li><a href="{{ url_for('refresh_all') }}">Refresh cache</a></li>
       </ul>
     </nav>
+    </header>
 
     <main>
       {% block sidenav %}{% endblock sidenav %}
@@ -34,7 +36,9 @@
 
     <footer>
       <ul>
-        <li><a href="http://community.kozea.org/">A Kozea Project</a></li>
+        <li>
+          <img id="kozea-logo" src="{{ url_for('static', filename='images/logo-kozea.png') }}" alt="logo-kozea" />
+          <a href="http://community.kozea.org/">A Kozea Project</a></li>
       </ul>
     </footer>
   </body>
