@@ -163,6 +163,9 @@ footer {
 
     a {
         color: $text-color;
+        &:hover {
+          color: $accent-color;
+        }
     }
 
     #kozea-logo {

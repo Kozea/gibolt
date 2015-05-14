@@ -584,6 +584,9 @@ main nav a {
 footer a {
   color: #FFFFFF;
 }
+footer a:hover {
+  color: #FFC107;
+}
 footer #kozea-logo {
   margin-right: 5px;
   vertical-align: middle;
