@@ -451,6 +451,7 @@ header #logo {
 }
 header #logo h1 {
   display: inline-block;
+  font-size: 33pt;
 }
 header #logo img {
   margin: 0 10px 0 0;

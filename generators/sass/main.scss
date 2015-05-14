@@ -38,11 +38,6 @@ header {
     position:relative;
     box-shadow: $shadow;
 
-    h1{
-
-    }
-
-
   // Navigation menu
 
   #main-navigation-menu {
@@ -81,6 +76,7 @@ header {
 
         h1 {
           display: inline-block;
+          font-size: 33pt;
         }
 
         img {
