@@ -4,6 +4,8 @@
  * 2. Prevent iOS text size adjust after orientation change, without disabling
  *    user zoom.
  */
+@import url(http://fonts.googleapis.com/css?family=Courgette);
+@import url(http://fonts.googleapis.com/css?family=Roboto);
 html {
   font-family: sans-serif;
   /* 1 */
@@ -396,9 +398,14 @@ th {
   padding: 0;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: Courgette, sans-serif;
+}
+
 body {
   background-color: #455A64;
   color: #212121;
+  font-family: Roboto, serif;
 }
 body h1 {
   color: #FFFFFF;
@@ -407,58 +414,48 @@ body ul {
   list-style-type: none;
 }
 
-#main-navigation-menu {
-  display: inline-block;
-}
-#main-navigation-menu ul {
-  background-color: #455A64;
-  box-shadow: 0 2px 6px -1px black;
-  padding: 10px;
-  margin: 0;
-}
-#main-navigation-menu ul li {
-  display: inline-block;
-  margin: 0 10px;
-}
-#main-navigation-menu ul li:first-child {
-  margin: 0;
-}
-#main-navigation-menu ul li a {
-  display: block;
-  color: #FFFFFF;
-}
-#main-navigation-menu ul li a:hover {
-  color: #FFC107;
-}
-
 header {
   background-color: #607D8B;
   display: block;
   padding: 20px;
   margin-top: 20px;
   position: relative;
-  box-shadow: 0 5px 5px #CFD8DC;
+  box-shadow: 0 3px 2px #CFD8DC;
+}
+header #main-navigation-menu {
+  display: inline-block;
+}
+header #main-navigation-menu ul {
+  background-color: #455A64;
+  box-shadow: 0 2px 6px -1px #333;
+  padding: 10px;
+  margin: 0;
+}
+header #main-navigation-menu ul li {
+  display: inline-block;
+  margin: 0 10px;
+}
+header #main-navigation-menu ul li:first-child {
+  margin: 0;
+}
+header #main-navigation-menu ul li a {
+  display: block;
+  color: #FFFFFF;
+}
+header #main-navigation-menu ul li a:hover {
+  color: #FFC107;
 }
 header #logo {
   cursor: pointer;
   width: 30%;
 }
+header #logo h1 {
+  display: inline-block;
+}
 header #logo img {
   margin: 0 10px 0 0;
-  vertical-align: middle;
 }
-header #logo img#small-gear {
-  position: relative;
-  vertical-align: middle;
-  top: 15px;
-  left: -24px;
-  -webkit-transform: rotate(15deg);
-  -moz-transform: rotate(15deg);
-  -ms-transform: rotate(15deg);
-  -o-transform: rotate(15deg);
-  transform: rotate(15deg);
-}
-header #logo img:first-child {
+header #logo img#big-gear {
   -webkit-animation: rotate 3s linear infinite;
   -moz-animation: rotate 3s linear infinite;
   animation: rotate 3s linear infinite;
@@ -498,7 +495,15 @@ header #logo img:first-child {
     transform: rotate(360deg);
   }
 }
-header #logo img:last-child {
+header #logo img#small-gear {
+  position: relative;
+  top: 7px;
+  left: -20px;
+  -webkit-transform: rotate(15deg);
+  -moz-transform: rotate(15deg);
+  -ms-transform: rotate(15deg);
+  -o-transform: rotate(15deg);
+  transform: rotate(15deg);
   -webkit-animation: rotate-counter 3s linear infinite;
   -moz-animation: rotate-counter 3s linear infinite;
   animation: rotate-counter 3s linear infinite;
@@ -538,7 +543,7 @@ header #logo img:last-child {
     transform: rotate(-345deg);
   }
 }
-header #logo:hover img {
+header #logo:hover #big-gear, header #logo:hover #small-gear {
   -webkit-animation-play-state: running;
   -moz-animation-play-state: running;
   animation-play-state: running;
@@ -546,6 +551,7 @@ header #logo:hover img {
 
 main {
   background-color: #F2F2F2;
+  box-shadow: 0 2px 3px 0 #333;
   display: block;
   padding: 20px;
 }
@@ -554,6 +560,7 @@ main a:hover {
 }
 main nav {
   background-color: #CFD8DC;
+  box-shadow: 0 3px 2px #C8C8C8;
   padding: 5px;
   margin: 10px 0;
 }
@@ -584,7 +591,7 @@ footer #kozea-logo {
 
 article {
   background-color: #FFFFFF;
-  box-shadow: 0 5px 5px #CFD8DC;
+  box-shadow: 0 3px 2px #CFD8DC;
   padding: 10px;
   margin: 0 0 10px 0;
 }
@@ -594,6 +601,7 @@ article ul li {
 }
 
 .user-avatar {
+  vertical-align: middle;
   width: 50px;
 }
 

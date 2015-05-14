@@ -6,11 +6,13 @@
     <input type="date" value="{{ stop }}" name="stop">
     <button type="submit">submit</button>
 </from>
+<nav>
 <ul>
   {% for user in users | sort %}
     <li><a href="#{{ user }}">{{ user }}</a></li>
   {% endfor %}
 </ul>
+</nav>
 {% endblock sidenav %}
 
 {% block main %}

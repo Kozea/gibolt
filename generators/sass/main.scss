@@ -1,14 +1,23 @@
 @import "bourbon";
 @import "reset";
 @import "colors";
+@import url(http://fonts.googleapis.com/css?family=Courgette);
+@import url(http://fonts.googleapis.com/css?family=Roboto);
 
-$shadow: 0 5px 5px $light-primary-color;
+$shadow: 0 3px 2px $light-primary-color;
+$headings-font: Courgette, sans-serif;
+$text-font: Roboto, serif;
 
 // Default HTML
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $headings-font;
+}
 
 body {
     background-color: $dark-primary-color;
     color: $primary-text-color;
+    font-family: $text-font;
 
     h1 {
         color: $text-color;
@@ -19,15 +28,29 @@ body {
     }
 }
 
+// Main
 
-// Navigation menu
+header {
+    background-color: $primary-color;
+    display: block;
+    padding: 20px;
+    margin-top: 20px;
+    position:relative;
+    box-shadow: $shadow;
 
-#main-navigation-menu {
+    h1{
+
+    }
+
+
+  // Navigation menu
+
+  #main-navigation-menu {
     display: inline-block;
 
     ul {
       background-color: $dark-primary-color;
-      box-shadow: 0 2px 6px -1px black;
+      box-shadow: 0 2px 6px -1px $black;
       padding: 10px;
       margin: 0;
 
@@ -51,33 +74,19 @@ body {
     }
 }
 
-// Main
-
-header {
-    background-color: $primary-color;
-    display: block;
-    padding: 20px;
-    margin-top: 20px;
-    position:relative;
-    box-shadow: $shadow;
 
     #logo {
         cursor: pointer;
         width: 30%;
 
+        h1 {
+          display: inline-block;
+        }
+
         img {
             margin: 0 10px 0 0;
-            vertical-align: middle;
 
-            &#small-gear {
-                position: relative;
-                vertical-align: middle;
-                top: 15px;
-                left: -24px;
-                @include transform(rotate(15deg));
-            }
-
-            &:first-child {
+            &#big-gear {
                 @include keyframes(rotate) {
                     from {
                         @include transform(rotate(0deg));
@@ -89,8 +98,13 @@ header {
                 @include animation(rotate 3s linear infinite);
                 @include animation-play-state(paused);
             }
-            &:last-child {
-                @include keyframes(rotate-counter) {
+
+            &#small-gear {
+                position: relative;
+                top: 7px;
+                left: -20px;
+                @include transform(rotate(15deg));
+                                @include keyframes(rotate-counter) {
                     from {
                         @include transform(rotate(15deg));
                     }
@@ -103,9 +117,9 @@ header {
             }
         }
 
-        &:hover {
-            img {
-                @include animation-play-state(running);
+        &:hover{
+          #big-gear, #small-gear {
+            @include animation-play-state(running);
             }
         }
     }
@@ -113,6 +127,7 @@ header {
 
 main {
     background-color: $white;
+    box-shadow: 0 2px 3px 0 $black;
     display: block;
     padding: 20px;
 
@@ -124,6 +139,7 @@ main {
 
     nav {
       background-color: $light-primary-color;
+      box-shadow: 0 3px 2px $light-grey;
       padding: 5px;
       margin: 10px 0;
 
@@ -148,6 +164,7 @@ main {
 }
 
 footer {
+
     a {
         color: $text-color;
     }
@@ -176,7 +193,8 @@ article {
 // OTHER
 
 .user-avatar {
-    width: 50px;
+  vertical-align: middle;
+  width: 50px;
 }
 
 .issues-label {
