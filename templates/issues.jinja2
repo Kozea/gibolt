@@ -107,6 +107,7 @@
 </nav>
 {% endblock sidenav %}
 {% block main %}
+  <article>
   {% if groupby %}
     <h2>
       {% if noned_issues %}
@@ -135,8 +136,11 @@
     <h2>{{ issues | length }} Issues</h2>
     {{ present_issues(issues) }}
   {% endif %}
+  </article>
+  
   <h2>Progress</h2>
     <progress value="{{ closed  / ((closed + opened) or 999999)}}">
-       {{ closed }} / {{ closed + opened }}">
+       {{ closed }} / {{ closed + opened }}>
     </progress>
+
 {% endblock main %}

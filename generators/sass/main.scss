@@ -2,6 +2,8 @@
 @import "reset";
 @import "colors";
 
+$shadow: 0 5px 5px $light-primary-color;
+
 // Default HTML
 
 body {
@@ -21,13 +23,14 @@ body {
 // Navigation menu
 
 #main-navigation-menu {
-    display: block;
-    width: 100%;
+    display: inline-block;
 
     ul {
-        padding: 0;
-        margin: 0;
-        
+      background-color: $dark-primary-color;
+      box-shadow: 0 2px 6px -1px black;
+      padding: 10px;
+      margin: 0;
+
         li {
             display: inline-block;
             margin: 0 10px;
@@ -35,7 +38,7 @@ body {
             &:first-child{
                 margin: 0;
             }
-            
+
             a {
                 display: block;
                 color: $text-color;
@@ -56,12 +59,12 @@ header {
     padding: 20px;
     margin-top: 20px;
     position:relative;
-    box-shadow: 0 5px 5px $light-primary-color;
+    box-shadow: $shadow;
 
     #logo {
         cursor: pointer;
         width: 30%;
-        
+
         img {
             margin: 0 10px 0 0;
             vertical-align: middle;
@@ -99,7 +102,7 @@ header {
                 @include animation-play-state(paused);
             }
         }
-        
+
         &:hover {
             img {
                 @include animation-play-state(running);
@@ -112,6 +115,36 @@ main {
     background-color: $white;
     display: block;
     padding: 20px;
+
+    a {
+      &:hover {
+        color: $accent-color;
+      }
+    }
+
+    nav {
+      background-color: $light-primary-color;
+      padding: 5px;
+      margin: 10px 0;
+
+      ul{
+        margin: 0;
+        padding: 0;
+        }
+
+      li{
+        background-color: $primary-color;
+        box-shadow: 0 3px 2px -1px $dark-primary-color;
+        display: inline-block;
+        margin: 5px;
+        padding: 5px;
+        }
+
+      a{
+        color: $text-color; 
+        display: inline-block;
+      }
+    }
 }
 
 footer {
@@ -126,6 +159,29 @@ footer {
     }
 }
 
+article {
+  background-color: $text-color;
+  box-shadow: $shadow;
+  padding: 10px;
+  margin: 0 0 10px 0;
+
+  ul {
+    li {
+      display: block;
+      margin: 10px 0;
+    }
+  }
+}
+
+// OTHER
+
 .user-avatar {
     width: 50px;
+}
+
+.issues-label {
+  background-color: $dark-primary-color;
+  border-radius: 5px;
+  border: 1px solid $primary-color;
+  padding: 3px;
 }
