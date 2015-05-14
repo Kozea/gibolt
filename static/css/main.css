@@ -438,10 +438,109 @@ header {
   position: relative;
   box-shadow: 0 5px 5px #CFD8DC;
 }
+header #logo {
+  cursor: pointer;
+  width: 30%;
+}
 header #logo img {
   margin: 0 10px 0 0;
   vertical-align: middle;
-  width: 50px;
+}
+header #logo img#small-gear {
+  position: relative;
+  vertical-align: middle;
+  top: 15px;
+  left: -24px;
+  -webkit-transform: rotate(15deg);
+  -moz-transform: rotate(15deg);
+  -ms-transform: rotate(15deg);
+  -o-transform: rotate(15deg);
+  transform: rotate(15deg);
+}
+header #logo img:first-child {
+  -webkit-animation: rotate 3s linear infinite;
+  -moz-animation: rotate 3s linear infinite;
+  animation: rotate 3s linear infinite;
+  -webkit-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  animation-play-state: paused;
+}
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes rotate {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+@keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+header #logo img:last-child {
+  -webkit-animation: rotate-counter 3s linear infinite;
+  -moz-animation: rotate-counter 3s linear infinite;
+  animation: rotate-counter 3s linear infinite;
+  -webkit-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  animation-play-state: paused;
+}
+@-webkit-keyframes rotate-counter {
+  from {
+    -webkit-transform: rotate(15deg);
+  }
+  to {
+    -webkit-transform: rotate(-345deg);
+  }
+}
+@-moz-keyframes rotate-counter {
+  from {
+    -moz-transform: rotate(15deg);
+  }
+  to {
+    -moz-transform: rotate(-345deg);
+  }
+}
+@keyframes rotate-counter {
+  from {
+    -webkit-transform: rotate(15deg);
+    -moz-transform: rotate(15deg);
+    -ms-transform: rotate(15deg);
+    -o-transform: rotate(15deg);
+    transform: rotate(15deg);
+  }
+  to {
+    -webkit-transform: rotate(-345deg);
+    -moz-transform: rotate(-345deg);
+    -ms-transform: rotate(-345deg);
+    -o-transform: rotate(-345deg);
+    transform: rotate(-345deg);
+  }
+}
+header #logo:hover img {
+  -webkit-animation-play-state: running;
+  -moz-animation-play-state: running;
+  animation-play-state: running;
 }
 
 main {

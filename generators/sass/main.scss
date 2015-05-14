@@ -59,12 +59,52 @@ header {
     box-shadow: 0 5px 5px $light-primary-color;
 
     #logo {
+        cursor: pointer;
+        width: 30%;
+        
         img {
             margin: 0 10px 0 0;
             vertical-align: middle;
-            width: 50px;
-        }
 
+            &#small-gear {
+                position: relative;
+                vertical-align: middle;
+                top: 15px;
+                left: -24px;
+                @include transform(rotate(15deg));
+            }
+
+            &:first-child {
+                @include keyframes(rotate) {
+                    from {
+                        @include transform(rotate(0deg));
+                    }
+                    to {
+                        @include transform(rotate(360deg));
+                    }
+                }
+                @include animation(rotate 3s linear infinite);
+                @include animation-play-state(paused);
+            }
+            &:last-child {
+                @include keyframes(rotate-counter) {
+                    from {
+                        @include transform(rotate(15deg));
+                    }
+                    to {
+                        @include transform(rotate(-345deg));
+                    }
+                }
+                @include animation(rotate-counter 3s linear infinite);
+                @include animation-play-state(paused);
+            }
+        }
+        
+        &:hover {
+            img {
+                @include animation-play-state(running);
+            }
+        }
     }
 }
 
