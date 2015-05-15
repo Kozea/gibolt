@@ -189,6 +189,43 @@ article {
   }
 }
 
+// FORMS
+
+
+nav form input {
+  &[type=checkbox], &[type=radio] {
+    display:none;
+    & + label {
+      display:inline-block;
+      background-color:$dark-primary-color;
+      color: $white;
+      padding: 5px;
+      box-shadow: 0 2px 2px $black;
+      &:hover {
+        color: $accent-color;
+        cursor: pointer;
+      }
+    }
+  }
+  &:checked {
+    & + label {
+      border: 2px inset;
+      box-shadow: 0 2px 2px $light-grey;
+      background-color:$light-primary-color;
+      color: $black;
+      &:hover {
+        color: $dark-accent-color;
+      }
+    }
+  }
+  &[type=radio]:checked + label {
+     &:hover {
+       cursor: default;
+       color: $black;
+     }
+  }
+}
+
 // OTHER
 
 .user-avatar {
@@ -201,4 +238,12 @@ article {
   border-radius: 5px;
   border: 1px solid $primary-color;
   padding: 3px;
+}
+
+.open {
+  color: $open-issue;
+}
+
+.closed {
+  color: $close-issue;
 }

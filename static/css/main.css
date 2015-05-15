@@ -604,6 +604,34 @@ article ul li {
   margin: 10px 0;
 }
 
+nav form input[type=checkbox], nav form input[type=radio] {
+  display: none;
+}
+nav form input[type=checkbox] + label, nav form input[type=radio] + label {
+  display: inline-block;
+  background-color: #455A64;
+  color: #F2F2F2;
+  padding: 5px;
+  box-shadow: 0 2px 2px #333;
+}
+nav form input[type=checkbox] + label:hover, nav form input[type=radio] + label:hover {
+  color: #FFC107;
+  cursor: pointer;
+}
+nav form input:checked + label {
+  border: 2px inset;
+  box-shadow: 0 2px 2px #C8C8C8;
+  background-color: #CFD8DC;
+  color: #333;
+}
+nav form input:checked + label:hover {
+  color: #7F6003;
+}
+nav form input[type=radio]:checked + label:hover {
+  cursor: default;
+  color: #333;
+}
+
 .user-avatar {
   vertical-align: middle;
   width: 50px;
@@ -614,6 +642,14 @@ article ul li {
   border-radius: 5px;
   border: 1px solid #607D8B;
   padding: 3px;
+}
+
+.open {
+  color: #1B8B44;
+}
+
+.closed {
+  color: #8B130E;
 }
 
 /*# sourceMappingURL=main.css.map */

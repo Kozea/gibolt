@@ -4,7 +4,7 @@ module.exports = (grunt) ->
     coffee:
       compile:
         files:
-          'static/javascript/main.js': ['generators/coffees/*.coffee']
+          'static/js/main.js': ['generators/coffees/*.coffee']
     sass:
       dist:
         options:

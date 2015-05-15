@@ -1,4 +1,4 @@
 (function() {
-  alert('hello world');
+  document.getElementById("useless-submit").hide();
 
 }).call(this);
