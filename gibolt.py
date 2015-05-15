@@ -39,24 +39,24 @@ GitHub.request = patched_github_request
 app = Flask(__name__)
 
 
-# order by len(list)
 @app.template_filter('sort_by_len')
-def sort_by_list_number(values, reverse=False):
+def sort_by_len(values, reverse=False):
+    """Sort the ``values`` list by the length of its second item.```"""
     return sorted(values, key=lambda item: len(item[1]), reverse=reverse)
 
 
-# order project by closed ticket
 @app.template_filter('format_date')
 def format_date_filter(isodate, dateformat):
+    """Transform an ISO-date to a string following ``dateformat``."""
     numbers = [int(number) for number in isodate.split('-')]
     while len(numbers) < 3:
         numbers.append(1)
     return date(*numbers).strftime(dateformat)
 
 
-# split a full name after a / to display only the projet name
 @app.template_filter('short_name')
 def short_name(full_name):
+    """Split a full name after a slash to display only the projet name."""
     return full_name.split('/')[1]
 
 
@@ -68,6 +68,18 @@ def nice_name(name):
             'state': 'State',
             'repository.full_name': 'Project'}
     return names.get(name, name)
+
+
+@app.template_filter('text_color')
+def text_color(color):
+    """Return 'black' if the color is light, else 'white'."""
+    red, green, blue = [
+        int(value, base=16) for value in (color[:2], color[2:4], color[4:])]
+    if red + green + blue > 256 * 3 / 2:
+        return 'black'
+    else:
+        return 'white'
+
 
 app.secret_key = 'secret'
 app.config['ORGANISATION'] = 'Kozea'
