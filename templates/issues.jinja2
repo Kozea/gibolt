@@ -8,7 +8,7 @@
       <li class="{{ issue['state'] }}">
         <span class="project">{{ issue.repository.full_name | short_name }}</span>
         {% for l in issue.labels %}
-          <span class="issues-label" style="color: #{{ l.color }};">{{ l.name }}</span>
+          <span class="issues-label" style="background: #{{ l.color }}; color: {{ l.color | text_color }}">{{ l.name }}</span>
         {% endfor %}
         <a href="{{ issue['html_url']}}">#{{ issue.number }}</a> {{ issue['title'] | striptags }}
       </li>

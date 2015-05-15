@@ -638,10 +638,8 @@ nav form input[type=radio]:checked + label:hover {
 }
 
 .issues-label {
-  background-color: #455A64;
   border-radius: 5px;
-  border: 1px solid #607D8B;
-  padding: 3px;
+  padding: 0.25em;
 }
 
 .open {
