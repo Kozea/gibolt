@@ -75,7 +75,7 @@ def text_color(color):
     """Return 'black' if the color is light, else 'white'."""
     red, green, blue = [
         int(value, base=16) for value in (color[:2], color[2:4], color[4:])]
-    if red + green + blue > 256 * 3 / 2:
+    if red * .2989 + green * .5870 + blue * 0.1140 > 128:
         return 'black'
     else:
         return 'white'
