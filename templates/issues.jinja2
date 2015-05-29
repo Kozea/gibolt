@@ -1,128 +1,83 @@
 {% extends '_layout.jinja2' %}
 
-
-{% macro present_issues(issues) -%}
-  {{ issues | length }} issues
+{% macro present_issues(issues) %}
   <ul>
     {% for issue in issues %}
-      <li class="{{ issue['state'] }}">
+      <li class="{{ issue.state }}">
         <span class="project">{{ issue.repository.full_name | short_name }}</span>
-        {% for l in issue.labels %}
-          <span class="issues-label" style="background: #{{ l.color }}; color: {{ l.color | text_color }}">{{ l.name }}</span>
+        {% for label in issue.labels %}
+          <span class="issues-label" style="background: #{{ label.color }}; color: {{ label.color | text_color }}">{{ label.name }}</span>
         {% endfor %}
-        <a href="{{ issue['html_url']}}">#{{ issue.number }}</a> {{ issue['title'] | striptags }}
+        <a href="{{ issue.html_url }}">#{{ issue.number }}</a> {{ issue.title | striptags }}
       </li>
-  {% endfor %}
+    {% endfor %}
   </ul>
-{%- endmacro %}
-
-
-{% macro mk_labeled_input(type, name, value, label) -%}
-  <input type="{{ type }}" name="{{ name }}" id="{{ name }}_{{ value }}" value="{{ value }}"
-    {{'checked="checked"' if value in filters[name]}} onChange="this.form.submit()">
-  <label for="{{ name }}_{{ value }}">{{ label }}</label>
-{%- endmacro %}
-
-
-{% macro mk_option(value, label=None) -%}
-  <option value="{{ value }}"{{ ' selected="selected"' if value == groupby }}>
-  {% if label is none %}
-    {{ value | nice_name }}
-  {% else %}
-    {{ label }}
-  {% endif %}
-  </option>
 {% endmacro %}
 
+{% macro mk_labeled_input(type, name, value, label) %}
+  <input type="{{ type }}" name="{{ name }}" id="{{ name }}_{{ value }}" value="{{ value }}" {{ 'checked' if value in filters[name] }} onChange="this.form.submit()" />
+  <label for="{{ name }}_{{ value }}">{{ label }}</label>
+{% endmacro %}
 
 {% block sidenav %}
-<h2>sprint menu</h2>
-<nav>
-  <ul>
-    <li><a href="{{ url_for("show_sprint_issues") }}">All Sprint Issues</a></li >
-    <li><a href="{{ url_for(
-        "show_issues", filter='all',state='open',labels='sprint',
-        groupby='assignee.login') }}">
-        All sprint Issues grouped by assignee</a></li>
-    <li><a href="{{ url_for(
-        "show_issues", filter='all',state='open',labels='sprint',
-        groupby='milestone.title') }}">
-        All sprint Issues grouped by milestone</a></li>
-    <li><a href="{{ url_for(
-        "show_issues", filter='all',state='open',labels='sprint') }}">
-        Sprint open issue</a></li>
-    <li><a href="{{ url_for(
-        "show_issues", filter='all',state='closed',labels='sprint') }}">
-        Sprint closed issue</a></li>
-    <li><a href="{{ url_for(
-        "show_issues", filter='all',state='all',labels='sprint,feature') }}">
-        Sprint Features</a></li>
-    <li><a href="{{ url_for(
-        "show_issues", filter='all',state='all',labels='sprint,document') }}">
-        Sprint Documents</a></li>
-  </ul>
-  <form action="{{url_for("show_form_query")}}" method="get">
-    <fieldset>
-      <legend>State</legend>
-      {{ mk_labeled_input('radio', 'state', 'open', 'open') }}
-      {{ mk_labeled_input('radio', 'state', 'closed', 'closed') }}
-      {{ mk_labeled_input('radio', 'state', 'all', 'all') }}
-    </fieldset>
-    <fieldset>
-      <legend>Priority</legend>
-        {{ mk_labeled_input('checkbox', 'labels', 'sprint','sprint') }}
+  <nav>
+    <form action="{{ url_for('show_form_query') }}" method="get">
+      <fieldset>
+        <legend>State</legend>
+        {{ mk_labeled_input('radio', 'state', 'open', 'open') }}
+        {{ mk_labeled_input('radio', 'state', 'closed', 'closed') }}
+        {{ mk_labeled_input('radio', 'state', 'all', 'all') }}
+      </fieldset>
+      <fieldset>
+        <legend>Priority</legend>
+        {{ mk_labeled_input('checkbox', 'labels', 'sprint', 'sprint') }}
         {{ mk_labeled_input('checkbox', 'labels', 'must', 'must') }}
         {{ mk_labeled_input('checkbox', 'labels', 'nice', 'nice') }}
         {{ mk_labeled_input('checkbox', 'labels', 'later', 'later') }}
-    </fieldset>
-    <fieldset>
-      <legend>Type</legend>
-        {{ mk_labeled_input('checkbox', 'labels', 'feature','feature') }}
+      </fieldset>
+      <fieldset>
+        <legend>Type</legend>
+        {{ mk_labeled_input('checkbox', 'labels', 'feature', 'feature') }}
         {{ mk_labeled_input('checkbox', 'labels', 'bug', 'bug') }}
         {{ mk_labeled_input('checkbox', 'labels', 'document', 'doc') }}
         {{ mk_labeled_input('checkbox', 'labels', 'design', 'design') }}
         {{ mk_labeled_input('checkbox', 'labels', 'tool', 'tool') }}
         {{ mk_labeled_input('checkbox', 'labels', 'debt', 'debt') }}
-    </fieldset>
-    <fieldset>
-      <legend>group by</legend>
-      <select name="groupby" onChange="this.form.submit()">
-        {{ mk_option('', 'no group') }}
-        {{ mk_option('assignee.login') }}
-        {{ mk_option('milestone.title') }}
-        {{ mk_option('state') }}
-        {{ mk_option('repository.full_name') }}
-      </select>
-    </fieldset>
-    <input type="hidden"  name="filter" value="all">
+      </fieldset>
+      <fieldset>
+        <legend>Group by</legend>
+        <select name="groupby" onChange="this.form.submit()">
+          {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository.full_name') %}
+            <option value="{{ value }}" {{ 'selected' if value == groupby }}>{{ groupers[value] }}</option>
+          {% endfor %}
+        </select>
+      </fieldset>
+      <input type="hidden" name="filter" value="all" />
+      <input type="submit" id="useless-submit" />
+    </form>
 
-
-    <button type="submit" id="useless-submit">submit</button>
-
-  </form>
-  <form method="get" action={{ url_for('show_issues_query') }}>
-    <label>custom query</label>
-    <input value="{{query}}" size="50" type="text" class="text" name="query">
-  </form>
-</nav>
+    <form method="get" action={{ url_for('show_issues_query') }}>
+      <label>Query</label>
+      <input value="{{ query }}" size="50" type="text" class="text" name="query">
+    </form>
+  </nav>
 {% endblock sidenav %}
+
 {% block main %}
-  <article>
+  <h2>
+    {{ issues | length + noned_issues | length }} Issues
+    {% if groupby %}Grouped by {{ groupers[groupby] }}{% endif %}
+  </h2>
+  {{ progress(opened, closed) }}
   {% if groupby %}
-    <h2>
-      {% if noned_issues %}
-        {{ issues | length + noned_issues | length }}
-      {% else %}
-        {{ issues | length }}
-      {% endif %}
-      Issues grouped by {{ groupby | nice_name }}
-    </h2>
     {% for issue in issues | groupby(groupby) | sort_by_len(reverse=True) %}
       <article>
-        <h3>{{ issue.grouper }}</h3>
-        {% if groupby == 'assignee.login' %}
-          <img class="user-avatar" src="{{ issue.list[0].assignee.avatar_url }}" alt="avatar" />
-        {% endif %}
+        <h3>
+          {% if groupby == 'assignee.login' %}
+            <img class="user-avatar" src="{{ issue.list[0].assignee.avatar_url }}" alt="avatar" />
+          {% endif %}
+          {{ issue.grouper }}
+        </h3>
         {{ present_issues(issue.list) }}
       </article>
     {% endfor %}
@@ -133,14 +88,9 @@
       </article>
     {% endif %}
   {% else %}
-    <h2>{{ issues | length }} Issues</h2>
-    {{ present_issues(issues) }}
+    <article>
+      <h3>Overall</h3>
+      {{ present_issues(issues) }}
+    </article>
   {% endif %}
-  </article>
-  
-  <h2>Progress</h2>
-    <progress value="{{ closed  / ((closed + opened) or 999999)}}">
-       {{ closed }} / {{ closed + opened }}>
-    </progress>
-
 {% endblock main %}

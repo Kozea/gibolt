@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from collections import OrderedDict
 from datetime import date, datetime
 from functools import wraps
 
@@ -9,6 +10,14 @@ from flask import (
     Flask, request, session, render_template, redirect, url_for, flash)
 import requests
 from cachecontrol import CacheControl
+
+
+GROUPERS = OrderedDict((
+    ('', ''),
+    ('assignee.login', 'Assignee'),
+    ('milestone.title', 'Milestone'),
+    ('state', 'State'),
+    ('repository.full_name', 'Project')))
 
 
 # monkey patch to manage pagination in github-flask and use cache
@@ -37,6 +46,12 @@ GitHub.request = patched_github_request
 
 
 app = Flask(__name__)
+app.secret_key = 'secret'
+app.config['ORGANISATION'] = 'Kozea'
+app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
+app.config['GITHUB_CLIENT_SECRET'] = 'bcfee82e06c41d22cd324b33a86c1e82a372c403'
+app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
+app.config['TIMEZONE'] = 'Europe/Paris'
 
 
 @app.template_filter('sort_by_len')
@@ -60,16 +75,6 @@ def short_name(full_name):
     return full_name.split('/')[1]
 
 
-@app.template_filter('nice_name')
-def nice_name(name):
-    names = {
-            'assignee.login': 'Assignee',
-            'milestone.title': 'Milestone',
-            'state': 'State',
-            'repository.full_name': 'Project'}
-    return names.get(name, name)
-
-
 @app.template_filter('text_color')
 def text_color(color):
     """Return 'black' if the color is light, else 'white'."""
@@ -81,17 +86,8 @@ def text_color(color):
         return 'white'
 
 
-app.secret_key = 'secret'
-app.config['ORGANISATION'] = 'Kozea'
-app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
-app.config['GITHUB_CLIENT_SECRET'] = 'bcfee82e06c41d22cd324b33a86c1e82a372c403'
-app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
-app.config['TIMEZONE'] = 'Europe/Paris'
-
 github = GitHub(app)
-sess = requests.session()
-cached_sess = CacheControl(sess, cache_etags=False)
-github.session = cached_sess
+github.session = CacheControl(requests.session(), cache_etags=False)
 cache = {'users': {}, 'repos': {}}
 
 
@@ -100,7 +96,7 @@ def date_from_iso(iso_date):
         localzone = pytz.timezone(app.config['TIMEZONE'])
         utczone = pytz.timezone('Etc/UTC')
         absolutedate = utczone.localize(
-                datetime.strptime(iso_date, '%Y-%m-%dT%H:%M:%SZ'))
+            datetime.strptime(iso_date, '%Y-%m-%dT%H:%M:%SZ'))
         localdate = absolutedate.astimezone(localzone)
         return localdate.date()
     return date(*[int(value) for value in iso_date[:10].split('-')])
@@ -187,7 +183,7 @@ def show_sprint_issues():
 @autologin
 def show_issues():
     filters = dict(
-            (key, ','.join(values)) for (key, values) in request.args.lists())
+        (key, ','.join(values)) for (key, values) in request.args.lists())
     groupby = filters.get('groupby')
     if groupby:
         del filters['groupby']
@@ -201,7 +197,7 @@ def show_issues():
         query += "{0}:{1} ".format(key, value)
     end_url = end_url[:-1]
     issues = github.get(url + end_url, all_pages=True)
-    noned_issues = None
+    noned_issues = []
     opened = len([issue for issue in issues if issue['state'] == 'open'])
     closed = len([issue for issue in issues if issue['state'] == 'closed'])
 
@@ -213,7 +209,7 @@ def show_issues():
     return render_template(
         'issues.jinja2', issues=issues, noned_issues=noned_issues,
         opened=opened, closed=closed, query=query, groupby=groupby,
-        filters=filters)
+        filters=filters, groupers=GROUPERS)
 
 
 @app.route('/assigned/<start>/<stop>')
@@ -221,23 +217,16 @@ def show_issues():
 @autologin
 def show_assigned_issues(start=None, stop=None):
     today = date.today()
-    if start is None:
-        start = request.args.get('start')
-    if start is None:
-        start = date(today.year, today.month, 1)
-    else:
-        start = date_from_iso(start)
 
-    if stop is None:
-        stop = request.args.get('stop')
-    if stop is None:
-        stop = today
-    else:
-        stop = date_from_iso(stop)
+    start = start or request.args.get('start')
+    start = date_from_iso(start) if start else date(today.year, today.month, 1)
+    stop = stop or request.args.get('stop')
+    stop = date_from_iso(stop) if stop else today
 
-    since = start.strftime("%Y-%m-%dT00:00:00Z")
-    url = 'orgs/{0}/issues?per_page=100&state=closed&filter=all&since={1}'\
-        .format(app.config['ORGANISATION'], since)
+    since = start.strftime('%Y-%m-%dT00:00:00Z')
+    url = (
+        'orgs/{0}/issues?per_page=100&state=closed&filter=all&since={1}'
+        .format(app.config['ORGANISATION'], since))
     issues = github.get(url, all_pages=True)
     ok_issues = []
     assignees = []
@@ -247,9 +236,9 @@ def show_assigned_issues(start=None, stop=None):
             issue['closed_month'] = issue['closed_at'][:7]
             ok_issues.append(issue)
             assignees.append(issue['assignee']['login'])
-    users = set(assignees)
-    return render_template('assigned_issues.jinja2', issues=ok_issues,
-                           start=start, stop=stop, users=users)
+    return render_template(
+        'assigned_issues.jinja2', issues=ok_issues, start=start, stop=stop,
+        users=set(assignees))
 
 
 @app.route('/issues/custom_query')
@@ -273,30 +262,18 @@ def show_form_query():
     return redirect(url_for('show_issues', **request.args))
 
 
-@app.route('/stones/<display>')
+@app.route('/stones')
 @autologin
-def show_now(display='year'):
+def show_now():
     today = date.today()
-    start = date(today.year, today.month, 1)
-    stop = start + relativedelta(months=(12 if display == 'year' else 1))
-    return redirect(url_for('show', display=display, start=start, stop=stop))
+    start = date(today.year, today.month, 1) + relativedelta(months=-1)
+    stop = start + relativedelta(months=12)
+    return redirect(url_for('show', start=start, stop=stop))
 
 
-@app.route('/stones/month/<month_start>')
+@app.route('/stones/<start>/<stop>')
 @autologin
-def show_month(month_start):
-    stop = date_from_iso(month_start) + relativedelta(months=1)
-    return redirect(url_for(
-        'show', display='month', start=month_start, stop=stop))
-
-
-@app.route('/stones/<display>/<start>/<stop>')
-@autologin
-def show(display, start, stop):
-    display_step = (
-        relativedelta(months=1) if display == 'year'
-        else relativedelta(days=1))
-
+def show(start, stop):
     repos_name = cache['users'].get(session['user'])
     milestones = []
     for name in repos_name:
@@ -304,10 +281,10 @@ def show(display, start, stop):
             refresh_repo_milestones(name)
         milestones += cache.get('repos').get(name).get('milestones')
     stones = get_stones_by_step(
-        milestones, date_from_iso(start), date_from_iso(stop), display_step)
+        milestones, date_from_iso(start), date_from_iso(stop),
+        relativedelta(months=1))
     return render_template(
-        '{0}.jinja2'.format(display), start=date_from_iso(start),
-        stones_by_step=stones)
+        'stones.jinja2', start=date_from_iso(start), stones_by_step=stones)
 
 
 def get_stones_by_step(all_stones, start, end, step):

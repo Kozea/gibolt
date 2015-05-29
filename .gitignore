@@ -1,3 +1,5 @@
 *.swp
 *~
 .web_cache
+node_modules
+.sass-cache
