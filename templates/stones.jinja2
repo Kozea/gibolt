@@ -8,7 +8,7 @@
       {% if stones %}
         <ul>
           {% for stone in stones | sort(attribute='due_on') %}
-            <li>
+            <li class="{{ stone.state }}">
 			  {{ stone.due_on.strftime('%d') }} {{ stone.repo }}
               <a href="{{ stone.html_url }}">{{ stone.title }}</a>
               {{ progress(stone.open_issues, stone.closed_issues) }}
