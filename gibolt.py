@@ -197,6 +197,11 @@ def show_issues():
         query += "{0}:{1} ".format(key, value)
     end_url = end_url[:-1]
     issues = github.get(url + end_url, all_pages=True)
+
+    for issue in issues:
+        issue['opened'] = issue.get('body', '').count('- [ ]')
+        issue['closed'] = issue.get('body', '').count('- [x]')
+
     noned_issues = []
     opened = len([issue for issue in issues if issue['state'] == 'open'])
     closed = len([issue for issue in issues if issue['state'] == 'closed'])

@@ -9,6 +9,7 @@
           <span class="issues-label" style="background: #{{ label.color }}; color: {{ label.color | text_color }}">{{ label.name }}</span>
         {% endfor %}
         <a href="{{ issue.html_url }}">#{{ issue.number }}</a> {{ issue.title | striptags }}
+        {{ progress(issue.opened, issue.closed) }}
       </li>
     {% endfor %}
   </ul>
