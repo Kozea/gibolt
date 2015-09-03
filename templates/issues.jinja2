@@ -1,9 +1,12 @@
 {% extends '_layout.jinja2' %}
 
-{% macro present_issues(issues) %}
+{% macro present_issues(issues, with_avatar=true) %}
   <ul>
     {% for issue in issues %}
       <li class="{{ issue.state }}">
+        {% if with_avatar %}
+          <img class="mini-user-avatar" src="{{ issue.assignee.avatar_url }}" alt="avatar" title="{{ issue.assignee.login }}"/>
+        {% endif %}
         <span class="project">{{ issue.repository.full_name | short_name }}</span>
         {% for label in issue.labels %}
           <span class="issues-label" style="background: #{{ label.color }}; color: {{ label.color | text_color }}">{{ label.name }}</span>
@@ -67,12 +70,16 @@
 {% endblock sidenav %}
 
 {% block main %}
+  {% set with_avatar = true %}
   <h2>
     {{ issues | length + noned_issues | length }} Issues
     {% if groupby %}Grouped by {{ groupers[groupby] }}{% endif %}
   </h2>
   {{ progress(opened, closed) }}
   {% if groupby %}
+    {% if groupby == 'assignee.login' %}
+      {% set with_avatar = false %}
+    {% endif %}
     {% for issue in issues | groupby(groupby) | sort_by_len(reverse=True) %}
       <article>
         <h3>
@@ -81,19 +88,19 @@
           {% endif %}
           {{ issue.grouper }}
         </h3>
-        {{ present_issues(issue.list) }}
+        {{ present_issues(issue.list, with_avatar) }}
       </article>
     {% endfor %}
     {% if noned_issues %}
       <article>
         <h3>None</h3>
-        {{ present_issues(noned_issues) }}
+        {{ present_issues(noned_issues, with_avatar) }}
       </article>
     {% endif %}
   {% else %}
     <article>
       <h3>Overall</h3>
-      {{ present_issues(issues) }}
+      {{ present_issues(issues, with_avatar) }}
     </article>
   {% endif %}
 {% endblock main %}
