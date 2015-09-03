@@ -150,6 +150,7 @@ def get_allowed_repos():
 @app.route('/refresh/all')
 @autologin
 def refresh_all():
+    cache['users'][session['user']] = get_allowed_repos()
     repo_names = cache.get('users').get(session['user'])
     for repo_name in repo_names:
         refresh_repo_milestones(repo_name)
