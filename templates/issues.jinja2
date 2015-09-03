@@ -72,7 +72,13 @@
 {% block main %}
   {% set with_avatar = true %}
   <h2>
-    {{ issues | length + noned_issues | length }} Issues
+    {% set nb_issues = issues | length + noned_issues | length %}
+    {{ nb_issues }}
+    {% if nb_issues == 1%}
+      Issue
+    {% else %}
+      Issues
+    {% endif %}
     {% if groupby %}Grouped by {{ groupers[groupby] }}{% endif %}
   </h2>
   {{ progress(opened, closed) }}
