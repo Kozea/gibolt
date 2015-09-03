@@ -637,6 +637,11 @@ nav form input[type=radio]:checked + label:hover {
   width: 50px;
 }
 
+.mini-user-avatar {
+  vertical-align: middle;
+  width: 25px;
+}
+
 .issues-label {
   border-radius: 5px;
   padding: 0.25em;
