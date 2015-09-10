@@ -5,7 +5,7 @@
     {% for issue in issues %}
       <li class="{{ issue.state }}">
         {% if with_avatar %}
-          <img class="mini-user-avatar" src="{{ issue.assignee.avatar_url }}" alt="avatar" title="{{ issue.assignee.login }}"/>
+          <img class="mini-user-avatar" src="{{ issue.assignee.avatar_url or url_for('static', filename='images/question-mark.png')}}" alt="avatar" title="{{ issue.assignee.login or 'not assigned' }}"/>
         {% endif %}
         <span class="project">{{ issue.repository.full_name | short_name }}</span>
         {% for label in issue.labels %}
