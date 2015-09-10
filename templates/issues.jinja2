@@ -14,7 +14,7 @@
             <input type="checkbox" name="issues" value="{{issue.repository.full_name | short_name }}-{{ issue.number }}-{{ labels }}"/>
         {% endif %}
         {% if with_avatar %}
-          <img class="mini-user-avatar" src="{{ issue.assignee.avatar_url }}" alt="avatar" title="{{ issue.assignee.login }}"/>
+          <img class="mini-user-avatar" src="{{ issue.assignee.avatar_url or url_for('static', filename='images/question-mark.png')}}" alt="avatar" title="{{ issue.assignee.login or 'not assigned' }}"/>
         {% endif %}
         <span class="project">{{ issue.repository.full_name | short_name }}</span>
         {% for label in issue.labels %}
@@ -113,7 +113,14 @@
     {% endfor %}
     {% if noned_issues %}
       <article>
-        <h3>None</h3>
+        <h3>
+          {% if groupby == 'assignee.login' %}
+            <img class="user-avatar" src="{{ url_for('static', filename="images/question-mark.png") }}" alt="avatar" />
+            Unassigned
+          {% else %}
+            None
+          {% endif %}
+        </h3>
         {{ present_issues(noned_issues, with_avatar) }}
       </article>
     {% endif %}

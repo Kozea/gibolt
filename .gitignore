@@ -3,5 +3,3 @@
 .web_cache
 node_modules
 .sass-cache
-static/css/main.css
-static/css/main.css.map
