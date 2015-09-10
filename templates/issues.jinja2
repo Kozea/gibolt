@@ -1,9 +1,18 @@
 {% extends '_layout.jinja2' %}
 
-{% macro present_issues(issues, with_avatar=true) %}
+{% macro present_issues(issues, with_avatar=true, with_box=true) %}
   <ul>
     {% for issue in issues %}
       <li class="{{ issue.state }}">
+        {% if with_box %}
+          {% set labels =  [] %}
+          {% for label in issue.labels %}
+            {% set joinedlabels = joinedlabels + label.name %}
+          {% endfor %}
+            {{ joinedlabels }}
+          <label>
+            <input type="checkbox" name="issues" value="{{issue.repository.full_name | short_name }}-{{ issue.number }}-{{ labels }}"/>
+        {% endif %}
         {% if with_avatar %}
           <img class="mini-user-avatar" src="{{ issue.assignee.avatar_url }}" alt="avatar" title="{{ issue.assignee.login }}"/>
         {% endif %}
@@ -13,6 +22,9 @@
         {% endfor %}
         <a href="{{ issue.html_url }}">#{{ issue.number }}</a> {{ issue.title | striptags }}
         {{ progress(issue.opened, issue.closed) }}
+        {% if with_box %}
+          </label>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
@@ -82,6 +94,8 @@
     {% if groupby %}Grouped by {{ groupers[groupby] }}{% endif %}
   </h2>
   {{ progress(opened, closed) }}
+  <form method="post" action="{{ url_for('apply_labels')}} ">
+    <input type="hidden" name="query" value="{{ query }}"/>
   {% if groupby %}
     {% if groupby == 'assignee.login' %}
       {% set with_avatar = false %}
@@ -109,4 +123,6 @@
       {{ present_issues(issues, with_avatar) }}
     </article>
   {% endif %}
+  <button type="submit" title="remove next label and apply sprint label">next to sprint</button>
+  </form>
 {% endblock main %}

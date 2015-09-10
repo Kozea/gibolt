@@ -218,6 +218,15 @@ def show_issues():
         filters=filters, groupers=GROUPERS)
 
 
+@app.route('/apply_labels', methods=["POST"])
+@autologin
+def apply_labels():
+    for issue_id in request.form.getlist('issues'):
+        print(issue_id)
+    return redirect(url_for('show_issues_query',
+                            query=request.form.get('query')))
+
+
 @app.route('/assigned/<start>/<stop>')
 @app.route('/assigned')
 @autologin
@@ -291,6 +300,12 @@ def show(start, stop):
         relativedelta(months=1))
     return render_template(
         'stones.jinja2', start=date_from_iso(start), stones_by_step=stones)
+
+
+@app.route('/sprint/next_to_sprint')
+@autologin
+def next_to_sprint():
+    pass
 
 
 def get_stones_by_step(all_stones, start, end, step):
