@@ -99,7 +99,14 @@
     {% endfor %}
     {% if noned_issues %}
       <article>
-        <h3>None</h3>
+        <h3>
+          {% if groupby == 'assignee.login' %}
+            <img class="user-avatar" src="{{ url_for('static', filename="images/question-mark.png") }}" alt="avatar" />
+            Unassigned
+          {% else %}
+            None
+          {% endif %}
+        </h3>
         {{ present_issues(noned_issues, with_avatar) }}
       </article>
     {% endif %}
