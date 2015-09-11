@@ -1,12 +1,12 @@
 {% extends '_layout.jinja2' %}
 
-{% macro present_issues(issues, with_avatar=true, with_box=true) %}
+{% macro present_issues(issues, with_avatar=true, with_box=true, grouper=none) %}
   <ul>
     {% for issue in issues %}
       <li class="{{ issue.state }}">
         {% if with_box %}
           <label>
-            <input class="issues" type="checkbox" name="issues" value="{{issue.repository.full_name | short_name }}${{ issue.number }}$
+            <input class="issues {{ grouper }}" type="checkbox" name="issues" value="{{issue.repository.full_name | short_name }}${{ issue.number }}$
             {%- for label in issue.labels -%}
               {{ label.name }}
               {%-if not loop.last -%},{%- endif -%}
@@ -82,6 +82,7 @@
 
 {% block main %}
   {% set with_avatar = true %}
+  <form method="post" action="{{ url_for('apply_labels')}} ">
   <h2>
     {% set nb_issues = issues | length + noned_issues | length %}
     {{ nb_issues }}
@@ -91,11 +92,10 @@
       Issues
     {% endif %}
     {% if groupby %}Grouped by {{ groupers[groupby] }}{% endif %}
+    <input type="checkbox" onclick="toggle(this, 'issues')"/>
   </h2>
   {{ progress(opened, closed) }}
-  <form method="post" action="{{ url_for('apply_labels')}} ">
     <input type="hidden" name="query" value="{{ query }}"/>
-    <input type="checkbox" id="chk_all"/>
   {% if groupby %}
     {% if groupby == 'assignee.login' %}
       {% set with_avatar = false %}
@@ -107,8 +107,9 @@
             <img class="user-avatar" src="{{ issue.list[0].assignee.avatar_url }}" alt="avatar" />
           {% endif %}
           {{ issue.grouper }}
+          <input type="checkbox" class="issues" onclick="toggle(this, '{{issue.grouper}}')"/>
         </h3>
-        {{ present_issues(issue.list, with_avatar) }}
+        {{ present_issues(issue.list, with_avatar, grouper=issue.grouper) }}
       </article>
     {% endfor %}
     {% if noned_issues %}
@@ -119,15 +120,19 @@
             Unassigned
           {% else %}
             None
+          <input type="checkbox" class="issues" onclick="toggle(this, 'None')"/>
           {% endif %}
         </h3>
-        {{ present_issues(noned_issues, with_avatar) }}
+        {{ present_issues(noned_issues, with_avatar, grouper='None') }}
       </article>
     {% endif %}
   {% else %}
     <article>
-      <h3>Overall</h3>
-      {{ present_issues(issues, with_avatar) }}
+      <h3>
+        Overall
+        <input type="checkbox" class="issues" onclick="toggle(this, 'Overall')"/>
+      </h3>
+      {{ present_issues(issues, with_avatar, grouper='Overall') }}
     </article>
   {% endif %}
   <button name="next_to_sprint" type="submit" title="remove next label and apply sprint label">next to sprint</button>
