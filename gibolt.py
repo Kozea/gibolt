@@ -2,10 +2,11 @@
 from collections import OrderedDict
 from datetime import date, datetime
 from functools import wraps
+import json
 
 import pytz
 from dateutil.relativedelta import relativedelta
-from flask.ext.github import GitHub, GitHubError
+from flask.ext.github import GitHub
 from flask import (
     Flask, request, session, render_template, redirect, url_for, flash)
 import requests
@@ -18,31 +19,6 @@ GROUPERS = OrderedDict((
     ('milestone.title', 'Milestone'),
     ('state', 'State'),
     ('repository.full_name', 'Project')))
-
-
-# monkey patch to manage pagination in github-flask and use cache
-def patched_github_request(self, method, resource, all_pages=False, **kwargs):
-    response = self.raw_request(method, resource, **kwargs)
-    status_code = str(response.status_code)
-    if not status_code.startswith('2'):
-        raise GitHubError(response)
-    if response.headers['Content-Type'].startswith('application/json'):
-        result = response.json()
-        while response.links.get('next') and all_pages:
-            response = self.session.request(
-                    method, response.links['next']['url'], **kwargs)
-            if not status_code.startswith('2'):
-                raise GitHubError(response)
-            if response.headers['Content-Type'].startswith('application/json'):
-                result += response.json()
-            else:
-                raise GitHubError(response)
-        return result
-    else:
-        return response
-
-
-GitHub.request = patched_github_request
 
 
 app = Flask(__name__)
@@ -222,7 +198,26 @@ def show_issues():
 @autologin
 def apply_labels():
     for issue_id in request.form.getlist('issues'):
-        print(issue_id)
+        repo, number, labels = issue_id.split('$')
+        labels = labels.split(',')
+        if 'next_to_sprint' in request.form:
+            if 'next' in labels:
+                labels.remove('next')
+            if 'sprint' not in labels:
+                labels.append('sprint')
+        elif 'delete_sprint' in request.form:
+            if 'sprint' in labels:
+                labels.remove('sprint')
+        elif 'add_next' in request.form:
+            if 'next' not in labels:
+                labels.append('next')
+
+        data = json.dumps({'labels': labels})
+        res = github.patch(
+            'repos/{0}/{1}/issues/{2}'.format(
+                app.config['ORGANISATION'], repo, number),
+            data=data)
+        print(res)
     return redirect(url_for('show_issues_query',
                             query=request.form.get('query')))
 
