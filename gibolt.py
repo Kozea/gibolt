@@ -227,8 +227,8 @@ def apply_labels():
         if 'next_to_sprint' in request.form:
             if 'next' in labels:
                 labels.remove('next')
-            if 'sprint' not in labels:
-                labels.append('sprint')
+                if 'sprint' not in labels:
+                    labels.append('sprint')
         elif 'delete_sprint' in request.form:
             if 'sprint' in labels:
                 labels.remove('sprint')
