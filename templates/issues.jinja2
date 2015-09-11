@@ -6,7 +6,7 @@
       <li class="{{ issue.state }}">
         {% if with_box %}
           <label>
-            <input type="checkbox" name="issues" value="{{issue.repository.full_name | short_name }}${{ issue.number }}$
+            <input class="issues" type="checkbox" name="issues" value="{{issue.repository.full_name | short_name }}${{ issue.number }}$
             {%- for label in issue.labels -%}
               {{ label.name }}
               {%-if not loop.last -%},{%- endif -%}
@@ -95,6 +95,7 @@
   {{ progress(opened, closed) }}
   <form method="post" action="{{ url_for('apply_labels')}} ">
     <input type="hidden" name="query" value="{{ query }}"/>
+    <input type="checkbox" id="chk_all"/>
   {% if groupby %}
     {% if groupby == 'assignee.login' %}
       {% set with_avatar = false %}
