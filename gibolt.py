@@ -237,11 +237,13 @@ def apply_labels():
                 labels.append('next')
 
         data = json.dumps({'labels': labels})
-        res = github.patch(
-            'repos/{0}/{1}/issues/{2}'.format(
-                app.config['ORGANISATION'], repo, number),
-            data=data)
-        print(res)
+        try:
+            github.patch(
+                'repos/{0}/{1}/issues/{2}'.format(
+                    app.config['ORGANISATION'], repo, number),
+                data=data)
+        except GitHubError:
+            flash("Unable to change issue {} of {}".format(number, repo))
     return redirect(url_for('show_issues_query',
                             query=request.form.get('query')))
 
