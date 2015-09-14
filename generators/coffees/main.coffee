@@ -4,45 +4,44 @@ root.toggle = (oInput, input_class)->
   aInputs = document.getElementsByClassName(input_class)
   for input in aInputs
     input.checked = oInput.checked
+  cousins = document.getElementsByClassName('issues')
+  gaia = document.getElementById('gaia')
+  setState(cousins, gaia)
 
 root.toggleparent = (oInput, parent_class)->
   parents = document.getElementsByClassName(parent_class + ' parent')
   brothers = document.getElementsByClassName(oInput.className)
-  check = 0
-  uncheck = 0
-  for brother in brothers
-    if brother.className.indexOf('parent') == -1
-      if brother.checked
-        check += 1
-      else
-        uncheck += 1
   for parent in parents
-    if check == 0
-      parent.checked = false
-      parent.indeterminate = false
-    else if uncheck == 0
-      parent.checked = true
-      parent.indeterminate = false
-    else
-      parent.indeterminate = true
+    setState(brothers, parent)
+
   cousins = document.getElementsByClassName('issues')
-  check = 0
-  uncheck = 0
-  for cousin in cousins
-    if cousin.className.indexOf('parent') == -1
-      if cousin.checked
-        check += 1
-      else
-        uncheck += 1
   gaia = document.getElementById('gaia')
-  if check == 0
-    gaia.checked = false
-    gaia.indeterminate = false
-  else if uncheck == 0
-    gaia.checked = true
-    gaia.indeterminate = false
-  else
-    gaia.indeterminate = true
+  setState(cousins, gaia)
+
+
+
+setState = (boxes, parent)->
+  state = 'none'
+  for box in boxes
+    if box.className.indexOf('parent') == -1
+      if box.checked
+        if state == 'unchecked'
+          parent.indeterminate = true
+          return 'indeterminate'
+        else
+          parent.checked = true
+          parent.indeterminate = false
+          state = 'checked'
+      else
+        if state == 'checked'
+          parent.indeterminate = true
+          return 'indeterminate'
+        else
+          parent.checked = false
+          parent.indeterminate = false
+          state = 'unchecked'
+  return state
+
 
 document.addEventListener 'DOMContentLoaded', () ->
   document.getElementById("useless-submit").hidden = true
