@@ -105,9 +105,11 @@
         <h3>
           {% if groupby == 'assignee.login' %}
             <img class="user-avatar" src="{{ issue.list[0].assignee.avatar_url }}" alt="avatar" />
+          {% elif groupby == 'milestone.title' %}
+            {{ issue.list[0].repository.full_name | short_name }} -
           {% endif %}
           {{ issue.grouper }}
-          <input type="checkbox" class="issues parent {{issue.grouper}}" onclick="toggle(this, '{{issue.grouper}}')"/>
+          <input type="checkbox" class="issues parent {{ issue.grouper }}" onclick="toggle(this, '{{ issue.grouper }}')"/>
         </h3>
         {{ present_issues(issue.list, with_avatar, grouper=issue.grouper) }}
       </article>
