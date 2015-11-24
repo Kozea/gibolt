@@ -3,7 +3,7 @@
 {% macro present_issues(issues, with_avatar=true, with_box=true, grouper=none) %}
   <ul>
     {% for issue in issues %}
-      <li class="{{ issue.state }}">
+    <li class="{{ issue.state }}{%- if issue.pull_request %} pull-request{%- endif -%}">
         {% if with_box %}
           <label>
             <input class="issues {{ grouper }}" type="checkbox" name="issues" onclick="toggleparent(this, '{{ grouper }}')" value="{{issue.repository.full_name | short_name }}${{ issue.number }}$

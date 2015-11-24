@@ -250,3 +250,9 @@ nav form input {
 .closed {
   color: $close-issue;
 }
+.pull-request::before {
+  margin-left: -15px;
+  content: "PR";
+  vertical-align: super;
+  font-size: 0.6em;
+}

@@ -655,4 +655,11 @@ nav form input[type=radio]:checked + label:hover {
   color: #8B130E;
 }
 
+.pull-request::before {
+  margin-left: -15px;
+  content: "PR";
+  vertical-align: super;
+  font-size: 0.6em;
+}
+
 /*# sourceMappingURL=main.css.map */
