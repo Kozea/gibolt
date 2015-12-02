@@ -67,58 +67,7 @@ header {
             }
         }
     }
-}
-
-
-    #logo {
-        cursor: pointer;
-        width: 30%;
-
-        h1 {
-          display: inline-block;
-          font-size: 33pt;
-        }
-
-        img {
-            margin: 0 10px 0 0;
-
-            &#big-gear {
-                @include keyframes(rotate) {
-                    from {
-                        @include transform(rotate(0deg));
-                    }
-                    to {
-                        @include transform(rotate(360deg));
-                    }
-                }
-                @include animation(rotate 3s linear infinite);
-                @include animation-play-state(paused);
-            }
-
-            &#small-gear {
-                position: relative;
-                top: 7px;
-                left: -20px;
-                @include transform(rotate(15deg));
-                                @include keyframes(rotate-counter) {
-                    from {
-                        @include transform(rotate(15deg));
-                    }
-                    to {
-                        @include transform(rotate(-345deg));
-                    }
-                }
-                @include animation(rotate-counter 3s linear infinite);
-                @include animation-play-state(paused);
-            }
-        }
-
-        &:hover{
-          #big-gear, #small-gear {
-            @include animation-play-state(running);
-            }
-        }
-    }
+  }
 }
 
 main {
@@ -251,8 +200,9 @@ nav form input {
   color: $close-issue;
 }
 .pull-request::before {
-  margin-left: -15px;
   content: "PR";
-  vertical-align: super;
-  font-size: 0.6em;
+  margin-left: -3em;
+  position:absolute;
+  text-align: right;
+  width: 2em;
 }

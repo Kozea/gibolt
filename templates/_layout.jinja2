@@ -18,13 +18,9 @@
   <body>
     <a name="top"></a>
     <header>
-      <div id="logo">
-        <img id="big-gear" src="{{ url_for('static', filename='images/gear.png')}}" alt='logo' />
-        <img id="small-gear" src="{{ url_for('static', filename='images/gear42.png')}}" alt='logo' />
-        <h1 id="project-title">
-          Gibolt
-        </h1>
-      </div>
+      <h1 id="project-title">
+        Gibolt
+      </h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% for category, message in messages %}
         <aside class="flash {{ category }}">
