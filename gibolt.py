@@ -126,7 +126,7 @@ def token_getter():
 @app.route('/callback')
 @github.authorized_handler
 def authorized(oauth_token):
-    next_url = request.args.get('next') or url_for('index')
+    next_url = request.args.get('next') or url_for('my_sprint')
     if oauth_token is None:
         flash("Authorization failed.")
         return redirect(next_url)
@@ -149,7 +149,7 @@ def refresh_all():
     for repo_name in repo_names:
         refresh_repo_milestones(repo_name)
     flash('cache is fresh as a peppermint candy')
-    return redirect(url_for('index'))
+    return redirect(url_for('my_sprint'))
 
 
 def refresh_repo_milestones(repo_name):

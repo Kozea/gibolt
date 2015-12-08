@@ -62,6 +62,10 @@
         {{ mk_labeled_input('checkbox', 'labels', 'debt', 'debt') }}
       </fieldset>
       <fieldset>
+        <legend>Filter</legend>
+        {{ mk_labeled_input('radio', 'filter', 'all', 'all') }}
+        {{ mk_labeled_input('radio', 'filter', 'assigned', 'assigned') }}
+      </fieldset>
         <legend>Group by</legend>
         <select name="groupby" onChange="this.form.submit()">
           {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository.full_name') %}
@@ -69,7 +73,6 @@
           {% endfor %}
         </select>
       </fieldset>
-      <input type="hidden" name="filter" value="all" />
       <input type="submit" id="useless-submit" />
     </form>
 
