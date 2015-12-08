@@ -113,12 +113,6 @@ def autologin(f):
     return decorated_function
 
 
-@app.route('/')
-@autologin
-def index():
-    return redirect(url_for('show_now', display='year'))
-
-
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     return github.authorize(scope="repo")
@@ -177,6 +171,14 @@ def refresh_repo_milestones(repo_name):
 @autologin
 def show_sprint_issues():
     filters = {'filter': 'all', 'state': 'all', 'labels': 'sprint'}
+    return redirect(url_for('show_issues', **filters))
+
+
+@app.route('/')
+@app.route('/my_sprint')
+@autologin
+def my_sprint():
+    filters = {'filter': 'assigned', 'state': 'all', 'labels': 'sprint'}
     return redirect(url_for('show_issues', **filters))
 
 
@@ -321,12 +323,6 @@ def show(start, stop):
         relativedelta(months=1))
     return render_template(
         'stones.jinja2', start=date_from_iso(start), stones_by_step=stones)
-
-
-@app.route('/sprint/next_to_sprint')
-@autologin
-def next_to_sprint():
-    pass
 
 
 def get_stones_by_step(all_stones, start, end, step):
