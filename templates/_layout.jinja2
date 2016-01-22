@@ -30,8 +30,8 @@
     </header>
 
     <main>
-      {% block sidenav %}{% endblock sidenav %}
-      {% block topnav %}{% endblock topnav %}
+      <aside>{% block sidenav %}{% endblock sidenav %}</aside>
+      <aside>{% block topnav %}{% endblock topnav %}</aside>
       <section id="main">{% block main %}{% endblock main %}</section>
     </main>
 

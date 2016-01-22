@@ -2,10 +2,10 @@
 {% import 'utils/_progress.jinja2' as progress %}
 
 {% block main %}
-  <h2>Timeline from {{ stones_by_step[0][0].strftime('%B %Y') }} to {{ stones_by_step[-1][0].strftime('%B %Y') }}</h2>
+  <h1>Timeline from {{ stones_by_step[0][0].strftime('%B %Y') }} to {{ stones_by_step[-1][0].strftime('%B %Y') }}</h1>
   {% for month, stones in stones_by_step %}
     <article>
-      <h3>{{ month.strftime('%B %Y') }}</h3>
+      <h2>{{ month.strftime('%B %Y') }}</h2>
       {% if stones %}
         <ul>
           {% for stone in stones | sort(attribute='due_on') %}

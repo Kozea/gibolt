@@ -20,12 +20,12 @@
 {% endblock sidenav %}
 
 {% block main %}
-  <h2>Report of Issues by Project and by User</h2>
+  <h1>Report of Issues by Project and by User</h1>
 
   <article>
-    <h3>Overall</h3>
+    <h2>Overall</h2>
     {% for issues_by_month in issues | groupby('closed_month') %}
-      <h4>{{ issues_by_month.grouper | format_date('%B %Y') }}</h4>
+      <h3>{{ issues_by_month.grouper | format_date('%B %Y') }}</h3>
       {% for issues_by_project in issues_by_month.list | groupby('repository.full_name') | sort_by_len(reverse=True) %}
         <li>
           {{ issues_by_project.grouper | short_name }}
@@ -37,12 +37,12 @@
 
   {% for grouper, issues_by_user in issues | groupby('assignee.login') | sort_by_len(reverse=True) %}
     <article>
-      <h3>
+      <h2>
         <img class="user-avatar" src="{{ issues_by_user[0].assignee.avatar_url }}" alt="avatar" />
         {{ grouper }}
-      </h3>
+      </h2>
       {% for issues_by_month in issues_by_user  | groupby('closed_month') | sort_by_len(reverse=True) %}
-        <h4>{{ issues_by_month.grouper | format_date('%B %Y')}}</h4>
+        <h3>{{ issues_by_month.grouper | format_date('%B %Y')}}</h3>
         <dl>
           {% for issues_by_project in issues_by_month.list | groupby('repository.full_name') | sort_by_len(reverse=True) %}
             <dt>

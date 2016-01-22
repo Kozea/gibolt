@@ -91,7 +91,7 @@
 {% block main %}
   {% set with_avatar = true %}
   <form method="post" action="{{ url_for('apply_labels')}} ">
-  <h2>
+  <h1>
     {% set nb_issues = issues | length + noned_issues | length %}
     {{ nb_issues }}
     {% if nb_issues == 1%}
@@ -101,7 +101,7 @@
     {% endif %}
     {% if groupby %}Grouped by {{ groupers[groupby] }}{% endif %}
     <input id="gaia" type="checkbox" onclick="toggle(this, 'issues')"/>
-  </h2>
+  </h1>
   {{ progress.render(opened, closed) }}
     <input type="hidden" name="query" value="{{ query }}"/>
   {% if groupby %}
@@ -110,7 +110,7 @@
     {% endif %}
     {% for issue in issues | groupby(groupby) | sort_by_len(reverse=True) %}
       <article>
-        <h3>
+        <h2>
           {% if groupby == 'assignee.login' %}
             <img class="user-avatar" src="{{ issue.list[0].assignee.avatar_url }}" alt="avatar" />
           {% elif groupby == 'milestone.title' %}
@@ -118,13 +118,13 @@
           {% endif %}
           {{ issue.grouper }}
           <input type="checkbox" class="issues parent {{ issue.grouper }}" onclick="toggle(this, '{{ issue.grouper }}')"/>
-        </h3>
+        </h2>
         {{ present_issues(issue.list, with_avatar, grouper=issue.grouper) }}
       </article>
     {% endfor %}
     {% if noned_issues %}
       <article>
-        <h3>
+        <h2>
           {% if groupby == 'assignee.login' %}
             <img class="user-avatar" src="{{ url_for('static', filename="images/question-mark.png") }}" alt="avatar" />
             Unassigned
@@ -132,16 +132,16 @@
             None
           {% endif %}
           <input type="checkbox" class="parent None issues" onclick="toggle(this, 'None')"/>
-        </h3>
+        </h2>
         {{ present_issues(noned_issues, with_avatar, grouper='None') }}
       </article>
     {% endif %}
   {% else %}
     <article>
-      <h3>
+      <h2>
         Overall
         <input type="checkbox" class="issues" onclick="toggle(this, 'Overall')"/>
-      </h3>
+      </h2>
       {{ present_issues(issues, with_avatar, grouper='Overall') }}
     </article>
   {% endif %}
