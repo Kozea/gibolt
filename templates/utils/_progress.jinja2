@@ -1,0 +1,7 @@
+{% macro render(opened, closed) %}
+  {% if opened or closed %}
+    {% set value = closed / (closed + opened) %}
+    {% set title='{} / {} ({}%)'.format(closed, closed + opened, (100 * value) | round | int) %}
+    <progress value="{{ value }}" title="{{ title }}">{{ title }}</progress>
+  {% endif %}
+{% endmacro %}

@@ -1,4 +1,5 @@
 {% extends '_layout.jinja2' %}
+{% import 'utils/_progress.jinja2' as progress %}
 
 {% macro present_issues(issues, with_avatar=true, with_box=true, grouper=none) %}
   <ul>
@@ -20,7 +21,7 @@
           <span class="issues-label" style="background: #{{ label.color }}; color: {{ label.color | text_color }}">{{ label.name }}</span>
         {% endfor %}
         <a href="{{ issue.html_url }}">#{{ issue.number }}</a> {{ issue.title | striptags }}
-        {{ progress(issue.opened, issue.closed) }}
+        {{ progress.render(issue.opened, issue.closed) }}
         {% if with_box %}
           </label>
         {% endif %}
@@ -61,27 +62,31 @@
         {{ mk_labeled_input('checkbox', 'labels', 'tool', 'tool') }}
         {{ mk_labeled_input('checkbox', 'labels', 'debt', 'debt') }}
       </fieldset>
-      <fieldset>
-        <legend>Filter</legend>
-        {{ mk_labeled_input('radio', 'filter', 'all', 'all') }}
-        {{ mk_labeled_input('radio', 'filter', 'assigned', 'assigned') }}
-      </fieldset>
-        <legend>Group by</legend>
-        <select name="groupby" onChange="this.form.submit()">
-          {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository.full_name') %}
-            <option value="{{ value }}" {{ 'selected' if value == groupby }}>{{ groupers[value] }}</option>
-          {% endfor %}
-        </select>
-      </fieldset>
       <input type="submit" id="useless-submit" />
     </form>
 
-    <form method="get" action={{ url_for('show_issues_query') }}>
-      <label>Query</label>
-      <input value="{{ query }}" size="50" type="text" class="text" name="query">
-    </form>
   </nav>
 {% endblock sidenav %}
+
+{% block topnav %}
+  <form action="{{ url_for('show_form_query') }}" method="get">
+    <fieldset>
+      <legend>Filter</legend>
+      {{ mk_labeled_input('radio', 'filter', 'all', 'all') }}
+      {{ mk_labeled_input('radio', 'filter', 'assigned', 'assigned') }}
+    </fieldset>
+    <legend>Group by</legend>
+    <select name="groupby" onChange="this.form.submit()">
+      {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository.full_name') %}
+        <option value="{{ value }}" {{ 'selected' if value == groupby }}>{{ groupers[value] }}</option>
+      {% endfor %}
+    </select>
+  </form>
+  <form method="get" action={{ url_for('show_issues_query') }}>
+    <label>Query</label>
+    <input value="{{ query }}" size="50" type="text" class="text" name="query">
+  </form>
+{% endblock topnav %}
 
 {% block main %}
   {% set with_avatar = true %}
@@ -97,7 +102,7 @@
     {% if groupby %}Grouped by {{ groupers[groupby] }}{% endif %}
     <input id="gaia" type="checkbox" onclick="toggle(this, 'issues')"/>
   </h2>
-  {{ progress(opened, closed) }}
+  {{ progress.render(opened, closed) }}
     <input type="hidden" name="query" value="{{ query }}"/>
   {% if groupby %}
     {% if groupby == 'assignee.login' %}
