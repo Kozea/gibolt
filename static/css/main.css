@@ -2347,162 +2347,90 @@ th {
 
 /*# sourceMappingURL=knacss.css.map */
 
-@import url(https://fonts.googleapis.com/css?family=Courgette);
-@import url(https://fonts.googleapis.com/css?family=Roboto);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900);
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 h1, h2, h3, h4, h5, h6 {
-  font-family: Courgette, sans-serif;
+  font-family: Montserrat, sans-serif;
 }
 
-body {
-  background-color: #455A64;
-  color: #212121;
-  font-family: Roboto, serif;
-}
-body h1 {
-  color: #FFFFFF;
-}
-body ul {
-  list-style-type: none;
-}
-
-header {
-  background-color: #607D8B;
-  display: block;
-  padding: 20px;
-  margin-top: 20px;
-  position: relative;
-  box-shadow: 0 3px 2px #CFD8DC;
-}
-header #main-navigation-menu {
-  display: inline-block;
-}
-header #main-navigation-menu ul {
-  background-color: #455A64;
-  box-shadow: 0 2px 6px -1px #333;
-  padding: 10px;
-  margin: 0;
-}
-header #main-navigation-menu ul li {
-  display: inline-block;
-  margin: 0 10px;
-}
-header #main-navigation-menu ul li:first-child {
-  margin: 0;
-}
-header #main-navigation-menu ul li a {
-  display: block;
-  color: #FFFFFF;
-}
-header #main-navigation-menu ul li a:hover {
-  color: #FFC107;
-}
-
-main {
-  background-color: #F2F2F2;
-  box-shadow: 0 2px 3px 0 #333;
-  display: block;
-  padding: 20px;
-}
-main a:hover {
-  color: #FFC107;
-}
-main nav {
-  background-color: #CFD8DC;
-  box-shadow: 0 3px 2px #C8C8C8;
-  padding: 5px;
-  margin: 10px 0;
-}
-main nav ul {
-  margin: 0;
-  padding: 0;
-}
-main nav li {
-  background-color: #607D8B;
-  box-shadow: 0 3px 2px -1px #455A64;
-  display: inline-block;
-  margin: 5px;
-  padding: 5px;
-}
-main nav a {
-  color: #FFFFFF;
-  display: inline-block;
-}
-
-footer a {
-  color: #FFFFFF;
-}
-footer a:hover {
-  color: #FFC107;
-}
-footer #kozea-logo {
-  margin-right: 5px;
-  vertical-align: middle;
-  width: 50px;
-}
-
-article {
-  background-color: #FFFFFF;
-  box-shadow: 0 3px 2px #CFD8DC;
-  padding: 10px;
-  margin: 0 0 10px 0;
-}
-article ul li {
-  display: block;
-  margin: 10px 0;
-}
-
-nav form input[type=checkbox], nav form input[type=radio] {
-  display: none;
-}
-nav form input[type=checkbox] + label, nav form input[type=radio] + label {
-  display: inline-block;
-  background-color: #455A64;
-  color: #F2F2F2;
-  padding: 5px;
-  box-shadow: 0 2px 2px #333;
-}
-nav form input[type=checkbox] + label:hover, nav form input[type=radio] + label:hover {
-  color: #FFC107;
-  cursor: pointer;
-}
-nav form input:checked + label {
-  border: 2px inset;
-  box-shadow: 0 2px 2px #C8C8C8;
-  background-color: #CFD8DC;
-  color: #333;
-}
-nav form input:checked + label:hover {
-  color: #7F6003;
-}
-nav form input[type=radio]:checked + label:hover {
-  cursor: default;
-  color: #333;
-}
-
-.user-avatar {
-  vertical-align: middle;
-  width: 50px;
-}
-
-.mini-user-avatar {
-  vertical-align: middle;
-  width: 25px;
-}
-
-.issues-label {
-  border-radius: 5px;
-  padding: 0.25em;
+ul {
+  list-style: none;
 }
 
 .open {
-  color: #1B8B44;
+  color: #010101;
 }
 
 .closed {
-  color: #8B130E;
+  color: #f54e40;
 }
 
-.pull-request::before {
+html {
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+}
+html body {
+  background-color: #f0f5f9;
+  color: #010101;
+}
+html body header {
+  background-color: #2c3249;
+}
+html body header h1 {
+  color: #fff;
+}
+html body header #main-navigation-menu {
+  /* - nav menu - */
+}
+html body header #main-navigation-menu ul li {
+  display: inline-block;
+  margin: 0 10px;
+}
+html body header #main-navigation-menu ul li a {
+  display: block;
+  color: #fff;
+}
+html body main aside nav form input[type=checkbox], html body main aside nav form input[type=radio] {
+  /* - nav aside buttons -*/
+  display: none;
+}
+html body main aside nav form input[type=checkbox] + label, html body main aside nav form input[type=radio] + label {
+  background-color: red;
+  color: black;
+  display: inline-block;
+  padding: 5px;
+}
+html body main aside nav form input[type=checkbox] + label:hover, html body main aside nav form input[type=radio] + label:hover {
+  color: black;
+  cursor: pointer;
+}
+html body main aside nav form input:checked + label {
+  background-color: green;
+  color: purple;
+}
+html body main aside nav form input:checked + label:hover {
+  color: yellow;
+}
+html body main aside nav form input[type=radio]:checked + label:hover {
+  color: brown;
+  cursor: default;
+}
+html body main #main {
+  /* - section - */
+}
+html body main #main form article ul li label .user-avatar {
+  vertical-align: middle;
+  width: 50px;
+}
+html body main #main form article ul li label .mini-user-avatar {
+  vertical-align: middle;
+  width: 25px;
+}
+html body main #main form article ul li label .issues-label {
+  border-radius: 5px;
+  padding: 0.25em;
+}
+html body main #main form article ul li .pull-request::before {
   content: "PR";
   margin-left: -3em;
   position: absolute;

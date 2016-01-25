@@ -1,194 +1,18 @@
 @import "bourbon";
 @import "colors";
-@import url(https://fonts.googleapis.com/css?family=Courgette);
-@import url(https://fonts.googleapis.com/css?family=Roboto);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900);
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 
-$shadow: 0 3px 2px $light-primary-color;
-$headings-font: Courgette, sans-serif;
-$text-font: Roboto, serif;
 
-// Default HTML
+$headings-font: Montserrat, sans-serif;
+$text-font: Roboto, sans-serif;
 
 h1, h2, h3, h4, h5, h6 {
   font-family: $headings-font;
 }
 
-body {
-    background-color: $dark-primary-color;
-    color: $primary-text-color;
-    font-family: $text-font;
-
-    h1 {
-        color: $text-color;
-    }
-
-    ul {
-        list-style-type: none;
-    }
-}
-
-// Main
-
-header {
-    background-color: $primary-color;
-    display: block;
-    padding: 20px;
-    margin-top: 20px;
-    position:relative;
-    box-shadow: $shadow;
-
-  // Navigation menu
-
-  #main-navigation-menu {
-    display: inline-block;
-
-    ul {
-      background-color: $dark-primary-color;
-      box-shadow: 0 2px 6px -1px $black;
-      padding: 10px;
-      margin: 0;
-
-        li {
-            display: inline-block;
-            margin: 0 10px;
-
-            &:first-child{
-                margin: 0;
-            }
-
-            a {
-                display: block;
-                color: $text-color;
-
-                &:hover {
-                    color: $accent-color;
-                }
-            }
-        }
-    }
-  }
-}
-
-main {
-    background-color: $white;
-    box-shadow: 0 2px 3px 0 $black;
-    display: block;
-    padding: 20px;
-
-    a {
-      &:hover {
-        color: $accent-color;
-      }
-    }
-
-    nav {
-      background-color: $light-primary-color;
-      box-shadow: 0 3px 2px $light-grey;
-      padding: 5px;
-      margin: 10px 0;
-
-      ul{
-        margin: 0;
-        padding: 0;
-        }
-
-      li{
-        background-color: $primary-color;
-        box-shadow: 0 3px 2px -1px $dark-primary-color;
-        display: inline-block;
-        margin: 5px;
-        padding: 5px;
-        }
-
-      a{
-        color: $text-color; 
-        display: inline-block;
-      }
-    }
-}
-
-footer {
-
-    a {
-        color: $text-color;
-        &:hover {
-          color: $accent-color;
-        }
-    }
-
-    #kozea-logo {
-        margin-right: 5px;
-        vertical-align: middle;
-        width: 50px;
-    }
-}
-
-article {
-  background-color: $text-color;
-  box-shadow: $shadow;
-  padding: 10px;
-  margin: 0 0 10px 0;
-
-  ul {
-    li {
-      display: block;
-      margin: 10px 0;
-    }
-  }
-}
-
-// FORMS
-
-
-nav form input {
-  &[type=checkbox], &[type=radio] {
-    display:none;
-    & + label {
-      display:inline-block;
-      background-color:$dark-primary-color;
-      color: $white;
-      padding: 5px;
-      box-shadow: 0 2px 2px $black;
-      &:hover {
-        color: $accent-color;
-        cursor: pointer;
-      }
-    }
-  }
-  &:checked {
-    & + label {
-      border: 2px inset;
-      box-shadow: 0 2px 2px $light-grey;
-      background-color:$light-primary-color;
-      color: $black;
-      &:hover {
-        color: $dark-accent-color;
-      }
-    }
-  }
-  &[type=radio]:checked + label {
-     &:hover {
-       cursor: default;
-       color: $black;
-     }
-  }
-}
-
-// OTHER
-
-.user-avatar {
-  vertical-align: middle;
-  width: 50px;
-}
-
-.mini-user-avatar {
-  vertical-align: middle;
-  width: 25px;
-}
-
-.issues-label {
-  border-radius: 5px;
-  padding: 0.25em;
+ul {
+  list-style: none;
 }
 
 .open {
@@ -198,10 +22,130 @@ nav form input {
 .closed {
   color: $close-issue;
 }
-.pull-request::before {
-  content: "PR";
-  margin-left: -3em;
-  position:absolute;
-  text-align: right;
-  width: 2em;
+
+
+
+html {
+  font-family: $text-font;
+  font-weight: 400;
+
+  body {
+    background-color: $body;
+    color: $text;
+
+    header {
+      background-color: $header;
+
+      h1 {
+        color: #fff;
+      }
+
+      #main-navigation-menu { /* - nav menu - */
+
+        ul {
+          li {
+            display: inline-block;
+            margin: 0 10px;
+
+            a {
+              display: block;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+
+    main {
+      aside {
+        nav {
+          form {
+            input {
+              &[type=checkbox], &[type=radio] { /* - nav aside buttons -*/
+                display:none;
+
+                & + label {
+                  background-color:red;
+                  color: black;
+                  display:inline-block;
+                  padding: 5px;
+
+                  &:hover {
+                    color: black;
+                    cursor: pointer;
+                  }
+                }
+              }
+
+              &:checked {
+                & + label {
+                  background-color:green;
+                  color: purple;
+
+                  &:hover {
+                    color: yellow;
+                  }
+                }
+              }
+
+              &[type=radio]:checked + label {
+                 &:hover {
+                   color: brown;
+                   cursor: default;
+                 }
+              }
+            }
+          }
+        }
+      }
+
+      #main { /* - section - */
+        form {
+          h1 {
+            input {
+            }
+          }
+
+          article {
+            h2 {
+              input {
+
+              }
+            }
+
+            ul {
+              li {
+                label {
+                  .user-avatar {
+                    vertical-align: middle;
+                    width: 50px;
+                  }
+
+                  .mini-user-avatar {
+                    vertical-align: middle;
+                    width: 25px;
+                  }
+                  .issues-label {
+                    border-radius: 5px;
+                    padding: 0.25em;
+                  }
+                }
+
+                .pull-request::before {
+                  content: "PR";
+                  margin-left: -3em;
+                  position:absolute;
+                  text-align: right;
+                  width: 2em;
+                }
+              }
+            }
+          }
+
+          button  {
+          }
+        }
+      }
+    }
+  }
 }
