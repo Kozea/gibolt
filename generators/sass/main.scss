@@ -23,6 +23,10 @@ ul {
   color: $close-issue;
 }
 
+a {
+  text-decoration: none;
+}
+
 
 
 html {
@@ -32,20 +36,40 @@ html {
   body {
     background-color: $body;
     color: $text;
+    margin: 0;
+    padding: 1em;
 
     header {
       background-color: $header;
+      height: 50px;
+      line-height: 50px;
+      margin: -1em -1em 0.5em -1em;
+      top: 16px;
+      position: fixed;
+      width: 100%;
 
       h1 {
         color: #fff;
+        font-size: 1.2em;
+        margin: 0;
+        padding-left: 1em;
       }
 
       #main-navigation-menu { /* - nav menu - */
+        position: absolute;
+        right: 0;
+        top: 0;
 
         ul {
+          margin: 0;
+
           li {
             display: inline-block;
+            line-height: 50px;
             margin: 0 10px;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            font-weight: 500;
 
             a {
               display: block;
@@ -57,17 +81,30 @@ html {
     }
 
     main {
+      padding-top: 2em;
+
       aside {
+        background: $aside;
+        bottom: 0;
+        box-sizing: border-box;
+        color: #fefeff;
+        margin: -1em;
+        padding-top: 1em;
+        position: fixed;
+        top: 66px;
+        width: 180px;
+
         nav {
           form {
+
             input {
               &[type=checkbox], &[type=radio] { /* - nav aside buttons -*/
                 display:none;
 
                 & + label {
-                  background-color:red;
-                  color: black;
-                  display:inline-block;
+                  /*background-color:red;*/
+                  color: #fefeff;
+                  display:block;
                   padding: 5px;
 
                   &:hover {
@@ -79,8 +116,8 @@ html {
 
               &:checked {
                 & + label {
-                  background-color:green;
-                  color: purple;
+                  background-color: #365988;
+                  color: #fefeff;
 
                   &:hover {
                     color: yellow;
@@ -95,11 +132,73 @@ html {
                  }
               }
             }
+
+            fieldset {
+              border: none;
+              margin: 0;
+              padding: 0;
+
+              label {
+                &:before {
+                  content: "";
+                  display: inline-block;
+                  width: 5px;
+                  height: 5px;
+                  background: #009800;
+                  margin-right: 5px;
+                  vertical-align: middle;
+                  border-radius: 100%;
+                }
+              }
+
+              legend {
+                display: none;
+              }
+
+              &:first-of-type { /*- state - */
+                text-align: center;
+
+                input {
+                  &:checked {
+                    & + label {
+                      background-color: #6fa1fe;
+
+                      &:hover {
+                      }
+                    }
+                  }
+                }
+
+                label {
+                  background: $aside;
+                  border-bottom: 1px solid #fff;
+                  border-top: 1px solid #fff;
+                  color: #fff;
+                  display: inline-block;
+                  margin: 0 -2px;
+
+                  &:before {
+                    content: none;
+                  }
+
+                  &:first-of-type {
+                    border-left: 1px solid #fff;
+                    border-right: 1px solid #fff;
+                  }
+
+                  &:last-of-type {
+                    border-left: 1px solid #fff;
+                    border-right: 1px solid #fff;
+                  }
+                }
+              }
+            }
           }
         }
       }
 
       #main { /* - section - */
+        padding-left: 200px;
         form {
           h1 {
             input {
