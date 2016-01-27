@@ -38,6 +38,7 @@ html {
     color: $text;
     margin: 0;
     padding: 1em;
+    position: relative;
 
     header {
       background-color: $header;
@@ -81,9 +82,40 @@ html {
     }
 
     main {
-      padding-top: 2em;
+      /*padding-top: 2em;*/
 
-      aside {
+
+      #filter {
+        background: $aside;
+        color: #fff;
+        left: 180px;
+        position: fixed;
+        top: 50px;
+        width: 100%;
+
+        form {
+          display: inline-block;
+
+          fieldset {
+            border: none;
+            display: inline-block;
+
+            legend, input {
+              display: none;
+            }
+          }
+
+          div {
+            display: inline-block;
+          }
+
+          legend {
+            float: left;
+          }
+        }
+      }
+
+      aside:not(#filter) {
         background: $aside;
         bottom: 0;
         box-sizing: border-box;
@@ -94,9 +126,10 @@ html {
         top: 66px;
         width: 180px;
 
+
+
         nav {
           form {
-
             input {
               &[type=checkbox], &[type=radio] { /* - nav aside buttons -*/
                 display:none;
@@ -140,14 +173,65 @@ html {
 
               label {
                 &:before {
+                  border-radius: 100%;
                   content: "";
                   display: inline-block;
-                  width: 5px;
                   height: 5px;
-                  background: #009800;
                   margin-right: 5px;
                   vertical-align: middle;
-                  border-radius: 100%;
+                  width: 5px;
+                }
+
+                &[for="labels_sprint"]:before {
+                  background: $sprint;
+                }
+
+                &[for="labels_next"]:before {
+                  background: $next;
+                }
+
+                &[for="labels_must"]:before {
+                  background: $must;
+                }
+
+                &[for="labels_nice"]:before {
+                  background: $nice;
+                }
+
+                &[for="labels_later"]:before {
+                  background: $later;
+                }
+
+                &[for="labels_next"]:before {
+                  background: $next;
+                }
+
+                &[for="labels_feature"]:before {
+                  background: $feature;
+                }
+
+                &[for="labels_bug"]:before {
+                  background: $bug;
+                }
+
+                &[for="labels_document"]:before {
+                  background: $document;
+                }
+
+                &[for="labels_commercial"]:before {
+                  background: $commercial;
+                }
+
+                &[for="labels_design"]:before {
+                  background: $design;
+                }
+
+                &[for="labels_tool"]:before {
+                  background: $tool;
+                }
+
+                &[for="labels_debt"]:before {
+                  background: $debt;
                 }
               }
 
@@ -162,6 +246,7 @@ html {
                   &:checked {
                     & + label {
                       background-color: #6fa1fe;
+
 
                       &:hover {
                       }

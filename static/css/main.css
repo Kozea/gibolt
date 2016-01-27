@@ -1,3 +1,4 @@
+/* - Labels colors - */
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900);
 @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 h1, h2, h3, h4, h5, h6 {
@@ -29,6 +30,7 @@ html body {
   color: #010101;
   margin: 0;
   padding: 1em;
+  position: relative;
 }
 html body header {
   background-color: #2c3249;
@@ -67,9 +69,33 @@ html body header #main-navigation-menu ul li a {
   color: #fff;
 }
 html body main {
-  padding-top: 2em;
+  /*padding-top: 2em;*/
 }
-html body main aside {
+html body main #filter {
+  background: #2c4065;
+  color: #fff;
+  left: 180px;
+  position: fixed;
+  top: 50px;
+  width: 100%;
+}
+html body main #filter form {
+  display: inline-block;
+}
+html body main #filter form fieldset {
+  border: none;
+  display: inline-block;
+}
+html body main #filter form fieldset legend, html body main #filter form fieldset input {
+  display: none;
+}
+html body main #filter form div {
+  display: inline-block;
+}
+html body main #filter form legend {
+  float: left;
+}
+html body main aside:not(#filter) {
   background: #2c4065;
   bottom: 0;
   box-sizing: border-box;
@@ -80,57 +106,95 @@ html body main aside {
   top: 66px;
   width: 180px;
 }
-html body main aside nav form input[type=checkbox], html body main aside nav form input[type=radio] {
+html body main aside:not(#filter) nav form input[type=checkbox], html body main aside:not(#filter) nav form input[type=radio] {
   /* - nav aside buttons -*/
   display: none;
 }
-html body main aside nav form input[type=checkbox] + label, html body main aside nav form input[type=radio] + label {
+html body main aside:not(#filter) nav form input[type=checkbox] + label, html body main aside:not(#filter) nav form input[type=radio] + label {
   /*background-color:red;*/
   color: #fefeff;
   display: block;
   padding: 5px;
 }
-html body main aside nav form input[type=checkbox] + label:hover, html body main aside nav form input[type=radio] + label:hover {
+html body main aside:not(#filter) nav form input[type=checkbox] + label:hover, html body main aside:not(#filter) nav form input[type=radio] + label:hover {
   color: black;
   cursor: pointer;
 }
-html body main aside nav form input:checked + label {
+html body main aside:not(#filter) nav form input:checked + label {
   background-color: #365988;
   color: #fefeff;
 }
-html body main aside nav form input:checked + label:hover {
+html body main aside:not(#filter) nav form input:checked + label:hover {
   color: yellow;
 }
-html body main aside nav form input[type=radio]:checked + label:hover {
+html body main aside:not(#filter) nav form input[type=radio]:checked + label:hover {
   color: brown;
   cursor: default;
 }
-html body main aside nav form fieldset {
+html body main aside:not(#filter) nav form fieldset {
   border: none;
   margin: 0;
   padding: 0;
 }
-html body main aside nav form fieldset label:before {
+html body main aside:not(#filter) nav form fieldset label:before {
+  border-radius: 100%;
   content: "";
   display: inline-block;
-  width: 5px;
   height: 5px;
-  background: #009800;
   margin-right: 5px;
   vertical-align: middle;
-  border-radius: 100%;
+  width: 5px;
 }
-html body main aside nav form fieldset legend {
+html body main aside:not(#filter) nav form fieldset label[for="labels_sprint"]:before {
+  background: #009800;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_next"]:before {
+  background: #882211;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_must"]:before {
+  background: #dd1111;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_nice"]:before {
+  background: #ff4500;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_later"]:before {
+  background: #fbca04;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_next"]:before {
+  background: #882211;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_feature"]:before {
+  background: #207de5;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_bug"]:before {
+  background: #9a62d3;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_document"]:before {
+  background: #a1a1a1;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_commercial"]:before {
+  background: #7aafb3;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_design"]:before {
+  background: #add924;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_tool"]:before {
+  background: #882244;
+}
+html body main aside:not(#filter) nav form fieldset label[for="labels_debt"]:before {
+  background: #0b0b0b;
+}
+html body main aside:not(#filter) nav form fieldset legend {
   display: none;
 }
-html body main aside nav form fieldset:first-of-type {
+html body main aside:not(#filter) nav form fieldset:first-of-type {
   /*- state - */
   text-align: center;
 }
-html body main aside nav form fieldset:first-of-type input:checked + label {
+html body main aside:not(#filter) nav form fieldset:first-of-type input:checked + label {
   background-color: #6fa1fe;
 }
-html body main aside nav form fieldset:first-of-type label {
+html body main aside:not(#filter) nav form fieldset:first-of-type label {
   background: #2c4065;
   border-bottom: 1px solid #fff;
   border-top: 1px solid #fff;
@@ -138,14 +202,14 @@ html body main aside nav form fieldset:first-of-type label {
   display: inline-block;
   margin: 0 -2px;
 }
-html body main aside nav form fieldset:first-of-type label:before {
+html body main aside:not(#filter) nav form fieldset:first-of-type label:before {
   content: none;
 }
-html body main aside nav form fieldset:first-of-type label:first-of-type {
+html body main aside:not(#filter) nav form fieldset:first-of-type label:first-of-type {
   border-left: 1px solid #fff;
   border-right: 1px solid #fff;
 }
-html body main aside nav form fieldset:first-of-type label:last-of-type {
+html body main aside:not(#filter) nav form fieldset:first-of-type label:last-of-type {
   border-left: 1px solid #fff;
   border-right: 1px solid #fff;
 }
