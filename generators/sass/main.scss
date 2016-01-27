@@ -37,15 +37,13 @@ html {
     background-color: $body;
     color: $text;
     margin: 0;
-    padding: 1em;
     position: relative;
 
     header {
       background-color: $header;
       height: 50px;
       line-height: 50px;
-      margin: -1em -1em 0.5em -1em;
-      top: 16px;
+      top: 0;
       position: fixed;
       width: 100%;
 
@@ -82,12 +80,10 @@ html {
     }
 
     main {
-      /*padding-top: 2em;*/
-
-
       #filter {
         background: $aside;
         color: #fff;
+        height: 50px;
         left: 180px;
         position: fixed;
         top: 50px;
@@ -120,13 +116,10 @@ html {
         bottom: 0;
         box-sizing: border-box;
         color: #fefeff;
-        margin: -1em;
         padding-top: 1em;
         position: fixed;
-        top: 66px;
+        top: 50px;
         width: 180px;
-
-
 
         nav {
           form {
@@ -283,11 +276,25 @@ html {
       }
 
       #main { /* - section - */
-        padding-left: 200px;
+        padding-left: 195px;
+        padding-top: 100px;
+
         form {
           h1 {
+            background: #e0e9f0;
+            color: #636F77;
+            font-size: 1.1em;
+            font-weight: 400;
+            margin: 0 0 0 -15px;
+            padding: 0.8em;
+            text-transform: uppercase;
+
             input {
             }
+          }
+
+          progress {
+            display: inline-block;
           }
 
           article {
