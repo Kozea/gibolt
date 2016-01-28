@@ -7,9 +7,8 @@
     <script language="javascript" src="{{ url_for('static', filename='js/main.js') }}" ></script>
   </head>
 
-  <body>
-    <header>
-      <h1 id="project-title">Gibolt</h1>
+  <header>
+    <h1 id="project-title">Gibolt</h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% for category, message in messages %}
         <aside class="flash {{ category }}">
@@ -17,7 +16,6 @@
         </aside>
       {% endfor %}
     {% endwith %}
-
     <nav id="main-navigation-menu">
       <ul>
         <li><a href="{{ url_for('my_sprint') }}">My Sprint</a></li>
@@ -27,14 +25,15 @@
         <li><a href="{{ url_for('refresh_all') }}">Refresh Cache</a></li>
       </ul>
     </nav>
-    </header>
+  </header>
 
+  <aside>{% block sidenav %}{% endblock sidenav %}</aside>
+  <aside id="filter">{% block topnav %}{% endblock topnav %}</aside>
+
+  <body>
     <main>
-      <aside>{% block sidenav %}{% endblock sidenav %}</aside>
-      <aside id="filter">{% block topnav %}{% endblock topnav %}</aside>
-
       <section id="main">{% block main %}{% endblock main %}</section>
     </main>
-
   </body>
+
 </html>
