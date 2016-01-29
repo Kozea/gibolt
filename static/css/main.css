@@ -35,49 +35,70 @@ html body {
   overflow: hidden;
 }
 html body header {
+  align-items: center;
   background: #2c3249;
+  display: flex;
   flex: 100%;
   order: 0;
 }
 html body header h1 {
   color: #fff;
-  display: inline-block;
+  flex: 1;
   font-size: 1.2em;
   margin: 0;
   padding-left: 1em;
 }
 html body header #main-navigation-menu {
   /* - nav menu - */
-  display: inline-block;
-  float: right;
 }
 html body header #main-navigation-menu ul {
+  display: flex;
   margin: 0;
 }
 html body header #main-navigation-menu ul li {
-  display: inline-block;
-  line-height: 50px;
-  margin: 0 10px;
-  text-transform: uppercase;
-  font-size: 0.8em;
+  font-size: 13px;
   font-weight: 500;
+  text-transform: uppercase;
+  transition: background 0.3s;
+}
+html body header #main-navigation-menu ul li:hover {
+  background: #6fa1fe;
 }
 html body header #main-navigation-menu ul li a {
-  display: block;
   color: #fff;
+  display: block;
+  padding: 1em;
 }
 html body #filter {
   background: #2c4065;
   color: #fff;
-  order: 1;
   flex: 1 100%;
+  line-height: 50px;
+  order: 1;
+  padding-left: 170px;
 }
 html body #filter form {
   display: inline-block;
+  margin: 0;
+  padding: 0;
 }
 html body #filter form fieldset {
   border: none;
   display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+html body #filter form fieldset label {
+  display: inline-block;
+  padding: 0.2em 1em;
+  transition: background 0.2s;
+}
+html body #filter form fieldset label:hover {
+  background: #f54e40;
+  cursor: pointer;
+}
+html body #filter form fieldset label:checked {
+  background: black;
 }
 html body #filter form fieldset legend, html body #filter form fieldset input {
   display: none;
@@ -93,6 +114,8 @@ html body aside:not(#filter) {
   color: #fefeff;
   min-height: 100vh;
   order: 2;
+  padding: 10px;
+  width: 150px;
 }
 html body aside:not(#filter) nav form input[type=checkbox], html body aside:not(#filter) nav form input[type=radio] {
   /* - nav aside buttons -*/

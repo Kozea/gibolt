@@ -43,36 +43,39 @@ html {
     overflow: hidden;
 
     header {
+      align-items: center;
       background: $header;
+      display: flex;
       flex: 100%;
       order: 0;
 
       h1 {
         color: #fff;
-        display: inline-block;
+        flex: 1;
         font-size: 1.2em;
         margin: 0;
         padding-left: 1em;
       }
 
       #main-navigation-menu { /* - nav menu - */
-        display: inline-block;
-        float: right;
-
         ul {
+          display: flex;
           margin: 0;
 
           li {
-            display: inline-block;
-            line-height: 50px;
-            margin: 0 10px;
-            text-transform: uppercase;
-            font-size: 0.8em;
+            font-size: 13px;
             font-weight: 500;
+            text-transform: uppercase;
+            transition: background 0.3s;
+
+            &:hover {
+              background: #6fa1fe;
+            }
 
             a {
-              display: block;
               color: #fff;
+              display: block;
+              padding: 1em;
             }
           }
         }
@@ -82,15 +85,36 @@ html {
     #filter {
       background: $aside;
       color: #fff;
-      order: 1;
       flex: 1 100%;
+      line-height: 50px;
+      order: 1;
+      padding-left: 170px;
 
       form {
         display: inline-block;
+        margin: 0;
+        padding: 0;
 
         fieldset {
           border: none;
           display: inline-block;
+          margin: 0;
+          padding: 0;
+
+          label {
+            display: inline-block;
+            padding: 0.2em 1em;
+            transition: background 0.2s;
+
+            &:hover {
+              background: $secondary;
+              cursor: pointer;
+            }
+
+            &:checked {
+              background: black;
+            }
+          }
 
           legend, input {
             display: none;
@@ -113,6 +137,8 @@ html {
       color: #fefeff;
       min-height: 100vh;
       order: 2;
+      padding: 10px;
+      width: 150px;
 
       nav {
         form {
