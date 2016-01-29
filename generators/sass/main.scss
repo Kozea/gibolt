@@ -86,18 +86,20 @@ html {
       background: $aside;
       color: #fff;
       flex: 1 100%;
-      line-height: 50px;
+      height: 50px;
       order: 1;
       padding-left: 170px;
+      display: flex;
+      align-items: center;
 
       form {
-        display: inline-block;
+        display: flex;
+        align-items: center;
         margin: 0;
         padding: 0;
 
         fieldset {
           border: none;
-          display: inline-block;
           margin: 0;
           padding: 0;
 
@@ -121,16 +123,29 @@ html {
           }
         }
 
-        div {
-          display: inline-block;
-        }
-
         legend {
           float: left;
         }
       }
-    }
 
+      select, input {
+        -webkit-appearance: none;
+        appearance: none;
+        background: #fff;
+
+        box-shadow: none;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      input {
+        background: $aside;
+        border: 1px solid #fff;
+        color: #fff;
+      }
+    }
 
     aside:not(#filter) {
       background: $aside;

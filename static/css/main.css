@@ -73,18 +73,20 @@ html body #filter {
   background: #2c4065;
   color: #fff;
   flex: 1 100%;
-  line-height: 50px;
+  height: 50px;
   order: 1;
   padding-left: 170px;
+  display: flex;
+  align-items: center;
 }
 html body #filter form {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   margin: 0;
   padding: 0;
 }
 html body #filter form fieldset {
   border: none;
-  display: inline-block;
   margin: 0;
   padding: 0;
 }
@@ -103,11 +105,22 @@ html body #filter form fieldset label:checked {
 html body #filter form fieldset legend, html body #filter form fieldset input {
   display: none;
 }
-html body #filter form div {
-  display: inline-block;
-}
 html body #filter form legend {
   float: left;
+}
+html body #filter select, html body #filter input {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fff;
+  box-shadow: none;
+}
+html body #filter select:focus, html body #filter input:focus {
+  outline: none;
+}
+html body #filter input {
+  background: #2c4065;
+  border: 1px solid #fff;
+  color: #fff;
 }
 html body aside:not(#filter) {
   background: #2c4065;

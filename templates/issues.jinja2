@@ -75,10 +75,8 @@
       {{ mk_labeled_input('radio', 'filter', 'all', 'all') }}
       {{ mk_labeled_input('radio', 'filter', 'assigned', 'assigned') }}
     </fieldset>
-    <div>
     <legend>Group by</legend>
     <select name="groupby" onChange="this.form.submit()">
-    </div>
       {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository.full_name') %}
         <option value="{{ value }}" {{ 'selected' if value == groupby }}>{{ groupers[value] }}</option>
       {% endfor %}
