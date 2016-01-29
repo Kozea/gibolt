@@ -36,28 +36,28 @@ html {
   body {
     background-color: $body;
     color: $text;
+    display: flex;
+    flex-direction: column;
+    flex-flow: row wrap;
     margin: 0;
-    position: relative;
+    overflow: hidden;
 
     header {
-      background-color: $header;
-      height: 50px;
-      line-height: 50px;
-      top: 0;
-      position: fixed;
-      width: 100%;
+      background: $header;
+      flex: 100%;
+      order: 0;
 
       h1 {
         color: #fff;
+        display: inline-block;
         font-size: 1.2em;
         margin: 0;
         padding-left: 1em;
       }
 
       #main-navigation-menu { /* - nav menu - */
-        position: absolute;
-        right: 0;
-        top: 0;
+        display: inline-block;
+        float: right;
 
         ul {
           margin: 0;
@@ -79,195 +79,186 @@ html {
       }
     }
 
-    main {
-      #filter {
-        background: $aside;
-        color: #fff;
-        height: 50px;
-        left: 180px;
-        position: fixed;
-        top: 50px;
-        width: 100%;
+    #filter {
+      background: $aside;
+      color: #fff;
+      order: 1;
+      flex: 1 100%;
 
-        form {
+      form {
+        display: inline-block;
+
+        fieldset {
+          border: none;
           display: inline-block;
+
+          legend, input {
+            display: none;
+          }
+        }
+
+        div {
+          display: inline-block;
+        }
+
+        legend {
+          float: left;
+        }
+      }
+    }
+
+
+    aside:not(#filter) {
+      background: $aside;
+      color: #fefeff;
+      min-height: 100vh;
+      order: 2;
+
+      nav {
+        form {
+          input {
+            &[type=checkbox], &[type=radio] { /* - nav aside buttons -*/
+              display:none;
+
+              & + label {
+                color: #fefeff;
+                display:block;
+                padding: 5px;
+
+                &:hover {
+                  color: black;
+                  cursor: pointer;
+                }
+              }
+            }
+
+            &:checked {
+              & + label {
+                background-color: #365988;
+                color: #fefeff;
+
+                &:hover {
+                  color: yellow;
+                }
+              }
+            }
+
+            &[type=radio]:checked + label {
+               &:hover {
+                 color: brown;
+                 cursor: default;
+               }
+            }
+          }
 
           fieldset {
             border: none;
-            display: inline-block;
+            margin: 0;
+            padding: 0;
 
-            legend, input {
+            label {
+              &:before {
+                border-radius: 100%;
+                content: "";
+                display: inline-block;
+                height: 5px;
+                margin-right: 5px;
+                vertical-align: middle;
+                width: 5px;
+              }
+
+              &[for="labels_sprint"]:before {
+                background: $sprint;
+              }
+
+              &[for="labels_next"]:before {
+                background: $next;
+              }
+
+              &[for="labels_must"]:before {
+                background: $must;
+              }
+
+              &[for="labels_nice"]:before {
+                background: $nice;
+              }
+
+              &[for="labels_later"]:before {
+                background: $later;
+              }
+
+              &[for="labels_next"]:before {
+                background: $next;
+              }
+
+              &[for="labels_feature"]:before {
+                background: $feature;
+              }
+
+              &[for="labels_bug"]:before {
+                background: $bug;
+              }
+
+              &[for="labels_document"]:before {
+                background: $document;
+              }
+
+              &[for="labels_commercial"]:before {
+                background: $commercial;
+              }
+
+              &[for="labels_design"]:before {
+                background: $design;
+              }
+
+              &[for="labels_tool"]:before {
+                background: $tool;
+              }
+
+              &[for="labels_debt"]:before {
+                background: $debt;
+              }
+            }
+
+            legend {
               display: none;
             }
-          }
 
-          div {
-            display: inline-block;
-          }
+            &:first-of-type { /*- state - */
+              text-align: center;
 
-          legend {
-            float: left;
-          }
-        }
-      }
-
-      aside:not(#filter) {
-        background: $aside;
-        bottom: 0;
-        box-sizing: border-box;
-        color: #fefeff;
-        padding-top: 1em;
-        position: fixed;
-        top: 50px;
-        width: 180px;
-
-        nav {
-          form {
-            input {
-              &[type=checkbox], &[type=radio] { /* - nav aside buttons -*/
-                display:none;
-
-                & + label {
-                  /*background-color:red;*/
-                  color: #fefeff;
-                  display:block;
-                  padding: 5px;
-
-                  &:hover {
-                    color: black;
-                    cursor: pointer;
-                  }
-                }
-              }
-
-              &:checked {
-                & + label {
-                  background-color: #365988;
-                  color: #fefeff;
-
-                  &:hover {
-                    color: yellow;
-                  }
-                }
-              }
-
-              &[type=radio]:checked + label {
-                 &:hover {
-                   color: brown;
-                   cursor: default;
-                 }
-              }
-            }
-
-            fieldset {
-              border: none;
-              margin: 0;
-              padding: 0;
-
-              label {
-                &:before {
-                  border-radius: 100%;
-                  content: "";
-                  display: inline-block;
-                  height: 5px;
-                  margin-right: 5px;
-                  vertical-align: middle;
-                  width: 5px;
-                }
-
-                &[for="labels_sprint"]:before {
-                  background: $sprint;
-                }
-
-                &[for="labels_next"]:before {
-                  background: $next;
-                }
-
-                &[for="labels_must"]:before {
-                  background: $must;
-                }
-
-                &[for="labels_nice"]:before {
-                  background: $nice;
-                }
-
-                &[for="labels_later"]:before {
-                  background: $later;
-                }
-
-                &[for="labels_next"]:before {
-                  background: $next;
-                }
-
-                &[for="labels_feature"]:before {
-                  background: $feature;
-                }
-
-                &[for="labels_bug"]:before {
-                  background: $bug;
-                }
-
-                &[for="labels_document"]:before {
-                  background: $document;
-                }
-
-                &[for="labels_commercial"]:before {
-                  background: $commercial;
-                }
-
-                &[for="labels_design"]:before {
-                  background: $design;
-                }
-
-                &[for="labels_tool"]:before {
-                  background: $tool;
-                }
-
-                &[for="labels_debt"]:before {
-                  background: $debt;
-                }
-              }
-
-              legend {
-                display: none;
-              }
-
-              &:first-of-type { /*- state - */
-                text-align: center;
-
-                input {
-                  &:checked {
-                    & + label {
-                      background-color: #6fa1fe;
+              input {
+                &:checked {
+                  & + label {
+                    background-color: #6fa1fe;
 
 
-                      &:hover {
-                      }
+                    &:hover {
                     }
                   }
                 }
+              }
 
-                label {
-                  background: $aside;
-                  border-bottom: 1px solid #fff;
-                  border-top: 1px solid #fff;
-                  color: #fff;
-                  display: inline-block;
-                  margin: 0 -2px;
+              label {
+                background: $aside;
+                border-bottom: 1px solid #fff;
+                border-top: 1px solid #fff;
+                color: #fff;
+                display: inline-block;
+                margin: 0 -2px;
 
-                  &:before {
-                    content: none;
-                  }
+                &:before {
+                  content: none;
+                }
 
-                  &:first-of-type {
-                    border-left: 1px solid #fff;
-                    border-right: 1px solid #fff;
-                  }
+                &:first-of-type {
+                  border-left: 1px solid #fff;
+                  border-right: 1px solid #fff;
+                }
 
-                  &:last-of-type {
-                    border-left: 1px solid #fff;
-                    border-right: 1px solid #fff;
-                  }
+                &:last-of-type {
+                  border-left: 1px solid #fff;
+                  border-right: 1px solid #fff;
                 }
               }
             }
@@ -275,19 +266,32 @@ html {
         }
       }
 
-      #main { /* - section - */
-        padding-left: 195px;
-        padding-top: 100px;
 
+    }
+
+    main {
+      order: 3;
+      flex: 3 0px;
+      overflow: auto;
+      height: 100vh;
+
+
+      aside:not(#filter) {
+
+      }
+
+      #main { /* - section - */
         form {
           h1 {
-            background: #e0e9f0;
+            /*background: #e0e9f0;
             color: #636F77;
             font-size: 1.1em;
             font-weight: 400;
             margin: 0 0 0 -15px;
             padding: 0.8em;
-            text-transform: uppercase;
+            text-transform: uppercase;*/
+            margin: 0;
+
 
             input {
             }
