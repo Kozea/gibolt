@@ -88,7 +88,7 @@ html {
       color: #ced9eb;
       flex: 1 100%;
       order: 1;
-      padding-left: 170px;
+      padding-left: 150px;
       display: flex;
       align-items: center;
 
@@ -163,7 +163,6 @@ html {
       color: #ced9eb;
       min-height: 100vh;
       order: 2;
-      padding: 10px;
       width: 150px;
 
       nav {
@@ -174,11 +173,10 @@ html {
 
               & + label {
                 color: #fefeff;
-                display:block;
-                padding: 5px;
+                padding: 0.5em;
 
                 &:hover {
-                  color: black;
+                  background: #365988;
                   cursor: pointer;
                 }
               }
@@ -186,19 +184,13 @@ html {
 
             &:checked {
               & + label {
-                background-color: #365988;
+                background: #365988;
                 color: #fefeff;
-
-                &:hover {
-                  color: yellow;
-                }
               }
             }
 
             &[type=radio]:checked + label {
                &:hover {
-                 color: brown;
-                 cursor: default;
                }
             }
           }
@@ -207,6 +199,49 @@ html {
             border: none;
             margin: 0;
             padding: 0;
+
+            &:not(:first-of-type) {
+              display: flex;
+              flex-direction: column;
+            }
+
+            &:first-of-type { /*- state - */
+              margin-bottom: 1em;
+              text-align: center;
+
+              input {
+                &:checked {
+                  & + label {
+                    background-color: #6fa1fe;
+                  }
+                }
+              }
+
+              label {
+                background: $aside;
+                border-bottom: 1px solid #ced9eb;
+                border-top: 1px solid #ced9eb;
+                color: #fff;
+                display: inline-block;
+                margin: 0 -2px;
+
+                &:hover {
+                  background: darken($aside, 10%);
+                }
+
+                &:before {
+                  content: none;
+                }
+
+                &:first-of-type {
+                  border-left: 1px solid #ced9eb;
+                }
+
+                &:last-of-type {
+                  border-right: 1px solid #ced9eb;
+                }
+              }
+            }
 
             label {
               &:before {
@@ -275,50 +310,9 @@ html {
             legend {
               display: none;
             }
-
-            &:first-of-type { /*- state - */
-              text-align: center;
-
-              input {
-                &:checked {
-                  & + label {
-                    background-color: #6fa1fe;
-
-
-                    &:hover {
-                    }
-                  }
-                }
-              }
-
-              label {
-                background: $aside;
-                border-bottom: 1px solid #fff;
-                border-top: 1px solid #fff;
-                color: #fff;
-                display: inline-block;
-                margin: 0 -2px;
-
-                &:before {
-                  content: none;
-                }
-
-                &:first-of-type {
-                  border-left: 1px solid #fff;
-                  border-right: 1px solid #fff;
-                }
-
-                &:last-of-type {
-                  border-left: 1px solid #fff;
-                  border-right: 1px solid #fff;
-                }
-              }
-            }
           }
         }
       }
-
-
     }
 
     main {

@@ -75,7 +75,7 @@ html body #filter {
   color: #ced9eb;
   flex: 1 100%;
   order: 1;
-  padding-left: 170px;
+  padding-left: 150px;
   display: flex;
   align-items: center;
 }
@@ -137,7 +137,6 @@ html body aside:not(#filter) {
   color: #ced9eb;
   min-height: 100vh;
   order: 2;
-  padding: 10px;
   width: 150px;
 }
 html body aside:not(#filter) nav form input[type=checkbox], html body aside:not(#filter) nav form input[type=radio] {
@@ -146,28 +145,52 @@ html body aside:not(#filter) nav form input[type=checkbox], html body aside:not(
 }
 html body aside:not(#filter) nav form input[type=checkbox] + label, html body aside:not(#filter) nav form input[type=radio] + label {
   color: #fefeff;
-  display: block;
-  padding: 5px;
+  padding: 0.5em;
 }
 html body aside:not(#filter) nav form input[type=checkbox] + label:hover, html body aside:not(#filter) nav form input[type=radio] + label:hover {
-  color: black;
+  background: #365988;
   cursor: pointer;
 }
 html body aside:not(#filter) nav form input:checked + label {
-  background-color: #365988;
+  background: #365988;
   color: #fefeff;
-}
-html body aside:not(#filter) nav form input:checked + label:hover {
-  color: yellow;
-}
-html body aside:not(#filter) nav form input[type=radio]:checked + label:hover {
-  color: brown;
-  cursor: default;
 }
 html body aside:not(#filter) nav form fieldset {
   border: none;
   margin: 0;
   padding: 0;
+}
+html body aside:not(#filter) nav form fieldset:not(:first-of-type) {
+  display: flex;
+  flex-direction: column;
+}
+html body aside:not(#filter) nav form fieldset:first-of-type {
+  /*- state - */
+  margin-bottom: 1em;
+  text-align: center;
+}
+html body aside:not(#filter) nav form fieldset:first-of-type input:checked + label {
+  background-color: #6fa1fe;
+}
+html body aside:not(#filter) nav form fieldset:first-of-type label {
+  background: #2c4065;
+  border-bottom: 1px solid #ced9eb;
+  border-top: 1px solid #ced9eb;
+  color: #fff;
+  display: inline-block;
+  margin: 0 -2px;
+}
+html body aside:not(#filter) nav form fieldset:first-of-type label:hover {
+  background: #1d2941;
+}
+html body aside:not(#filter) nav form fieldset:first-of-type label:before {
+  content: none;
+}
+html body aside:not(#filter) nav form fieldset:first-of-type label:first-of-type {
+  border-left: 1px solid #ced9eb;
+}
+html body aside:not(#filter) nav form fieldset:first-of-type label:last-of-type {
+  border-right: 1px solid #ced9eb;
 }
 html body aside:not(#filter) nav form fieldset label:before {
   border-radius: 100%;
@@ -219,32 +242,6 @@ html body aside:not(#filter) nav form fieldset label[for="labels_debt"]:before {
 }
 html body aside:not(#filter) nav form fieldset legend {
   display: none;
-}
-html body aside:not(#filter) nav form fieldset:first-of-type {
-  /*- state - */
-  text-align: center;
-}
-html body aside:not(#filter) nav form fieldset:first-of-type input:checked + label {
-  background-color: #6fa1fe;
-}
-html body aside:not(#filter) nav form fieldset:first-of-type label {
-  background: #2c4065;
-  border-bottom: 1px solid #fff;
-  border-top: 1px solid #fff;
-  color: #fff;
-  display: inline-block;
-  margin: 0 -2px;
-}
-html body aside:not(#filter) nav form fieldset:first-of-type label:before {
-  content: none;
-}
-html body aside:not(#filter) nav form fieldset:first-of-type label:first-of-type {
-  border-left: 1px solid #fff;
-  border-right: 1px solid #fff;
-}
-html body aside:not(#filter) nav form fieldset:first-of-type label:last-of-type {
-  border-left: 1px solid #fff;
-  border-right: 1px solid #fff;
 }
 html body main {
   order: 3;
