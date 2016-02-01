@@ -2,10 +2,11 @@
 @import "colors";
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900);
 @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,700,900);
 
 
 $headings-font: Montserrat, sans-serif;
-$text-font: Roboto, sans-serif;
+$text-font: Lato, sans-serif;
 
 h1, h2, h3, h4, h5, h6 {
   font-family: $headings-font;
@@ -84,32 +85,32 @@ html {
 
     #filter {
       background: $aside;
-      color: #fff;
+      color: #ced9eb;
       flex: 1 100%;
-      height: 50px;
       order: 1;
       padding-left: 170px;
       display: flex;
       align-items: center;
 
       form {
-        display: flex;
         align-items: center;
+        display: flex;
         margin: 0;
         padding: 0;
 
         fieldset {
           border: none;
-          margin: 0;
+          margin: 0 0.5em 0 0;
           padding: 0;
 
           label {
             display: inline-block;
-            padding: 0.2em 1em;
-            transition: background 0.2s;
+            padding: 1em;
+            transition: background 0.2s, color 0.2s;
 
             &:hover {
               background: $secondary;
+              color: #fff;
               cursor: pointer;
             }
 
@@ -129,11 +130,9 @@ html {
       }
 
       select, input {
-        -webkit-appearance: none;
-        appearance: none;
-        background: #fff;
-
         box-shadow: none;
+        margin: 0 0.5em;
+        padding: 0.5em;
 
         &:focus {
           outline: none;
@@ -142,14 +141,26 @@ html {
 
       input {
         background: $aside;
-        border: 1px solid #fff;
+        border: 1px solid #ced9eb;
         color: #fff;
+        font-family: $text-font;
+        font-size: 0.9em;
+      }
+
+      select {
+        background: $aside;
+        border-color: #ced9eb;
+
+        option {
+          background: #fff;
+          font-family: $text-font;
+        }
       }
     }
 
     aside:not(#filter) {
       background: $aside;
-      color: #fefeff;
+      color: #ced9eb;
       min-height: 100vh;
       order: 2;
       padding: 10px;
