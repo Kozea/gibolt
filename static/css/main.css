@@ -19,6 +19,7 @@ ul {
 }
 
 a {
+  color: #6fa1fe;
   text-decoration: none;
 }
 
@@ -253,29 +254,67 @@ html body main #main {
   /* - section - */
 }
 html body main #main form h1 {
-  /*background: #e0e9f0;
+  align-items: center;
+  background: #e0e9f0;
   color: #636F77;
+  display: flex;
   font-size: 1.1em;
   font-weight: 400;
-  margin: 0 0 0 -15px;
+  margin: 0;
   padding: 0.8em;
-  text-transform: uppercase;*/
+  text-transform: uppercase;
+}
+html body main #main form h1 input, html body main #main form h1 progress {
+  margin: 0 0.5em;
+}
+html body main #main form progress[value] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+}
+html body main #main form progress[value]::-webkit-progress-bar {
+  background-color: #c5d4df;
+  box-shadow: none;
+}
+html body main #main form progress[value]::-moz-progress-bar {
+  background-color: #fe8d53;
+  border: none;
+}
+html body main #main form progress[value]::-webkit-progress-value {
+  background: #fe8d53;
+}
+html body main #main form article {
+  background: #fff;
+  padding: 1em;
+}
+html body main #main form article h2 {
   margin: 0;
 }
-html body main #main form progress {
-  display: inline-block;
+html body main #main form article ul li {
+  margin: 0.5em 0;
+}
+html body main #main form article ul li label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  order: 2;
 }
 html body main #main form article ul li label .user-avatar {
   vertical-align: middle;
-  width: 50px;
+  width: 40px;
+  order: 0;
+  max-height: 40px;
 }
 html body main #main form article ul li label .mini-user-avatar {
   vertical-align: middle;
-  width: 25px;
+  width: 40px;
+  max-height: 40px;
 }
 html body main #main form article ul li label .issues-label {
   border-radius: 5px;
   padding: 0.25em;
+  order: 4;
 }
 html body main #main form article ul li .pull-request::before {
   content: "PR";

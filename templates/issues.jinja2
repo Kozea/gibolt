@@ -101,8 +101,8 @@
     {% endif %}
     {% if groupby %}Grouped by {{ groupers[groupby] }}{% endif %}
     <input id="gaia" type="checkbox" onclick="toggle(this, 'issues')"/>
+    {{ progress.render(opened, closed) }}
   </h1>
-  {{ progress.render(opened, closed) }}
     <input type="hidden" name="query" value="{{ query }}"/>
   {% if groupby %}
     {% if groupby == 'assignee.login' %}

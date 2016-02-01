@@ -25,6 +25,7 @@ ul {
 }
 
 a {
+  color: #6fa1fe;
   text-decoration: none;
 }
 
@@ -329,46 +330,82 @@ html {
       #main { /* - section - */
         form {
           h1 {
-            /*background: #e0e9f0;
+            align-items: center;
+            background: #e0e9f0;
             color: #636F77;
+            display: flex;
             font-size: 1.1em;
             font-weight: 400;
-            margin: 0 0 0 -15px;
-            padding: 0.8em;
-            text-transform: uppercase;*/
             margin: 0;
+            padding: 0.8em;
+            text-transform: uppercase;
 
-
-            input {
+            input, progress {
+              margin: 0 0.5em;
             }
           }
 
-          progress {
-            display: inline-block;
+          progress[value] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+
+            &::-webkit-progress-bar {
+              background-color: #c5d4df;
+              box-shadow: none;
+            }
+
+            &::-moz-progress-bar {
+              background-color: #fe8d53;
+              border: none;
+            }
+
+            &::-webkit-progress-value {
+              background: #fe8d53;
+            }
           }
 
           article {
+            background: #fff;
+            padding: 1em;
+
             h2 {
+              margin: 0;
+
               input {
 
               }
             }
 
             ul {
+
               li {
+                margin: 0.5em 0;
+
                 label {
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  order: 2;
+
                   .user-avatar {
                     vertical-align: middle;
-                    width: 50px;
+                    width: 40px;
+                    order: 0;
+                    max-height: 40px;
                   }
 
                   .mini-user-avatar {
                     vertical-align: middle;
-                    width: 25px;
+                    width: 40px;
+                    max-height: 40px;
                   }
+
                   .issues-label {
                     border-radius: 5px;
                     padding: 0.25em;
+                    order: 4;
                   }
                 }
 
