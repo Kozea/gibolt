@@ -128,10 +128,12 @@ html body #filter input {
 html body #filter select {
   background: #2c4065;
   border-color: #ced9eb;
+  color: #fff;
+  font-family: Lato, sans-serif;
 }
 html body #filter select option {
   background: #fff;
-  font-family: Lato, sans-serif;
+  color: #2c4065;
 }
 html body aside:not(#filter) {
   background: #2c4065;
@@ -247,7 +249,6 @@ html body aside:not(#filter) nav form fieldset legend {
 html body main {
   order: 3;
   flex: 3 0px;
-  overflow: auto;
   height: 100vh;
 }
 html body main #main {
@@ -286,6 +287,9 @@ html body main #main form progress[value]::-webkit-progress-value {
 }
 html body main #main form article {
   background: #fff;
+  margin-bottom: 1em;
+  height: 100vh;
+  overflow: auto;
   padding: 1em;
 }
 html body main #main form article h2 {
@@ -313,7 +317,9 @@ html body main #main form article ul li label .mini-user-avatar {
 }
 html body main #main form article ul li label .issues-label {
   border-radius: 5px;
-  padding: 0.25em;
+  font-size: 0.8em;
+  margin: 0 0.2em;
+  padding: 0.5em;
   order: 4;
 }
 html body main #main form article ul li .pull-request::before {
@@ -322,6 +328,19 @@ html body main #main form article ul li .pull-request::before {
   position: absolute;
   text-align: right;
   width: 2em;
+}
+html body main #main form button {
+  border: none;
+  background: #BAC9D5;
+  padding: 1em;
+  font-family: Lato, sans-serif;
+  transition: background 0.2s;
+}
+html body main #main form button:hover {
+  background: #cad5df;
+}
+html body main #main form button:first-of-type {
+  margin-left: 1em;
 }
 
 /*# sourceMappingURL=main.css.map */

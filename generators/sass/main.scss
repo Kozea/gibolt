@@ -151,10 +151,12 @@ html {
       select {
         background: $aside;
         border-color: #ced9eb;
+        color: #fff;
+        font-family: $text-font;
 
         option {
           background: #fff;
-          font-family: $text-font;
+          color: $aside;
         }
       }
     }
@@ -319,7 +321,6 @@ html {
     main {
       order: 3;
       flex: 3 0px;
-      overflow: auto;
       height: 100vh;
 
 
@@ -368,6 +369,9 @@ html {
 
           article {
             background: #fff;
+            margin-bottom: 1em;
+            height: 100vh;
+            overflow: auto;
             padding: 1em;
 
             h2 {
@@ -379,7 +383,6 @@ html {
             }
 
             ul {
-
               li {
                 margin: 0.5em 0;
 
@@ -404,7 +407,9 @@ html {
 
                   .issues-label {
                     border-radius: 5px;
-                    padding: 0.25em;
+                    font-size: 0.8em;
+                    margin: 0 0.2em;
+                    padding: 0.5em;
                     order: 4;
                   }
                 }
@@ -421,6 +426,19 @@ html {
           }
 
           button  {
+            border: none;
+            background: #BAC9D5;
+            padding: 1em;
+            font-family: $text-font;
+            transition: background 0.2s;
+
+            &:hover {
+              background: lighten(#BAC9D5, 5%);
+            }
+
+            &:first-of-type {
+              margin-left: 1em;
+            }
           }
         }
       }
