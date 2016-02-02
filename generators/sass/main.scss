@@ -1,15 +1,35 @@
 @import "bourbon";
 @import "colors";
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900);
+
 @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700,900);
-
 
 $headings-font: Montserrat, sans-serif;
 $text-font: Lato, sans-serif;
 
 h1, h2, h3, h4, h5, h6 {
   font-family: $headings-font;
+}
+
+input[type=checkbox] {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid #C5CCD2;
+  border-radius: 100%;
+  box-shadow: none;
+  height: 15px;
+  width: 15px;
+
+  &:checked {
+    background: $a;
+    background-clip: content-box;
+    border: 2px solid $a;
+    padding: 2px;
+
+    &:focus {
+      outline: none;
+    }
+  }
 }
 
 ul {
@@ -25,10 +45,9 @@ ul {
 }
 
 a {
-  color: #6fa1fe;
+  color: $a;
   text-decoration: none;
 }
-
 
 
 html {
@@ -71,7 +90,7 @@ html {
             transition: background 0.3s;
 
             &:hover {
-              background: #6fa1fe;
+              background: $a;
             }
 
             a {
@@ -84,14 +103,14 @@ html {
       }
     }
 
-    #filter {
+    #filter { /* - aside filter - */
+      align-items: center;
       background: $aside;
       color: #ced9eb;
+      display: flex;
       flex: 1 100%;
       order: 1;
       padding-left: 150px;
-      display: flex;
-      align-items: center;
 
       form {
         align-items: center;
@@ -172,7 +191,7 @@ html {
         form {
           input {
             &[type=checkbox], &[type=radio] { /* - nav aside buttons -*/
-              display:none;
+              display: none;
 
               & + label {
                 color: #fefeff;
@@ -215,7 +234,7 @@ html {
               input {
                 &:checked {
                   & + label {
-                    background-color: #6fa1fe;
+                    background-color: $a;
                   }
                 }
               }
@@ -319,14 +338,9 @@ html {
     }
 
     main {
-      order: 3;
       flex: 3 0px;
       height: 100vh;
-
-
-      aside:not(#filter) {
-
-      }
+      order: 3;
 
       #main { /* - section - */
         form {
@@ -358,7 +372,7 @@ html {
             }
 
             &::-moz-progress-bar {
-              background-color: #fe8d53;
+              background-color: $progress;
               border: none;
             }
 
@@ -378,7 +392,7 @@ html {
               margin: 0;
 
               input {
-
+                vertical-align: middle;
               }
             }
 
@@ -387,30 +401,30 @@ html {
                 margin: 0.5em 0;
 
                 label {
+                  align-items: center;
                   display: flex;
                   flex-direction: row;
-                  align-items: center;
                   order: 2;
 
                   .user-avatar {
+                    max-height: 40px;
+                    order: 0;
                     vertical-align: middle;
                     width: 40px;
-                    order: 0;
-                    max-height: 40px;
                   }
 
                   .mini-user-avatar {
+                    max-height: 40px;
                     vertical-align: middle;
                     width: 40px;
-                    max-height: 40px;
                   }
 
                   .issues-label {
                     border-radius: 5px;
                     font-size: 0.8em;
                     margin: 0 0.2em;
-                    padding: 0.5em;
                     order: 4;
+                    padding: 0.5em;
                   }
                 }
 

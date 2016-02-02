@@ -1,9 +1,27 @@
 /* - Labels colors - */
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700,900);
 @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700,900);
 h1, h2, h3, h4, h5, h6 {
   font-family: Montserrat, sans-serif;
+}
+
+input[type=checkbox] {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid #C5CCD2;
+  border-radius: 100%;
+  box-shadow: none;
+  height: 15px;
+  width: 15px;
+}
+input[type=checkbox]:checked {
+  background: #6fa1fe;
+  background-clip: content-box;
+  border: 2px solid #6fa1fe;
+  padding: 2px;
+}
+input[type=checkbox]:checked:focus {
+  outline: none;
 }
 
 ul {
@@ -72,13 +90,14 @@ html body header #main-navigation-menu ul li a {
   padding: 1em;
 }
 html body #filter {
+  /* - aside filter - */
+  align-items: center;
   background: #2c4065;
   color: #ced9eb;
+  display: flex;
   flex: 1 100%;
   order: 1;
   padding-left: 150px;
-  display: flex;
-  align-items: center;
 }
 html body #filter form {
   align-items: center;
@@ -247,9 +266,9 @@ html body aside:not(#filter) nav form fieldset legend {
   display: none;
 }
 html body main {
-  order: 3;
   flex: 3 0px;
   height: 100vh;
+  order: 3;
 }
 html body main #main {
   /* - section - */
@@ -295,32 +314,35 @@ html body main #main form article {
 html body main #main form article h2 {
   margin: 0;
 }
+html body main #main form article h2 input {
+  vertical-align: middle;
+}
 html body main #main form article ul li {
   margin: 0.5em 0;
 }
 html body main #main form article ul li label {
+  align-items: center;
   display: flex;
   flex-direction: row;
-  align-items: center;
   order: 2;
 }
 html body main #main form article ul li label .user-avatar {
+  max-height: 40px;
+  order: 0;
   vertical-align: middle;
   width: 40px;
-  order: 0;
-  max-height: 40px;
 }
 html body main #main form article ul li label .mini-user-avatar {
+  max-height: 40px;
   vertical-align: middle;
   width: 40px;
-  max-height: 40px;
 }
 html body main #main form article ul li label .issues-label {
   border-radius: 5px;
   font-size: 0.8em;
   margin: 0 0.2em;
-  padding: 0.5em;
   order: 4;
+  padding: 0.5em;
 }
 html body main #main form article ul li .pull-request::before {
   content: "PR";
