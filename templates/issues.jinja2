@@ -38,13 +38,7 @@
 {% block sidenav %}
   <nav>
     <form action="{{ url_for('show_form_query') }}" method="get">
-      <fieldset>
-        <legend>State</legend>
-        {{ mk_labeled_input('radio', 'state', 'open', 'open') }}
-        {{ mk_labeled_input('radio', 'state', 'closed', 'closed') }}
-        {{ mk_labeled_input('radio', 'state', 'all', 'all') }}
-      </fieldset>
-      <fieldset>
+      <fieldset class="github_labels">
         <legend>Priority</legend>
         {{ mk_labeled_input('checkbox', 'labels', 'sprint', 'sprint') }}
         {{ mk_labeled_input('checkbox', 'labels', 'next', 'next') }}
@@ -52,7 +46,7 @@
         {{ mk_labeled_input('checkbox', 'labels', 'nice', 'nice') }}
         {{ mk_labeled_input('checkbox', 'labels', 'later', 'later') }}
       </fieldset>
-      <fieldset>
+      <fieldset class="github_labels">
         <legend>Type</legend>
         {{ mk_labeled_input('checkbox', 'labels', 'feature', 'feature') }}
         {{ mk_labeled_input('checkbox', 'labels', 'bug', 'bug') }}
@@ -70,21 +64,18 @@
 
 {% block topnav %}
   <form action="{{ url_for('show_form_query') }}" method="get">
-    <fieldset>
-      <legend>Filter</legend>
-      {{ mk_labeled_input('radio', 'filter', 'all', 'all') }}
-      {{ mk_labeled_input('radio', 'filter', 'assigned', 'assigned') }}
+    <fieldset class="state">
+      <legend>State</legend>
+      {{ mk_labeled_input('radio', 'state', 'open', 'open') }}
+      {{ mk_labeled_input('radio', 'state', 'closed', 'closed') }}
+      {{ mk_labeled_input('radio', 'state', 'all', 'all') }}
     </fieldset>
-    <legend>Group by</legend>
-    <select name="groupby" onChange="this.form.submit()">
+    <fieldset class="groupby">
+      <legend>Group by</legend>
       {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository.full_name') %}
-        <option value="{{ value }}" {{ 'selected' if value == groupby }}>{{ groupers[value] }}</option>
+        <input type="radio" name="groupby" id="groupby_{{ value }}" value="{{ value }}" {{ 'checked' if value == groupby }} onChange="this.form.submit()" /><label for="groupby_{{ value }}">{{ groupers[value] if value else "Don't Group"}}</label>
       {% endfor %}
-    </select>
-  </form>
-  <form method="get" action={{ url_for('show_issues_query') }}>
-    <label>Query</label>
-    <input value="{{ query }}" size="50" type="text" class="text" name="query">
+    </fieldset>
   </form>
 {% endblock topnav %}
 

@@ -216,7 +216,7 @@ def show_issues():
 
     return render_template(
         'issues.jinja2', issues=issues, noned_issues=noned_issues,
-        opened=opened, closed=closed, query=query, groupby=groupby,
+        opened=opened, closed=closed, groupby=groupby,
         filters=filters, groupers=GROUPERS)
 
 
@@ -277,20 +277,6 @@ def show_assigned_issues(start=None, stop=None):
     return render_template(
         'assigned_issues.jinja2', issues=ok_issues, start=start, stop=stop,
         users=set(assignees))
-
-
-@app.route('/issues/custom_query')
-@autologin
-def show_issues_query():
-    # parse query to filter here
-    query = request.args.get('query').strip()
-    args = query.split(' ')
-    filters = {}
-    for arg in args:
-        if ':' in arg:
-            key, value = arg.split(':')
-            filters[key] = value
-    return redirect(url_for('show_issues', **filters))
 
 
 @app.route('/issues/form_query')
