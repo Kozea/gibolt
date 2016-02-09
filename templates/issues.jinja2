@@ -18,7 +18,7 @@
         {% endif %}
         <span class="project">{{ issue.repository.full_name | short_name }}</span>
         {% for label in issue.labels %}
-          <span class="issues-label" style="background: #{{ label.color }}; color: {{ label.color | text_color }}">{{ label.name }}</span>
+          <span class="issues-label">{{ label.name }}</span>
         {% endfor %}
         <a href="{{ issue.html_url }}">#{{ issue.number }}</a> {{ issue.title | striptags }}
         {{ progress.render(issue.opened, issue.closed) }}
