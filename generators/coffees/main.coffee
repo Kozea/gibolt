@@ -45,3 +45,7 @@ setState = (boxes, parent)->
 
 document.addEventListener 'DOMContentLoaded', () ->
   document.getElementById("useless-submit").hidden = true
+
+
+root.submit_forms = ()->
+    window.location.href = "/issues?"+$("#issue_filter_1").serialize()+"&"+$("#issue_filter_2").serialize()

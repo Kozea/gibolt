@@ -32,13 +32,13 @@
 {% endmacro %}
 
 {% macro mk_labeled_input(type, name, value, label) %}
-  <input type="{{ type }}" name="{{ name }}" id="{{ name }}_{{ value }}" value="{{ value }}" {{ 'checked' if value in filters[name] }} onChange="this.form.submit()" />
+  <input type="{{ type }}" name="{{ name }}" id="{{ name }}_{{ value }}" value="{{ value }}" {{ 'checked' if value in filters[name] }} onChange="submit_forms()" />
   <label for="{{ name }}_{{ value }}">{{ label }}</label>
 {% endmacro %}
 
 {% block sidenav %}
   <nav>
-    <form action="{{ url_for('show_form_query') }}" method="get">
+    <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_2">
       <fieldset class="github_labels">
         <legend>Priority</legend>
         {{ mk_labeled_input('checkbox', 'labels', 'sprint', 'sprint') }}
@@ -64,17 +64,18 @@
 {% endblock sidenav %}
 
 {% block topnav %}
-  <form action="{{ url_for('show_form_query') }}" method="get">
+  <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_1">
     <fieldset class="state">
       <legend>State</legend>
       {{ mk_labeled_input('radio', 'state', 'open', 'open') }}
       {{ mk_labeled_input('radio', 'state', 'closed', 'closed') }}
       {{ mk_labeled_input('radio', 'state', 'all', 'all') }}
     </fieldset>
+    <input type="hidden" name="filter" value="{{filters['filter']}}"/>
     <fieldset class="groupby">
       <legend>Group by</legend>
       {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository.full_name') %}
-        <input type="radio" name="groupby" id="groupby_{{ value }}" value="{{ value }}" {{ 'checked' if value == groupby }} onChange="this.form.submit()" /><label for="groupby_{{ value }}">{{ groupers[value] if value else "Don't Group"}}</label>
+        <input type="radio" name="groupby" id="groupby_{{ value }}" value="{{ value }}" {{ 'checked' if value == groupby }} onChange="submit_forms()" /><label for="groupby_{{ value }}">{{ groupers[value] if value else "Don't Group"}}</label>
       {% endfor %}
     </fieldset>
   </form>
