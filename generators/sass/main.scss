@@ -323,9 +323,9 @@ html {
           h1 {
             align-items: center;
             background: #e0e9f0;
-            color: #636F77;
+            color: #50595f;
             display: flex;
-            font-size: 1.1em;
+            font-size: 1.2em;
             font-weight: 400;
             margin: 0;
             padding: 0.8em;
@@ -376,45 +376,39 @@ html {
               li {
                 margin: 0.5em 0;
 
-                label {
-                  align-items: center;
-                  display: flex;
-                  flex-direction: row;
-                  order: 2;
+                .user-avatar {
+                  max-height: 40px;
+                  order: 0;
+                  vertical-align: middle;
+                  width: 40px;
+                }
 
-                  .user-avatar {
-                    max-height: 40px;
-                    order: 0;
-                    vertical-align: middle;
-                    width: 40px;
-                  }
+                .mini-user-avatar {
+                  max-height: 40px;
+                  vertical-align: middle;
+                  width: 40px;
+                }
 
-                  .mini-user-avatar {
-                    max-height: 40px;
-                    vertical-align: middle;
-                    width: 40px;
-                  }
+                .issues-label {
+                  border-radius: 5px;
+                  color: $text;
+                  font-size: 0.8em;
+                  margin: 0 0.2em;
+                  order: 4;
+                  padding: 0.5em;
 
-                  .issues-label {
-                    border-radius: 5px;
+                  &:before {
+                    background: red;
+                    border-radius: 100%;
+                    content: "";
                     color: $text;
-                    font-size: 0.8em;
-                    margin: 0 0.2em;
-                    order: 4;
-                    padding: 0.5em;
-
-                    &:before {
-                      background: red;
-                      border-radius: 100%;
-                      content: "";
-                      color: $text;
-                      display: inline-block;
-                      height: 8px;
-                      margin-right: 0.5em;
-                      width: 8px;
-                    }
+                    display: inline-block;
+                    height: 8px;
+                    margin-right: 0.5em;
+                    width: 8px;
                   }
                 }
+
 
                 .pull-request::before {
                   content: "PR";

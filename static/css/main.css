@@ -257,9 +257,9 @@ html body main #main {
 html body main #main form h1 {
   align-items: center;
   background: #e0e9f0;
-  color: #636F77;
+  color: #50595f;
   display: flex;
-  font-size: 1.1em;
+  font-size: 1.2em;
   font-weight: 400;
   margin: 0;
   padding: 0.8em;
@@ -301,24 +301,18 @@ html body main #main form article h2 input {
 html body main #main form article ul li {
   margin: 0.5em 0;
 }
-html body main #main form article ul li label {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  order: 2;
-}
-html body main #main form article ul li label .user-avatar {
+html body main #main form article ul li .user-avatar {
   max-height: 40px;
   order: 0;
   vertical-align: middle;
   width: 40px;
 }
-html body main #main form article ul li label .mini-user-avatar {
+html body main #main form article ul li .mini-user-avatar {
   max-height: 40px;
   vertical-align: middle;
   width: 40px;
 }
-html body main #main form article ul li label .issues-label {
+html body main #main form article ul li .issues-label {
   border-radius: 5px;
   color: #010101;
   font-size: 0.8em;
@@ -326,7 +320,7 @@ html body main #main form article ul li label .issues-label {
   order: 4;
   padding: 0.5em;
 }
-html body main #main form article ul li label .issues-label:before {
+html body main #main form article ul li .issues-label:before {
   background: red;
   border-radius: 100%;
   content: "";

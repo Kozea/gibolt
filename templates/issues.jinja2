@@ -6,7 +6,6 @@
     {% for issue in issues %}
     <li class="{{ issue.state }}{%- if issue.pull_request %} pull-request{%- endif -%}">
         {% if with_box %}
-          <label>
             <input class="issues {{ grouper }}" type="checkbox" name="issues" onclick="toggleparent(this, '{{ grouper }}')" value="{{issue.repository.full_name | short_name }}${{ issue.number }}$
             {%- for label in issue.labels -%}
               {{ label.name }}
@@ -16,14 +15,16 @@
         {% if with_avatar %}
           <img class="mini-user-avatar" src="{{ issue.assignee.avatar_url or url_for('static', filename='images/question-mark.png')}}" alt="avatar" title="{{ issue.assignee.login or 'not assigned' }}"/>
         {% endif %}
-        <span class="project">{{ issue.repository.full_name | short_name }}</span>
-        {% for label in issue.labels %}
-          <span class="issues-label">{{ label.name }}</span>
-        {% endfor %}
-        <a href="{{ issue.html_url }}">#{{ issue.number }}</a> {{ issue.title | striptags }}
-        {{ progress.render(issue.opened, issue.closed) }}
-        {% if with_box %}
-          </label>
+        <a href="{{ issue.html_url }}">
+          <span class="project">{{ issue.repository.full_name | short_name }}</span>
+          <span class="issue-id">#{{ issue.number }}</span>
+          <span class="issue-title">{{ issue.title | striptags }}</span>
+          {{ progress.render(issue.opened, issue.closed) }}
+          {% for label in issue.labels %}
+            <span class="issues-label">{{ label.name }}</span>
+          {% endfor %}
+          {% if with_box %}
+        </a>
         {% endif %}
       </li>
     {% endfor %}
