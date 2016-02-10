@@ -25,17 +25,7 @@ input[type=checkbox]:checked:focus {
 
 ul {
   list-style: none;
-}
-
-.open {
-  color: #010101;
-}
-
-.closed {
-  color: #f54e40;
-}
-.closed span {
-  color: #010101;
+  padding-left: 0;
 }
 
 a {
@@ -112,6 +102,13 @@ html body #filter form fieldset {
   margin: 0 0.5em 0 0;
   padding: 0;
 }
+html body #filter form fieldset.state label:hover {
+  background: #6fa1fe;
+}
+html body #filter form fieldset.state input:checked + label {
+  background: #6fa1fe;
+  color: #fff;
+}
 html body #filter form fieldset label {
   display: inline-block;
   padding: 1em;
@@ -122,43 +119,40 @@ html body #filter form fieldset label:hover {
   color: #fff;
   cursor: pointer;
 }
-html body #filter form fieldset label:checked {
-  background: black;
-}
 html body #filter form fieldset legend, html body #filter form fieldset input {
   display: none;
 }
-html body #filter form legend {
-  float: left;
-}
-html body #filter select, html body #filter input {
+html body #filter form select, html body #filter form input {
   box-shadow: none;
   margin: 0 0.5em;
   padding: 0.5em;
 }
-html body #filter select:focus, html body #filter input:focus {
+html body #filter form select:focus, html body #filter form input:focus {
   outline: none;
 }
-html body #filter input {
+html body #filter form input {
   background: #2c4065;
   border: 1px solid #ced9eb;
   color: #fff;
   font-family: Lato, sans-serif;
   font-size: 0.9em;
 }
-html body #filter input:checked + label {
+html body #filter form input:checked + label {
   background: #f54e40;
   color: #fff;
 }
-html body #filter select {
+html body #filter form select {
   background: #2c4065;
   border-color: #ced9eb;
   color: #fff;
   font-family: Lato, sans-serif;
 }
-html body #filter select option {
+html body #filter form select option {
   background: #fff;
   color: #2c4065;
+}
+html body #filter form legend {
+  float: left;
 }
 html body aside:not(#filter) {
   background: #2c4065;
@@ -273,6 +267,7 @@ html body main #main form progress[value] {
   -moz-appearance: none;
   appearance: none;
   border: none;
+  height: 10px;
 }
 html body main #main form progress[value]::-webkit-progress-bar {
   background-color: #c5d4df;
@@ -299,7 +294,35 @@ html body main #main form article h2 input {
   vertical-align: middle;
 }
 html body main #main form article ul li {
-  margin: 0.5em 0;
+  align-items: center;
+  display: flex;
+  padding: 1em;
+  transition: color 0.2s;
+}
+html body main #main form article ul li:hover.open .issue-title {
+  color: #686868;
+}
+html body main #main form article ul li:hover.closed .issue-title {
+  color: #fdd5d1;
+}
+html body main #main form article ul li.open .issue-title {
+  color: #0F0F0F;
+}
+html body main #main form article ul li.open .issue-id, html body main #main form article ul li.closed .issue-id {
+  color: #6fa1fe;
+  font-weight: 600;
+}
+html body main #main form article ul li.closed .issue-title {
+  color: #f54e40;
+}
+html body main #main form article ul li a {
+  color: #010101;
+}
+html body main #main form article ul li .issue_id {
+  color: #6fa1fe;
+}
+html body main #main form article ul li .issue-title {
+  margin: 0.3em 0;
 }
 html body main #main form article ul li .user-avatar {
   max-height: 40px;
@@ -307,28 +330,29 @@ html body main #main form article ul li .user-avatar {
   vertical-align: middle;
   width: 40px;
 }
+html body main #main form article ul li .issue-title {
+  display: flex;
+  font-size: 1.05em;
+}
 html body main #main form article ul li .mini-user-avatar {
+  margin: 0 0.5em;
   max-height: 40px;
   vertical-align: middle;
   width: 40px;
 }
 html body main #main form article ul li .issues-label {
-  border-radius: 5px;
-  color: #010101;
-  font-size: 0.8em;
-  margin: 0 0.2em;
-  order: 4;
-  padding: 0.5em;
+  color: #6D6D6D;
+  margin: 0 0.3em;
 }
 html body main #main form article ul li .issues-label:before {
-  background: red;
-  border-radius: 100%;
-  content: "";
-  color: #010101;
+  border-color: inherit;
+  border-style: solid;
+  border-radius: 0.25em;
+  border-width: 0.25em;
+  content: '';
   display: inline-block;
-  height: 8px;
-  margin-right: 0.5em;
-  width: 8px;
+  height: 0;
+  margin-right: 0.2em;
 }
 html body main #main form article ul li .pull-request::before {
   content: "PR";

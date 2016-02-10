@@ -33,18 +33,7 @@ input[type=checkbox] {
 
 ul {
   list-style: none;
-}
-
-.open {
-  color: $open-issue;
-}
-
-.closed {
-  color: $close-issue;
-
-  span {
-    color: $text;
-  }
+  padding-left: 0;
 }
 
 a {
@@ -126,6 +115,19 @@ html {
           margin: 0 0.5em 0 0;
           padding: 0;
 
+          &.state {
+            label:hover {
+              background: $a;
+            }
+
+            input:checked {
+              & + label {
+                background: $a;
+                color: #fff;
+              }
+            }
+          }
+
           label {
             display: inline-block;
             padding: 1em;
@@ -136,10 +138,6 @@ html {
               color: #fff;
               cursor: pointer;
             }
-
-            &:checked {
-              background: black;
-            }
           }
 
           legend, input {
@@ -147,45 +145,45 @@ html {
           }
         }
 
-        legend {
-          float: left;
-        }
-      }
+        select, input {
+          box-shadow: none;
+          margin: 0 0.5em;
+          padding: 0.5em;
 
-      select, input {
-        box-shadow: none;
-        margin: 0 0.5em;
-        padding: 0.5em;
-
-        &:focus {
-          outline: none;
-        }
-      }
-
-      input {
-        background: $aside;
-        border: 1px solid #ced9eb;
-        color: #fff;
-        font-family: $text-font;
-        font-size: 0.9em;
-
-        &:checked {
-          & + label {
-            background: $secondary;
-            color: #fff;
+          &:focus {
+            outline: none;
           }
         }
-      }
 
-      select {
-        background: $aside;
-        border-color: #ced9eb;
-        color: #fff;
-        font-family: $text-font;
+        input {
+          background: $aside;
+          border: 1px solid #ced9eb;
+          color: #fff;
+          font-family: $text-font;
+          font-size: 0.9em;
 
-        option {
-          background: #fff;
-          color: $aside;
+          &:checked {
+            & + label {
+              background: $secondary;
+              color: #fff;
+            }
+          }
+        }
+
+        select {
+          background: $aside;
+          border-color: #ced9eb;
+          color: #fff;
+          font-family: $text-font;
+
+          option {
+            background: #fff;
+            color: $aside;
+          }
+        }
+
+        legend {
+          float: left;
         }
       }
     }
@@ -341,6 +339,7 @@ html {
             -moz-appearance: none;
             appearance: none;
             border: none;
+            height: 10px;
 
             &::-webkit-progress-bar {
               background-color: #c5d4df;
@@ -374,7 +373,51 @@ html {
 
             ul {
               li {
-                margin: 0.5em 0;
+                align-items: center;
+                display: flex;
+                padding: 1em;
+                transition: color 0.2s;
+
+                &:hover {
+                  &.open .issue-title {
+                    color: lighten($open-issue, 35%);
+                  }
+
+                  &.closed .issue-title {
+                    color: lighten($close-issue, 30%);
+                  }
+                }
+
+                &.open {
+                  .issue-title {
+                    color: $open-issue;
+                  }
+                }
+
+                &.open, &.closed {
+                  .issue-id {
+                    color: $a;
+                    font-weight: 600;
+                  }
+                }
+
+                &.closed {
+                  .issue-title {
+                    color: $close-issue;
+                  }
+                }
+
+                a {
+                  color: $text;
+                }
+
+                .issue_id {
+                  color: $a;
+                }
+
+                .issue-title {
+                  margin: 0.3em 0;
+                }
 
                 .user-avatar {
                   max-height: 40px;
@@ -383,32 +426,33 @@ html {
                   width: 40px;
                 }
 
+                .issue-title {
+                  display: flex;
+                  font-size: 1.05em;
+                }
+
                 .mini-user-avatar {
+                  margin: 0 0.5em;
                   max-height: 40px;
                   vertical-align: middle;
                   width: 40px;
                 }
 
                 .issues-label {
-                  border-radius: 5px;
-                  color: $text;
-                  font-size: 0.8em;
-                  margin: 0 0.2em;
-                  order: 4;
-                  padding: 0.5em;
+                  color: #6D6D6D;
+                  margin: 0 0.3em;
 
                   &:before {
-                    background: red;
-                    border-radius: 100%;
-                    content: "";
-                    color: $text;
+                    border-color: inherit;
+                    border-style: solid;
+                    border-radius: 0.25em;
+                    border-width: 0.25em;
+                    content: '';
                     display: inline-block;
-                    height: 8px;
-                    margin-right: 0.5em;
-                    width: 8px;
+                    height: 0;
+                    margin-right: 0.2em;
                   }
                 }
-
 
                 .pull-request::before {
                   content: "PR";
