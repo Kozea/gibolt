@@ -16,9 +16,9 @@
           <img class="mini-user-avatar" src="{{ issue.assignee.avatar_url or url_for('static', filename='images/question-mark.png')}}" alt="avatar" title="{{ issue.assignee.login or 'not assigned' }}"/>
         {% endif %}
         <a href="{{ issue.html_url }}">
-          <span class="project">{{ issue.repository.full_name | short_name }}</span>
-          <span class="issue-id">#{{ issue.number }}</span>
           <span class="issue-title">{{ issue.title | striptags }}</span>
+          <span class="issue-id">#{{ issue.number }}</span>
+          <span class="project">{{ issue.repository.full_name | short_name }}</span>
           {{ progress.render(issue.opened, issue.closed) }}
           {% for label in issue.labels %}
             <span class="issues-label">{{ label.name }}</span>
