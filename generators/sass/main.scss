@@ -309,7 +309,7 @@ html {
           }
 
           &::-moz-progress-bar {
-            background-color: #c5d4df;
+            background-color: $progress;
             border: none;
           }
 

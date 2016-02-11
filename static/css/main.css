@@ -242,7 +242,7 @@ html body main form progress[value]::-webkit-progress-bar {
   box-shadow: none;
 }
 html body main form progress[value]::-moz-progress-bar {
-  background-color: #c5d4df;
+  background-color: #fe8d53;
   border: none;
 }
 html body main form progress[value]::-webkit-progress-value {
