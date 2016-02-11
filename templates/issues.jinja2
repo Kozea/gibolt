@@ -36,7 +36,7 @@
   <label for="{{ name }}_{{ value }}">{{ label }}</label>
 {% endmacro %}
 
-{% block sidenav %}
+{% block filter %}
   <nav>
     <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_2">
       <fieldset class="github_labels">
@@ -61,9 +61,9 @@
     </form>
 
   </nav>
-{% endblock sidenav %}
+{% endblock filter %}
 
-{% block topnav %}
+{% block status %}
   <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_1">
     <fieldset class="state">
       <legend>State</legend>
@@ -79,7 +79,7 @@
       {% endfor %}
     </fieldset>
   </form>
-{% endblock topnav %}
+{% endblock status %}
 
 {% block main %}
   {% set with_avatar = true %}

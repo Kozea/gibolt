@@ -70,7 +70,7 @@ html {
         padding-left: 1em;
       }
 
-      #main-navigation-menu { /* - nav menu - */
+      nav {
         ul {
           display: flex;
           margin: 0;
@@ -100,7 +100,7 @@ html {
       color: #ced9eb;
     }
 
-    #filter { /* - aside filter - */
+    #status { /* - aside filter - */
       align-items: center;
       display: flex;
       flex: 1 100%;
@@ -157,7 +157,7 @@ html {
       }
     }
 
-    aside:not(#filter) {
+    #filter {
       min-height: 100vh;
       order: 2;
       width: 150px;
@@ -275,170 +275,168 @@ html {
       height: 100vh;
       order: 3;
 
-      #main { /* - section - */
-        form {
-          h1 {
-            align-items: center;
-            background: #e0e9f0;
-            color: #50595f;
-            display: flex;
-            font-size: 1.2em;
-            font-weight: 400;
+      form {
+        h1 {
+          align-items: center;
+          background: #e0e9f0;
+          color: #50595f;
+          display: flex;
+          font-size: 1.2em;
+          font-weight: 400;
+          margin: 0;
+          padding: 0.8em;
+          text-transform: uppercase;
+
+          input, progress {
+            margin: 0 0.5em;
+          }
+        }
+
+        progress[value] {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          border: none;
+          height: 10px;
+
+          &::-webkit-progress-bar {
+            background-color: #c5d4df;
+            box-shadow: none;
+          }
+
+          &::-moz-progress-bar {
+            background-color: $progress;
+            border: none;
+          }
+
+          &::-webkit-progress-value {
+            background: #fe8d53;
+          }
+        }
+
+        article {
+          height: 100vh;
+          margin-bottom: 1em;
+          overflow: auto;
+          padding: 1em;
+
+          h2 {
             margin: 0;
-            padding: 0.8em;
-            text-transform: uppercase;
 
-            input, progress {
-              margin: 0 0.5em;
+            input {
+              vertical-align: middle;
             }
           }
 
-          progress[value] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            border: none;
-            height: 10px;
-
-            &::-webkit-progress-bar {
-              background-color: #c5d4df;
-              box-shadow: none;
-            }
-
-            &::-moz-progress-bar {
-              background-color: $progress;
-              border: none;
-            }
-
-            &::-webkit-progress-value {
-              background: #fe8d53;
-            }
+          .user-avatar {
+            max-height: 45px;
+            order: 0;
+            vertical-align: middle;
+            width: 45px;
           }
 
-          article {
-            height: 100vh;
-            margin-bottom: 1em;
-            overflow: auto;
-            padding: 1em;
+          .mini-user-avatar {
+            margin: 0 0.5em;
+            max-height: 45px;
+            vertical-align: middle;
+            width: 45px;
+          }
 
-            h2 {
-              margin: 0;
+          ul {
+            li {
+              background: #fff;
+              border: 1px solid darken($body, 5%);
+              align-items: center;
+              display: flex;
+              margin: 0.5em 0;
+              padding: 1.5em;
+              transition: color 0.2s;
 
-              input {
-                vertical-align: middle;
+              &:hover {
+                &.open .issue-title {
+                  color: lighten($open-issue, 35%);
+                }
+
+                &.closed .issue-title {
+                  color: lighten($close-issue, 15%);
+                }
               }
-            }
 
-            .user-avatar {
-              max-height: 45px;
-              order: 0;
-              vertical-align: middle;
-              width: 45px;
-            }
-
-            .mini-user-avatar {
-              margin: 0 0.5em;
-              max-height: 45px;
-              vertical-align: middle;
-              width: 45px;
-            }
-
-            ul {
-              li {
-                background: #fff;
-                border: 1px solid darken($body, 5%);
-                align-items: center;
-                display: flex;
-                margin: 0.5em 0;
-                padding: 1.5em;
-                transition: color 0.2s;
-
-                &:hover {
-                  &.open .issue-title {
-                    color: lighten($open-issue, 35%);
-                  }
-
-                  &.closed .issue-title {
-                    color: lighten($close-issue, 15%);
-                  }
-                }
-
-                &.open {
-                  .issue-title {
-                    color: $open-issue;
-                  }
-                }
-
-                &.open, &.closed {
-                  .issue-id {
-                    color: $a;
-                    font-weight: 700;
-                  }
-                }
-
-                &.closed {
-                  .issue-title {
-                    color: $close-issue;
-                  }
-                }
-
-                a {
-                  color: $text;
-                  padding: 0.5em;
-                }
-
-                .issue_id {
-                  color: $a;
-                }
-
+              &.open {
                 .issue-title {
-                  display: flex;
-                  font-size: 1.2em;
-                  margin-bottom: 0.5em;
+                  color: $open-issue;
                 }
+              }
 
-                .issues-label {
-                  color: #6A6A6A;
-                  font-size: 0.9em;
-                  margin: 0 0.3em;
-
-                  &:before {
-                    border-color: inherit;
-                    border-style: solid;
-                    border-radius: 0.25em;
-                    border-width: 0.25em;
-                    content: '';
-                    display: inline-block;
-                    height: 0;
-                    margin-right: 0.2em;
-                  }
+              &.open, &.closed {
+                .issue-id {
+                  color: $a;
+                  font-weight: 700;
                 }
+              }
 
-                .pull-request::before {
-                  content: "PR";
-                  margin-left: -3em;
-                  position:absolute;
-                  text-align: right;
-                  width: 2em;
+              &.closed {
+                .issue-title {
+                  color: $close-issue;
                 }
+              }
+
+              a {
+                color: $text;
+                padding: 0.5em;
+              }
+
+              .issue_id {
+                color: $a;
+              }
+
+              .issue-title {
+                display: flex;
+                font-size: 1.2em;
+                margin-bottom: 0.5em;
+              }
+
+              .issues-label {
+                color: #6A6A6A;
+                font-size: 0.9em;
+                margin: 0 0.3em;
+
+                &:before {
+                  border-color: inherit;
+                  border-style: solid;
+                  border-radius: 0.25em;
+                  border-width: 0.25em;
+                  content: '';
+                  display: inline-block;
+                  height: 0;
+                  margin-right: 0.2em;
+                }
+              }
+
+              .pull-request::before {
+                content: "PR";
+                margin-left: -3em;
+                position:absolute;
+                text-align: right;
+                width: 2em;
               }
             }
           }
+        }
 
-          button  {
-            border: none;
-            background: #BAC9D5;
-            padding: 1em;
-            font-family: $text-font;
-            transition: background 0.2s;
+        button  {
+          border: none;
+          background: #BAC9D5;
+          padding: 1em;
+          font-family: $text-font;
+          transition: background 0.2s;
 
-            &:hover {
-              background: lighten(#BAC9D5, 5%);
-            }
+          &:hover {
+            background: lighten(#BAC9D5, 5%);
+          }
 
-            &:first-of-type {
-              margin-left: 1em;
-            }
+          &:first-of-type {
+            margin-left: 1em;
           }
         }
       }

@@ -60,23 +60,20 @@ html body header h1 {
   margin: 0;
   padding-left: 1em;
 }
-html body header #main-navigation-menu {
-  /* - nav menu - */
-}
-html body header #main-navigation-menu ul {
+html body header nav ul {
   display: flex;
   margin: 0;
 }
-html body header #main-navigation-menu ul li {
+html body header nav ul li {
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
   transition: background 0.3s;
 }
-html body header #main-navigation-menu ul li:hover {
+html body header nav ul li:hover {
   background: #6fa1fe;
 }
-html body header #main-navigation-menu ul li a {
+html body header nav ul li a {
   color: #fff;
   display: block;
   padding: 1em;
@@ -85,7 +82,7 @@ html body aside {
   background: #2c4065;
   color: #ced9eb;
 }
-html body #filter {
+html body #status {
   /* - aside filter - */
   align-items: center;
   display: flex;
@@ -93,74 +90,74 @@ html body #filter {
   order: 1;
   padding-left: 150px;
 }
-html body #filter form {
+html body #status form {
   align-items: center;
   display: flex;
   margin: 0;
   padding: 0;
 }
-html body #filter form fieldset {
+html body #status form fieldset {
   border: none;
   margin: 0 0.5em 0 0;
   padding: 0;
 }
-html body #filter form fieldset input:checked + label {
+html body #status form fieldset input:checked + label {
   background: #f54e40;
   color: #fff;
 }
-html body #filter form fieldset.state label:hover {
+html body #status form fieldset.state label:hover {
   background: #6fa1fe;
 }
-html body #filter form fieldset.state input:checked + label {
+html body #status form fieldset.state input:checked + label {
   background: #6fa1fe;
   color: #fff;
 }
-html body #filter form fieldset label {
+html body #status form fieldset label {
   display: inline-block;
   padding: 1em;
   transition: background 0.2s, color 0.2s;
 }
-html body #filter form fieldset label:hover {
+html body #status form fieldset label:hover {
   background: #f54e40;
   color: #fff;
   cursor: pointer;
 }
-html body #filter form fieldset legend, html body #filter form fieldset input {
+html body #status form fieldset legend, html body #status form fieldset input {
   display: none;
 }
-html body aside:not(#filter) {
+html body #filter {
   min-height: 100vh;
   order: 2;
   width: 150px;
 }
-html body aside:not(#filter) nav input {
+html body #filter nav input {
   display: none;
 }
-html body aside:not(#filter) nav input + label {
+html body #filter nav input + label {
   color: #fefeff;
   padding: 0.5em;
 }
-html body aside:not(#filter) nav input + label:hover {
+html body #filter nav input + label:hover {
   background: #365988;
   cursor: pointer;
 }
-html body aside:not(#filter) nav input:checked + label {
+html body #filter nav input:checked + label {
   background: #365988;
   color: #fefeff;
 }
-html body aside:not(#filter) nav fieldset {
+html body #filter nav fieldset {
   border: none;
   margin: 0;
   padding: 0;
 }
-html body aside:not(#filter) nav fieldset.github_labels {
+html body #filter nav fieldset.github_labels {
   display: flex;
   flex-direction: column;
 }
-html body aside:not(#filter) nav fieldset.github_labels:first-of-type {
+html body #filter nav fieldset.github_labels:first-of-type {
   border-bottom: 1px solid #151e30;
 }
-html body aside:not(#filter) nav fieldset label:before {
+html body #filter nav fieldset label:before {
   border-radius: 100%;
   content: "";
   display: inline-block;
@@ -169,46 +166,46 @@ html body aside:not(#filter) nav fieldset label:before {
   vertical-align: middle;
   width: 5px;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_sprint"]:before {
+html body #filter nav fieldset label[for="labels_sprint"]:before {
   background: #009800;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_next"]:before {
+html body #filter nav fieldset label[for="labels_next"]:before {
   background: #882211;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_must"]:before {
+html body #filter nav fieldset label[for="labels_must"]:before {
   background: #dd1111;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_nice"]:before {
+html body #filter nav fieldset label[for="labels_nice"]:before {
   background: #ff4500;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_later"]:before {
+html body #filter nav fieldset label[for="labels_later"]:before {
   background: #fbca04;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_next"]:before {
+html body #filter nav fieldset label[for="labels_next"]:before {
   background: #882211;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_feature"]:before {
+html body #filter nav fieldset label[for="labels_feature"]:before {
   background: #207de5;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_bug"]:before {
+html body #filter nav fieldset label[for="labels_bug"]:before {
   background: #9a62d3;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_document"]:before {
+html body #filter nav fieldset label[for="labels_document"]:before {
   background: #a1a1a1;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_commercial"]:before {
+html body #filter nav fieldset label[for="labels_commercial"]:before {
   background: #7aafb3;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_design"]:before {
+html body #filter nav fieldset label[for="labels_design"]:before {
   background: #add924;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_tool"]:before {
+html body #filter nav fieldset label[for="labels_tool"]:before {
   background: #882244;
 }
-html body aside:not(#filter) nav fieldset label[for="labels_debt"]:before {
+html body #filter nav fieldset label[for="labels_debt"]:before {
   background: #0b0b0b;
 }
-html body aside:not(#filter) nav fieldset legend {
+html body #filter nav fieldset legend {
   display: none;
 }
 html body main {
@@ -216,10 +213,7 @@ html body main {
   height: 100vh;
   order: 3;
 }
-html body main #main {
-  /* - section - */
-}
-html body main #main form h1 {
+html body main form h1 {
   align-items: center;
   background: #e0e9f0;
   color: #50595f;
@@ -230,52 +224,52 @@ html body main #main form h1 {
   padding: 0.8em;
   text-transform: uppercase;
 }
-html body main #main form h1 input, html body main #main form h1 progress {
+html body main form h1 input, html body main form h1 progress {
   margin: 0 0.5em;
 }
-html body main #main form progress[value] {
+html body main form progress[value] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   border: none;
   height: 10px;
 }
-html body main #main form progress[value]::-webkit-progress-bar {
+html body main form progress[value]::-webkit-progress-bar {
   background-color: #c5d4df;
   box-shadow: none;
 }
-html body main #main form progress[value]::-moz-progress-bar {
+html body main form progress[value]::-moz-progress-bar {
   background-color: #fe8d53;
   border: none;
 }
-html body main #main form progress[value]::-webkit-progress-value {
+html body main form progress[value]::-webkit-progress-value {
   background: #fe8d53;
 }
-html body main #main form article {
+html body main form article {
   height: 100vh;
   margin-bottom: 1em;
   overflow: auto;
   padding: 1em;
 }
-html body main #main form article h2 {
+html body main form article h2 {
   margin: 0;
 }
-html body main #main form article h2 input {
+html body main form article h2 input {
   vertical-align: middle;
 }
-html body main #main form article .user-avatar {
+html body main form article .user-avatar {
   max-height: 45px;
   order: 0;
   vertical-align: middle;
   width: 45px;
 }
-html body main #main form article .mini-user-avatar {
+html body main form article .mini-user-avatar {
   margin: 0 0.5em;
   max-height: 45px;
   vertical-align: middle;
   width: 45px;
 }
-html body main #main form article ul li {
+html body main form article ul li {
   background: #fff;
   border: 1px solid #dee9f2;
   align-items: center;
@@ -284,40 +278,40 @@ html body main #main form article ul li {
   padding: 1.5em;
   transition: color 0.2s;
 }
-html body main #main form article ul li:hover.open .issue-title {
+html body main form article ul li:hover.open .issue-title {
   color: #686868;
 }
-html body main #main form article ul li:hover.closed .issue-title {
+html body main form article ul li:hover.closed .issue-title {
   color: #f99189;
 }
-html body main #main form article ul li.open .issue-title {
+html body main form article ul li.open .issue-title {
   color: #0F0F0F;
 }
-html body main #main form article ul li.open .issue-id, html body main #main form article ul li.closed .issue-id {
+html body main form article ul li.open .issue-id, html body main form article ul li.closed .issue-id {
   color: #6fa1fe;
   font-weight: 700;
 }
-html body main #main form article ul li.closed .issue-title {
+html body main form article ul li.closed .issue-title {
   color: #f54e40;
 }
-html body main #main form article ul li a {
+html body main form article ul li a {
   color: #010101;
   padding: 0.5em;
 }
-html body main #main form article ul li .issue_id {
+html body main form article ul li .issue_id {
   color: #6fa1fe;
 }
-html body main #main form article ul li .issue-title {
+html body main form article ul li .issue-title {
   display: flex;
   font-size: 1.2em;
   margin-bottom: 0.5em;
 }
-html body main #main form article ul li .issues-label {
+html body main form article ul li .issues-label {
   color: #6A6A6A;
   font-size: 0.9em;
   margin: 0 0.3em;
 }
-html body main #main form article ul li .issues-label:before {
+html body main form article ul li .issues-label:before {
   border-color: inherit;
   border-style: solid;
   border-radius: 0.25em;
@@ -327,24 +321,24 @@ html body main #main form article ul li .issues-label:before {
   height: 0;
   margin-right: 0.2em;
 }
-html body main #main form article ul li .pull-request::before {
+html body main form article ul li .pull-request::before {
   content: "PR";
   margin-left: -3em;
   position: absolute;
   text-align: right;
   width: 2em;
 }
-html body main #main form button {
+html body main form button {
   border: none;
   background: #BAC9D5;
   padding: 1em;
   font-family: Lato, sans-serif;
   transition: background 0.2s;
 }
-html body main #main form button:hover {
+html body main form button:hover {
   background: #cad5df;
 }
-html body main #main form button:first-of-type {
+html body main form button:first-of-type {
   margin-left: 1em;
 }
 

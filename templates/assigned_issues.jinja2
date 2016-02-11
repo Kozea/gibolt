@@ -1,6 +1,6 @@
 {% extends '_layout.jinja2' %}
 
-{% block sidenav %}
+{% block filter %}
   <form method="get" action="{{ url_for('show_assigned_issues') }}">
     <label>Start
       <input type="date" value="{{ start }}" name="start">
@@ -17,7 +17,7 @@
       {% endfor %}
     </ul>
   </nav>
-{% endblock sidenav %}
+{% endblock filter %}
 
 {% block main %}
   <h1>Report of Issues by Project and by User</h1>

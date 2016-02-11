@@ -9,7 +9,7 @@
   </head>
 
   <header>
-    <h1 id="project-title">Gibolt</h1>
+    <h1>Gibolt</h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% for category, message in messages %}
         <aside class="flash {{ category }}">
@@ -17,7 +17,7 @@
         </aside>
       {% endfor %}
     {% endwith %}
-    <nav id="main-navigation-menu">
+    <nav>
       <ul>
         <li><a href="{{ url_for('my_sprint') }}">My Sprint</a></li>
         <li><a href="{{ url_for('show_now') }}">Timeline</a></li>
@@ -28,12 +28,12 @@
     </nav>
   </header>
 
-  <aside>{% block sidenav %}{% endblock sidenav %}</aside>
-  <aside id="filter">{% block topnav %}{% endblock topnav %}</aside>
+  <aside id="status">{% block status %}{% endblock status %}</aside>
+  <aside id="filter">{% block filter %}{% endblock filter %}</aside>
 
   <body>
     <main>
-      <section id="main">{% block main %}{% endblock main %}</section>
+      {% block main %}{% endblock main %}
     </main>
   </body>
 
