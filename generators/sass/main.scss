@@ -1,8 +1,8 @@
 @import "bourbon";
 @import "colors";
 
-@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
-@import url(https://fonts.googleapis.com/css?family=Lato:400,300,700,900);
+@import url(https:\/\/fonts.googleapis.com/css?family=Montserrat:400);
+@import url(https:\/\/fonts.googleapis.com/css?family=Lato:400,700);
 
 $headings-font: Montserrat, sans-serif;
 $text-font: Lato, sans-serif;
@@ -77,7 +77,7 @@ html {
 
           li {
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 700;
             text-transform: uppercase;
             transition: background 0.3s;
 
@@ -372,7 +372,7 @@ html {
                 &.open, &.closed {
                   .issue-id {
                     color: $a;
-                    font-weight: 600;
+                    font-weight: 700;
                   }
                 }
 
