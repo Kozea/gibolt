@@ -14,19 +14,14 @@ module.exports = (grunt) ->
     sass:
       dist:
         options:
-          loadPath: require('node-bourbon').includePaths
           style: 'expanded'
         files: [
           expand: true
           flatten: true
-          src: ["#{sass_path}/*.scss", "#{bower_path}/**/*.scss"]
+          src: "#{sass_path}/main.scss"
           dest: static_css_path
           ext: '.css'
         ]
-    concat:
-      css:
-        src: "#{static_css_path}/**/*.css",
-        dest: "#{static_css_path}/main.css",
     watch:
       scripts:
         files: ['**/*.coffee']
@@ -41,5 +36,4 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-contrib-watch'
-  grunt.loadNpmTasks 'grunt-contrib-concat'
-  grunt.registerTask 'default', ['coffee', 'sass', 'concat', 'watch']
+  grunt.registerTask 'default', ['coffee', 'sass', 'watch']
