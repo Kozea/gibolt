@@ -184,9 +184,6 @@ html body #filter nav fieldset label[for="labels_nice"]:before {
 html body #filter nav fieldset label[for="labels_later"]:before {
   background: #fbca04;
 }
-html body #filter nav fieldset label[for="labels_next"]:before {
-  background: #882211;
-}
 html body #filter nav fieldset label[for="labels_feature"]:before {
   background: #207de5;
 }
@@ -315,14 +312,50 @@ html body main form article ul li .issues-label {
   margin: 0 0.3em;
 }
 html body main form article ul li .issues-label:before {
-  border-color: inherit;
-  border-style: solid;
   border-radius: 0.25em;
   border-width: 0.25em;
   content: '';
   display: inline-block;
-  height: 0;
+  height: 0.5em;
   margin-right: 0.2em;
+  height: 0.5em;
+  width: 0.5em;
+}
+html body main form article ul li .issues-label.label-sprint:before {
+  background-color: #009800;
+}
+html body main form article ul li .issues-label.label-next:before {
+  background-color: #882211;
+}
+html body main form article ul li .issues-label.label-must:before {
+  background-color: #dd1111;
+}
+html body main form article ul li .issues-label.label-nice:before {
+  background-color: #ff4500;
+}
+html body main form article ul li .issues-label.label-later:before {
+  background-color: #fbca04;
+}
+html body main form article ul li .issues-label.label-feature:before {
+  background-color: #207de5;
+}
+html body main form article ul li .issues-label.label-bug:before {
+  background-color: #9a62d3;
+}
+html body main form article ul li .issues-label.label-document:before {
+  background-color: #a1a1a1;
+}
+html body main form article ul li .issues-label.label-commercial:before {
+  background-color: #7aafb3;
+}
+html body main form article ul li .issues-label.label-design:before {
+  background-color: #add924;
+}
+html body main form article ul li .issues-label.label-tool:before {
+  background-color: #882244;
+}
+html body main form article ul li .issues-label.label-debt:before {
+  background-color: #0b0b0b;
 }
 html body main form article ul li .pull-request::before {
   content: "PR";

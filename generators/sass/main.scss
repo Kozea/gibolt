@@ -213,56 +213,10 @@ html {
               width: 5px;
             }
 
-            &[for="labels_sprint"]:before {
-              background: $sprint;
-            }
-
-            &[for="labels_next"]:before {
-              background: $next;
-            }
-
-            &[for="labels_must"]:before {
-              background: $must;
-            }
-
-            &[for="labels_nice"]:before {
-              background: $nice;
-            }
-
-            &[for="labels_later"]:before {
-              background: $later;
-            }
-
-            &[for="labels_next"]:before {
-              background: $next;
-            }
-
-            &[for="labels_feature"]:before {
-              background: $feature;
-            }
-
-            &[for="labels_bug"]:before {
-              background: $bug;
-            }
-
-            &[for="labels_document"]:before {
-              background: $document;
-            }
-
-            &[for="labels_commercial"]:before {
-              background: $commercial;
-            }
-
-            &[for="labels_design"]:before {
-              background: $design;
-            }
-
-            &[for="labels_tool"]:before {
-              background: $tool;
-            }
-
-            &[for="labels_debt"]:before {
-              background: $debt;
+            @each $label, $color in $label-colors {
+              &[for="labels_#{$label}"]:before {
+                background: $color;
+              }
             }
           }
 
@@ -270,7 +224,6 @@ html {
             display: none;
           }
         }
-
       }
     }
 
@@ -406,14 +359,20 @@ html {
                 margin: 0 0.3em;
 
                 &:before {
-                  border-color: inherit;
-                  border-style: solid;
                   border-radius: 0.25em;
                   border-width: 0.25em;
                   content: '';
                   display: inline-block;
-                  height: 0;
+                  height: 0.5em;
                   margin-right: 0.2em;
+                  height: 0.5em;
+                  width: 0.5em;
+                }
+
+                @each $label, $color in $label-colors {
+                  &.label-#{$label}:before {
+                    background-color: $color;
+                  }
                 }
               }
 

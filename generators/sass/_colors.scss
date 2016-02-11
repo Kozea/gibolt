@@ -12,16 +12,17 @@ $checked-label: #365988;
 
 /* - Labels colors - */
 
-$sprint: #009800;
-$next: #882211;
-$must: #dd1111;
-$nice: #ff4500;
-$later: #fbca04;
-$next: #882211;
-$feature: #207de5;
-$bug: #9a62d3;
-$document: #a1a1a1;
-$commercial: #7aafb3;
-$design: #add924;
-$tool: #882244;
-$debt: #0b0b0b;
+$label-colors: (
+  sprint: #009800,
+  next: #882211,
+  must: #dd1111,
+  nice: #ff4500,
+  later: #fbca04,
+  feature: #207de5,
+  bug: #9a62d3,
+  document: #a1a1a1,
+  commercial: #7aafb3,
+  design: #add924,
+  tool: #882244,
+  debt: #0b0b0b,
+);

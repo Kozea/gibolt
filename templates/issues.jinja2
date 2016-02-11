@@ -20,7 +20,7 @@
           <span class="issue-id">#{{ issue.number }}</span>
           <span class="project">{{ issue.repository.full_name | short_name }}</span>
           {% for label in issue.labels %}
-            <span class="issues-label" style="border-color: #{{ label.color }}">{{ label.name }}</span>
+            <span class="issues-label label-{{ label.name }}">{{ label.name }}</span>
           {% endfor %}
           {{ progress.render(issue.opened, issue.closed) }}
           {% if with_box %}
