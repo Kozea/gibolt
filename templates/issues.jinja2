@@ -67,9 +67,9 @@
   <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_1">
     <fieldset class="state">
       <legend>State</legend>
-      {{ mk_labeled_input('radio', 'state', 'open', 'open') }}
-      {{ mk_labeled_input('radio', 'state', 'closed', 'closed') }}
-      {{ mk_labeled_input('radio', 'state', 'all', 'all') }}
+      {{ mk_labeled_input('radio', 'state', 'open', 'Open') }}
+      {{ mk_labeled_input('radio', 'state', 'closed', 'Closed') }}
+      {{ mk_labeled_input('radio', 'state', 'all', 'All') }}
     </fieldset>
     <input type="hidden" name="filter" value="{{filters['filter']}}"/>
     <fieldset class="groupby">
