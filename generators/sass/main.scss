@@ -30,6 +30,27 @@ input[type=checkbox] {
   }
 }
 
+.issues-label {
+  &:before {
+    background-color: #000;
+    border-radius: 0.25em;
+    border-width: 0.25em;
+    content: '';
+    display: inline-block;
+    height: 0.5em;
+    font-size: 0.9em;
+    margin-right: 0.5em;
+    vertical-align: middle;
+    width: 0.5em;
+  }
+
+  @each $label, $color in $label-colors {
+    &.label-#{$label}:before {
+      background-color: $color;
+    }
+  }
+}
+
 ul {
   list-style: none;
   padding-left: 0;
@@ -41,85 +62,79 @@ a {
 }
 
 
-html {
+body {
+  align-content: flex-start;
+  background-color: $body;
+  color: $text;
+  display: flex;
+  height: 100vh;
+  flex-flow: column wrap;
   font-family: $text-font;
   font-weight: 400;
+  margin: 0;
+  width: 100vw;
 
-  body {
-    background-color: $body;
-    color: $text;
+  header {
+    align-items: center;
+    background: $header;
     display: flex;
-    flex-direction: column;
     flex-flow: row wrap;
-    margin: 0;
-    overflow: hidden;
+    width: 100%;
 
-    header {
-      align-items: center;
-      background: $header;
-      display: flex;
-      flex: 100%;
-      order: 0;
+    h1 {
+      color: #fff;
+      flex: 1;
+      font-size: 1.2em;
+      margin: 0;
+      padding-left: 1em;
+    }
 
-      h1 {
-        color: #fff;
-        flex: 1;
-        font-size: 1.2em;
+    nav {
+      ul {
+        display: flex;
+        flex-flow: row wrap;
         margin: 0;
-        padding-left: 1em;
-      }
 
-      nav {
-        ul {
-          display: flex;
-          margin: 0;
+        li {
+          font-weight: 700;
+          text-transform: uppercase;
+          transition: background 0.3s;
 
-          li {
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            transition: background 0.3s;
+          &:hover {
+            background: $a;
+          }
 
-            &:hover {
-              background: $a;
-            }
-
-            a {
-              color: #fff;
-              display: block;
-              padding: 1em;
-            }
+          a {
+            color: #fff;
+            display: block;
+            padding: 1em;
           }
         }
       }
     }
+  }
 
-    aside {
-      background: $aside;
-      color: #ced9eb;
-    }
+  aside {
+    background: $aside;
+    color: #ced9eb;
 
-    #flash {
-      flex: 1 100%;
+    &#flash {
       text-align: center;
+      width: 100%;
     }
 
-    #status {
+    &#status {
       align-items: center;
       display: flex;
-      flex: 1 100%;
-      order: 1;
-      padding-left: 150px;
+      padding-left: 8em;
 
       form {
         align-items: center;
         display: flex;
-        margin: 0;
-        padding: 0;
 
         fieldset {
           border: none;
-          margin: 0 0.5em 0 0;
+          margin: 0 2em 0 0;
           padding: 0;
 
           input:checked {
@@ -161,10 +176,9 @@ html {
       }
     }
 
-    #filter {
-      min-height: 100vh;
-      order: 2;
-      width: 150px;
+    &#filter {
+      position: absolute;
+      width: 8em;
 
       nav {
         input {
@@ -197,26 +211,8 @@ html {
             display: flex;
             flex-direction: column;
 
-            &:first-of-type {
+            &:not(:last-of-type) {
               border-bottom: 1px solid darken($aside, 15%);
-            }
-          }
-
-          label {
-            &:before {
-              border-radius: 100%;
-              content: "";
-              display: inline-block;
-              height: 5px;
-              margin-right: 5px;
-              vertical-align: middle;
-              width: 5px;
-            }
-
-            @each $label, $color in $label-colors {
-              &[for="labels_#{$label}"]:before {
-                background: $color;
-              }
             }
           }
 
@@ -226,182 +222,164 @@ html {
         }
       }
     }
+  }
 
-    main {
-      flex: 3 0px;
-      height: 100vh;
-      order: 3;
+  #filter:not(:empty) + main {
+    border-left: 8em $aside solid;
+  }
 
-      form {
-        h1 {
-          align-items: center;
-          background: #e0e9f0;
-          color: #50595f;
+  main {
+    flex: 1;
+    overflow: auto;
+
+    h1 {
+      align-items: center;
+      background: #e0e9f0;
+      color: #50595f;
+      display: flex;
+      font-size: 1.2em;
+      font-weight: 400;
+      margin: 0;
+      padding: 0.8em;
+      text-transform: uppercase;
+
+      input, progress {
+        margin: 0 0.5em;
+      }
+    }
+
+    progress[value] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border: none;
+      height: 0.8em;
+
+      &::-webkit-progress-bar {
+        background-color: #c5d4df;
+        box-shadow: none;
+      }
+
+      &::-moz-progress-bar {
+        background-color: $progress;
+        border: none;
+      }
+
+      &::-webkit-progress-value {
+        background: #fe8d53;
+      }
+    }
+
+    article {
+      overflow: auto;
+      padding: 1em;
+
+      h2 {
+        margin: 0;
+
+        input {
+          vertical-align: middle;
+        }
+      }
+
+      .user-avatar {
+        max-height: 45px;
+        order: 0;
+        vertical-align: middle;
+        width: 45px;
+      }
+
+      .mini-user-avatar {
+        margin: 0 0.5em;
+        max-height: 45px;
+        vertical-align: middle;
+        width: 45px;
+      }
+
+      li {
+        display: flex;
+      }
+
+      li, dl {
+        background: #fff;
+        border: 1px solid darken($body, 5%);
+        align-items: center;
+        margin: 0.5em 0;
+        padding: 1.5em;
+        transition: color 0.2s;
+
+        &:hover {
+          &.open .issue-title {
+            color: lighten($open-issue, 35%);
+          }
+
+          &.closed .issue-title {
+            color: lighten($close-issue, 15%);
+          }
+        }
+
+        &.open {
+          .issue-title {
+            color: $open-issue;
+          }
+        }
+
+        &.open, &.closed {
+          .issue-id {
+            color: $a;
+            font-weight: 700;
+          }
+        }
+
+        &.closed {
+          .issue-title {
+            color: $close-issue;
+          }
+        }
+
+        a {
+          color: $text;
+          padding: 0.5em;
+        }
+
+        .issue_id {
+          color: $a;
+        }
+
+        .issue-title {
           display: flex;
           font-size: 1.2em;
-          font-weight: 400;
-          margin: 0;
-          padding: 0.8em;
-          text-transform: uppercase;
-
-          input, progress {
-            margin: 0 0.5em;
-          }
+          margin-bottom: 0.5em;
         }
 
-        progress[value] {
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          appearance: none;
-          border: none;
-          height: 10px;
-
-          &::-webkit-progress-bar {
-            background-color: #c5d4df;
-            box-shadow: none;
-          }
-
-          &::-moz-progress-bar {
-            background-color: $progress;
-            border: none;
-          }
-
-          &::-webkit-progress-value {
-            background: #fe8d53;
-          }
+        .issues-label {
+          color: #6A6A6A;
+          margin: 0 0.3em;
         }
 
-        article {
-          height: 100vh;
-          margin-bottom: 1em;
-          overflow: auto;
-          padding: 1em;
-
-          h2 {
-            margin: 0;
-
-            input {
-              vertical-align: middle;
-            }
-          }
-
-          .user-avatar {
-            max-height: 45px;
-            order: 0;
-            vertical-align: middle;
-            width: 45px;
-          }
-
-          .mini-user-avatar {
-            margin: 0 0.5em;
-            max-height: 45px;
-            vertical-align: middle;
-            width: 45px;
-          }
-
-          ul {
-            li {
-              background: #fff;
-              border: 1px solid darken($body, 5%);
-              align-items: center;
-              display: flex;
-              margin: 0.5em 0;
-              padding: 1.5em;
-              transition: color 0.2s;
-
-              &:hover {
-                &.open .issue-title {
-                  color: lighten($open-issue, 35%);
-                }
-
-                &.closed .issue-title {
-                  color: lighten($close-issue, 15%);
-                }
-              }
-
-              &.open {
-                .issue-title {
-                  color: $open-issue;
-                }
-              }
-
-              &.open, &.closed {
-                .issue-id {
-                  color: $a;
-                  font-weight: 700;
-                }
-              }
-
-              &.closed {
-                .issue-title {
-                  color: $close-issue;
-                }
-              }
-
-              a {
-                color: $text;
-                padding: 0.5em;
-              }
-
-              .issue_id {
-                color: $a;
-              }
-
-              .issue-title {
-                display: flex;
-                font-size: 1.2em;
-                margin-bottom: 0.5em;
-              }
-
-              .issues-label {
-                color: #6A6A6A;
-                font-size: 0.9em;
-                margin: 0 0.3em;
-
-                &:before {
-                  border-radius: 0.25em;
-                  border-width: 0.25em;
-                  content: '';
-                  display: inline-block;
-                  height: 0.5em;
-                  margin-right: 0.2em;
-                  height: 0.5em;
-                  width: 0.5em;
-                }
-
-                @each $label, $color in $label-colors {
-                  &.label-#{$label}:before {
-                    background-color: $color;
-                  }
-                }
-              }
-
-              .pull-request::before {
-                content: "PR";
-                margin-left: -3em;
-                position:absolute;
-                text-align: right;
-                width: 2em;
-              }
-            }
-          }
+        .pull-request::before {
+          content: "PR";
+          margin-left: -3em;
+          position:absolute;
+          text-align: right;
+          width: 2em;
         }
+      }
+    }
 
-        button  {
-          border: none;
-          background: #BAC9D5;
-          padding: 1em;
-          font-family: $text-font;
-          transition: background 0.2s;
+    button  {
+      border: none;
+      background: #BAC9D5;
+      padding: 1em;
+      font-family: $text-font;
+      transition: background 0.2s;
 
-          &:hover {
-            background: lighten(#BAC9D5, 5%);
-          }
+      &:hover {
+        background: lighten(#BAC9D5, 5%);
+      }
 
-          &:first-of-type {
-            margin-left: 1em;
-          }
-        }
+      &:first-of-type {
+        margin-left: 1em;
       }
     }
   }

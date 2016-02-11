@@ -33,7 +33,7 @@
 
 {% macro mk_labeled_input(type, name, value, label) %}
   <input type="{{ type }}" name="{{ name }}" id="{{ name }}_{{ value }}" value="{{ value }}" {{ 'checked' if value in filters[name] }} onChange="submit_forms()" />
-  <label for="{{ name }}_{{ value }}">{{ label }}</label>
+  <label for="{{ name }}_{{ value }}" {% if name == 'labels' %}class="issues-label label-{{ label }}"{% endif %}>{{ label }}</label>
 {% endmacro %}
 
 {% block filter %}
@@ -51,7 +51,7 @@
         <legend>Type</legend>
         {{ mk_labeled_input('checkbox', 'labels', 'feature', 'feature') }}
         {{ mk_labeled_input('checkbox', 'labels', 'bug', 'bug') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'document', 'doc') }}
+        {{ mk_labeled_input('checkbox', 'labels', 'document', 'document') }}
         {{ mk_labeled_input('checkbox', 'labels', 'commercial', 'commercial') }}
         {{ mk_labeled_input('checkbox', 'labels', 'design', 'design') }}
         {{ mk_labeled_input('checkbox', 'labels', 'tool', 'tool') }}
@@ -75,7 +75,7 @@
     <fieldset class="groupby">
       <legend>Group by</legend>
       {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository.full_name') %}
-        <input type="radio" name="groupby" id="groupby_{{ value }}" value="{{ value }}" {{ 'checked' if value == groupby }} onChange="submit_forms()" /><label for="groupby_{{ value }}">{{ groupers[value] if value else "Don't Group"}}</label>
+        <input type="radio" name="groupby" id="groupby_{{ value }}" value="{{ value }}" {{ 'checked' if value == (groupby or '') }} onChange="submit_forms()" /><label for="groupby_{{ value }}">{{ groupers[value] if value else "Don't Group"}}</label>
       {% endfor %}
     </fieldset>
   </form>

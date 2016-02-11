@@ -26,12 +26,16 @@
     <h2>Overall</h2>
     {% for issues_by_month in issues | groupby('closed_month') %}
       <h3>{{ issues_by_month.grouper | format_date('%B %Y') }}</h3>
-      {% for issues_by_project in issues_by_month.list | groupby('repository.full_name') | sort_by_len(reverse=True) %}
-        <li>
-          {{ issues_by_project.grouper | short_name }}
-          ({{ (issues_by_project.list | length / issues_by_month.list | length * 100) | round | int }}%)
-        </li>
-      {% endfor %}
+      {% if issues_by_month.list %}
+        <ul>
+          {% for issues_by_project in issues_by_month.list | groupby('repository.full_name') | sort_by_len(reverse=True) %}
+            <li>
+              {{ issues_by_project.grouper | short_name }}
+              ({{ (issues_by_project.list | length / issues_by_month.list | length * 100) | round | int }}%)
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     {% endfor %}
   </article>
 

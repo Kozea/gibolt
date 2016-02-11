@@ -23,6 +23,55 @@ input[type=checkbox]:checked:focus {
   outline: none;
 }
 
+.issues-label:before {
+  background-color: #000;
+  border-radius: 0.25em;
+  border-width: 0.25em;
+  content: '';
+  display: inline-block;
+  height: 0.5em;
+  font-size: 0.9em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+  width: 0.5em;
+}
+.issues-label.label-sprint:before {
+  background-color: #009800;
+}
+.issues-label.label-next:before {
+  background-color: #882211;
+}
+.issues-label.label-must:before {
+  background-color: #dd1111;
+}
+.issues-label.label-nice:before {
+  background-color: #ff4500;
+}
+.issues-label.label-later:before {
+  background-color: #fbca04;
+}
+.issues-label.label-feature:before {
+  background-color: #207de5;
+}
+.issues-label.label-bug:before {
+  background-color: #9a62d3;
+}
+.issues-label.label-document:before {
+  background-color: #a1a1a1;
+}
+.issues-label.label-commercial:before {
+  background-color: #7aafb3;
+}
+.issues-label.label-design:before {
+  background-color: #add924;
+}
+.issues-label.label-tool:before {
+  background-color: #882244;
+}
+.issues-label.label-debt:before {
+  background-color: #0b0b0b;
+}
+
 ul {
   list-style: none;
   padding-left: 0;
@@ -33,187 +82,138 @@ a {
   text-decoration: none;
 }
 
-html {
-  font-family: Lato, sans-serif;
-  font-weight: 400;
-}
-html body {
+body {
+  align-content: flex-start;
   background-color: #f0f5f9;
   color: #010101;
   display: flex;
-  flex-direction: column;
-  flex-flow: row wrap;
+  height: 100vh;
+  flex-flow: column wrap;
+  font-family: Lato, sans-serif;
+  font-weight: 400;
   margin: 0;
-  overflow: hidden;
+  width: 100vw;
 }
-html body header {
+body header {
   align-items: center;
   background: #2c3249;
   display: flex;
-  flex: 100%;
-  order: 0;
+  flex-flow: row wrap;
+  width: 100%;
 }
-html body header h1 {
+body header h1 {
   color: #fff;
   flex: 1;
   font-size: 1.2em;
   margin: 0;
   padding-left: 1em;
 }
-html body header nav ul {
+body header nav ul {
   display: flex;
+  flex-flow: row wrap;
   margin: 0;
 }
-html body header nav ul li {
-  font-size: 13px;
+body header nav ul li {
   font-weight: 700;
   text-transform: uppercase;
   transition: background 0.3s;
 }
-html body header nav ul li:hover {
+body header nav ul li:hover {
   background: #6fa1fe;
 }
-html body header nav ul li a {
+body header nav ul li a {
   color: #fff;
   display: block;
   padding: 1em;
 }
-html body aside {
+body aside {
   background: #2c4065;
   color: #ced9eb;
 }
-html body #flash {
-  flex: 1 100%;
+body aside#flash {
   text-align: center;
+  width: 100%;
 }
-html body #status {
+body aside#status {
   align-items: center;
   display: flex;
-  flex: 1 100%;
-  order: 1;
-  padding-left: 150px;
+  padding-left: 8em;
 }
-html body #status form {
+body aside#status form {
   align-items: center;
   display: flex;
-  margin: 0;
-  padding: 0;
 }
-html body #status form fieldset {
+body aside#status form fieldset {
   border: none;
-  margin: 0 0.5em 0 0;
+  margin: 0 2em 0 0;
   padding: 0;
 }
-html body #status form fieldset input:checked + label {
+body aside#status form fieldset input:checked + label {
   background: #f54e40;
   color: #fff;
 }
-html body #status form fieldset.state label:hover {
+body aside#status form fieldset.state label:hover {
   background: #6fa1fe;
 }
-html body #status form fieldset.state input:checked + label {
+body aside#status form fieldset.state input:checked + label {
   background: #6fa1fe;
   color: #fff;
 }
-html body #status form fieldset label {
+body aside#status form fieldset label {
   display: inline-block;
   padding: 1em;
   transition: background 0.2s, color 0.2s;
 }
-html body #status form fieldset label:hover {
+body aside#status form fieldset label:hover {
   background: #f54e40;
   color: #fff;
   cursor: pointer;
 }
-html body #status form fieldset legend, html body #status form fieldset input {
+body aside#status form fieldset legend, body aside#status form fieldset input {
   display: none;
 }
-html body #filter {
-  min-height: 100vh;
-  order: 2;
-  width: 150px;
+body aside#filter {
+  position: absolute;
+  width: 8em;
 }
-html body #filter nav input {
+body aside#filter nav input {
   display: none;
 }
-html body #filter nav input + label {
+body aside#filter nav input + label {
   color: #fefeff;
   padding: 0.5em;
 }
-html body #filter nav input + label:hover {
+body aside#filter nav input + label:hover {
   background: #365988;
   cursor: pointer;
 }
-html body #filter nav input:checked + label {
+body aside#filter nav input:checked + label {
   background: #365988;
   color: #fefeff;
 }
-html body #filter nav fieldset {
+body aside#filter nav fieldset {
   border: none;
   margin: 0;
   padding: 0;
 }
-html body #filter nav fieldset.github_labels {
+body aside#filter nav fieldset.github_labels {
   display: flex;
   flex-direction: column;
 }
-html body #filter nav fieldset.github_labels:first-of-type {
+body aside#filter nav fieldset.github_labels:not(:last-of-type) {
   border-bottom: 1px solid #151e30;
 }
-html body #filter nav fieldset label:before {
-  border-radius: 100%;
-  content: "";
-  display: inline-block;
-  height: 5px;
-  margin-right: 5px;
-  vertical-align: middle;
-  width: 5px;
-}
-html body #filter nav fieldset label[for="labels_sprint"]:before {
-  background: #009800;
-}
-html body #filter nav fieldset label[for="labels_next"]:before {
-  background: #882211;
-}
-html body #filter nav fieldset label[for="labels_must"]:before {
-  background: #dd1111;
-}
-html body #filter nav fieldset label[for="labels_nice"]:before {
-  background: #ff4500;
-}
-html body #filter nav fieldset label[for="labels_later"]:before {
-  background: #fbca04;
-}
-html body #filter nav fieldset label[for="labels_feature"]:before {
-  background: #207de5;
-}
-html body #filter nav fieldset label[for="labels_bug"]:before {
-  background: #9a62d3;
-}
-html body #filter nav fieldset label[for="labels_document"]:before {
-  background: #a1a1a1;
-}
-html body #filter nav fieldset label[for="labels_commercial"]:before {
-  background: #7aafb3;
-}
-html body #filter nav fieldset label[for="labels_design"]:before {
-  background: #add924;
-}
-html body #filter nav fieldset label[for="labels_tool"]:before {
-  background: #882244;
-}
-html body #filter nav fieldset label[for="labels_debt"]:before {
-  background: #0b0b0b;
-}
-html body #filter nav fieldset legend {
+body aside#filter nav fieldset legend {
   display: none;
 }
-html body main {
-  flex: 3 0px;
-  height: 100vh;
-  order: 3;
+body #filter:not(:empty) + main {
+  border-left: 8em #2c4065 solid;
 }
-html body main form h1 {
+body main {
+  flex: 1;
+  overflow: auto;
+}
+body main h1 {
   align-items: center;
   background: #e0e9f0;
   color: #50595f;
@@ -224,157 +224,110 @@ html body main form h1 {
   padding: 0.8em;
   text-transform: uppercase;
 }
-html body main form h1 input, html body main form h1 progress {
+body main h1 input, body main h1 progress {
   margin: 0 0.5em;
 }
-html body main form progress[value] {
+body main progress[value] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   border: none;
-  height: 10px;
+  height: 0.8em;
 }
-html body main form progress[value]::-webkit-progress-bar {
+body main progress[value]::-webkit-progress-bar {
   background-color: #c5d4df;
   box-shadow: none;
 }
-html body main form progress[value]::-moz-progress-bar {
+body main progress[value]::-moz-progress-bar {
   background-color: #fe8d53;
   border: none;
 }
-html body main form progress[value]::-webkit-progress-value {
+body main progress[value]::-webkit-progress-value {
   background: #fe8d53;
 }
-html body main form article {
-  height: 100vh;
-  margin-bottom: 1em;
+body main article {
   overflow: auto;
   padding: 1em;
 }
-html body main form article h2 {
+body main article h2 {
   margin: 0;
 }
-html body main form article h2 input {
+body main article h2 input {
   vertical-align: middle;
 }
-html body main form article .user-avatar {
+body main article .user-avatar {
   max-height: 45px;
   order: 0;
   vertical-align: middle;
   width: 45px;
 }
-html body main form article .mini-user-avatar {
+body main article .mini-user-avatar {
   margin: 0 0.5em;
   max-height: 45px;
   vertical-align: middle;
   width: 45px;
 }
-html body main form article ul li {
+body main article li {
+  display: flex;
+}
+body main article li, body main article dl {
   background: #fff;
   border: 1px solid #dee9f2;
   align-items: center;
-  display: flex;
   margin: 0.5em 0;
   padding: 1.5em;
   transition: color 0.2s;
 }
-html body main form article ul li:hover.open .issue-title {
+body main article li:hover.open .issue-title, body main article dl:hover.open .issue-title {
   color: #686868;
 }
-html body main form article ul li:hover.closed .issue-title {
+body main article li:hover.closed .issue-title, body main article dl:hover.closed .issue-title {
   color: #f99189;
 }
-html body main form article ul li.open .issue-title {
+body main article li.open .issue-title, body main article dl.open .issue-title {
   color: #0F0F0F;
 }
-html body main form article ul li.open .issue-id, html body main form article ul li.closed .issue-id {
+body main article li.open .issue-id, body main article li.closed .issue-id, body main article dl.open .issue-id, body main article dl.closed .issue-id {
   color: #6fa1fe;
   font-weight: 700;
 }
-html body main form article ul li.closed .issue-title {
+body main article li.closed .issue-title, body main article dl.closed .issue-title {
   color: #f54e40;
 }
-html body main form article ul li a {
+body main article li a, body main article dl a {
   color: #010101;
   padding: 0.5em;
 }
-html body main form article ul li .issue_id {
+body main article li .issue_id, body main article dl .issue_id {
   color: #6fa1fe;
 }
-html body main form article ul li .issue-title {
+body main article li .issue-title, body main article dl .issue-title {
   display: flex;
   font-size: 1.2em;
   margin-bottom: 0.5em;
 }
-html body main form article ul li .issues-label {
+body main article li .issues-label, body main article dl .issues-label {
   color: #6A6A6A;
-  font-size: 0.9em;
   margin: 0 0.3em;
 }
-html body main form article ul li .issues-label:before {
-  border-radius: 0.25em;
-  border-width: 0.25em;
-  content: '';
-  display: inline-block;
-  height: 0.5em;
-  margin-right: 0.2em;
-  height: 0.5em;
-  width: 0.5em;
-}
-html body main form article ul li .issues-label.label-sprint:before {
-  background-color: #009800;
-}
-html body main form article ul li .issues-label.label-next:before {
-  background-color: #882211;
-}
-html body main form article ul li .issues-label.label-must:before {
-  background-color: #dd1111;
-}
-html body main form article ul li .issues-label.label-nice:before {
-  background-color: #ff4500;
-}
-html body main form article ul li .issues-label.label-later:before {
-  background-color: #fbca04;
-}
-html body main form article ul li .issues-label.label-feature:before {
-  background-color: #207de5;
-}
-html body main form article ul li .issues-label.label-bug:before {
-  background-color: #9a62d3;
-}
-html body main form article ul li .issues-label.label-document:before {
-  background-color: #a1a1a1;
-}
-html body main form article ul li .issues-label.label-commercial:before {
-  background-color: #7aafb3;
-}
-html body main form article ul li .issues-label.label-design:before {
-  background-color: #add924;
-}
-html body main form article ul li .issues-label.label-tool:before {
-  background-color: #882244;
-}
-html body main form article ul li .issues-label.label-debt:before {
-  background-color: #0b0b0b;
-}
-html body main form article ul li .pull-request::before {
+body main article li .pull-request::before, body main article dl .pull-request::before {
   content: "PR";
   margin-left: -3em;
   position: absolute;
   text-align: right;
   width: 2em;
 }
-html body main form button {
+body main button {
   border: none;
   background: #BAC9D5;
   padding: 1em;
   font-family: Lato, sans-serif;
   transition: background 0.2s;
 }
-html body main form button:hover {
+body main button:hover {
   background: #cad5df;
 }
-html body main form button:first-of-type {
+body main button:first-of-type {
   margin-left: 1em;
 }
 
