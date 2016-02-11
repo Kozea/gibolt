@@ -10,13 +10,6 @@
 
   <header>
     <h1>Gibolt</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% for category, message in messages %}
-        <aside class="flash {{ category }}">
-          {{ message }}
-        </aside>
-      {% endfor %}
-    {% endwith %}
     <nav>
       <ul>
         <li><a href="{{ url_for('my_sprint') }}">My Sprint</a></li>
@@ -28,6 +21,17 @@
     </nav>
   </header>
 
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <aside id="flash">
+        <ul>
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </aside>
+    {% endif %}
+  {% endwith %}
   <aside id="status">{% block status %}{% endblock status %}</aside>
   <aside id="filter">{% block filter %}{% endblock filter %}</aside>
 

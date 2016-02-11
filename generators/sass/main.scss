@@ -100,7 +100,12 @@ html {
       color: #ced9eb;
     }
 
-    #status { /* - aside filter - */
+    #flash {
+      flex: 1 100%;
+      text-align: center;
+    }
+
+    #status {
       align-items: center;
       display: flex;
       flex: 1 100%;
@@ -305,7 +310,7 @@ html {
           }
 
           &::-moz-progress-bar {
-            background-color: $progress;
+            background-color: #c5d4df;
             border: none;
           }
 

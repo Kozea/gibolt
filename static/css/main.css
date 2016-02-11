@@ -82,8 +82,11 @@ html body aside {
   background: #2c4065;
   color: #ced9eb;
 }
+html body #flash {
+  flex: 1 100%;
+  text-align: center;
+}
 html body #status {
-  /* - aside filter - */
   align-items: center;
   display: flex;
   flex: 1 100%;
@@ -239,7 +242,7 @@ html body main form progress[value]::-webkit-progress-bar {
   box-shadow: none;
 }
 html body main form progress[value]::-moz-progress-bar {
-  background-color: #fe8d53;
+  background-color: #c5d4df;
   border: none;
 }
 html body main form progress[value]::-webkit-progress-value {
