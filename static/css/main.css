@@ -196,6 +196,9 @@ body aside#filter nav fieldset {
   margin: 0;
   padding: 0;
 }
+body aside#filter nav fieldset legend {
+  display: none;
+}
 body aside#filter nav fieldset.github_labels {
   display: flex;
   flex-direction: column;

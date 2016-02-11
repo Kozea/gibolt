@@ -207,6 +207,10 @@ body {
           margin: 0;
           padding: 0;
 
+          legend {
+            display: none;
+          }
+
           &.github_labels {
             display: flex;
             flex-direction: column;
