@@ -95,10 +95,13 @@ html {
       }
     }
 
-    #filter { /* - aside filter - */
-      align-items: center;
+    aside {
       background: $aside;
       color: #ced9eb;
+    }
+
+    #filter { /* - aside filter - */
+      align-items: center;
       display: flex;
       flex: 1 100%;
       order: 1;
@@ -114,6 +117,13 @@ html {
           border: none;
           margin: 0 0.5em 0 0;
           padding: 0;
+
+          input:checked {
+            & + label {
+              background: $secondary;
+              color: #fff;
+            }
+          }
 
           &.state {
             label:hover {
@@ -144,170 +154,119 @@ html {
             display: none;
           }
         }
-
-        select, input {
-          box-shadow: none;
-          margin: 0 0.5em;
-          padding: 0.5em;
-
-          &:focus {
-            outline: none;
-          }
-        }
-
-        input {
-          background: $aside;
-          border: 1px solid #ced9eb;
-          color: #fff;
-          font-family: $text-font;
-          font-size: 0.9em;
-
-          &:checked {
-            & + label {
-              background: $secondary;
-              color: #fff;
-            }
-          }
-        }
-
-        select {
-          background: $aside;
-          border-color: #ced9eb;
-          color: #fff;
-          font-family: $text-font;
-
-          option {
-            background: #fff;
-            color: $aside;
-          }
-        }
-
-        legend {
-          float: left;
-        }
       }
     }
 
     aside:not(#filter) {
-      background: $aside;
-      color: #ced9eb;
       min-height: 100vh;
       order: 2;
       width: 150px;
 
       nav {
-        form {
-          input {
-            &[type=checkbox], &[type=radio] { /* - nav aside buttons -*/
-              display: none;
+        input {
+          display: none;
 
-              & + label {
-                color: #fefeff;
-                padding: 0.5em;
+          & + label {
+            color: #fefeff;
+            padding: 0.5em;
 
-                &:hover {
-                  background: #365988;
-                  cursor: pointer;
-                }
-              }
-            }
-
-            &:checked {
-              & + label {
-                background: #365988;
-                color: #fefeff;
-              }
-            }
-
-            &[type=radio]:checked + label {
-               &:hover {
-               }
+            &:hover {
+              background: $checked-label;
+              cursor: pointer;
             }
           }
 
-          fieldset {
-            border: none;
-            margin: 0;
-            padding: 0;
-
-            &.github_labels {
-              display: flex;
-              flex-direction: column;
-
-              &:first-of-type {
-                border-bottom: 1px solid darken($aside, 15%);
-              }
-            }
-
-            label {
-              &:before {
-                border-radius: 100%;
-                content: "";
-                display: inline-block;
-                height: 5px;
-                margin-right: 5px;
-                vertical-align: middle;
-                width: 5px;
-              }
-
-              &[for="labels_sprint"]:before {
-                background: $sprint;
-              }
-
-              &[for="labels_next"]:before {
-                background: $next;
-              }
-
-              &[for="labels_must"]:before {
-                background: $must;
-              }
-
-              &[for="labels_nice"]:before {
-                background: $nice;
-              }
-
-              &[for="labels_later"]:before {
-                background: $later;
-              }
-
-              &[for="labels_next"]:before {
-                background: $next;
-              }
-
-              &[for="labels_feature"]:before {
-                background: $feature;
-              }
-
-              &[for="labels_bug"]:before {
-                background: $bug;
-              }
-
-              &[for="labels_document"]:before {
-                background: $document;
-              }
-
-              &[for="labels_commercial"]:before {
-                background: $commercial;
-              }
-
-              &[for="labels_design"]:before {
-                background: $design;
-              }
-
-              &[for="labels_tool"]:before {
-                background: $tool;
-              }
-
-              &[for="labels_debt"]:before {
-                background: $debt;
-              }
-            }
-
-            legend {
-              display: none;
+          &:checked {
+            & + label {
+              background: $checked-label;
+              color: #fefeff;
             }
           }
         }
+
+        fieldset {
+          border: none;
+          margin: 0;
+          padding: 0;
+
+          &.github_labels {
+            display: flex;
+            flex-direction: column;
+
+            &:first-of-type {
+              border-bottom: 1px solid darken($aside, 15%);
+            }
+          }
+
+          label {
+            &:before {
+              border-radius: 100%;
+              content: "";
+              display: inline-block;
+              height: 5px;
+              margin-right: 5px;
+              vertical-align: middle;
+              width: 5px;
+            }
+
+            &[for="labels_sprint"]:before {
+              background: $sprint;
+            }
+
+            &[for="labels_next"]:before {
+              background: $next;
+            }
+
+            &[for="labels_must"]:before {
+              background: $must;
+            }
+
+            &[for="labels_nice"]:before {
+              background: $nice;
+            }
+
+            &[for="labels_later"]:before {
+              background: $later;
+            }
+
+            &[for="labels_next"]:before {
+              background: $next;
+            }
+
+            &[for="labels_feature"]:before {
+              background: $feature;
+            }
+
+            &[for="labels_bug"]:before {
+              background: $bug;
+            }
+
+            &[for="labels_document"]:before {
+              background: $document;
+            }
+
+            &[for="labels_commercial"]:before {
+              background: $commercial;
+            }
+
+            &[for="labels_design"]:before {
+              background: $design;
+            }
+
+            &[for="labels_tool"]:before {
+              background: $tool;
+            }
+
+            &[for="labels_debt"]:before {
+              background: $debt;
+            }
+          }
+
+          legend {
+            display: none;
+          }
+        }
+
       }
     }
 
@@ -357,9 +316,8 @@ html {
           }
 
           article {
-            background: #fff;
-            margin-bottom: 1em;
             height: 100vh;
+            margin-bottom: 1em;
             overflow: auto;
             padding: 1em;
 
@@ -371,11 +329,28 @@ html {
               }
             }
 
+            .user-avatar {
+              max-height: 45px;
+              order: 0;
+              vertical-align: middle;
+              width: 45px;
+            }
+
+            .mini-user-avatar {
+              margin: 0 0.5em;
+              max-height: 45px;
+              vertical-align: middle;
+              width: 45px;
+            }
+
             ul {
               li {
+                background: #fff;
+                border: 1px solid darken($body, 5%);
                 align-items: center;
                 display: flex;
-                padding: 1em;
+                margin: 0.5em 0;
+                padding: 1.5em;
                 transition: color 0.2s;
 
                 &:hover {
@@ -384,7 +359,7 @@ html {
                   }
 
                   &.closed .issue-title {
-                    color: lighten($close-issue, 30%);
+                    color: lighten($close-issue, 15%);
                   }
                 }
 
@@ -409,6 +384,7 @@ html {
 
                 a {
                   color: $text;
+                  padding: 0.5em;
                 }
 
                 .issue_id {
@@ -416,30 +392,14 @@ html {
                 }
 
                 .issue-title {
-                  margin: 0.3em 0;
-                }
-
-                .user-avatar {
-                  max-height: 40px;
-                  order: 0;
-                  vertical-align: middle;
-                  width: 40px;
-                }
-
-                .issue-title {
                   display: flex;
-                  font-size: 1.05em;
-                }
-
-                .mini-user-avatar {
-                  margin: 0 0.5em;
-                  max-height: 40px;
-                  vertical-align: middle;
-                  width: 40px;
+                  font-size: 1.2em;
+                  margin-bottom: 0.5em;
                 }
 
                 .issues-label {
-                  color: #6D6D6D;
+                  color: #6A6A6A;
+                  font-size: 0.9em;
                   margin: 0 0.3em;
 
                   &:before {

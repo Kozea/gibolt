@@ -81,11 +81,13 @@ html body header #main-navigation-menu ul li a {
   display: block;
   padding: 1em;
 }
+html body aside {
+  background: #2c4065;
+  color: #ced9eb;
+}
 html body #filter {
   /* - aside filter - */
   align-items: center;
-  background: #2c4065;
-  color: #ced9eb;
   display: flex;
   flex: 1 100%;
   order: 1;
@@ -101,6 +103,10 @@ html body #filter form fieldset {
   border: none;
   margin: 0 0.5em 0 0;
   padding: 0;
+}
+html body #filter form fieldset input:checked + label {
+  background: #f54e40;
+  color: #fff;
 }
 html body #filter form fieldset.state label:hover {
   background: #6fa1fe;
@@ -122,74 +128,39 @@ html body #filter form fieldset label:hover {
 html body #filter form fieldset legend, html body #filter form fieldset input {
   display: none;
 }
-html body #filter form select, html body #filter form input {
-  box-shadow: none;
-  margin: 0 0.5em;
-  padding: 0.5em;
-}
-html body #filter form select:focus, html body #filter form input:focus {
-  outline: none;
-}
-html body #filter form input {
-  background: #2c4065;
-  border: 1px solid #ced9eb;
-  color: #fff;
-  font-family: Lato, sans-serif;
-  font-size: 0.9em;
-}
-html body #filter form input:checked + label {
-  background: #f54e40;
-  color: #fff;
-}
-html body #filter form select {
-  background: #2c4065;
-  border-color: #ced9eb;
-  color: #fff;
-  font-family: Lato, sans-serif;
-}
-html body #filter form select option {
-  background: #fff;
-  color: #2c4065;
-}
-html body #filter form legend {
-  float: left;
-}
 html body aside:not(#filter) {
-  background: #2c4065;
-  color: #ced9eb;
   min-height: 100vh;
   order: 2;
   width: 150px;
 }
-html body aside:not(#filter) nav form input[type=checkbox], html body aside:not(#filter) nav form input[type=radio] {
-  /* - nav aside buttons -*/
+html body aside:not(#filter) nav input {
   display: none;
 }
-html body aside:not(#filter) nav form input[type=checkbox] + label, html body aside:not(#filter) nav form input[type=radio] + label {
+html body aside:not(#filter) nav input + label {
   color: #fefeff;
   padding: 0.5em;
 }
-html body aside:not(#filter) nav form input[type=checkbox] + label:hover, html body aside:not(#filter) nav form input[type=radio] + label:hover {
+html body aside:not(#filter) nav input + label:hover {
   background: #365988;
   cursor: pointer;
 }
-html body aside:not(#filter) nav form input:checked + label {
+html body aside:not(#filter) nav input:checked + label {
   background: #365988;
   color: #fefeff;
 }
-html body aside:not(#filter) nav form fieldset {
+html body aside:not(#filter) nav fieldset {
   border: none;
   margin: 0;
   padding: 0;
 }
-html body aside:not(#filter) nav form fieldset.github_labels {
+html body aside:not(#filter) nav fieldset.github_labels {
   display: flex;
   flex-direction: column;
 }
-html body aside:not(#filter) nav form fieldset.github_labels:first-of-type {
+html body aside:not(#filter) nav fieldset.github_labels:first-of-type {
   border-bottom: 1px solid #151e30;
 }
-html body aside:not(#filter) nav form fieldset label:before {
+html body aside:not(#filter) nav fieldset label:before {
   border-radius: 100%;
   content: "";
   display: inline-block;
@@ -198,46 +169,46 @@ html body aside:not(#filter) nav form fieldset label:before {
   vertical-align: middle;
   width: 5px;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_sprint"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_sprint"]:before {
   background: #009800;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_next"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_next"]:before {
   background: #882211;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_must"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_must"]:before {
   background: #dd1111;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_nice"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_nice"]:before {
   background: #ff4500;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_later"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_later"]:before {
   background: #fbca04;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_next"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_next"]:before {
   background: #882211;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_feature"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_feature"]:before {
   background: #207de5;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_bug"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_bug"]:before {
   background: #9a62d3;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_document"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_document"]:before {
   background: #a1a1a1;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_commercial"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_commercial"]:before {
   background: #7aafb3;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_design"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_design"]:before {
   background: #add924;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_tool"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_tool"]:before {
   background: #882244;
 }
-html body aside:not(#filter) nav form fieldset label[for="labels_debt"]:before {
+html body aside:not(#filter) nav fieldset label[for="labels_debt"]:before {
   background: #0b0b0b;
 }
-html body aside:not(#filter) nav form fieldset legend {
+html body aside:not(#filter) nav fieldset legend {
   display: none;
 }
 html body main {
@@ -281,9 +252,8 @@ html body main #main form progress[value]::-webkit-progress-value {
   background: #fe8d53;
 }
 html body main #main form article {
-  background: #fff;
-  margin-bottom: 1em;
   height: 100vh;
+  margin-bottom: 1em;
   overflow: auto;
   padding: 1em;
 }
@@ -293,17 +263,32 @@ html body main #main form article h2 {
 html body main #main form article h2 input {
   vertical-align: middle;
 }
+html body main #main form article .user-avatar {
+  max-height: 45px;
+  order: 0;
+  vertical-align: middle;
+  width: 45px;
+}
+html body main #main form article .mini-user-avatar {
+  margin: 0 0.5em;
+  max-height: 45px;
+  vertical-align: middle;
+  width: 45px;
+}
 html body main #main form article ul li {
+  background: #fff;
+  border: 1px solid #dee9f2;
   align-items: center;
   display: flex;
-  padding: 1em;
+  margin: 0.5em 0;
+  padding: 1.5em;
   transition: color 0.2s;
 }
 html body main #main form article ul li:hover.open .issue-title {
   color: #686868;
 }
 html body main #main form article ul li:hover.closed .issue-title {
-  color: #fdd5d1;
+  color: #f99189;
 }
 html body main #main form article ul li.open .issue-title {
   color: #0F0F0F;
@@ -317,31 +302,19 @@ html body main #main form article ul li.closed .issue-title {
 }
 html body main #main form article ul li a {
   color: #010101;
+  padding: 0.5em;
 }
 html body main #main form article ul li .issue_id {
   color: #6fa1fe;
 }
 html body main #main form article ul li .issue-title {
-  margin: 0.3em 0;
-}
-html body main #main form article ul li .user-avatar {
-  max-height: 40px;
-  order: 0;
-  vertical-align: middle;
-  width: 40px;
-}
-html body main #main form article ul li .issue-title {
   display: flex;
-  font-size: 1.05em;
-}
-html body main #main form article ul li .mini-user-avatar {
-  margin: 0 0.5em;
-  max-height: 40px;
-  vertical-align: middle;
-  width: 40px;
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
 }
 html body main #main form article ul li .issues-label {
-  color: #6D6D6D;
+  color: #6A6A6A;
+  font-size: 0.9em;
   margin: 0 0.3em;
 }
 html body main #main form article ul li .issues-label:before {
