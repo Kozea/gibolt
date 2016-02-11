@@ -153,6 +153,9 @@ html body aside:not(#filter) nav fieldset {
   margin: 0;
   padding: 0;
 }
+html body aside:not(#filter) nav fieldset legend {
+  display: none;
+}
 html body aside:not(#filter) nav fieldset.github_labels {
   display: flex;
   flex-direction: column;
@@ -208,9 +211,6 @@ html body aside:not(#filter) nav fieldset label[for="labels_tool"]:before {
 html body aside:not(#filter) nav fieldset label[for="labels_debt"]:before {
   background: #0b0b0b;
 }
-html body aside:not(#filter) nav fieldset legend {
-  display: none;
-}
 html body main {
   flex: 3 0px;
   height: 100vh;
@@ -263,15 +263,10 @@ html body main #main form article h2 {
 html body main #main form article h2 input {
   vertical-align: middle;
 }
-html body main #main form article .user-avatar {
-  max-height: 45px;
-  order: 0;
-  vertical-align: middle;
-  width: 45px;
-}
-html body main #main form article .mini-user-avatar {
+html body main #main form article .user-avatar, html body main #main form article .mini-user-avatar {
   margin: 0 0.5em;
   max-height: 45px;
+  order: 0;
   vertical-align: middle;
   width: 45px;
 }
@@ -281,31 +276,31 @@ html body main #main form article ul li {
   align-items: center;
   display: flex;
   margin: 0.5em 0;
-  padding: 1.5em;
+  padding: 1.8em;
   transition: color 0.2s;
 }
-html body main #main form article ul li:hover.open .issue-title {
-  color: #686868;
+html body main #main form article ul li a {
+  color: #010101;
+  padding: 0 0.5em;
 }
-html body main #main form article ul li:hover.closed .issue-title {
-  color: #f99189;
+html body main #main form article ul li .issue-id {
+  color: #6fa1fe;
+  font-weight: 600;
+}
+html body main #main form article ul li .issue-id:hover {
+  color: #88b2fe;
 }
 html body main #main form article ul li.open .issue-title {
   color: #0F0F0F;
 }
-html body main #main form article ul li.open .issue-id, html body main #main form article ul li.closed .issue-id {
-  color: #6fa1fe;
-  font-weight: 600;
+html body main #main form article ul li.open .issue-title:hover {
+  color: #686868;
 }
 html body main #main form article ul li.closed .issue-title {
   color: #f54e40;
 }
-html body main #main form article ul li a {
-  color: #010101;
-  padding: 0.5em;
-}
-html body main #main form article ul li .issue_id {
-  color: #6fa1fe;
+html body main #main form article ul li.closed .issue-title:hover {
+  color: #f99189;
 }
 html body main #main form article ul li .issue-title {
   display: flex;
@@ -337,8 +332,8 @@ html body main #main form article ul li .pull-request::before {
 html body main #main form button {
   border: none;
   background: #BAC9D5;
-  padding: 1em;
   font-family: Lato, sans-serif;
+  padding: 1em;
   transition: background 0.2s;
 }
 html body main #main form button:hover {

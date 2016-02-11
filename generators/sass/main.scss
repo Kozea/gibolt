@@ -189,6 +189,10 @@ html {
           margin: 0;
           padding: 0;
 
+          legend {
+            display: none;
+          }
+
           &.github_labels {
             display: flex;
             flex-direction: column;
@@ -261,12 +265,7 @@ html {
               background: $debt;
             }
           }
-
-          legend {
-            display: none;
-          }
         }
-
       }
     }
 
@@ -329,16 +328,10 @@ html {
               }
             }
 
-            .user-avatar {
-              max-height: 45px;
-              order: 0;
-              vertical-align: middle;
-              width: 45px;
-            }
-
-            .mini-user-avatar {
+            .user-avatar, .mini-user-avatar {
               margin: 0 0.5em;
               max-height: 45px;
+              order: 0;
               vertical-align: middle;
               width: 45px;
             }
@@ -350,45 +343,37 @@ html {
                 align-items: center;
                 display: flex;
                 margin: 0.5em 0;
-                padding: 1.5em;
+                padding: 1.8em;
                 transition: color 0.2s;
-
-                &:hover {
-                  &.open .issue-title {
-                    color: lighten($open-issue, 35%);
-                  }
-
-                  &.closed .issue-title {
-                    color: lighten($close-issue, 15%);
-                  }
-                }
-
-                &.open {
-                  .issue-title {
-                    color: $open-issue;
-                  }
-                }
-
-                &.open, &.closed {
-                  .issue-id {
-                    color: $a;
-                    font-weight: 600;
-                  }
-                }
-
-                &.closed {
-                  .issue-title {
-                    color: $close-issue;
-                  }
-                }
 
                 a {
                   color: $text;
-                  padding: 0.5em;
+                  padding: 0 0.5em;
                 }
 
-                .issue_id {
+                .issue-id {
                   color: $a;
+                  font-weight: 600;
+
+                  &:hover {
+                    color: lighten($a, 5%);
+                  }
+                }
+
+                &.open .issue-title {
+                  color: $open-issue;
+
+                  &:hover {
+                    color: lighten($open-issue, 35%);
+                  }
+                }
+
+                &.closed .issue-title {
+                  color: $close-issue;
+
+                  &:hover {
+                    color: lighten($close-issue, 15%);
+                  }
                 }
 
                 .issue-title {
@@ -427,9 +412,9 @@ html {
 
           button  {
             border: none;
-            background: #BAC9D5;
-            padding: 1em;
+            background: $button;
             font-family: $text-font;
+            padding: 1em;
             transition: background 0.2s;
 
             &:hover {
