@@ -118,13 +118,16 @@ body header nav ul li {
   text-transform: uppercase;
   transition: background 0.3s;
 }
-body header nav ul li:hover {
+body header nav ul li.checked a {
   background: #6fa1fe;
 }
 body header nav ul li a {
   color: #fff;
   display: block;
   padding: 1em;
+}
+body header nav ul li a:hover, body header nav ul li a:focus {
+  background: #6fa1fe;
 }
 body aside {
   background: #2c4065;
