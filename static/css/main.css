@@ -317,12 +317,13 @@ body main article li .issues-label, body main article dl .issues-label {
   color: #6A6A6A;
   margin: 0 0.3em;
 }
-body main article li .pull-request::before, body main article dl .pull-request::before {
+body main article li.pull-request .issue-title::after, body main article dl.pull-request .issue-title::after {
+  border-radius: 1.5em;
   content: "PR";
-  margin-left: -3em;
-  position: absolute;
-  text-align: right;
-  width: 2em;
+  margin-left: 0.5em;
+  font-size: 0.5em;
+  display: inline-block;
+  vertical-align: top;
 }
 body main button {
   border: none;
