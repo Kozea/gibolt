@@ -291,58 +291,45 @@ body {
       }
 
       .user-avatar {
-        max-height: 45px;
+        max-height: 40px;
         order: 0;
         vertical-align: middle;
-        width: 45px;
-      }
-
-      .mini-user-avatar {
-        margin: 0 0.5em;
-        max-height: 45px;
-        vertical-align: middle;
-        width: 45px;
+        width: 40px;
       }
 
       li {
         display: flex;
+        position: relative;
       }
 
       li, dl {
         background: #fff;
         border: 1px solid darken($body, 5%);
         align-items: center;
-        margin: 0.5em 0;
-        padding: 1.5em;
+        margin: 0.25em 0;
+        padding: 0.5em;
         transition: color 0.2s;
 
-        &:hover {
-          &.open .issue-title {
-            color: lighten($open-issue, 35%);
-          }
-
-          &.closed .issue-title {
-            color: lighten($close-issue, 15%);
-          }
+        input[type=checkbox] {
+          margin: 0 1em;
         }
 
-        &.open {
-          .issue-title {
-            color: $open-issue;
-          }
+        &:before {
+          border-left: 0.25em solid;
+          content: '';
+          position: absolute;
+          left: -1px;
+          top: -1px;
+          bottom: -1px;
+          display: block;
         }
 
-        &.open, &.closed {
-          .issue-id {
-            color: $a;
-            font-weight: 700;
-          }
+        &.open:before {
+          border-color: $open-issue;
         }
 
-        &.closed {
-          .issue-title {
-            color: $close-issue;
-          }
+        &.closed:before {
+          border-color: $close-issue;
         }
 
         a {
@@ -350,14 +337,19 @@ body {
           padding: 0.5em;
         }
 
-        .issue_id {
-          color: $a;
+        .issue-title {
+          display: block;
+          font-size: 1.2em;
+          margin-bottom: 0.25em;
         }
 
-        .issue-title {
-          display: flex;
-          font-size: 1.2em;
-          margin-bottom: 0.5em;
+        &:hover .issue-title {
+          color: lighten($text, 50%);
+        }
+
+        .issue-id {
+          color: $a;
+          font-weight: 700;
         }
 
         .issues-label {

@@ -262,55 +262,56 @@ body main article h2 input {
   vertical-align: middle;
 }
 body main article .user-avatar {
-  max-height: 45px;
+  max-height: 40px;
   order: 0;
   vertical-align: middle;
-  width: 45px;
-}
-body main article .mini-user-avatar {
-  margin: 0 0.5em;
-  max-height: 45px;
-  vertical-align: middle;
-  width: 45px;
+  width: 40px;
 }
 body main article li {
   display: flex;
+  position: relative;
 }
 body main article li, body main article dl {
   background: #fff;
   border: 1px solid #dee9f2;
   align-items: center;
-  margin: 0.5em 0;
-  padding: 1.5em;
+  margin: 0.25em 0;
+  padding: 0.5em;
   transition: color 0.2s;
 }
-body main article li:hover.open .issue-title, body main article dl:hover.open .issue-title {
-  color: #686868;
+body main article li input[type=checkbox], body main article dl input[type=checkbox] {
+  margin: 0 1em;
 }
-body main article li:hover.closed .issue-title, body main article dl:hover.closed .issue-title {
-  color: #f99189;
+body main article li:before, body main article dl:before {
+  border-left: 0.25em solid;
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
+  display: block;
 }
-body main article li.open .issue-title, body main article dl.open .issue-title {
-  color: #0F0F0F;
+body main article li.open:before, body main article dl.open:before {
+  border-color: #0fbb0f;
 }
-body main article li.open .issue-id, body main article li.closed .issue-id, body main article dl.open .issue-id, body main article dl.closed .issue-id {
-  color: #6fa1fe;
-  font-weight: 700;
-}
-body main article li.closed .issue-title, body main article dl.closed .issue-title {
-  color: #f54e40;
+body main article li.closed:before, body main article dl.closed:before {
+  border-color: #f54e40;
 }
 body main article li a, body main article dl a {
   color: #010101;
   padding: 0.5em;
 }
-body main article li .issue_id, body main article dl .issue_id {
-  color: #6fa1fe;
-}
 body main article li .issue-title, body main article dl .issue-title {
-  display: flex;
+  display: block;
   font-size: 1.2em;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.25em;
+}
+body main article li:hover .issue-title, body main article dl:hover .issue-title {
+  color: #818181;
+}
+body main article li .issue-id, body main article dl .issue-id {
+  color: #6fa1fe;
+  font-weight: 700;
 }
 body main article li .issues-label, body main article dl .issues-label {
   color: #6A6A6A;

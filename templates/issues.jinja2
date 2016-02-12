@@ -13,7 +13,7 @@
             {%- endfor -%}"/>
         {% endif %}
         {% if with_avatar %}
-          <img class="mini-user-avatar" src="{{ issue.assignee.avatar_url or url_for('static', filename='images/question-mark.png')}}" alt="avatar" title="{{ issue.assignee.login or 'not assigned' }}"/>
+          <img class="user-avatar" src="{{ issue.assignee.avatar_url or url_for('static', filename='images/question-mark.png')}}" alt="avatar" title="{{ issue.assignee.login or 'not assigned' }}"/>
         {% endif %}
         <a href="{{ issue.html_url }}">
           <span class="issue-title">{{ issue.title | striptags }}</span>
