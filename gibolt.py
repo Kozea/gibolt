@@ -202,8 +202,10 @@ def show_issues():
     issues = github.get(url + end_url, all_pages=True)
 
     for issue in issues:
-        issue['opened'] = issue.get('body', '').count('- [ ]')
-        issue['closed'] = issue.get('body', '').count('- [x]')
+        issue['opened'] = (issue.get('body').count('- [ ]') if
+                           issue.get('body') else 0)
+        issue['closed'] = (issue.get('body').count('- [x]') if
+                           issue.get('body') else 0)
 
     noned_issues = []
     opened = len([issue for issue in issues if issue['state'] == 'open'])
