@@ -50,7 +50,7 @@ def patched_github_request(self, method, resource, all_pages=False, **kwargs):
 GitHub.request = patched_github_request
 
 app = Flask(__name__)
-app.secret_key = 'secret'
+app.secret_key = 'new-secret'
 app.config['ORGANISATION'] = 'Kozea'
 app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
 app.config['GITHUB_CLIENT_SECRET'] = 'bcfee82e06c41d22cd324b33a86c1e82a372c403'
@@ -135,6 +135,7 @@ def authorized(oauth_token):
         flash("Authorization failed.")
         return redirect(next_url)
     session['user'] = oauth_token
+    session['login'] = github.get('user')['login']
     return redirect(next_url)
 
 
@@ -174,7 +175,7 @@ def refresh_repo_milestones(repo_name):
 @app.route('/issues/sprint')
 @autologin
 def show_sprint_issues():
-    filters = {'filter': 'all', 'state': 'all', 'label': 'sprint'}
+    filters = {'label': 'sprint'}
     return redirect(url_for('show_issues', **filters))
 
 
@@ -182,7 +183,7 @@ def show_sprint_issues():
 @app.route('/my_sprint')
 @autologin
 def my_sprint():
-    filters = {'filter': 'assigned', 'state': 'all', 'label': 'sprint'}
+    filters = {'assignee': session['login'], 'label': 'sprint'}
     return redirect(url_for('show_issues', **filters))
 
 
@@ -205,13 +206,12 @@ def show_issues():
                 continue
             if key == 'groupby':
                 continue
-            if key == 'filter':
-                continue
             if key == 'simple_query':
                 query += '+{0}'.format('+'.join(values))
                 continue
             for value in values:
-                query += "+{0}:{1}".format(key, value)
+                if value:
+                    query += "+{0}:{1}".format(key, value)
     response = github.get(url + end_url + query, all_pages=True)
     issues = response.get('items')
 
