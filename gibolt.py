@@ -174,7 +174,7 @@ def refresh_repo_milestones(repo_name):
 @app.route('/issues/sprint')
 @autologin
 def show_sprint_issues():
-    filters = {'filter': 'all', 'state': 'all', 'labels': 'sprint'}
+    filters = {'filter': 'all', 'state': 'all', 'label': 'sprint'}
     return redirect(url_for('show_issues', **filters))
 
 
@@ -182,7 +182,7 @@ def show_sprint_issues():
 @app.route('/my_sprint')
 @autologin
 def my_sprint():
-    filters = {'filter': 'assigned', 'state': 'all', 'labels': 'sprint'}
+    filters = {'filter': 'assigned', 'state': 'all', 'label': 'sprint'}
     return redirect(url_for('show_issues', **filters))
 
 
