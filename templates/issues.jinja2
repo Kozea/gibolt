@@ -6,7 +6,7 @@
     {% for issue in issues %}
     <li class="{{ issue.state }}{%- if issue.pull_request %} pull-request{%- endif -%}">
         {% if with_box %}
-            <input class="issues {{ grouper }}" type="checkbox" name="issues" onclick="toggleparent(this, '{{ grouper }}')" value="{{issue.repository.full_name | short_name }}${{ issue.number }}$
+            <input class="issues {{ grouper }}" type="checkbox" name="issues" onclick="toggleparent(this, '{{ grouper }}')" value="{{issue.repository_url | short_name }}${{ issue.number }}$
             {%- for label in issue.labels -%}
               {{ label.name }}
               {%-if not loop.last -%},{%- endif -%}
@@ -18,7 +18,7 @@
         <a href="{{ issue.html_url }}">
           <span class="issue-title">{{ issue.title | striptags }}</span>
           <span class="issue-id">#{{ issue.number }}</span>
-          <span class="project">{{ issue.repository.full_name | short_name }}</span>
+          <span class="project">{{ issue.repository_url | short_name }}</span>
           {% for label in issue.labels %}
             <span class="issues-label label-{{ label.name }}">{{ label.name }}</span>
           {% endfor %}
@@ -74,9 +74,12 @@
     <input type="hidden" name="filter" value="{{filters['filter']}}"/>
     <fieldset class="groupby">
       <legend>Group by</legend>
-      {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository.full_name') %}
+      {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository_url') %}
         <input type="radio" name="groupby" id="groupby_{{ value }}" value="{{ value }}" {{ 'checked' if value == (groupby or '') }} onChange="submit_forms()" /><label for="groupby_{{ value }}">{{ groupers[value] if value else "Don't Group"}}</label>
       {% endfor %}
+    </fieldset>
+    <fieldset class="query">
+      <input type="text" name="simple_query">
     </fieldset>
   </form>
 {% endblock status %}
@@ -107,9 +110,13 @@
           {% if groupby == 'assignee.login' %}
             <img class="user-avatar" src="{{ issue.list[0].assignee.avatar_url }}" alt="avatar" />
           {% elif groupby == 'milestone.title' %}
-            {{ issue.list[0].repository.full_name | short_name }} -
+            {{ issue.list[0].repository_url | short_name }} -
           {% endif %}
-          {{ issue.grouper }}
+          {% if groupby == 'repository_url' %}
+            {{ issue.grouper | short_name }}
+          {% else %}
+            {{ issue.grouper }}
+          {% endif %}
           <input type="checkbox" class="issues parent {{ issue.grouper }}" onclick="toggle(this, '{{ issue.grouper }}')"/>
         </h2>
         {{ present_issues(issue.list, with_avatar, grouper=issue.grouper) }}
