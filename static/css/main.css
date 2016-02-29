@@ -172,7 +172,7 @@ body aside#status form fieldset label:hover {
   color: #fff;
   cursor: pointer;
 }
-body aside#status form fieldset legend, body aside#status form fieldset input {
+body aside#status form fieldset legend, body aside#status form fieldset input[type=radio] {
   display: none;
 }
 body aside#filter {
