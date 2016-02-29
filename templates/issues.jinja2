@@ -33,7 +33,7 @@
 
 {% macro mk_labeled_input(type, name, value, label) %}
   <input type="{{ type }}" name="{{ name }}" id="{{ name }}_{{ value }}" value="{{ value }}" {{ 'checked' if value in filters[name] }} onChange="submit_forms()" />
-  <label for="{{ name }}_{{ value }}" {% if name == 'labels' %}class="issues-label label-{{ label }}"{% endif %}>{{ label }}</label>
+  <label for="{{ name }}_{{ value }}" {% if name == 'label' %}class="issues-label label-{{ label }}"{% endif %}>{{ label }}</label>
 {% endmacro %}
 
 {% block filter %}
@@ -41,21 +41,21 @@
     <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_2">
       <fieldset class="github_labels">
         <legend>Priority</legend>
-        {{ mk_labeled_input('checkbox', 'labels', 'sprint', 'sprint') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'next', 'next') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'must', 'must') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'nice', 'nice') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'later', 'later') }}
+        {{ mk_labeled_input('checkbox', 'label', 'sprint', 'sprint') }}
+        {{ mk_labeled_input('checkbox', 'label', 'next', 'next') }}
+        {{ mk_labeled_input('checkbox', 'label', 'must', 'must') }}
+        {{ mk_labeled_input('checkbox', 'label', 'nice', 'nice') }}
+        {{ mk_labeled_input('checkbox', 'label', 'later', 'later') }}
       </fieldset>
       <fieldset class="github_labels">
         <legend>Type</legend>
-        {{ mk_labeled_input('checkbox', 'labels', 'feature', 'feature') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'bug', 'bug') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'document', 'document') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'commercial', 'commercial') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'design', 'design') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'tool', 'tool') }}
-        {{ mk_labeled_input('checkbox', 'labels', 'debt', 'debt') }}
+        {{ mk_labeled_input('checkbox', 'label', 'feature', 'feature') }}
+        {{ mk_labeled_input('checkbox', 'label', 'bug', 'bug') }}
+        {{ mk_labeled_input('checkbox', 'label', 'document', 'document') }}
+        {{ mk_labeled_input('checkbox', 'label', 'commercial', 'commercial') }}
+        {{ mk_labeled_input('checkbox', 'label', 'design', 'design') }}
+        {{ mk_labeled_input('checkbox', 'label', 'tool', 'tool') }}
+        {{ mk_labeled_input('checkbox', 'label', 'debt', 'debt') }}
       </fieldset>
       <input type="submit" id="useless-submit" />
     </form>
@@ -79,7 +79,7 @@
       {% endfor %}
     </fieldset>
     <fieldset class="query">
-      <input type="text" name="simple_query">
+      <input type="text" name="simple_query" value="{{ filters.simple_query }}">
     </fieldset>
   </form>
 {% endblock status %}

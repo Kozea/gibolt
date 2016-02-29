@@ -76,7 +76,7 @@ def format_date_filter(isodate, dateformat):
 @app.template_filter('short_name')
 def short_name(full_name):
     """Split a full name after a slash to display only the projet name."""
-    return full_name.split('/')[5]
+    return full_name.split('/')[-1]
 
 
 @app.template_filter('text_color')
@@ -194,24 +194,13 @@ def show_issues():
     groupby = filters.get('groupby')
     if groupby:
         del filters['groupby']
-
-    url = 'orgs/{0}/issues'.format(
-            app.config['ORGANISATION'])
-    end_url = '?per_page=100&'
-    query = ''
-    for key, value in filters.items():
-        end_url += "{0}={1}&".format(key, value)
-        query += "{0}:{1} ".format(key, value)
-    end_url = end_url[:-1]
-    print(url + end_url)
     url = 'search/issues'
     end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
+    query = ''
     if 'complex_query' in request.args:
-        end_url += '+' + request.args.get('complex_query')
+        query += '+' + request.args.get('complex_query')
     else:
         for (key, values) in request.args.lists():
-            if key == 'labels':
-                key = 'label'
             if key == 'state' and 'all' in values:
                 continue
             if key == 'groupby':
@@ -219,12 +208,11 @@ def show_issues():
             if key == 'filter':
                 continue
             if key == 'simple_query':
-                end_url += '+{0}'.format('+'.join(values))
+                query += '+{0}'.format('+'.join(values))
                 continue
             for value in values:
-                end_url += "+{0}:{1}".format(key, value)
-    print(url + end_url)
-    response = github.get(url + end_url, all_pages=True)
+                query += "+{0}:{1}".format(key, value)
+    response = github.get(url + end_url + query, all_pages=True)
     issues = response.get('items')
 
     for issue in issues:
