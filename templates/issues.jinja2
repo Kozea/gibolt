@@ -64,7 +64,7 @@
 {% endblock filter %}
 
 {% block status %}
-  <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_1">
+  <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_1" onSubmit="submit_forms(); return false">
     <fieldset class="state">
       <legend>State</legend>
       {{ mk_labeled_input('radio', 'state', 'open', 'Open') }}
