@@ -262,8 +262,7 @@ def apply_labels():
                 data=data)
         except GitHubError:
             flash("Unable to change issue {} of {}".format(number, repo))
-    return redirect(url_for('show_issues_query',
-                            query=request.form.get('query')))
+    return redirect(request.referrer)
 
 
 @app.route('/assigned/<start>/<stop>')
