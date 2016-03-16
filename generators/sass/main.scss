@@ -133,8 +133,9 @@ body {
       padding-left: 8em;
 
       form {
-        align-items: center;
+        align-items: stretch;
         display: flex;
+        width: 100%;
 
         fieldset {
           border: none;
@@ -161,6 +162,10 @@ body {
             }
           }
 
+          &.groupby {
+            flex: 1;
+          }
+
           label {
             display: inline-block;
             padding: 1em;
@@ -170,6 +175,28 @@ body {
               background: $secondary;
               color: #fff;
               cursor: pointer;
+            }
+          }
+
+          &.query {
+            background: lighten($aside, 25%);
+            margin-right: 0;
+            padding: 1em;
+
+            input {
+              background: url('/static/images/search.svg') no-repeat lighten($aside, 25%);
+              border: 0;
+              color: #fff;
+              font-family: $text-font;
+              font-size: 1em;
+              padding: 0 0 0 1.5em;
+              transition: 0.5s;
+              width: 0;
+
+              &:focus, &:not([value=""]) {
+                outline: none;
+                width: 10em;
+              }
             }
           }
 

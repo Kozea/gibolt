@@ -143,8 +143,9 @@ body aside#status {
   padding-left: 8em;
 }
 body aside#status form {
-  align-items: center;
+  align-items: stretch;
   display: flex;
+  width: 100%;
 }
 body aside#status form fieldset {
   border: none;
@@ -162,6 +163,9 @@ body aside#status form fieldset.state input:checked + label {
   background: #6fa1fe;
   color: #fff;
 }
+body aside#status form fieldset.groupby {
+  flex: 1;
+}
 body aside#status form fieldset label {
   display: inline-block;
   padding: 1em;
@@ -171,6 +175,25 @@ body aside#status form fieldset label:hover {
   background: #f54e40;
   color: #fff;
   cursor: pointer;
+}
+body aside#status form fieldset.query {
+  background: #5a7ab7;
+  margin-right: 0;
+  padding: 1em;
+}
+body aside#status form fieldset.query input {
+  background: url("/static/images/search.svg") no-repeat #5a7ab7;
+  border: 0;
+  color: #fff;
+  font-family: Lato, sans-serif;
+  font-size: 1em;
+  padding: 0 0 0 1.5em;
+  transition: 0.5s;
+  width: 0;
+}
+body aside#status form fieldset.query input:focus, body aside#status form fieldset.query input:not([value=""]) {
+  outline: none;
+  width: 10em;
 }
 body aside#status form fieldset legend, body aside#status form fieldset input[type=radio] {
   display: none;
