@@ -187,6 +187,7 @@ body aside#status form fieldset.query input {
   color: #fff;
   font-family: Lato, sans-serif;
   font-size: 1em;
+  margin: 0;
   padding: 0 0 0 1.5em;
   transition: 0.5s;
   width: 0;
