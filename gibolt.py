@@ -4,13 +4,13 @@ from datetime import date, datetime
 from functools import wraps
 import json
 
-import pytz
+from cachecontrol import CacheControl
 from dateutil.relativedelta import relativedelta
 from flask.ext.github import GitHub, GitHubError
 from flask import (
     Flask, request, session, render_template, redirect, url_for, flash)
+import pytz
 import requests
-from cachecontrol import CacheControl
 
 
 GROUPERS = OrderedDict((
@@ -19,35 +19,6 @@ GROUPERS = OrderedDict((
     ('milestone.title', 'Milestone'),
     ('state', 'State'),
     ('repository_url', 'Project')))
-
-
-# monkey patch to manage pagination in github-flask and use cache
-def patched_github_request(self, method, resource, all_pages=False, **kwargs):
-    response = self.raw_request(method, resource, **kwargs)
-    status_code = str(response.status_code)
-    if not status_code.startswith('2'):
-        raise GitHubError(response)
-    if response.headers['Content-Type'].startswith('application/json'):
-        result = response.json()
-        while response.links.get('next') and all_pages:
-            response = self.session.request(
-                    method, response.links['next']['url'], **kwargs)
-            if not status_code.startswith('2'):
-                raise GitHubError(response)
-            if response.headers['Content-Type'].startswith('application/json'):
-                body = response.json()
-                if isinstance(body, list):
-                    result += body
-                elif isinstance(body, dict) and 'items' in body:
-                    result['items'] += body['items']
-            else:
-                raise GitHubError(response)
-        return result
-    else:
-        return response
-
-
-GitHub.request = patched_github_request
 
 app = Flask(__name__)
 app.secret_key = 'new-secret'
