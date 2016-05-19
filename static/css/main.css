@@ -2,8 +2,7 @@
 @import url(https:\/\/fonts.googleapis.com/css?family=Montserrat:400);
 @import url(https:\/\/fonts.googleapis.com/css?family=Lato:400,700);
 h1, h2, h3, h4, h5, h6 {
-  font-family: Montserrat, sans-serif;
-}
+  font-family: Montserrat, sans-serif; }
 
 input[type=checkbox] {
   -webkit-appearance: none;
@@ -11,17 +10,14 @@ input[type=checkbox] {
   border: 2px solid #C5CCD2;
   box-shadow: none;
   height: 15px;
-  width: 15px;
-}
-input[type=checkbox]:checked {
-  background: #6fa1fe;
-  background-clip: content-box;
-  border: 2px solid #6fa1fe;
-  padding: 2px;
-}
-input[type=checkbox]:checked:focus {
-  outline: none;
-}
+  width: 15px; }
+  input[type=checkbox]:checked {
+    background: #6fa1fe;
+    background-clip: content-box;
+    border: 2px solid #6fa1fe;
+    padding: 2px; }
+    input[type=checkbox]:checked:focus {
+      outline: none; }
 
 .issues-label:before {
   background-color: #000;
@@ -33,54 +29,51 @@ input[type=checkbox]:checked:focus {
   font-size: 0.9em;
   margin-right: 0.5em;
   vertical-align: middle;
-  width: 0.5em;
-}
+  width: 0.5em; }
+
 .issues-label.label-sprint:before {
-  background-color: #009800;
-}
+  background-color: #009800; }
+
 .issues-label.label-next:before {
-  background-color: #882211;
-}
+  background-color: #882211; }
+
 .issues-label.label-must:before {
-  background-color: #dd1111;
-}
+  background-color: #dd1111; }
+
 .issues-label.label-nice:before {
-  background-color: #ff4500;
-}
+  background-color: #ff4500; }
+
 .issues-label.label-later:before {
-  background-color: #fbca04;
-}
+  background-color: #fbca04; }
+
 .issues-label.label-feature:before {
-  background-color: #207de5;
-}
+  background-color: #207de5; }
+
 .issues-label.label-bug:before {
-  background-color: #9a62d3;
-}
+  background-color: #9a62d3; }
+
 .issues-label.label-document:before {
-  background-color: #a1a1a1;
-}
+  background-color: #a1a1a1; }
+
 .issues-label.label-commercial:before {
-  background-color: #7aafb3;
-}
+  background-color: #7aafb3; }
+
 .issues-label.label-design:before {
-  background-color: #add924;
-}
+  background-color: #add924; }
+
 .issues-label.label-tool:before {
-  background-color: #882244;
-}
+  background-color: #882244; }
+
 .issues-label.label-debt:before {
-  background-color: #0b0b0b;
-}
+  background-color: #0b0b0b; }
 
 ul {
   list-style: none;
-  padding-left: 0;
-}
+  padding-left: 0; }
 
 a {
   color: #6fa1fe;
-  text-decoration: none;
-}
+  text-decoration: none; }
 
 body {
   align-content: flex-start;
@@ -92,275 +85,213 @@ body {
   font-family: Lato, sans-serif;
   font-weight: 400;
   margin: 0;
-  width: 100vw;
-}
-body header {
-  align-items: center;
-  background: #2c3249;
-  display: flex;
-  flex-flow: row wrap;
-  width: 100%;
-}
-body header h1 {
-  color: #fff;
-  flex: 1;
-  font-size: 1.2em;
-  margin: 0;
-  padding-left: 1em;
-}
-body header nav ul {
-  display: flex;
-  flex-flow: row wrap;
-  margin: 0;
-}
-body header nav ul li {
-  font-weight: 700;
-  text-transform: uppercase;
-  transition: background 0.3s;
-}
-body header nav ul li.checked a {
-  background: #6fa1fe;
-}
-body header nav ul li a {
-  color: #fff;
-  display: block;
-  padding: 1em;
-}
-body header nav ul li a:hover, body header nav ul li a:focus {
-  background: #6fa1fe;
-}
-body aside {
-  background: #2c4065;
-  color: #ced9eb;
-}
-body aside#flash {
-  text-align: center;
-  width: 100%;
-}
-body aside#status {
-  align-items: center;
-  display: flex;
-  padding-left: 8em;
-}
-body aside#status form {
-  align-items: stretch;
-  display: flex;
-  width: 100%;
-}
-body aside#status form fieldset {
-  border: none;
-  margin: 0 2em 0 0;
-  padding: 0;
-}
-body aside#status form fieldset input:checked + label {
-  background: #f54e40;
-  color: #fff;
-}
-body aside#status form fieldset.state label:hover {
-  background: #6fa1fe;
-}
-body aside#status form fieldset.state input:checked + label {
-  background: #6fa1fe;
-  color: #fff;
-}
-body aside#status form fieldset.groupby {
-  flex: 1;
-}
-body aside#status form fieldset label {
-  display: inline-block;
-  padding: 1em;
-  transition: background 0.2s, color 0.2s;
-}
-body aside#status form fieldset label:hover {
-  background: #f54e40;
-  color: #fff;
-  cursor: pointer;
-}
-body aside#status form fieldset.query {
-  background: #5a7ab7;
-  margin-right: 0;
-  padding: 1em;
-}
-body aside#status form fieldset.query input {
-  background: url("/static/images/search.svg") no-repeat #5a7ab7;
-  border: 0;
-  color: #fff;
-  font-family: Lato, sans-serif;
-  font-size: 1em;
-  margin: 0;
-  padding: 0 0 0 1.5em;
-  transition: 0.5s;
-  width: 0;
-}
-body aside#status form fieldset.query input:focus, body aside#status form fieldset.query input:not([value=""]) {
-  outline: none;
-  width: 10em;
-}
-body aside#status form fieldset legend, body aside#status form fieldset input[type=radio] {
-  display: none;
-}
-body aside#filter {
-  position: absolute;
-  width: 8em;
-}
-body aside#filter nav input {
-  display: none;
-}
-body aside#filter nav input + label {
-  color: #fefeff;
-  padding: 0.5em;
-}
-body aside#filter nav input + label:hover {
-  background: #365988;
-  cursor: pointer;
-}
-body aside#filter nav input:checked + label {
-  background: #365988;
-  color: #fefeff;
-}
-body aside#filter nav fieldset {
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-body aside#filter nav fieldset legend {
-  display: none;
-}
-body aside#filter nav fieldset.github_labels {
-  display: flex;
-  flex-direction: column;
-}
-body aside#filter nav fieldset.github_labels:not(:last-of-type) {
-  border-bottom: 1px solid #151e30;
-}
-body aside#filter nav fieldset legend {
-  display: none;
-}
-body #filter:not(:empty) + main {
-  border-left: 8em #2c4065 solid;
-}
-body main {
-  flex: 1;
-  overflow: auto;
-}
-body main h1 {
-  align-items: center;
-  background: #e0e9f0;
-  color: #50595f;
-  display: flex;
-  font-size: 1.2em;
-  font-weight: 400;
-  margin: 0;
-  padding: 0.8em;
-  text-transform: uppercase;
-}
-body main h1 input, body main h1 progress {
-  margin: 0 0.5em;
-}
-body main progress[value] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: none;
-  height: 0.8em;
-}
-body main progress[value]::-webkit-progress-bar {
-  background-color: #c5d4df;
-  box-shadow: none;
-}
-body main progress[value]::-moz-progress-bar {
-  background-color: #fe8d53;
-  border: none;
-}
-body main progress[value]::-webkit-progress-value {
-  background: #fe8d53;
-}
-body main article {
-  overflow: auto;
-  padding: 1em;
-}
-body main article h2 {
-  margin: 0;
-}
-body main article h2 input {
-  vertical-align: middle;
-}
-body main article .user-avatar {
-  max-height: 40px;
-  order: 0;
-  vertical-align: middle;
-  width: 40px;
-}
-body main article li {
-  display: flex;
-  position: relative;
-}
-body main article li, body main article dl {
-  background: #fff;
-  border: 1px solid #dee9f2;
-  align-items: center;
-  margin: 0.25em 0;
-  padding: 0.5em;
-  transition: color 0.2s;
-}
-body main article li input[type=checkbox], body main article dl input[type=checkbox] {
-  margin: 0 1em;
-}
-body main article li:before, body main article dl:before {
-  border-left: 0.25em solid;
-  content: '';
-  position: absolute;
-  left: -1px;
-  top: -1px;
-  bottom: -1px;
-  display: block;
-}
-body main article li.open:before, body main article dl.open:before {
-  border-color: #0fbb0f;
-}
-body main article li.closed:before, body main article dl.closed:before {
-  border-color: #f54e40;
-}
-body main article li a, body main article dl a {
-  color: #010101;
-  padding: 0.5em;
-}
-body main article li .issue-title, body main article dl .issue-title {
-  display: block;
-  font-size: 1.2em;
-  margin-bottom: 0.25em;
-}
-body main article li:hover .issue-title, body main article dl:hover .issue-title {
-  color: #818181;
-}
-body main article li .issue-id, body main article dl .issue-id {
-  color: #6fa1fe;
-  font-weight: 700;
-}
-body main article li .issues-label, body main article dl .issues-label {
-  color: #6A6A6A;
-  margin: 0 0.3em;
-}
-body main article li.pull-request .issue-title::after, body main article dl.pull-request .issue-title::after {
-  border-radius: 1.5em;
-  content: "PR";
-  margin-left: 0.5em;
-  font-size: 0.5em;
-  display: inline-block;
-  vertical-align: top;
-}
-body main button {
-  border: none;
-  background: #BAC9D5;
-  padding: 1em;
-  font-family: Lato, sans-serif;
-  transition: background 0.2s;
-}
-body main button:hover {
-  background: #cad5df;
-}
-body main button:first-of-type {
-  margin-left: 1em;
-}
-
-/*# sourceMappingURL=main.css.map */
+  width: 100vw; }
+  body header {
+    align-items: center;
+    background: #2c3249;
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%; }
+    body header h1 {
+      color: #fff;
+      flex: 1;
+      font-size: 1.2em;
+      margin: 0;
+      padding-left: 1em; }
+    body header nav ul {
+      display: flex;
+      flex-flow: row wrap;
+      margin: 0; }
+      body header nav ul li {
+        font-weight: 700;
+        text-transform: uppercase;
+        transition: background 0.3s; }
+        body header nav ul li.checked a {
+          background: #6fa1fe; }
+        body header nav ul li a {
+          color: #fff;
+          display: block;
+          padding: 1em; }
+          body header nav ul li a:hover, body header nav ul li a:focus {
+            background: #6fa1fe; }
+  body aside {
+    background: #2c4065;
+    color: #ced9eb; }
+    body aside#flash {
+      text-align: center;
+      width: 100%; }
+    body aside#status {
+      align-items: center;
+      display: flex;
+      padding-left: 8em; }
+      body aside#status form {
+        align-items: stretch;
+        display: flex;
+        width: 100%; }
+        body aside#status form fieldset {
+          border: none;
+          margin: 0 2em 0 0;
+          padding: 0; }
+          body aside#status form fieldset input:checked + label {
+            background: #f54e40;
+            color: #fff; }
+          body aside#status form fieldset.state label:hover {
+            background: #6fa1fe; }
+          body aside#status form fieldset.state input:checked + label {
+            background: #6fa1fe;
+            color: #fff; }
+          body aside#status form fieldset.groupby {
+            flex: 1; }
+          body aside#status form fieldset label {
+            display: inline-block;
+            padding: 1em;
+            transition: background 0.2s, color 0.2s; }
+            body aside#status form fieldset label:hover {
+              background: #f54e40;
+              color: #fff;
+              cursor: pointer; }
+          body aside#status form fieldset.query {
+            background: #5a7ab7;
+            margin-right: 0;
+            padding: 1em; }
+            body aside#status form fieldset.query input {
+              background: url("/static/images/search.svg") no-repeat #5a7ab7;
+              border: 0;
+              color: #fff;
+              font-family: Lato, sans-serif;
+              font-size: 1em;
+              margin: 0;
+              padding: 0 0 0 1.5em;
+              transition: 0.5s;
+              width: 0; }
+              body aside#status form fieldset.query input:focus, body aside#status form fieldset.query input:not([value=""]) {
+                outline: none;
+                width: 10em; }
+          body aside#status form fieldset legend, body aside#status form fieldset input[type=radio] {
+            display: none; }
+    body aside#filter {
+      position: absolute;
+      width: 8em; }
+      body aside#filter nav input {
+        display: none; }
+        body aside#filter nav input + label {
+          color: #fefeff;
+          padding: 0.5em; }
+          body aside#filter nav input + label:hover {
+            background: #365988;
+            cursor: pointer; }
+        body aside#filter nav input:checked + label {
+          background: #365988;
+          color: #fefeff; }
+      body aside#filter nav fieldset {
+        border: none;
+        margin: 0;
+        padding: 0; }
+        body aside#filter nav fieldset legend {
+          display: none; }
+        body aside#filter nav fieldset.github_labels {
+          display: flex;
+          flex-direction: column; }
+          body aside#filter nav fieldset.github_labels:not(:last-of-type) {
+            border-bottom: 1px solid #151e30; }
+        body aside#filter nav fieldset legend {
+          display: none; }
+  body #filter:not(:empty) + main {
+    border-left: 8em #2c4065 solid; }
+  body main {
+    flex: 1;
+    overflow: auto; }
+    body main h1 {
+      align-items: center;
+      background: #e0e9f0;
+      color: #50595f;
+      display: flex;
+      font-size: 1.2em;
+      font-weight: 400;
+      margin: 0;
+      padding: 0.8em;
+      text-transform: uppercase; }
+      body main h1 input, body main h1 progress {
+        margin: 0 0.5em; }
+    body main progress[value] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border: none;
+      height: 0.8em; }
+      body main progress[value]::-webkit-progress-bar {
+        background-color: #c5d4df;
+        box-shadow: none; }
+      body main progress[value]::-moz-progress-bar {
+        background-color: #fe8d53;
+        border: none; }
+      body main progress[value]::-webkit-progress-value {
+        background: #fe8d53; }
+    body main article {
+      overflow: auto;
+      padding: 1em; }
+      body main article h2 {
+        margin: 0; }
+        body main article h2 input {
+          vertical-align: middle; }
+      body main article .user-avatar {
+        max-height: 40px;
+        order: 0;
+        vertical-align: middle;
+        width: 40px; }
+      body main article li {
+        display: flex;
+        position: relative; }
+      body main article li, body main article dl {
+        background: #fff;
+        border: 1px solid #dee9f2;
+        align-items: center;
+        margin: 0.25em 0;
+        padding: 0.5em;
+        transition: color 0.2s; }
+        body main article li input[type=checkbox], body main article dl input[type=checkbox] {
+          margin: 0 1em; }
+        body main article li:before, body main article dl:before {
+          border-left: 0.25em solid;
+          content: '';
+          position: absolute;
+          left: -1px;
+          top: -1px;
+          bottom: -1px;
+          display: block; }
+        body main article li.open:before, body main article dl.open:before {
+          border-color: #0fbb0f; }
+        body main article li.closed:before, body main article dl.closed:before {
+          border-color: #f54e40; }
+        body main article li a, body main article dl a {
+          color: #010101;
+          padding: 0.5em; }
+        body main article li .issue-title, body main article dl .issue-title {
+          display: block;
+          font-size: 1.2em;
+          margin-bottom: 0.25em; }
+        body main article li:hover .issue-title, body main article dl:hover .issue-title {
+          color: #818181; }
+        body main article li .issue-id, body main article dl .issue-id {
+          color: #6fa1fe;
+          font-weight: 700; }
+        body main article li .issues-label, body main article dl .issues-label {
+          color: #6A6A6A;
+          margin: 0 0.3em; }
+        body main article li.pull-request .issue-title::after, body main article dl.pull-request .issue-title::after {
+          border-radius: 1.5em;
+          content: "PR";
+          margin-left: 0.5em;
+          font-size: 0.5em;
+          display: inline-block;
+          vertical-align: top; }
+    body main button {
+      border: none;
+      background: #BAC9D5;
+      padding: 1em;
+      font-family: Lato, sans-serif;
+      transition: background 0.2s; }
+      body main button:hover {
+        background: #cad5df; }
+      body main button:first-of-type {
+        margin-left: 1em; }

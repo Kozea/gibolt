@@ -34,6 +34,6 @@ module.exports = (grunt) ->
         options:
           spawn: false
   grunt.loadNpmTasks 'grunt-contrib-coffee'
-  grunt.loadNpmTasks 'grunt-contrib-sass'
+  grunt.loadNpmTasks 'grunt-sass'
   grunt.loadNpmTasks 'grunt-contrib-watch'
-  grunt.registerTask 'default', ['coffee', 'sass', 'watch']
+  grunt.registerTask 'default', ['coffee', 'sass']
