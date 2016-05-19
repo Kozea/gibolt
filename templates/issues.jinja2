@@ -139,8 +139,7 @@
       {{ present_issues(issues, with_avatar, grouper='Overall') }}
     </article>
   {% endif %}
-  <button name="next_to_sprint" type="submit" title="remove next label and apply sprint label">next to sprint</button>
-  <button name="delete_sprint" type="submit" title="remove sprint label">remove sprint</button>
-  <button name="add_next" type="submit" title="add next label">add next</button>
+  <button name="increment_priority" type="submit" title="increment priority label">Increment priority</button>
+  <button name="delete_top_priority" type="submit" title="remove sprint label">Remove top priority</button>
   </form>
 {% endblock main %}

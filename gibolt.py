@@ -199,17 +199,20 @@ def apply_labels():
     for issue_id in request.form.getlist('issues'):
         repo, number, labels = issue_id.split('$')
         labels = labels.split(',')
-        if 'next_to_sprint' in request.form:
-            if 'next' in labels:
-                labels.remove('next')
-                if 'sprint' not in labels:
-                    labels.append('sprint')
-        elif 'delete_sprint' in request.form:
-            if 'sprint' in labels:
-                labels.remove('sprint')
-        elif 'add_next' in request.form:
-            if 'next' not in labels:
-                labels.append('next')
+        priority_labels = [
+            label for label, color in app.config.get('PRIORITY_LABELS')]
+        if 'increment_priority' in request.form:
+            current_priority = set(labels).intersection(priority_labels)
+            if current_priority:
+                current_priority = current_priority.pop()
+            current_priority_index = priority_labels.index(current_priority)
+            if current_priority_index > 0:
+                labels.remove(current_priority)
+                labels.append(priority_labels[current_priority_index - 1])
+
+        elif 'delete_top_priority' in request.form:
+            if priority_labels[0] in labels:
+                labels.remove(priority_labels[0])
 
         data = json.dumps({'labels': labels})
         try:
