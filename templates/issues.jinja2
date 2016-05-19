@@ -41,21 +41,15 @@
     <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_2">
       <fieldset class="github_labels">
         <legend>Priority</legend>
-        {{ mk_labeled_input('checkbox', 'label', 'sprint', 'sprint') }}
-        {{ mk_labeled_input('checkbox', 'label', 'next', 'next') }}
-        {{ mk_labeled_input('checkbox', 'label', 'must', 'must') }}
-        {{ mk_labeled_input('checkbox', 'label', 'nice', 'nice') }}
-        {{ mk_labeled_input('checkbox', 'label', 'later', 'later') }}
+        {% for label in config.PRIORITY_LABELS %}
+          {{ mk_labeled_input('checkbox', 'label', label, label) }}
+        {% endfor %}
       </fieldset>
       <fieldset class="github_labels">
         <legend>Type</legend>
-        {{ mk_labeled_input('checkbox', 'label', 'feature', 'feature') }}
-        {{ mk_labeled_input('checkbox', 'label', 'bug', 'bug') }}
-        {{ mk_labeled_input('checkbox', 'label', 'document', 'document') }}
-        {{ mk_labeled_input('checkbox', 'label', 'commercial', 'commercial') }}
-        {{ mk_labeled_input('checkbox', 'label', 'design', 'design') }}
-        {{ mk_labeled_input('checkbox', 'label', 'tool', 'tool') }}
-        {{ mk_labeled_input('checkbox', 'label', 'debt', 'debt') }}
+        {% for label in config.QUALIFIER_LABELS %}
+          {{ mk_labeled_input('checkbox', 'label', label, label) }}
+        {% endfor %}
       </fieldset>
       <input type="submit" id="useless-submit" />
     </form>

@@ -21,12 +21,8 @@ GROUPERS = OrderedDict((
     ('repository_url', 'Project')))
 
 app = Flask(__name__)
-app.secret_key = 'new-secret'
-app.config['ORGANISATION'] = 'Kozea'
-app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
-app.config['GITHUB_CLIENT_SECRET'] = 'bcfee82e06c41d22cd324b33a86c1e82a372c403'
+app.config.from_object('default_settings')
 app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
-app.config['TIMEZONE'] = 'Europe/Paris'
 
 
 @app.template_filter('sort_by_len')
