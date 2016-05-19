@@ -1,4 +1,3 @@
-/* - Labels colors - */
 @import url(https:\/\/fonts.googleapis.com/css?family=Montserrat:400);
 @import url(https:\/\/fonts.googleapis.com/css?family=Lato:400,700);
 h1, h2, h3, h4, h5, h6 {
@@ -30,42 +29,6 @@ input[type=checkbox] {
   margin-right: 0.5em;
   vertical-align: middle;
   width: 0.5em; }
-
-.issues-label.label-sprint:before {
-  background-color: #009800; }
-
-.issues-label.label-next:before {
-  background-color: #882211; }
-
-.issues-label.label-must:before {
-  background-color: #dd1111; }
-
-.issues-label.label-nice:before {
-  background-color: #ff4500; }
-
-.issues-label.label-later:before {
-  background-color: #fbca04; }
-
-.issues-label.label-feature:before {
-  background-color: #207de5; }
-
-.issues-label.label-bug:before {
-  background-color: #9a62d3; }
-
-.issues-label.label-document:before {
-  background-color: #a1a1a1; }
-
-.issues-label.label-commercial:before {
-  background-color: #7aafb3; }
-
-.issues-label.label-design:before {
-  background-color: #add924; }
-
-.issues-label.label-tool:before {
-  background-color: #882244; }
-
-.issues-label.label-debt:before {
-  background-color: #0b0b0b; }
 
 ul {
   list-style: none;

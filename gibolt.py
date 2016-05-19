@@ -8,7 +8,8 @@ from cachecontrol import CacheControl
 from dateutil.relativedelta import relativedelta
 from flask.ext.github import GitHub, GitHubError
 from flask import (
-    Flask, request, session, render_template, redirect, url_for, flash)
+    Flask, request, Response, session, render_template, redirect, url_for,
+    flash)
 import pytz
 import requests
 
@@ -280,6 +281,14 @@ def show(start, stop):
         relativedelta(months=1))
     return render_template(
         'stones.jinja2', start=date_from_iso(start), stones_by_step=stones)
+
+
+@app.route('/css/dynamic')
+def dynamic_css():
+    labels = (app.config.get('PRIORITY_LABELS') +
+              app.config.get('QUALIFIER_LABELS'))
+    return Response(render_template('dynamic_css.jinja2', labels=labels),
+                    mimetype='text/css')
 
 
 def get_stones_by_step(all_stones, start, end, step):

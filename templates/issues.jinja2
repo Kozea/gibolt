@@ -41,13 +41,13 @@
     <form action="{{ url_for('show_form_query') }}" method="get" id="issue_filter_2">
       <fieldset class="github_labels">
         <legend>Priority</legend>
-        {% for label in config.PRIORITY_LABELS %}
+        {% for label, color in config.PRIORITY_LABELS %}
           {{ mk_labeled_input('checkbox', 'label', label, label) }}
         {% endfor %}
       </fieldset>
       <fieldset class="github_labels">
         <legend>Type</legend>
-        {% for label in config.QUALIFIER_LABELS %}
+        {% for label, color in config.QUALIFIER_LABELS %}
           {{ mk_labeled_input('checkbox', 'label', label, label) }}
         {% endfor %}
       </fieldset>
