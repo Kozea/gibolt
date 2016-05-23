@@ -8,7 +8,8 @@ from cachecontrol import CacheControl
 from dateutil.relativedelta import relativedelta
 from flask.ext.github import GitHub, GitHubError
 from flask import (
-    Flask, request, session, render_template, redirect, url_for, flash)
+    Flask, request, Response, session, render_template, redirect, url_for,
+    flash)
 import pytz
 import requests
 
@@ -21,12 +22,8 @@ GROUPERS = OrderedDict((
     ('repository_url', 'Project')))
 
 app = Flask(__name__)
-app.secret_key = 'new-secret'
-app.config['ORGANISATION'] = 'Kozea'
-app.config['GITHUB_CLIENT_ID'] = '4891551b9540ce8c4280'
-app.config['GITHUB_CLIENT_SECRET'] = 'bcfee82e06c41d22cd324b33a86c1e82a372c403'
+app.config.from_object('default_settings')
 app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
-app.config['TIMEZONE'] = 'Europe/Paris'
 
 
 @app.template_filter('sort_by_len')
@@ -202,17 +199,20 @@ def apply_labels():
     for issue_id in request.form.getlist('issues'):
         repo, number, labels = issue_id.split('$')
         labels = labels.split(',')
-        if 'next_to_sprint' in request.form:
-            if 'next' in labels:
-                labels.remove('next')
-                if 'sprint' not in labels:
-                    labels.append('sprint')
-        elif 'delete_sprint' in request.form:
-            if 'sprint' in labels:
-                labels.remove('sprint')
-        elif 'add_next' in request.form:
-            if 'next' not in labels:
-                labels.append('next')
+        priority_labels = [
+            label for label, color in app.config.get('PRIORITY_LABELS')]
+        if 'increment_priority' in request.form:
+            current_priority = set(labels).intersection(priority_labels)
+            if current_priority:
+                current_priority = current_priority.pop()
+            current_priority_index = priority_labels.index(current_priority)
+            if current_priority_index > 0:
+                labels.remove(current_priority)
+                labels.append(priority_labels[current_priority_index - 1])
+
+        elif 'delete_top_priority' in request.form:
+            if priority_labels[0] in labels:
+                labels.remove(priority_labels[0])
 
         data = json.dumps({'labels': labels})
         try:
@@ -284,6 +284,14 @@ def show(start, stop):
         relativedelta(months=1))
     return render_template(
         'stones.jinja2', start=date_from_iso(start), stones_by_step=stones)
+
+
+@app.route('/css/dynamic')
+def dynamic_css():
+    labels = (app.config.get('PRIORITY_LABELS') +
+              app.config.get('QUALIFIER_LABELS'))
+    return Response(render_template('dynamic_css.jinja2', labels=labels),
+                    mimetype='text/css')
 
 
 def get_stones_by_step(all_stones, start, end, step):

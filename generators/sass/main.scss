@@ -44,11 +44,6 @@ input[type=checkbox] {
     width: 0.5em;
   }
 
-  @each $label, $color in $label-colors {
-    &.label-#{$label}:before {
-      background-color: $color;
-    }
-  }
 }
 
 ul {
