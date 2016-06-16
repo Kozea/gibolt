@@ -25,7 +25,6 @@
         <li {{ 'class="checked"' if request.endpoint == 'show_assigned_issues' }}>
           <a href="{{ url_for('show_assigned_issues') }}">Report</a>
         </li>
-        <li><a href="{{ url_for('refresh_all') }}">Refresh Cache</a></li>
         <li {{ 'class="checked"' if request.endpoint == 'repositories' or 'repository' in request.path }}>
           <a href="{{ url_for('repositories') }}">Repositories</a>
         </li>

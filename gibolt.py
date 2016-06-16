@@ -111,7 +111,7 @@ def refresh_all():
     for repo_name in repo_names:
         refresh_repo_milestones(repo_name)
     flash('Cache is fresh as a peppermint candy')
-    return redirect(url_for('my_sprint'))
+    return redirect(url_for('show_now'))
 
 
 def refresh_repo_milestones(repo_name):
