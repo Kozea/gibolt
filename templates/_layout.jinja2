@@ -13,11 +13,22 @@
     <h1>Gibolt</h1>
     <nav>
       <ul>
-        <li {{ 'class="checked"' if request.endpoint == 'show_issues' and request.values.assignee }}><a href="{{ url_for('my_sprint') }}">My Sprint</a></li>
-        <li {{ 'class="checked"' if request.endpoint == 'show' }}><a href="{{ url_for('show_now') }}">Timeline</a></li>
-        <li {{ 'class="checked"' if request.endpoint == 'show_issues' and not request.values.assignee }}><a href="{{ url_for('show_sprint_issues') }}">Issues</a></li>
-        <li {{ 'class="checked"' if request.endpoint == 'show_assigned_issues' }}><a href="{{ url_for('show_assigned_issues') }}">Report</a></li>
+        <li {{ 'class="checked"' if request.endpoint == 'show_issues' and request.values.assignee }}>
+          <a href="{{ url_for('my_sprint') }}">My Sprint</a>
+        </li>
+        <li {{ 'class="checked"' if request.endpoint == 'show' }}>
+          <a href="{{ url_for('show_now') }}">Timeline</a>
+        </li>
+        <li {{ 'class="checked"' if request.endpoint == 'show_issues' and not request.values.assignee }}>
+          <a href="{{ url_for('show_sprint_issues') }}">Issues</a>
+        </li>
+        <li {{ 'class="checked"' if request.endpoint == 'show_assigned_issues' }}>
+          <a href="{{ url_for('show_assigned_issues') }}">Report</a>
+        </li>
         <li><a href="{{ url_for('refresh_all') }}">Refresh Cache</a></li>
+        <li {{ 'class="checked"' if request.endpoint == 'repositories' or 'repository' in request.path }}>
+          <a href="{{ url_for('repositories') }}">Repositories</a>
+        </li>
       </ul>
     </nav>
   </header>

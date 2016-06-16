@@ -306,5 +306,51 @@ def get_stones_by_step(all_stones, start, end, step):
     return result
 
 
+@app.route('/repositories')
+@autologin
+def repositories():
+    app.config['ORGANISATION']
+    repositories = get_allowed_repos()
+    return render_template(
+        'repository_list.html.jinja2', repositories=repositories)
+
+
+@app.route('/repository/<string:repository_name>', methods=['GET', 'POST'])
+@autologin
+def repository(repository_name):
+    current_labels = github.get('repos/{0}/{1}/labels'.format(
+        app.config['ORGANISATION'], repository_name))
+    config_labels = (
+        app.config.get('PRIORITY_LABELS') + app.config.get('QUALIFIER_LABELS'))
+    missing_labels = []
+    overly_labels = []
+    for name, color in config_labels:
+        if not any(d['name'] == name for d in current_labels):
+            missing_labels.append((name, color))
+
+    for label in current_labels:
+        if not any(name == label['name'] for name, color in config_labels):
+            overly_labels.append((label['name'], label['color']))
+
+    if request.method == 'POST':
+        if 'add_missing' in request.form:
+            for name, color in missing_labels:
+                data = {'name': name, 'color': color}
+                github.post(
+                    'repos/{0}/{1}/labels'.format(
+                        app.config.get('ORGANISATION'), repository_name),
+                    data=data)
+        if 'delete_overly' in request.form:
+            for name, color in overly_labels:
+                github.delete('repos/{0}/{1}/labels/{2}'.format(
+                    app.config.get('ORGANISATION'), repository_name, name))
+        return redirect(url_for('repository', repository_name=repository_name))
+
+    return render_template(
+        'repository_read.html.jinja2', labels=current_labels,
+        missing_labels=missing_labels, overly_labels=overly_labels,
+        repository_name=repository_name)
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
