@@ -16,7 +16,7 @@ import requests
 
 GROUPERS = OrderedDict((
     ('', ''),
-    ('assignee.login', 'Assignee'),
+    ('assignee.logins', 'Assignee'),
     ('milestone.title', 'Milestone'),
     ('state', 'State'),
     ('repository_url', 'Project')))
@@ -169,7 +169,10 @@ def show_issues():
             for value in values:
                 if value:
                     query += "+{0}:{1}".format(key, value)
-    response = github.get(url + end_url + query, all_pages=True)
+    # use new github api with this additional header allow to get assignees.
+    headers = {'Accept': 'application/vnd.github.cerberus-preview'}
+    response = github.get(
+        url + end_url + query, all_pages=True, headers=headers)
     issues = response.get('items')
 
     for issue in issues:
@@ -177,6 +180,8 @@ def show_issues():
                            issue.get('body') else 0)
         issue['closed'] = (issue.get('body').count('- [x]') if
                            issue.get('body') else 0)
+        issue['assignee']['logins'] = ' and '.join(
+            [assignee['login'] for assignee in issue['assignees']])
 
     noned_issues = []
     opened = len([issue for issue in issues if issue['state'] == 'open'])
