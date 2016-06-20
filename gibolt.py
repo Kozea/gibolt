@@ -180,8 +180,13 @@ def show_issues():
                            issue.get('body') else 0)
         issue['closed'] = (issue.get('body').count('- [x]') if
                            issue.get('body') else 0)
-        issue['assignee']['logins'] = ' and '.join(
-            [assignee['login'] for assignee in issue['assignees']])
+        if len(issue['assignees']) > 1:
+            issue['assignee']['logins'] = "{0} and {1}".format(
+                ', '.join([assignee['login'] for
+                           assignee in issue['assignees']][:-1]),
+                issue['assignees'][-1]['login'])
+        else:
+            issue['assignee']['logins'] = issue['assignees'][0]['login']
 
     noned_issues = []
     opened = len([issue for issue in issues if issue['state'] == 'open'])
