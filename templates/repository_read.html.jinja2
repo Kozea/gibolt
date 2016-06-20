@@ -1,0 +1,30 @@
+{% extends '_layout.jinja2' %}
+{% block main %}
+<h2>{{ repository_name }}</h2>
+<h3>Current labels</h3>
+  <ul>
+    {% for label in labels %}
+      <li> {{ label.name }}</li>
+    {% endfor %}
+  </ul>
+<h3>Missing labels</h3>
+  <ul>
+    {% for label, color in missing_labels %}
+      <li>{{ label }}</li>
+    {% endfor %}
+  </ul>
+  <form method="post">
+    <button type="submit" name="add_missing">Add missing labels</button>
+  </form>
+
+<h3>Unconfigured labels</h3>
+  <ul>
+    {% for label, color in overly_labels %}
+      <li>{{ label }}</li>
+    {% endfor %}
+  </ul>
+  <form method="post">
+    <button type="submit" name="delete_overly">Delete Unconfigured labels</button>
+  </form>
+
+{% endblock main %}

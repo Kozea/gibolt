@@ -13,7 +13,9 @@
             {%- endfor -%}"/>
         {% endif %}
         {% if with_avatar %}
-          <img class="user-avatar" src="{{ issue.assignee.avatar_url or url_for('static', filename='images/question-mark.png')}}" alt="avatar" title="{{ issue.assignee.login or 'not assigned' }}"/>
+          {% for assignee in issue.assignees %}
+            <img class="user-avatar" src="{{ assignee.avatar_url or url_for('static', filename='images/question-mark.png')}}" alt="avatar" title="{{ assignee.login or 'not assigned' }}"/>
+          {% endfor %}
         {% endif %}
         <a href="{{ issue.html_url }}">
           <span class="issue-title">{{ issue.title | striptags }}</span>
@@ -68,7 +70,7 @@
     <input type="hidden" name="assignee" value="{{ filters.assignee }}"/>
     <fieldset class="groupby">
       <legend>Group by</legend>
-      {% for value in ('', 'assignee.login', 'milestone.title', 'state', 'repository_url') %}
+      {% for value in ('', 'assignee.logins', 'milestone.title', 'state', 'repository_url') %}
         <input type="radio" name="groupby" id="groupby_{{ value }}" value="{{ value }}" {{ 'checked' if value == (groupby or '') }} onChange="submit_forms()" /><label for="groupby_{{ value }}">{{ groupers[value] if value else "Don't Group"}}</label>
       {% endfor %}
     </fieldset>
@@ -95,14 +97,16 @@
   </h1>
     <input type="hidden" name="query" value="{{ query }}"/>
   {% if groupby %}
-    {% if groupby == 'assignee.login' %}
+    {% if groupby == 'assignee.logins' %}
       {% set with_avatar = false %}
     {% endif %}
     {% for issue in issues | groupby(groupby) | sort_by_len(reverse=True) %}
       <article>
         <h2>
-          {% if groupby == 'assignee.login' %}
-            <img class="user-avatar" src="{{ issue.list[0].assignee.avatar_url }}" alt="avatar" />
+          {% if groupby == 'assignee.logins' %}
+            {% for assignee in issue.list[0].assignees %}
+              <img class="user-avatar" src="{{ assignee.avatar_url }}" alt="avatar" />
+            {% endfor %}
           {% elif groupby == 'milestone.title' %}
             {{ issue.list[0].repository_url | short_name }} -
           {% endif %}
@@ -119,7 +123,7 @@
     {% if noned_issues %}
       <article>
         <h2>
-          {% if groupby == 'assignee.login' %}
+          {% if groupby == 'assignee.logins' %}
             <img class="user-avatar" src="{{ url_for('static', filename="images/question-mark.png") }}" alt="avatar" />
             Unassigned
           {% else %}

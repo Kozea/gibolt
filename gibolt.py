@@ -16,7 +16,7 @@ import requests
 
 GROUPERS = OrderedDict((
     ('', ''),
-    ('assignee.login', 'Assignee'),
+    ('assignee.logins', 'Assignee'),
     ('milestone.title', 'Milestone'),
     ('state', 'State'),
     ('repository_url', 'Project')))
@@ -111,7 +111,7 @@ def refresh_all():
     for repo_name in repo_names:
         refresh_repo_milestones(repo_name)
     flash('Cache is fresh as a peppermint candy')
-    return redirect(url_for('my_sprint'))
+    return redirect(url_for('show_now'))
 
 
 def refresh_repo_milestones(repo_name):
@@ -169,7 +169,10 @@ def show_issues():
             for value in values:
                 if value:
                     query += "+{0}:{1}".format(key, value)
-    response = github.get(url + end_url + query, all_pages=True)
+    # use new github api with this additional header allow to get assignees.
+    headers = {'Accept': 'application/vnd.github.cerberus-preview'}
+    response = github.get(
+        url + end_url + query, all_pages=True, headers=headers)
     issues = response.get('items')
 
     for issue in issues:
@@ -177,6 +180,13 @@ def show_issues():
                            issue.get('body') else 0)
         issue['closed'] = (issue.get('body').count('- [x]') if
                            issue.get('body') else 0)
+        if len(issue['assignees']) > 1:
+            issue['assignee']['logins'] = "{0} and {1}".format(
+                ', '.join([assignee['login'] for
+                           assignee in issue['assignees']][:-1]),
+                issue['assignees'][-1]['login'])
+        else:
+            issue['assignee']['logins'] = issue['assignees'][0]['login']
 
     noned_issues = []
     opened = len([issue for issue in issues if issue['state'] == 'open'])
@@ -304,6 +314,52 @@ def get_stones_by_step(all_stones, start, end, step):
         result.append((current, stones))
         current += step
     return result
+
+
+@app.route('/repositories')
+@autologin
+def repositories():
+    app.config['ORGANISATION']
+    repositories = get_allowed_repos()
+    return render_template(
+        'repository_list.html.jinja2', repositories=repositories)
+
+
+@app.route('/repository/<string:repository_name>', methods=['GET', 'POST'])
+@autologin
+def repository(repository_name):
+    current_labels = github.get('repos/{0}/{1}/labels'.format(
+        app.config['ORGANISATION'], repository_name))
+    config_labels = (
+        app.config.get('PRIORITY_LABELS') + app.config.get('QUALIFIER_LABELS'))
+    missing_labels = []
+    overly_labels = []
+    for name, color in config_labels:
+        if not any(d['name'] == name for d in current_labels):
+            missing_labels.append((name, color))
+
+    for label in current_labels:
+        if not any(name == label['name'] for name, color in config_labels):
+            overly_labels.append((label['name'], label['color']))
+
+    if request.method == 'POST':
+        if 'add_missing' in request.form:
+            for name, color in missing_labels:
+                data = {'name': name, 'color': color}
+                github.post(
+                    'repos/{0}/{1}/labels'.format(
+                        app.config.get('ORGANISATION'), repository_name),
+                    data=data)
+        if 'delete_overly' in request.form:
+            for name, color in overly_labels:
+                github.delete('repos/{0}/{1}/labels/{2}'.format(
+                    app.config.get('ORGANISATION'), repository_name, name))
+        return redirect(url_for('repository', repository_name=repository_name))
+
+    return render_template(
+        'repository_read.html.jinja2', labels=current_labels,
+        missing_labels=missing_labels, overly_labels=overly_labels,
+        repository_name=repository_name)
 
 
 if __name__ == '__main__':
