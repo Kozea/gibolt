@@ -187,8 +187,6 @@ def show_issues():
                 issue['assignees'][-1]['login'])
         elif issue['assignees']:
             issue['assignee']['logins'] = issue['assignees'][0]['login']
-        else:
-            issue['assignee']['logins'] = None
 
     noned_issues = []
     opened = len([issue for issue in issues if issue['state'] == 'open'])
