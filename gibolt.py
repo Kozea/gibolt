@@ -140,7 +140,9 @@ def show_sprint_issues():
 @app.route('/my_sprint')
 @autologin
 def my_sprint():
-    filters = {'assignee': session['login'], 'label': 'sprint', 'state': 'all'}
+    filters = {
+        'assignee': session['login'], 'label': 'sprint', 'state': 'all',
+        'groupby': 'state'}
     return redirect(url_for('show_issues', **filters))
 
 
@@ -328,6 +330,8 @@ def repositories():
 @app.route('/repository/<string:repository_name>', methods=['GET', 'POST'])
 @autologin
 def repository(repository_name):
+    repository = github.get('repos/{0}/{1}'.format(
+        app.config['ORGANISATION'], repository_name))
     current_labels = github.get('repos/{0}/{1}/labels'.format(
         app.config['ORGANISATION'], repository_name))
     config_labels = (
@@ -359,7 +363,7 @@ def repository(repository_name):
     return render_template(
         'repository_read.html.jinja2', labels=current_labels,
         missing_labels=missing_labels, overly_labels=overly_labels,
-        repository_name=repository_name)
+        repository=repository)
 
 
 if __name__ == '__main__':
