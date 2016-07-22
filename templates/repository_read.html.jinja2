@@ -1,6 +1,6 @@
 {% extends '_layout.jinja2' %}
 {% block main %}
-<h2>{{ repository_name }}</h2>
+<h2>{{ repository.name }}</h2>
 <h3>Current labels</h3>
   <ul>
     {% for label in labels %}
@@ -13,9 +13,13 @@
       <li>{{ label }}</li>
     {% endfor %}
   </ul>
-  <form method="post">
-    <button type="submit" name="add_missing">Add missing labels</button>
-  </form>
+  {% if repository.permissions.push %}
+    <form method="post">
+      <button type="submit" name="add_missing">Add missing labels</button>
+    </form>
+  {% else %}
+    You can't change labels on this repository, ask an admin for write permission
+  {% endif %}
 
 <h3>Unconfigured labels</h3>
   <ul>
@@ -23,8 +27,12 @@
       <li>{{ label }}</li>
     {% endfor %}
   </ul>
-  <form method="post">
-    <button type="submit" name="delete_overly">Delete Unconfigured labels</button>
-  </form>
+  {% if repository.permissions.push %}
+    <form method="post">
+      <button type="submit" name="delete_overly">Delete Unconfigured labels</button>
+    </form>
+  {% else %}
+    You can't change labels on this repository, ask an admin for write permission
+  {% endif %}
 
 {% endblock main %}
