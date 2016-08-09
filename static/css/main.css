@@ -3,11 +3,22 @@
 h1, h2, h3, h4, h5, h6 {
   font-family: Montserrat, sans-serif; }
 
+a {
+  color: #6fa1fe;
+  text-decoration: none; }
+
+ul {
+  list-style: none;
+  padding-left: 0; }
+
 input {
   background: #e0e9f0;
+  border: none;
   box-sizing: border-box;
+    box-sizing-font-family: Lato, sans-serif;
   margin: 0;
-  max-width: 100%; }
+  max-width: 100%;
+  outline: none; }
 
 label {
   display: block; }
@@ -15,30 +26,28 @@ label {
 [type=checkbox] {
   -webkit-appearance: none;
   appearance: none;
-  border: 2px solid #C5CCD2;
+  border: 2px solid #c5ccd2;
   box-shadow: none;
   height: 15px;
   width: 15px; }
+  [type=checkbox]:active {
+    border-color: #6fa1fe; }
   [type=checkbox]:checked {
-    background: #6fa1fe;
-    background-clip: content-box;
-    border: 2px solid #6fa1fe;
+    background: content-box #6fa1fe;
+    border-color: #6fa1fe;
     padding: 2px; }
-    [type=checkbox]:checked:focus {
-      outline: none; }
+    [type=checkbox]:checked:active {
+      border-color: #c5ccd2; }
 
 [type=submit] {
   border: none;
-  background: #BAC9D5;
+  background: #bac9d5;
   font-family: Lato, sans-serif;
   margin: 0.5em 0;
   padding: 1em;
   transition: background 0.2s; }
   [type=submit]:hover, [type=submit]:focus {
     background: #cad5df; }
-
-[type=date] {
-  border: none; }
 
 .issues-label:before {
   background-color: #000;
@@ -51,14 +60,6 @@ label {
   margin-right: 0.5em;
   vertical-align: middle;
   width: 0.5em; }
-
-ul {
-  list-style: none;
-  padding-left: 0; }
-
-a {
-  color: #6fa1fe;
-  text-decoration: none; }
 
 body {
   align-content: flex-start;
@@ -149,14 +150,12 @@ body {
               background: url("/static/images/search.svg") no-repeat #5a7ab7;
               border: 0;
               color: #fff;
-              font-family: Lato, sans-serif;
               font-size: 1em;
               margin: 0;
               padding: 0 0 0 1.5em;
               transition: 0.5s;
               width: 0; }
               body aside#status form fieldset.query input:focus, body aside#status form fieldset.query input:not([value=""]) {
-                outline: none;
                 width: 10em; }
           body aside#status form fieldset legend, body aside#status form fieldset input[type=radio] {
             display: none; }
@@ -240,12 +239,12 @@ body {
         margin: 0 1em; }
       body main article li:before, body main article dl:before {
         border-left: 0.25em solid;
-        content: '';
-        position: absolute;
-        left: -1px;
-        top: -1px;
         bottom: -1px;
-        display: block; }
+        content: '';
+        display: block;
+        left: -1px;
+        position: absolute;
+        top: -1px; }
       body main article li.open:before, body main article dl.open:before {
         border-color: #0fbb0f; }
       body main article li.closed:before, body main article dl.closed:before {
@@ -268,7 +267,7 @@ body {
       body main article li.pull-request .issue-title::after, body main article dl.pull-request .issue-title::after {
         border-radius: 1.5em;
         content: "PR";
-        margin-left: 0.5em;
-        font-size: 0.5em;
         display: inline-block;
+        font-size: 0.5em;
+        margin-left: 0.5em;
         vertical-align: top; }

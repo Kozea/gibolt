@@ -18,7 +18,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           flatten: true
-          src: "#{sass_path}/main.scss"
+          src: "#{sass_path}/main.sass"
           dest: static_css_path
           ext: '.css'
         ]
@@ -29,7 +29,7 @@ module.exports = (grunt) ->
         options:
           spawn: false
       sass:
-        files: ['**/*.scss']
+        files: ['**/*.sass']
         tasks: ['sass']
         options:
           spawn: false
