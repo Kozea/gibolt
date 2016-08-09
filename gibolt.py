@@ -24,10 +24,10 @@ GROUPERS = OrderedDict((
 
 # TODO: remove this when https://github.com/pallets/flask/issues/1907 is fixed
 if __name__ == '__main__':
-    class Falsk(Flask):
+    class Flask(Flask):
         def create_jinja_environment(self):
             self.config['TEMPLATES_AUTO_RELOAD'] = True
-            return Flask.create_jinja_environment(self)
+            return super().create_jinja_environment()
 
 app = Flask(__name__)
 app.config.from_object('default_settings')
