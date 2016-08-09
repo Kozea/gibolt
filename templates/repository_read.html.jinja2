@@ -1,38 +1,53 @@
 {% extends '_layout.jinja2' %}
 {% block main %}
-<h2>{{ repository.name }}</h2>
-<h3>Current labels</h3>
-  <ul>
-    {% for label in labels %}
-      <li> {{ label.name }}</li>
-    {% endfor %}
-  </ul>
-<h3>Missing labels</h3>
-  <ul>
-    {% for label, color in missing_labels %}
-      <li>{{ label }}</li>
-    {% endfor %}
-  </ul>
-  {% if repository.permissions.push %}
-    <form method="post">
-      <button type="submit" name="add_missing">Add missing labels</button>
-    </form>
-  {% else %}
-    You can't change labels on this repository, ask an admin for write permission
-  {% endif %}
+  <article>
+    <h2>{{ repository.name }}</h2>
 
-<h3>Unconfigured labels</h3>
-  <ul>
-    {% for label, color in overly_labels %}
-      <li>{{ label }}</li>
-    {% endfor %}
-  </ul>
-  {% if repository.permissions.push %}
-    <form method="post">
-      <button type="submit" name="delete_overly">Delete Unconfigured labels</button>
-    </form>
-  {% else %}
-    You can't change labels on this repository, ask an admin for write permission
-  {% endif %}
+    <h3>Current labels</h3>
+    {% if labels %}
+      <ul>
+        {% for label in labels %}
+          <li> {{ label.name }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No labels for this repository.</p>
+    {% endif %}
 
+    <h3>Missing labels</h3>
+    {% if missing_labels %}
+      <ul>
+        {% for label, color in missing_labels | sort %}
+          <li>{{ label }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No missing labels for this repository.</p>
+    {% endif %}
+    {% if repository.permissions.push %}
+      <form method="post">
+        <button type="submit" name="add_missing">Add missing labels</button>
+      </form>
+    {% else %}
+      <p>You can't change labels on this repository, ask an admin for write permission</p>
+    {% endif %}
+
+    <h3>Unconfigured labels</h3>
+    {% if overly_labels %}
+      <ul>
+        {% for label, color in overly_labels %}
+          <li>{{ label }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No unconfigured labels for this repository.</p>
+    {% endif %}
+    {% if repository.permissions.push %}
+      <form method="post">
+        <button type="submit" name="delete_overly">Delete Unconfigured labels</button>
+      </form>
+    {% else %}
+      <p>You can't change labels on this repository, ask an admin for write permission.</p>
+    {% endif %}
+  </article>
 {% endblock main %}

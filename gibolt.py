@@ -111,7 +111,7 @@ def get_allowed_repos():
     return [repo['name'] for repo in repos]
 
 
-@app.route('/refresh/all')
+@app.route('/refresh/all', methods=('POST',))
 @autologin
 def refresh_all():
     cache['users'][session['user']] = get_allowed_repos()

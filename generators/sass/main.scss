@@ -10,7 +10,18 @@ h1, h2, h3, h4, h5, h6 {
   font-family: $headings-font;
 }
 
-input[type=checkbox] {
+input {
+  background: #e0e9f0;
+  box-sizing: border-box;
+  margin: 0;
+  max-width: 100%;
+}
+
+label {
+  display: block;
+}
+
+[type=checkbox] {
   -webkit-appearance: none;
   appearance: none;
   border: 2px solid #C5CCD2;
@@ -28,6 +39,23 @@ input[type=checkbox] {
       outline: none;
     }
   }
+}
+
+[type=submit] {
+  border: none;
+  background: #BAC9D5;
+  font-family: $text-font;
+  margin: 0.5em 0;
+  padding: 1em;
+  transition: background 0.2s;
+
+  &:hover, &:focus {
+    background: lighten(#BAC9D5, 5%);
+  }
+}
+
+[type=date] {
+  border: none;
 }
 
 .issues-label {
@@ -116,6 +144,16 @@ body {
   aside {
     background: $aside;
     color: #ced9eb;
+
+    [type=submit] {
+      margin: 0.5em 0;
+      padding: 0.2em;
+      width: 100%;
+    }
+
+    li {
+      margin: 0.5em 0.2em;
+    }
 
     &#flash {
       text-align: center;
@@ -262,6 +300,7 @@ body {
   main {
     flex: 1;
     overflow: auto;
+    padding: 1rem;
 
     h1 {
       align-items: center;
@@ -270,7 +309,7 @@ body {
       display: flex;
       font-size: 1.2em;
       font-weight: 400;
-      margin: 0;
+      margin: -1rem -1rem 1rem -1rem;
       padding: 0.8em;
       text-transform: uppercase;
 
@@ -302,15 +341,8 @@ body {
     }
 
     article {
-      overflow: auto;
-      padding: 1em;
-
-      h2 {
-        margin: 0;
-
-        input {
-          vertical-align: middle;
-        }
+      h2 input {
+        vertical-align: middle;
       }
 
       .user-avatar {
@@ -322,15 +354,15 @@ body {
 
       li {
         display: flex;
-        position: relative;
       }
 
       li, dl {
+        align-items: center;
         background: #fff;
         border: 1px solid darken($body, 5%);
-        align-items: center;
         margin: 0.25em 0;
         padding: 0.5em;
+        position: relative;
         transition: color 0.2s;
 
         input[type=checkbox] {
@@ -388,22 +420,6 @@ body {
           display: inline-block;
           vertical-align: top;
         }
-      }
-    }
-
-    button  {
-      border: none;
-      background: #BAC9D5;
-      padding: 1em;
-      font-family: $text-font;
-      transition: background 0.2s;
-
-      &:hover {
-        background: lighten(#BAC9D5, 5%);
-      }
-
-      &:first-of-type {
-        margin-left: 1em;
       }
     }
   }

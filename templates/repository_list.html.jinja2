@@ -1,11 +1,14 @@
 {% extends '_layout.jinja2' %}
 
 {% block main %}
-  <ul>
-    {% for repository in repositories %}
-      <li>
-        <a href="{{ url_for("repository", repository_name=repository) }}">{{ repository }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+  <article>
+    <h2>Repositories</h2>
+    <ul>
+      {% for repository in repositories | sort %}
+        <li>
+          <a href="{{ url_for("repository", repository_name=repository) }}">{{ repository }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </article>
 {% endblock main %}

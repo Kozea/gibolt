@@ -3,20 +3,42 @@
 h1, h2, h3, h4, h5, h6 {
   font-family: Montserrat, sans-serif; }
 
-input[type=checkbox] {
+input {
+  background: #e0e9f0;
+  box-sizing: border-box;
+  margin: 0;
+  max-width: 100%; }
+
+label {
+  display: block; }
+
+[type=checkbox] {
   -webkit-appearance: none;
   appearance: none;
   border: 2px solid #C5CCD2;
   box-shadow: none;
   height: 15px;
   width: 15px; }
-  input[type=checkbox]:checked {
+  [type=checkbox]:checked {
     background: #6fa1fe;
     background-clip: content-box;
     border: 2px solid #6fa1fe;
     padding: 2px; }
-    input[type=checkbox]:checked:focus {
+    [type=checkbox]:checked:focus {
       outline: none; }
+
+[type=submit] {
+  border: none;
+  background: #BAC9D5;
+  font-family: Lato, sans-serif;
+  margin: 0.5em 0;
+  padding: 1em;
+  transition: background 0.2s; }
+  [type=submit]:hover, [type=submit]:focus {
+    background: #cad5df; }
+
+[type=date] {
+  border: none; }
 
 .issues-label:before {
   background-color: #000;
@@ -80,6 +102,12 @@ body {
   body aside {
     background: #2c4065;
     color: #ced9eb; }
+    body aside [type=submit] {
+      margin: 0.5em 0;
+      padding: 0.2em;
+      width: 100%; }
+    body aside li {
+      margin: 0.5em 0.2em; }
     body aside#flash {
       text-align: center;
       width: 100%; }
@@ -163,7 +191,8 @@ body {
     border-left: 8em #2c4065 solid; }
   body main {
     flex: 1;
-    overflow: auto; }
+    overflow: auto;
+    padding: 1rem; }
     body main h1 {
       align-items: center;
       background: #e0e9f0;
@@ -171,7 +200,7 @@ body {
       display: flex;
       font-size: 1.2em;
       font-weight: 400;
-      margin: 0;
+      margin: -1rem -1rem 1rem -1rem;
       padding: 0.8em;
       text-transform: uppercase; }
       body main h1 input, body main h1 progress {
@@ -190,71 +219,56 @@ body {
         border: none; }
       body main progress[value]::-webkit-progress-value {
         background: #fe8d53; }
-    body main article {
-      overflow: auto;
-      padding: 1em; }
-      body main article h2 {
-        margin: 0; }
-        body main article h2 input {
-          vertical-align: middle; }
-      body main article .user-avatar {
-        max-height: 40px;
-        order: 0;
-        vertical-align: middle;
-        width: 40px; }
-      body main article li {
-        display: flex;
-        position: relative; }
-      body main article li, body main article dl {
-        background: #fff;
-        border: 1px solid #dee9f2;
-        align-items: center;
-        margin: 0.25em 0;
-        padding: 0.5em;
-        transition: color 0.2s; }
-        body main article li input[type=checkbox], body main article dl input[type=checkbox] {
-          margin: 0 1em; }
-        body main article li:before, body main article dl:before {
-          border-left: 0.25em solid;
-          content: '';
-          position: absolute;
-          left: -1px;
-          top: -1px;
-          bottom: -1px;
-          display: block; }
-        body main article li.open:before, body main article dl.open:before {
-          border-color: #0fbb0f; }
-        body main article li.closed:before, body main article dl.closed:before {
-          border-color: #f54e40; }
-        body main article li a, body main article dl a {
-          color: #010101;
-          padding: 0.5em; }
-        body main article li .issue-title, body main article dl .issue-title {
-          display: block;
-          font-size: 1.2em;
-          margin-bottom: 0.25em; }
-        body main article li:hover .issue-title, body main article dl:hover .issue-title {
-          color: #818181; }
-        body main article li .issue-id, body main article dl .issue-id {
-          color: #6fa1fe;
-          font-weight: 700; }
-        body main article li .issues-label, body main article dl .issues-label {
-          color: #6A6A6A;
-          margin: 0 0.3em; }
-        body main article li.pull-request .issue-title::after, body main article dl.pull-request .issue-title::after {
-          border-radius: 1.5em;
-          content: "PR";
-          margin-left: 0.5em;
-          font-size: 0.5em;
-          display: inline-block;
-          vertical-align: top; }
-    body main button {
-      border: none;
-      background: #BAC9D5;
-      padding: 1em;
-      font-family: Lato, sans-serif;
-      transition: background 0.2s; }
-      body main button:hover {
-        background: #cad5df; }
-      body main button:first-of-type {
-        margin-left: 1em; }
+    body main article h2 input {
+      vertical-align: middle; }
+    body main article .user-avatar {
+      max-height: 40px;
+      order: 0;
+      vertical-align: middle;
+      width: 40px; }
+    body main article li {
+      display: flex; }
+    body main article li, body main article dl {
+      align-items: center;
+      background: #fff;
+      border: 1px solid #dee9f2;
+      margin: 0.25em 0;
+      padding: 0.5em;
+      position: relative;
+      transition: color 0.2s; }
+      body main article li input[type=checkbox], body main article dl input[type=checkbox] {
+        margin: 0 1em; }
+      body main article li:before, body main article dl:before {
+        border-left: 0.25em solid;
+        content: '';
+        position: absolute;
+        left: -1px;
+        top: -1px;
+        bottom: -1px;
+        display: block; }
+      body main article li.open:before, body main article dl.open:before {
+        border-color: #0fbb0f; }
+      body main article li.closed:before, body main article dl.closed:before {
+        border-color: #f54e40; }
+      body main article li a, body main article dl a {
+        color: #010101;
+        padding: 0.5em; }
+      body main article li .issue-title, body main article dl .issue-title {
+        display: block;
+        font-size: 1.2em;
+        margin-bottom: 0.25em; }
+      body main article li:hover .issue-title, body main article dl:hover .issue-title {
+        color: #818181; }
+      body main article li .issue-id, body main article dl .issue-id {
+        color: #6fa1fe;
+        font-weight: 700; }
+      body main article li .issues-label, body main article dl .issues-label {
+        color: #6A6A6A;
+        margin: 0 0.3em; }
+      body main article li.pull-request .issue-title::after, body main article dl.pull-request .issue-title::after {
+        border-radius: 1.5em;
+        content: "PR";
+        margin-left: 0.5em;
+        font-size: 0.5em;
+        display: inline-block;
+        vertical-align: top; }
