@@ -6,10 +6,10 @@ import json
 
 from cachecontrol import CacheControl
 from dateutil.relativedelta import relativedelta
-from flask.ext.github import GitHub, GitHubError
 from flask import (
     Flask, request, Response, session, render_template, redirect, url_for,
     flash)
+from flask_github import GitHub, GitHubError
 import pytz
 import requests
 
