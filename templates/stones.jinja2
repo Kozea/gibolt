@@ -12,7 +12,7 @@
           {% for stone in stones | sort(attribute='due_on') %}
             <li class="{{ stone.state }}">
               {{ stone.due_on.strftime('%d') }} {{ stone.repo }}
-              <a href="{{ stone.html_url }}">{{ stone.title }}</a>
+              <a href="{{ stone.url | replace('//api.', '//') }}">{{ stone.title }}</a>
               {{ progress.render(stone.open_issues, stone.closed_issues) }}
             </li>
           {% endfor %}
