@@ -21,6 +21,14 @@ GROUPERS = OrderedDict((
     ('state', 'State'),
     ('repository_url', 'Project')))
 
+
+# TODO: remove this when https://github.com/pallets/flask/issues/1907 is fixed
+if __name__ == '__main__':
+    class Falsk(Flask):
+        def create_jinja_environment(self):
+            self.config['TEMPLATES_AUTO_RELOAD'] = True
+            return Flask.create_jinja_environment(self)
+
 app = Flask(__name__)
 app.config.from_object('default_settings')
 app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
