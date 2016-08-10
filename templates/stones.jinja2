@@ -11,7 +11,8 @@
           {% for stone in stones | sort(attribute='due_on') %}
             <li class="{{ stone.state }}">
               {{ stone.due_on.strftime('%d') }} {{ stone.repo }}
-              <a href="{{ stone.url | replace('//api.', '//') }}">{{ stone.title }}</a>
+              {# TODO: replace this when the URL is available from the API #}
+              <a href="{{ stone.url | replace('//api.github.com/repos/', '//github.com/') | replace('/milestones/', '/milestone/') }}">{{ stone.title }}</a>
               {{ progress.render(stone.open_issues, stone.closed_issues) }}
             </li>
           {% endfor %}
