@@ -140,7 +140,7 @@ def refresh_repo_milestones(repo_name):
 @app.route('/issues/sprint')
 @autologin
 def show_sprint_issues():
-    filters = {'label': 'sprint', 'state': 'all'}
+    filters = {'priority': 'sprint', 'state': 'all'}
     return redirect(url_for('show_issues', **filters))
 
 
@@ -149,7 +149,7 @@ def show_sprint_issues():
 @autologin
 def my_sprint():
     filters = {
-        'assignee': session['login'], 'label': 'sprint', 'state': 'all',
+        'assignee': session['login'], 'priority': 'sprint', 'state': 'all',
         'groupby': 'state'}
     return redirect(url_for('show_issues', **filters))
 
@@ -169,9 +169,7 @@ def my_tickets():
 def show_issues():
     filters = dict(
         (key, ','.join(values)) for (key, values) in request.args.lists())
-    groupby = filters.get('groupby')
-    if groupby:
-        del filters['groupby']
+    groupby = filters.pop('groupby', None)
     url = 'search/issues'
     end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
     query = ''
@@ -186,6 +184,8 @@ def show_issues():
             if key == 'simple_query':
                 query += '+{0}'.format('+'.join(values))
                 continue
+            if key in ('type', 'priority'):
+                key = 'label'
             for value in values:
                 if value:
                     query += "+{0}:{1}".format(key, value)

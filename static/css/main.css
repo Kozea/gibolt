@@ -49,7 +49,7 @@ label {
   [type=submit]:hover, [type=submit]:focus {
     background: #cad5df; }
 
-.issues-label:before {
+[class|=label]:before {
   background-color: #000;
   border-radius: 0.25em;
   border-width: 0.25em;

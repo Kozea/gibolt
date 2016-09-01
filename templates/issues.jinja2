@@ -22,7 +22,7 @@
           <span class="issue-id">#{{ issue.number }}</span>
           <span class="project">{{ issue.repository_url | short_name }}</span>
           {% for label in issue.labels %}
-            <span class="issues-label label-{{ label.name }}">{{ label.name }}</span>
+            <span class="label-{{ label.name }}">{{ label.name }}</span>
           {% endfor %}
           {{ progress.render(issue.opened, issue.closed) }}
           {% if with_box %}
@@ -35,7 +35,7 @@
 
 {% macro mk_labeled_input(type, name, value, label) %}
   <input type="{{ type }}" name="{{ name }}" id="{{ name }}_{{ value }}" value="{{ value }}" {{ 'checked' if value in filters[name] }} onChange="submit_forms()" />
-  <label for="{{ name }}_{{ value }}" {% if name == 'label' %}class="issues-label label-{{ label }}"{% endif %}>{{ label }}</label>
+  <label for="{{ name }}_{{ value }}" {% if name in ('type', 'priority') %}class="label-{{ label }}"{% endif %}>{{ label }}</label>
 {% endmacro %}
 
 {% block filter %}
@@ -44,18 +44,17 @@
       <fieldset class="github_labels">
         <legend>Priority</legend>
         {% for label, color in config.PRIORITY_LABELS %}
-          {{ mk_labeled_input('checkbox', 'label', label, label) }}
+          {{ mk_labeled_input('radio', 'priority', label, label) }}
         {% endfor %}
       </fieldset>
       <fieldset class="github_labels">
         <legend>Type</legend>
         {% for label, color in config.QUALIFIER_LABELS %}
-          {{ mk_labeled_input('checkbox', 'label', label, label) }}
+          {{ mk_labeled_input('radio', 'type', label, label) }}
         {% endfor %}
       </fieldset>
       <input type="submit" id="useless-submit" />
     </form>
-
   </nav>
 {% endblock filter %}
 
