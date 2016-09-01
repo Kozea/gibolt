@@ -36,7 +36,7 @@ app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
 
 @app.template_filter('sort_by_len')
 def sort_by_len(values, reverse=False):
-    """Sort the ``values`` list by the length of its second item.```"""
+    """Sort the ``values`` list by the length of its second item."""
     return sorted(values, key=lambda item: len(item[1]), reverse=reverse)
 
 
@@ -154,7 +154,6 @@ def my_sprint():
     return redirect(url_for('show_issues', **filters))
 
 
-@app.route('/')
 @app.route('/my_tickets')
 @autologin
 def my_tickets():
