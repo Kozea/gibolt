@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from collections import OrderedDict
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from functools import wraps
 import json
@@ -57,7 +58,7 @@ def short_name(full_name):
 
 github = GitHub(app)
 github.session = CacheControl(requests.session())
-cache = {'users': {}, 'repos': {}}
+cache = {'users': {}}
 
 
 def date_from_iso(iso_date):
@@ -109,32 +110,6 @@ def get_allowed_repos():
         'orgs/{0}/repos?type=all&per_page=100'.format(
             app.config['ORGANISATION']), all_pages=True)
     return [repo['name'] for repo in repos]
-
-
-@app.route('/refresh/all', methods=('POST',))
-@autologin
-def refresh_all():
-    cache['users'][session['user']] = get_allowed_repos()
-    repo_names = cache.get('users').get(session['user'])
-    for repo_name in repo_names:
-        refresh_repo_milestones(repo_name)
-    flash('Cache is fresh as a peppermint candy')
-    return redirect(url_for('show_now'))
-
-
-def refresh_repo_milestones(repo_name):
-    repo = {}
-    url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
-        app.config['ORGANISATION'], repo_name)
-    repo['milestones'] = github.get(url, all_pages=True)
-    for milestone in repo['milestones']:
-        if milestone['due_on'] is not None:
-            milestone['due_on'] = date_from_iso(milestone['due_on'])
-            milestone['repo'] = repo_name
-            total = milestone['closed_issues'] + milestone['open_issues']
-            milestone['progress'] = (
-                milestone['closed_issues'] / (total or float('inf')))
-    cache['repos'][repo_name] = repo
 
 
 @app.route('/issues/sprint')
@@ -299,15 +274,33 @@ def show_now():
     return redirect(url_for('show', start=start, stop=stop))
 
 
+def refresh_repo_milestones(repo_name, repo, access_token):
+    url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
+        app.config['ORGANISATION'], repo_name)
+    repo['milestones'] = github.get(url, access_token=access_token)
+    for milestone in repo['milestones']:
+        if milestone['due_on'] is not None:
+            milestone['due_on'] = date_from_iso(milestone['due_on'])
+            milestone['repo'] = repo_name
+            total = milestone['closed_issues'] + milestone['open_issues']
+            milestone['progress'] = (
+                milestone['closed_issues'] / (total or float('inf')))
+
+
 @app.route('/stones/<start>/<stop>')
 @autologin
 def show(start, stop):
     repos_name = cache['users'].get(session['user'])
+    repos = []
     milestones = []
-    for name in repos_name:
-        if name not in cache.get('repos'):
-            refresh_repo_milestones(name)
-        milestones += cache.get('repos').get(name).get('milestones')
+    user = session.get('user')
+    with ThreadPoolExecutor(max_workers=50) as executor:
+        for name in repos_name:
+            repo = {}
+            repos.append(repo)
+            executor.submit(refresh_repo_milestones, name, repo, user)
+    for repo in repos:
+        milestones.extend(repo.get('milestones', []))
     stones = get_stones_by_step(
         milestones, date_from_iso(start), date_from_iso(stop),
         relativedelta(months=1))
