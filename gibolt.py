@@ -154,6 +154,16 @@ def my_sprint():
     return redirect(url_for('show_issues', **filters))
 
 
+@app.route('/')
+@app.route('/my_tickets')
+@autologin
+def my_tickets():
+    filters = {
+        'involves': session['login'], 'state': 'open',
+        'groupby': 'repository_url'}
+    return redirect(url_for('show_issues', **filters))
+
+
 @app.route('/issues')
 @autologin
 def show_issues():
