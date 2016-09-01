@@ -56,7 +56,7 @@ def short_name(full_name):
 
 
 github = GitHub(app)
-github.session = CacheControl(requests.session(), cache_etags=False)
+github.session = CacheControl(requests.session())
 cache = {'users': {}, 'repos': {}}
 
 
