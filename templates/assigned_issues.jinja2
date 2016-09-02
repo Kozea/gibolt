@@ -45,7 +45,7 @@
         <img class="user-avatar" src="{{ issues_by_user[0].assignee.avatar_url }}" alt="avatar" />
         {{ grouper }}
       </h2>
-      {% for issues_by_month in issues_by_user  | groupby('closed_month') | sort_by_len(reverse=True) %}
+      {% for issues_by_month in issues_by_user | groupby('closed_month') | sort %}
         <h3>{{ issues_by_month.grouper | format_date('%B %Y')}}</h3>
         <dl>
           {% for issues_by_project in issues_by_month.list | groupby('repository.full_name') | sort_by_len(reverse=True) %}
