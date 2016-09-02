@@ -40,7 +40,7 @@
   </article>
 
   {% for grouper, issues_by_user in issues | groupby('assignee.login') | sort_by_len(reverse=True) %}
-    <article>
+    <article id="{{ grouper }}">
       <h2>
         <img class="user-avatar" src="{{ issues_by_user[0].assignee.avatar_url }}" alt="avatar" />
         {{ grouper }}
