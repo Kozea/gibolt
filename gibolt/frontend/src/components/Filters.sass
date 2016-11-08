@@ -1,8 +1,13 @@
-@import ../utils
+@import ../vars
 
 .gibolt-Filters
-  max-height: 50vh
-  overflow: overlay
+  background: $aside
+  color: $aside-text
+  position: absolute
+  top: 0
+  width: 8em
 
-  &-list
-    list-style: none
+  &-set
+    padding: 0
+    &:not(:last-of-type)
+      border-bottom: 1px solid darken($aside, 15%)
