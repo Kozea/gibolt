@@ -13,18 +13,6 @@ ul
   list-style: none
   padding-left: 0
 
-input
-  background: #e0e9f0
-  border: none
-  box-sizing: border-box
-  font-family: $text-font
-  margin: 0
-  max-width: 100%
-  outline: none
-
-label
-  display: block
-
 [type=checkbox]
   -webkit-appearance: none
   appearance: none
@@ -33,44 +21,10 @@ label
   height: 15px
   width: 15px
 
-  &:active
-    border-color: $a
-
-  &:checked
-    background: content-box $a
-    border-color: $a
-    padding: 2px
-
-    &:active
-      border-color: #c5ccd2
-
-[type=submit]
-  border: none
-  background: #bac9d5
-  font-family: $text-font
-  margin: 0.5em 0
-  padding: 1em
-  transition: background 0.2s
-
-  &:hover, &:focus
-    background: lighten(#bac9d5, 5%)
-
-[class|=label]
-  &:before
-    background-color: #000
-    border-radius: 0.25em
-    border-width: 0.25em
-    content: ''
-    display: inline-block
-    height: 0.5em
-    font-size: 0.9em
-    margin: 0 0.5em
-    vertical-align: middle
-    width: 0.5em
-
-
-
 body
+  margin: 0
+
+.gibolt-App
   align-content: flex-start
   background-color: $body
   color: $text
@@ -79,5 +33,4 @@ body
   flex-flow: column wrap
   font-family: $text-font
   font-weight: 400
-  margin: 0
   width: 100vw

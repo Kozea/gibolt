@@ -1,0 +1,60 @@
+@import ../vars
+
+.gibolt-Issue
+  display: flex
+  align-items: center
+  background: #fff
+  border: 1px solid darken($body, 5%)
+  margin: 0.25em 0
+  padding: 0.5em
+  position: relative
+  transition: color 0.2s
+
+  &:before
+    border-left: 0.25em solid
+    bottom: -1px
+    content: ''
+    display: block
+    left: -1px
+    position: absolute
+    top: -1px
+
+  &-open:before
+    border-color: $open-issue
+
+  &-closed:before
+    border-color: $close-issue
+
+  &-avatar
+    max-height: 40px
+    order: 0
+    vertical-align: middle
+    width: 40px
+
+  &-link
+    color: $text
+    padding: 0.5em
+
+  &-title
+    display: block
+    font-size: 1.2em
+    margin-bottom: 0.25em
+
+  &:hover &-title
+    color: lighten($text, 50%)
+
+  &-id
+    color: $a
+    font-weight: 700
+
+  &-label
+    color: #6A6A6A
+    margin: 0 0.3em
+
+  &-pull-request &-title::after
+    border-radius: 1.5em
+    content: "PR"
+    display: inline-block
+    font-size: 0.5em
+    margin-left: 0.5em
+    vertical-align: top

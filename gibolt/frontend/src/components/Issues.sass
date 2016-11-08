@@ -1,8 +1,40 @@
-@import ../utils
+@import ../vars
 
 .gibolt-Issues
-  max-height: 50vh
-  overflow: overlay
+  flex: 1
+  overflow: auto
+  padding: 1rem
+  margin-left: 8em
 
-  &-list
-    list-style: none
+  &-head
+    align-items: center
+    background: #e0e9f0
+    color: #50595f
+    display: flex
+    font-size: 1.2em
+    font-weight: 400
+    margin: -1rem -1rem 1rem -1rem
+    padding: 0.8em
+    text-transform: uppercase
+
+    input
+      margin: 0 0.5em
+
+  progress[value]
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+    border: none
+    height: 0.8em
+    margin: 0 0.5em
+
+    &::-webkit-progress-bar
+      background-color: #c5d4df
+      box-shadow: none
+
+    &::-moz-progress-bar
+      background-color: $progress
+      border: none
+
+    &::-webkit-progress-value
+      background: #fe8d53
