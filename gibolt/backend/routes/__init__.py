@@ -1,19 +1,19 @@
-#!/usr/bin/env python
+import json
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from functools import wraps
-import json
 
-from cachecontrol import CacheControl
+import requests
 from dateutil.relativedelta import relativedelta
 from flask import (
-    Flask, request, Response, session, render_template, redirect, url_for,
-    flash)
-from flask_github import GitHub, GitHubError
-import pytz
-import requests
+    Response, flash, redirect, render_template, request, session, url_for)
 
+import pytz
+from cachecontrol import CacheControl
+from flask_github import GitHub, GitHubError
+
+from .. import app
 
 GROUPERS = OrderedDict((
     ('', ''),
@@ -21,18 +21,6 @@ GROUPERS = OrderedDict((
     ('milestone.title', 'Milestone'),
     ('state', 'State'),
     ('repository_url', 'Project')))
-
-
-# TODO: remove this when https://github.com/pallets/flask/issues/1907 is fixed
-if __name__ == '__main__':
-    class Flask(Flask):
-        def create_jinja_environment(self):
-            self.config['TEMPLATES_AUTO_RELOAD'] = True
-            return super().create_jinja_environment()
-
-app = Flask(__name__)
-app.config.from_object('default_settings')
-app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
 
 
 @app.template_filter('sort_by_len')
@@ -112,9 +100,9 @@ def get_allowed_repos():
     return [repo['name'] for repo in repos]
 
 
-@app.route('/issues/sprint')
+@app.route('/gibols/sprint')
 @autologin
-def show_sprint_issues():
+def show_sprint_s():
     filters = {'priority': 'sprint', 'state': 'all'}
     return redirect(url_for('show_issues', **filters))
 
@@ -141,6 +129,10 @@ def my_tickets():
 @app.route('/issues')
 @autologin
 def show_issues():
+    state = {
+
+    }
+    return render_template('index.jinja2', state=state)
     filters = dict(
         (key, ','.join(values)) for (key, values) in request.args.lists())
     groupby = filters.pop('groupby', None)
@@ -374,7 +366,3 @@ def repository(repository_name):
         'repository_read.html.jinja2', labels=current_labels,
         missing_labels=missing_labels, overly_labels=overly_labels,
         repository=repository)
-
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)

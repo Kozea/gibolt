@@ -1,0 +1,25 @@
+image: python:3.5
+
+cache:
+   key: "$CI_BUILD_REF_NAME"
+   untracked: true
+
+stages:
+  - build
+  - test
+
+install:
+  stage: build
+  script: make install
+
+build:
+  stage: build
+  script: make build
+
+lint:
+  stage: test
+  script: make
+
+test:
+  stage: test
+  script: make check

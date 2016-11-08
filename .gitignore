@@ -1,6 +1,4 @@
-*.swp
-*~
-.web_cache
-node_modules
-.sass-cache
-__pycache__
+.env
+.eggs
+.cache
+gibolt/frontend/static/
