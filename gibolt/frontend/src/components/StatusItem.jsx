@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
-import { pacomo } from '../utils'
+import { block } from '../utils'
 import './StatusItem.sass'
 
 
-export default pacomo.transformer(
-  function StatusItem(props) {
-    return (
-      <li className={props.active ? 'active' : ''}>
-        <a className="link" href={props.action}>{props.children}</a>
-      </li>
-    )
-  }
-)
+const b = block('StatusItem')
+export default function StatusItem(props) {
+  return (
+    <li className={ b({status: props.active}) }>
+      <a className={ b('link') } href={props.action}>{props.children}</a>
+    </li>
+  )
+}

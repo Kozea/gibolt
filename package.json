@@ -3,8 +3,33 @@
   "version": "1.0.0",
   "description": "Test of react 4th edition",
   "babel": {
-    "presets": ["es2015", "stage-0", "react"],
-    "plugins": ["react-hot-loader/babel", "transform-decorators-legacy"]
+    "env": {
+      "production": {
+        "presets": [
+          "es2015",
+          "stage-0",
+          "react"
+        ],
+        "plugins": [
+          "react-hot-loader/babel"
+        ]
+      },
+      "development": {
+        "presets": [
+          "react"
+        ],
+        "plugins": [
+          "react-hot-loader/babel",
+          "transform-es2015-parameters",
+          "transform-es2015-modules-commonjs",
+          "transform-es2015-destructuring",
+          "transform-es2015-spread",
+          "transform-async-to-generator",
+          "transform-runtime",
+          "transform-regenerator"
+        ]
+      }
+    }
   },
   "eslintConfig": {
     "ecmaFeatures": {
@@ -17,9 +42,18 @@
     },
     "parser": "babel-eslint",
     "rules": {
-      "quotes": [2, "single"],
-      "strict": [2, "never"],
-      "semi": ["error", "never"],
+      "quotes": [
+        2,
+        "single"
+      ],
+      "strict": [
+        2,
+        "never"
+      ],
+      "semi": [
+        "error",
+        "never"
+      ],
       "react/jsx-uses-react": 2,
       "react/jsx-uses-vars": 2,
       "react/react-in-jsx-scope": 2
@@ -40,6 +74,7 @@
   "license": "MIT",
   "dependencies": {
     "babel-register": "^6.18.0",
+    "bem-cn": "^2.1.3",
     "isomorphic-fetch": "^2.2.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
@@ -58,6 +93,7 @@
     "babel-loader": "^6.2.5",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-require-ignore": "^0.0.2",
+    "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",

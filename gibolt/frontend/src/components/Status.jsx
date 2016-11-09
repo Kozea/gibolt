@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { pacomo } from '../utils'
+import { block } from '../utils'
 import State from './State'
 import Grouper from './Grouper'
 import './Status.sass'
 
-@pacomo.decorator
+const b = block('Status')
 export default class Status extends Component {
   constructor(props) {
     super(props)
@@ -12,7 +12,7 @@ export default class Status extends Component {
 
   render() {
     return (
-      <aside>
+      <aside className={ b }>
         <State />
         <Grouper />
       </aside>

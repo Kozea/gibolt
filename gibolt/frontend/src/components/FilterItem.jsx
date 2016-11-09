@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
-import { pacomo } from '../utils'
+import { block } from '../utils'
 import './FilterItem.sass'
 
 
-export default pacomo.transformer(
-  function FilterItem(props) {
-    return (
-      <li className={ props.active ? 'active' : '' }>
-        <a className="link" href={ props.label }>
-          <span className="bullet" style={ {backgroundColor: props.color} } />
-          { props.label }
-        </a>
-      </li>
-    )
-  }
-)
+const b = block('FilterItem')
+export default function FilterItem(props) {
+  return (
+    <li className={ b('item', {active: props.active}) }>
+      <a className={ b('link') } href={ props.label }>
+        <span className={ b('bullet') } style={ {backgroundColor: props.color} } />
+        { props.label }
+      </a>
+    </li>
+  )
+}

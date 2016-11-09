@@ -1,22 +1,20 @@
 import React, { Component } from 'react'
-import { pacomo } from '../utils'
-
+import { block } from '../utils'
 import Header from '../components/Header'
 import Status from '../components/Status'
 import Filters from '../components/Filters'
 import Issues from '../components/Issues'
 import './App.sass'
 
-@pacomo.decorator
+const b = block('App')
 class App extends Component {
-
   constructor(props) {
     super(props)
   }
 
   render() {
     return (
-      <main>
+      <main className={ b }>
         <Header />
         <Status />
         <Filters />

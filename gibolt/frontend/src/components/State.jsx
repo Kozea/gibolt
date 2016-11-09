@@ -1,23 +1,22 @@
 import React, { Component } from 'react'
-import { pacomo } from '../utils'
+import { block } from '../utils'
 import StatusItem from './StatusItem'
 import './State.sass'
 
 
-export default pacomo.transformer(
-  function State() {
-    return (
-      <ul>
-        <StatusItem action="open" active={true}>
-          Open
-        </StatusItem>
-        <StatusItem action="closed">
-          Closed
-        </StatusItem>
-        <StatusItem action="all">
-          All
-        </StatusItem>
-      </ul>
-    )
-  }
-)
+const b = block('State')
+export default function State() {
+  return (
+    <ul className={ b }>
+      <StatusItem action="open" active={true}>
+        Open
+      </StatusItem>
+      <StatusItem action="closed">
+        Closed
+      </StatusItem>
+      <StatusItem action="all">
+        All
+      </StatusItem>
+    </ul>
+  )
+}

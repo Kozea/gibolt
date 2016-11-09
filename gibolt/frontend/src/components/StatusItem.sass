@@ -1,13 +1,13 @@
 @import ../vars
 
-.gibolt-StatusItem
+.StatusItem
   display: inline-block
 
-  &-active &-link
+  &__item--active &__link
     background: $secondary
     color: #fff
 
-  &-link
+  &__link
     padding: 1em
     transition: background 0.2s, color 0.2s
     color: $aside-text
@@ -16,13 +16,3 @@
       background: $secondary
       color: #fff
       cursor: pointer
-
-
-.gibolt-State
-  .gibolt-StatusItem-active
-    .gibolt-StatusItem-link
-      background: $a
-
-  .gibolt-StatusItem-link
-    &:hover
-      background: $a

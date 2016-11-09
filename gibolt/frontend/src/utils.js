@@ -1,4 +1,11 @@
-import { withPackageName } from 'react-pacomo'
-const pacomo = withPackageName('gibolt')
+import block from 'bem-cn'
 
-export { pacomo }
+
+block.setup({
+  el: '__',
+  mod: '--',
+  modValue: '-'
+})
+
+
+export { block }

@@ -1,6 +1,6 @@
 @import ../vars
 
-.gibolt-Issue
+.Issue
   display: flex
   align-items: center
   background: #fff
@@ -19,39 +19,40 @@
     position: absolute
     top: -1px
 
-  &-open:before
-    border-color: $open-issue
+  &--status
+    &-open:before
+      border-color: $open-issue
 
-  &-closed:before
-    border-color: $close-issue
+    &-closed:before
+      border-color: $close-issue
 
-  &-avatar
+  &__avatar
     max-height: 40px
     order: 0
     vertical-align: middle
     width: 40px
 
-  &-link
+  &__link
     color: $text
     padding: 0.5em
 
-  &-title
+  &__title
     display: block
     font-size: 1.2em
     margin-bottom: 0.25em
 
-  &:hover &-title
+  &:hover &__title
     color: lighten($text, 50%)
 
-  &-id
+  &__id
     color: $a
     font-weight: 700
 
-  &-label
+  &__label
     color: #6A6A6A
     margin: 0 0.3em
 
-  &-pull-request &-title::after
+  &--type-pull-request &__title::after
     border-radius: 1.5em
     content: "PR"
     display: inline-block
