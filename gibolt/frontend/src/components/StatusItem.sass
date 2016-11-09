@@ -3,7 +3,7 @@
 .StatusItem
   display: inline-block
 
-  &__item--active &__link
+  &--active &__link
     background: $secondary
     color: #fff
 
@@ -16,3 +16,13 @@
       background: $secondary
       color: #fff
       cursor: pointer
+
+.State
+  .StatusItem
+    &--active
+      .StatusItem__link
+         background: $a
+
+    &__link
+      &:hover
+        background: $a
