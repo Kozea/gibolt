@@ -1,5 +1,5 @@
-import { connect } from 'react-redux'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { block } from '../utils'
 import StatusItem from './StatusItem'
 import { setIssuesState } from '../actions'

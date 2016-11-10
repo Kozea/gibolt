@@ -1,19 +1,22 @@
 import fetch from 'isomorphic-fetch'
 
 
-export const selectPriorityLabel = (label) => {
+export const selectLabel = (label_type, label) => {
   return {
-    type: 'SELECT_PRIORITY_LABEL',
+    type: 'SELECT_LABEL',
+    label_type,
     label
   }
 }
 
-export const selectOnlyPriorityLabel = (label) => {
+export const selectOnlyLabel = (label_type, label) => {
   return {
-    type: 'SELECT_ONLY_PRIORITY_LABEL',
+    type: 'SELECT_ONLY_LABEL',
+    label_type,
     label
   }
 }
+
 
 export const setIssuesState = (issuesState) => {
   return {

@@ -11,7 +11,8 @@
           "react"
         ],
         "plugins": [
-          "react-hot-loader/babel"
+          "react-hot-loader/babel",
+          "transform-object-rest-spread"
         ]
       },
       "development": {
@@ -24,6 +25,7 @@
           "transform-es2015-modules-commonjs",
           "transform-es2015-destructuring",
           "transform-es2015-spread",
+          "transform-object-rest-spread",
           "transform-async-to-generator",
           "transform-runtime",
           "transform-regenerator"
@@ -73,6 +75,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "babel-register": "^6.18.0",
     "bem-cn": "^2.1.3",
     "isomorphic-fetch": "^2.2.1",

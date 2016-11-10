@@ -4,13 +4,13 @@ import './Label.sass'
 
 
 const b = block('Label')
-export default function Label(props) {
+export default function Label({ active, label, color, onClick}) {
   return (
-    <li className={ b('item', {active: props.active}) }>
-      <a className={ b('link') } href={ props.label }>
-        <span className={ b('bullet') } style={ {backgroundColor: props.color} } />
-        { props.label }
-      </a>
+    <li className={ b('item', {active: active}) }>
+      <span className={ b('link') } href={ label } onClick={ onClick }>
+        <span className={ b('bullet') } style={ {backgroundColor: color} } />
+        { label }
+      </span>
     </li>
   )
 }

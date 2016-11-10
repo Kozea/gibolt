@@ -1,29 +1,38 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { block } from '../utils'
 import Label from './Label'
+import { selectLabel, selectOnlyLabel } from '../actions/'
 import './Labels.sass'
 
 const b = block('Labels')
-export default function Labels() {
+function Labels({ labels, onLabelItemClick }) {
   return (
     <aside className={ b }>
-      <ul className={ b('set', {type: 'priority'}) }>
-        <Label label="sprint" color="#009800" active={true} />
-        <Label label="next" color="#882211" />
-        <Label label="must" color="#dd1111" />
-        <Label label="nice" color="#ff4500" />
-        <Label label="later" color="#fbca04" />
+    {['priority', 'qualifier'].map((type) =>
+      <ul key={ type } className={ b('set', { type }) }>
+        {labels.available[type].map((label) =>
+          <Label
+            key={ label.text }
+            label={ label.text }
+            color={ label.color }
+            active={ labels.selected[type].find((x) => (x == label.text)) !== undefined }
+            onClick={ (e) => { onLabelItemClick(type, label.text, e.shiftKey) } }/>
+        )}
       </ul>
-      <ul className={ b('set', {type:'type'}) }>
-        <Label label="feature" color="#207de5" />
-        <Label label="bug" color="#9a62d3" />
-        <Label label="document" color="#a1a1a1" />
-        <Label label="commercial" color="#7aafb3" />
-        <Label label="design" color="#add924" />
-        <Label label="tool" color="#882244" />
-        <Label label="debt" color="#0b0b0b" />
-        <Label label="star" color="#ffffff" />
-      </ul>
+    )}
     </aside>
   )
 }
+
+export default connect((state) => {
+    return {labels: state.labels}
+  }, (dispatch) => {
+    return {
+      onLabelItemClick: (label_type, label, multiple) => {
+        dispatch((multiple ? selectLabel : selectOnlyLabel)(
+          label_type, label))
+      }
+    }
+  }
+)(Labels)

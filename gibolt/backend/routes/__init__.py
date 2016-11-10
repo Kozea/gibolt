@@ -108,13 +108,35 @@ def show_sprint_s():
 
 
 @app.route('/')
-@app.route('/my_sprint')
 @autologin
-def my_sprint():
-    filters = {
-        'assignee': session['login'], 'priority': 'sprint', 'state': 'all',
-        'groupby': 'state'}
-    return redirect(url_for('show_issues', **filters))
+def index():
+    state = {
+        'labels': {
+            'available': {
+                'priority': [{
+                    'text': text,
+                    'color': '#%s' % color
+                } for text, color in app.config['PRIORITY_LABELS']],
+                'qualifier': [{
+                    'text': text,
+                    'color': '#%s' % color
+                } for text, color in app.config['QUALIFIER_LABELS']]
+            },
+            'selected': {
+                'priority': ['sprint'],
+                'qualifier': []
+            }
+        },
+        'issuesState': 'all',
+        'grouper': 'state',
+        'search': '',
+        'preset': 'my_sprint',
+        'issues': {
+            'list': [],
+            'loading': False
+        }
+    }
+    return render_template('index.jinja2', state=state)
 
 
 @app.route('/my_tickets')
@@ -126,13 +148,9 @@ def my_tickets():
     return redirect(url_for('show_issues', **filters))
 
 
-@app.route('/issues')
+@app.route('/issues.json')
 @autologin
-def show_issues():
-    state = {
-
-    }
-    return render_template('index.jinja2', state=state)
+def issues():
     filters = dict(
         (key, ','.join(values)) for (key, values) in request.args.lists())
     groupby = filters.pop('groupby', None)
