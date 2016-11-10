@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { block } from '../utils'
-import Header from '../components/Header'
+import Presets from '../components/Presets'
 import Status from '../components/Status'
-import Filters from '../components/Filters'
+import Labels from '../components/Labels'
 import Issues from '../components/Issues'
 import './App.sass'
 
@@ -15,9 +15,9 @@ class App extends Component {
   render() {
     return (
       <main className={ b }>
-        <Header />
+        <Presets />
         <Status />
-        <Filters />
+        <Labels />
         <Issues />
       </main>
     )

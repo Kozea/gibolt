@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { block } from '../utils'
-import './FilterItem.sass'
+import './Label.sass'
 
 
-const b = block('FilterItem')
-export default function FilterItem(props) {
+const b = block('Label')
+export default function Label(props) {
   return (
     <li className={ b('item', {active: props.active}) }>
       <a className={ b('link') } href={ props.label }>
