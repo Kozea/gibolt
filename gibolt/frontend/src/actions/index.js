@@ -1,7 +1,8 @@
 import fetch from 'isomorphic-fetch'
+import store from '..'
 
 
-export const selectLabel = (label_type, label) => {
+const _selectLabel = (label_type, label) => {
   return {
     type: 'SELECT_LABEL',
     label_type,
@@ -9,11 +10,80 @@ export const selectLabel = (label_type, label) => {
   }
 }
 
-export const selectOnlyLabel = (label_type, label) => {
+const _selectOnlyLabel = (label_type, label) => {
   return {
     type: 'SELECT_ONLY_LABEL',
     label_type,
     label
+  }
+}
+
+const _search = (search) => {
+  return {
+    type: 'SEARCH',
+    search
+  }
+}
+
+const _setPreset = (preset) => {
+  return {
+    type: 'SET_PRESET',
+    preset
+  }
+}
+
+const stateToParams = (state) => {
+  return {
+    labels: state.selected,
+    search: state.search
+  }
+}
+
+const fetchIssues = () => {
+  let state = store.getState()
+  fetch('/issues.json', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(stateToParams(state))
+  })
+  .then(response => response.json())
+  .then(json => {
+    let newState = store.getState()
+    if (JSON.stringify(json.params) == JSON.stringify(stateToParams(newState))) {
+      dispatch(setIssues(json.issues))
+    } else {
+      console.log('State is not coherent with fetch response', json.params, newState)
+    }
+  })
+}
+
+export const selectLabel = (label_type, label) => {
+  return (dispatch) => {
+    dispatch(_selectLabel(label_type, label))
+    fetchIssues()
+  }
+}
+
+export const selectOnlyLabel = (label_type, label) => {
+  return (dispatch) => {
+    dispatch(_selectOnlyLabel(label_type, label))
+    fetchIssues()
+  }
+}
+
+export const search = (search_) => {
+  return (dispatch) => {
+    dispatch(_search(search_))
+    fetchIssues()
+  }
+}
+
+export const setPreset = (preset) => {
+  return (dispatch) => {
+    dispatch(_setPreset(preset))
+    fetchIssues()
   }
 }
 
@@ -32,33 +102,9 @@ export const setGrouper = (grouper) => {
   }
 }
 
-export const search = (search) => {
-  return {
-    type: 'SEARCH',
-    search
-  }
-}
-
-export const setPreset = (preset) => {
-  return {
-    type: 'SET_PRESET',
-    preset
-  }
-}
-
 export const setIssues = (issues) => {
   return {
     type: 'SET_ISSUES',
     issues
-  }
-}
-
-// Thunks
-export const fetchIssues = () => {
-  return (dispatch) => {
-    fetch('/issues.json')
-    .then(response => response.json())
-    .then(json =>
-      dispatch(setIssues(json.issues)))
   }
 }
