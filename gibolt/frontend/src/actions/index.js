@@ -34,7 +34,7 @@ const _setPreset = (preset) => {
 
 const stateToParams = (state) => {
   return {
-    labels: state.selected,
+    labels: state.labels.selected,
     search: state.search
   }
 }
