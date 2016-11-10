@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { block } from '../utils'
-import State from './State'
+import IssuesState from './IssuesState'
 import Grouper from './Grouper'
 import './Status.sass'
 
@@ -13,7 +13,7 @@ export default class Status extends Component {
   render() {
     return (
       <aside className={ b }>
-        <State />
+        <IssuesState />
         <Grouper />
       </aside>
     )

@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { block } from '../utils'
 import StatusItem from './StatusItem'
-import './State.sass'
+import './IssuesState.sass'
 
 
-const b = block('State')
-export default function State() {
+const b = block('IssuesState')
+export default function IssuesState() {
   return (
     <ul className={ b }>
       <StatusItem action="open" active={true}>
