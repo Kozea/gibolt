@@ -38,6 +38,13 @@ const issuesState = (state='open', action) => {
   switch (action.type) {
     case 'SET_ISSUES_STATE':
       return action.issuesState
+    case 'SET_PRESET':
+      switch (action.preset) {
+        case 'my_sprint':
+          return 'open'
+        default:
+          return 'all'
+      }
     default:
       return state
   }
