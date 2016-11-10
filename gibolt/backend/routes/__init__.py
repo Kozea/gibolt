@@ -149,7 +149,7 @@ def my_tickets():
 
 
 @app.route('/issues.json', methods=['GET', 'POST'])
-# @autologin
+@autologin
 def issues():
     params = request.get_json()
     return jsonify({

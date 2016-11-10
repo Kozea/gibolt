@@ -43,6 +43,7 @@ const fetchIssues = (dispatch) => {
   let state = store.getState()
   fetch('/issues.json', {
     method: 'POST',
+    credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -57,7 +58,6 @@ const fetchIssues = (dispatch) => {
       console.log('State is not coherent with fetch response', json.params, newState)
     }
   })
-  // .catch(err => console.warn(err))
 }
 
 export const selectLabel = (label_type, label) => {
