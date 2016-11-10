@@ -53,3 +53,5 @@ if (module.hot) {
 }
 
 render()
+
+export default store

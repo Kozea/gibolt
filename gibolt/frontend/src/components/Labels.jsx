@@ -9,9 +9,9 @@ const b = block('Labels')
 function Labels({ labels, onLabelItemClick }) {
   return (
     <aside className={ b }>
-    {['priority', 'qualifier'].map((type) =>
+    { ['priority', 'qualifier'].map((type) =>
       <ul key={ type } className={ b('set', { type }) }>
-        {labels.available[type].map((label) =>
+        { labels.available[type].map((label) =>
           <Label
             key={ label.text }
             label={ label.text }
