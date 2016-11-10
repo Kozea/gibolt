@@ -84,7 +84,7 @@ def token_getter():
 @app.route('/callback')
 @github.authorized_handler
 def authorized(oauth_token):
-    next_url = request.args.get('next') or url_for('/')
+    next_url = request.args.get('next') or url_for('index')
     if oauth_token is None:
         flash("Authorization failed.")
         return redirect(next_url)
