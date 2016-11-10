@@ -7,7 +7,7 @@ const b = block('StatusItem')
 export default function StatusItem(props) {
   return (
     <li className={ b({active: props.active}) }>
-      <a className={ b('link') } href={props.action} onClick={props.onLinkClick} >{props.children}</a>
+      <span className={ b('link') } href={props.action} onClick={props.onLinkClick} >{props.children}</span>
     </li>
   )
 }

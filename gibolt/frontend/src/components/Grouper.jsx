@@ -1,27 +1,39 @@
+import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { block } from '../utils'
 import StatusItem from './StatusItem'
+import { setGrouper } from '../actions'
 
 
 const b = block('Grouper')
-export default function Grouper() {
+function Grouper({grouper, onStatusItemClick}) {
   return (
     <ul className={ b }>
-      <StatusItem action="nogroup">
+      <StatusItem action="nogroup" active={grouper == 'nogroup'} onLinkClick={() => onStatusItemClick('nogroup')}>
         Don’t Group
       </StatusItem>
-      <StatusItem action="assignee" active={true}>
+      <StatusItem action="assignee" active={grouper == 'assignee'} onLinkClick={() => onStatusItemClick('assignee')}>
         Assignee
       </StatusItem>
-      <StatusItem action="milestone">
+      <StatusItem action="milestone" active={grouper == 'milestone'} onLinkClick={() => onStatusItemClick('milestone')}>
         Milestone
       </StatusItem>
-      <StatusItem action="state">
+      <StatusItem action="state" active={grouper == 'state'} onLinkClick={() => onStatusItemClick('state')}>
         State
       </StatusItem>
-      <StatusItem action="Project">
+      <StatusItem action="Project" active={grouper == 'Project'} onLinkClick={() => onStatusItemClick('Project')}>
         Project
       </StatusItem>
     </ul>
   )
 }
+
+export default connect((state) => {
+  return {grouper: state.grouper}
+}, (dispatch) => {
+  return {
+    onStatusItemClick: (grouper) => {
+      dispatch(setGrouper(grouper))
+    }
+  }
+})(Grouper)

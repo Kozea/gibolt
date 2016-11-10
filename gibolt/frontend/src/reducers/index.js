@@ -10,8 +10,19 @@ const reduceIssuesState = (state='open', action) => {
   }
 }
 
+const reduceGrouper = (state='assignee', action) => {
+  switch (action.type) {
+    case 'SET_GROUPER':
+      return action.grouper
+    default:
+      return state
+  }
+}
+
+
 const reducer = combineReducers({
-    issuesState: reduceIssuesState
+    issuesState: reduceIssuesState,
+    grouper: reduceGrouper,
 })
 
 export default reducer
