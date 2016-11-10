@@ -7,7 +7,7 @@ from functools import wraps
 import requests
 from dateutil.relativedelta import relativedelta
 from flask import (
-    Response, flash, redirect, render_template, request, session, url_for)
+    Response, flash, redirect, render_template, request, session, url_for, jsonify)
 
 import pytz
 from cachecontrol import CacheControl
@@ -148,9 +148,41 @@ def my_tickets():
     return redirect(url_for('show_issues', **filters))
 
 
-@app.route('/issues.json')
-@autologin
+@app.route('/issues.json', methods=['GET', 'POST'])
+# @autologin
 def issues():
+    params = request.get_json()
+    return jsonify({
+        'params': params,
+        'issues': [{
+            'id': '42',
+            'title': 'Réécrire gibolt',
+            'users': [{
+                'name': 'paradoxxxzero',
+                'avatar': "https://avatars.githubusercontent.com/u/271144?v=3"
+            }],
+            'milestone': None,
+            'state': 'open',
+            'project': 'gibolt',
+            'labels': ['sprint', 'design', 'tool'],
+            'selected': False
+        }, {
+            'id': '1337',
+            'title': 'Passer à react redux',
+            'users': [{
+                'name': 'paradoxxxzero',
+                'avatar': "https://avatars.githubusercontent.com/u/271144?v=3"
+            }, {
+                'name': 'yobuntu',
+                'avatar': "https://avatars.githubusercontent.com/u/2544762?v=3"
+            }],
+            'milestone': 'Important',
+            'state': 'closed',
+            'project': 'gibolt',
+            'labels': ['must', 'document', 'star'],
+            'selected': False
+        }]
+    })
     filters = dict(
         (key, ','.join(values)) for (key, values) in request.args.lists())
     groupby = filters.pop('groupby', None)

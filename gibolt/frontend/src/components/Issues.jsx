@@ -1,48 +1,86 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { block } from '../utils'
 import Issue from './Issue'
 import './Issues.sass'
 
+const filterIssues = (issues, state) => {
+  return issues.filter((issue) => {
+    return (
+      state.issuesState == 'all' || state.issuesState == issue.state
+    )
+  })
+}
+
+const groupIssues = (issues, grouper) => {
+  if (grouper == 'nogroup') {
+    return [{
+      group: 'Overall',
+      issues
+    }]
+  }
+  let grouped = issues.reduce((groups, issue) => {
+    if (groups[issue[grouper]] == undefined) {
+      groups[issue[grouper]] = []
+    }
+    groups[issue[grouper]].push(issue)
+    return groups
+  }, {})
+  return Object.keys(grouped).map((key) => ({
+    group: key,
+    issues: grouped[key]
+  }))
+}
 
 const b = block('Issues')
-export default function Issues() {
+function Issues({ issues, grouper, availableLabels }) {
+  let issuesByGroup = groupIssues(issues, grouper)
+  let len = issues.length
+  let closedLen = issues.filter((issue) => issue.state == 'closed').length
+  let progressTitle = `${closedLen}/${len} ${closedLen/len}%`
+
   return (
     <section className={ b }>
       <h1 className={ b('head') }>
-        1 issue grouped by Group
+        { issues.length } issues grouped by { grouper }
         <input type="checkbox" />
-        <progress value="0.33" title="1/3">1/3</progress>
+        <progress value={ closedLen / len } title={ progressTitle }>{ closedLen }/{ len }</progress>
       </h1>
-      <article>
-        <h2>
-          Group
-          <input type="checkbox" />
-        </h2>
-        <ul>
-          <Issue
-            key="#42"
-            id="#42"
-            status="open"
-            user="paradoxxxzero"
-            avatar="https://avatars.githubusercontent.com/u/271144?v=3"
-            href="https://github.com/Kozea/gibolt/issues/42"
-            title="Ré-écrire gibolt"
-            project="gibolt"
-            labels={[{
-                text: 'sprint',
-                color: '#009800'
-              },
-              {
-                text: 'bug',
-                color: '#9a62d3'
-              },
-              {
-                text: 'tool',
-                color: '#882244'
-              }
-            ]} />
-        </ul>
-      </article>
+      { issuesByGroup.map(({ group, issues }) =>
+        <article key={ group }>
+          <h2>
+            { group == 'null' ? 'Non défini' : group }
+            <input type="checkbox" />
+          </h2>
+          <ul>
+            { issues.map((issue) =>
+              <Issue
+                key={ `${issue.project}/${issue.id}` }
+                id={ issue.id }
+                state={ issue.state }
+                title={ issue.title }
+                users={ issue.users }
+                avatars={ issue.avatars }
+                project={ issue.project }
+                labels={ issue.labels.map((label) =>
+                  availableLabels.filter((availabeLabel) =>
+                    availabeLabel.text == label)[0]) }
+              />
+            )}
+          </ul>
+        </article>
+      )}
     </section>
   )
 }
+
+
+export default connect((state) => {
+    return {
+      issues: filterIssues(state.issues.list, state),
+      grouper: state.grouper,
+      availableLabels: state.labels.available.priority.concat(
+        state.labels.available.qualifier)
+    }
+  }
+)(Issues)

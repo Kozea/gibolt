@@ -21,7 +21,7 @@ function Grouper({grouper, onStatusItemClick}) {
       <StatusItem action="state" active={grouper == 'state'} onLinkClick={() => onStatusItemClick('state')}>
         State
       </StatusItem>
-      <StatusItem action="Project" active={grouper == 'Project'} onLinkClick={() => onStatusItemClick('Project')}>
+      <StatusItem action="project" active={grouper == 'project'} onLinkClick={() => onStatusItemClick('project')}>
         Project
       </StatusItem>
     </ul>

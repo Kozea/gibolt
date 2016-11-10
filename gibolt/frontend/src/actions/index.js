@@ -57,6 +57,7 @@ const fetchIssues = (dispatch) => {
       console.log('State is not coherent with fetch response', json.params, newState)
     }
   })
+  // .catch(err => console.warn(err))
 }
 
 export const selectLabel = (label_type, label) => {
