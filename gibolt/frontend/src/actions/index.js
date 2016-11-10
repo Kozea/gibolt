@@ -39,7 +39,7 @@ const stateToParams = (state) => {
   }
 }
 
-const fetchIssues = () => {
+const fetchIssues = (dispatch) => {
   let state = store.getState()
   fetch('/issues.json', {
     method: 'POST',
@@ -62,28 +62,28 @@ const fetchIssues = () => {
 export const selectLabel = (label_type, label) => {
   return (dispatch) => {
     dispatch(_selectLabel(label_type, label))
-    fetchIssues()
+    fetchIssues(dispatch)
   }
 }
 
 export const selectOnlyLabel = (label_type, label) => {
   return (dispatch) => {
     dispatch(_selectOnlyLabel(label_type, label))
-    fetchIssues()
+    fetchIssues(dispatch)
   }
 }
 
 export const search = (search_) => {
   return (dispatch) => {
     dispatch(_search(search_))
-    fetchIssues()
+    fetchIssues(dispatch)
   }
 }
 
 export const setPreset = (preset) => {
   return (dispatch) => {
     dispatch(_setPreset(preset))
-    fetchIssues()
+    fetchIssues(dispatch)
   }
 }
 
