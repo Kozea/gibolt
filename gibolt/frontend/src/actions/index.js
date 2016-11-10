@@ -1,67 +1,61 @@
 import fetch from 'isomorphic-fetch'
 
-let tid = null
 
-export const incrementCounter = (step = 1) => {
+export const selectPriorityLabel = (label) => {
   return {
-    type: 'INCREMENT_COUNTER',
-    step
+    type: 'SELECT_PRIORITY_LABEL',
+    label
   }
 }
 
-export const resetCounter = () => {
+export const selectOnlyPriorityLabel = (label) => {
   return {
-    type: 'RESET_COUNTER'
+    type: 'SELECT_ONLY_PRIORITY_LABEL',
+    label
   }
 }
 
-export const setVersion = (version) => {
+export const setIssuesState = (issuesState) => {
   return {
-    type: 'SET_VERSION',
-    version
+    type: 'SET_ISSUES_STATE',
+    issuesState
   }
 }
 
-export const log = (message) => {
+export const setGrouper = (grouper) => {
   return {
-    type: 'LOG',
-    message: {
-      id: (new Date()).getTime(),  // This is bad
-      text: message
-    }
+    type: 'SET_GROUPER',
+    grouper
   }
 }
 
-export const deleteLog = (messageId) => {
+export const search = (search) => {
   return {
-    type: 'DELETE_LOG',
-    messageId
+    type: 'SEARCH',
+    search
+  }
+}
+
+export const setPreset = (preset) => {
+  return {
+    type: 'SET_PRESET',
+    preset
+  }
+}
+
+export const setIssues = (issues) => {
+  return {
+    type: 'SET_ISSUES',
+    issues
   }
 }
 
 // Thunks
-export const startCounter = () => {
-  return (dispatch, getState) => {
-    const { count } = getState()
-    tid = setInterval(() => {
-      dispatch(incrementCounter(count.step))
-      dispatch(log(`Incremented to ${getState().count.val}`))
-    }, 1000)
-  }
-}
-
-export const stopCounter = () => {
-  return () => {
-    tid && clearInterval(tid)
-    tid = null
-  }
-}
-
-export const getVersion = () => {
+export const fetchIssues = () => {
   return (dispatch) => {
-    fetch('/version.json')
+    fetch('/issues.json')
     .then(response => response.json())
     .then(json =>
-      dispatch(setVersion(json.version)))
+      dispatch(setIssues(json.issues)))
   }
 }
