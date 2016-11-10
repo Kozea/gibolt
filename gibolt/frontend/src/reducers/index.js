@@ -73,7 +73,18 @@ const preset = (state='my_sprint', action) => {
 const issues = (state=[], action) => {
   switch (action.type) {
     case 'SET_ISSUES':
-      return action.issues
+      return {
+        list: action.issues,
+        loading: false
+      }
+    case 'SELECT_LABEL':
+    case 'SELECT_ONLY_LABEL':
+    case 'SEARCH':
+    case 'SET_PRESET':
+      return {
+        list: [],
+        loading: true
+      }
     default:
       return state
   }
