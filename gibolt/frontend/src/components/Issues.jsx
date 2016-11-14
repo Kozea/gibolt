@@ -20,16 +20,14 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
         { issues.length } {
           issuesState == 'all' ? '' : ` ${ issuesState }`} issues {
            issuesState == 'all' ? '' : `over ${ allIssues.length } `}
-        grouped by { grouper }
-        <input type="checkbox" />
+        grouped by { grouper } <input type="checkbox" />
         <progress value={ closedLen / allIssues.length } title={ progressTitle }>{ closedLen }/{ len }</progress>
       </h1>
       { loading && <Loading /> }
       { issuesByGroup.map(({ id, group, issues }) =>
         <article key={ id } className={ b('group') }>
           <h2>
-            { group }
-            <input type="checkbox" />
+            { group } <input type="checkbox" />
           </h2>
           <ul>
             { sortIssues(issues, grouper).map((issue) =>
