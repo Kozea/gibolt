@@ -1,17 +1,17 @@
 // Imports
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var path = require('path')
+var webpack = require('webpack')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 // Getting static server bind from environment
-var staticServer = process.env.STATIC_SERVER || 'http://localhost:8000';
-var [bind, port] = staticServer.split('//')[1].split(':');
+var staticServer = process.env.STATIC_SERVER || 'http://localhost:8000'
+var [bind, port] = staticServer.split('//')[1].split(':')
 
 // Check production status
 // Production is used when building
-var DEBUG = process.env.NODE_ENV !== 'production';
+var DEBUG = process.env.NODE_ENV !== 'production'
 
-var publicPath = (DEBUG ? staticServer : '') + '/static/';
+var publicPath = (DEBUG ? staticServer : '') + '/static/'
 
 // Exporting setting for webpack
 module.exports = {
@@ -93,4 +93,4 @@ module.exports = {
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.AggressiveMergingPlugin(),
     ]
-};
+}
