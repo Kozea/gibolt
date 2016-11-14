@@ -168,7 +168,6 @@ def issues():
         url + end_url + query, all_pages=True, headers=headers)
     issues = response.get('items')
 
-    print(issues[0])
     return jsonify({
         'params': params,
         'issues': issues
