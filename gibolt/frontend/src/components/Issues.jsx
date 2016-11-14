@@ -19,6 +19,20 @@ const groupIssues = (issues, grouper) => {
       issues
     }]
   }
+  if (grouper == 'assignee') {
+    let grouped = issues.reduce((groups, issue) => {
+      if (groups[issue['assignee']] == undefined) {
+        groups[issues[grouper]] = []
+      }
+      groups[issues[grouper]].push(issue)
+      return groups
+    }, {})
+
+    return Object.keys(grouped).map((key) => ({
+      group:key,
+      issues: grouped[key]
+    }))
+  }
   let grouped = issues.reduce((groups, issue) => {
     if (groups[issue[grouper]] == undefined) {
       groups[issue[grouper]] = []
