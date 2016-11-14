@@ -3,22 +3,27 @@
 .Issues
   flex: 1
   overflow: auto
-  padding: 1rem
   margin-left: 8em
+  display: flex
+  flex-direction: column
+  position: relative
 
   &__head
     align-items: center
-    background: #e0e9f0
-    color: #50595f
+    background: $issues-header
+    color: $issues-header-fg
     display: flex
     font-size: 1.2em
     font-weight: 400
-    margin: -1rem -1rem 1rem -1rem
+    margin: 0
     padding: 0.8em
     text-transform: uppercase
 
     input
       margin: 0 0.5em
+
+  &__group
+    margin-left: 1em
 
   progress[value]
     -webkit-appearance: none

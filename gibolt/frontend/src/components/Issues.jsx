@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { block } from '../utils'
 import Issue from './Issue'
+import Loading from './Loading'
 import './Issues.sass'
 
 const filterIssues = (issues, state) => {
@@ -47,7 +48,7 @@ const groupIssues = (issues, grouper) => {
 }
 
 const b = block('Issues')
-function Issues({ issues, grouper, availableLabels }) {
+function Issues({ issues, loading, grouper, availableLabels }) {
   let issuesByGroup = groupIssues(issues, grouper)
   let len = issues.length
   let closedLen = issues.filter((issue) => issue.state == 'closed').length
@@ -60,8 +61,9 @@ function Issues({ issues, grouper, availableLabels }) {
         <input type="checkbox" />
         <progress value={ closedLen / len } title={ progressTitle }>{ closedLen }/{ len }</progress>
       </h1>
+      { loading && <Loading /> }
       { issuesByGroup.map(({ group, issues }) =>
-        <article key={ group }>
+        <article key={ group } className={ b('group') }>
           <h2>
             { group == 'null' ? 'Non défini' : group }
             <input type="checkbox" />
@@ -91,6 +93,7 @@ function Issues({ issues, grouper, availableLabels }) {
 export default connect((state) => {
     return {
       issues: filterIssues(state.issues.list, state),
+      loading: state.issues.loading,
       grouper: state.grouper,
       availableLabels: state.labels.available.priority.concat(
         state.labels.available.qualifier)
