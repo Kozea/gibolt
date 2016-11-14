@@ -134,7 +134,7 @@ def index():
         'preset': 'my_sprint',
         'issues': {
             'list': [],
-            'loading': False,
+            'loading': True,
             'mustLoad': True
         }
     }
