@@ -82,7 +82,8 @@ const issues = (state=[], action) => {
     case 'SET_ISSUES':
       return {
         list: action.issues,
-        loading: false
+        loading: false,
+        mustLoad: false
       }
     case 'SELECT_LABEL':
     case 'SELECT_ONLY_LABEL':
@@ -90,7 +91,8 @@ const issues = (state=[], action) => {
     case 'SET_PRESET':
       return {
         list: [],
-        loading: true
+        loading: true,
+        mustLoad: false
       }
     default:
       return state

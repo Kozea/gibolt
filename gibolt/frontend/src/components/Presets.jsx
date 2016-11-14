@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { block } from '../utils'
 import Preset from '../components/Preset'
 import './Presets.sass'
-import { setPreset } from '../actions'
+import { setPreset, fetchIssues } from '../actions'
 
 
 const b = block('Presets')
@@ -43,6 +43,7 @@ export default connect((state) => {
   return {
     onPresetClick: (preset) => {
       dispatch(setPreset(preset))
+      dispatch(fetchIssues())
     }
   }
 })(Presets)

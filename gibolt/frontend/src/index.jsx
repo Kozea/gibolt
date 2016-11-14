@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, dispatch } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
+import { fetchIssues } from './actions'
 import reducer from './reducers'
 import App from './components/App'
 
@@ -19,7 +20,9 @@ let render = () => {
   const App = require('./components/App').default
   ReactDOM.render(
     <Provider store={store}>
-      <App />
+      <App dispatchFirstLoad={ () => {
+          store.getState().issues.mustLoad && store.dispatch(fetchIssues())
+      } }/>
     </Provider>,
     rootNode
   )
