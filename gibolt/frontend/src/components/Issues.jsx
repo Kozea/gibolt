@@ -57,16 +57,15 @@ function Issues({ issues, loading, grouper, availableLabels }) {
           <ul>
             { issues.map((issue) =>
               <Issue
-                key={ `${issue.project}/${issue.id}` }
-                id={ issue.id }
+                key={ issue.id }
+                id={ issue.number }
                 state={ issue.state }
                 title={ issue.title }
-                users={ issue.users }
+                users={ issue.assignees }
                 avatars={ issue.avatars }
                 project={ issue.project }
-                labels={ issue.labels.map((label) =>
-                  availableLabels.filter((availabeLabel) =>
-                    availabeLabel.text == label)[0]) }
+                labels={ issue.labels }
+                url={ issue.html_url }
               />
             )}
           </ul>

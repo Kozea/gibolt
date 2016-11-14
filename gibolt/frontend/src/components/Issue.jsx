@@ -9,17 +9,17 @@ export default function Issue(props) {
     <li className={ b({status: props.state}) }>
       <input type="checkbox" />
       {props.users.map((user) =>
-        <img key={ user.name } className={ b('avatar') } src={ user.avatar } alt="avatar" title={ user.name } />
+        <img key={ user.id } className={ b('avatar') } src={ user.avatar_url } alt="avatar" title={ user.login } />
       )}
-      <a className={ b('link') } href={ props.href }>
+      <a className={ b('link') } href={ props.url }>
         <span className={ b('title') }>{ props.title }</span>
         <span className={ b('id') }>{ props.id }</span>
         <span className={ b('project') }>{ props.project }</span>
         {
           props.labels.map((label) => (
-            <span key={ label.text } className={ b('label') }>
-              <span className={ b('bullet') } style={ {backgroundColor: label.color} } />
-              { label.text }
+            <span key={ label.name } className={ b('label') }>
+              <span className={ b('bullet') } style={ {backgroundColor: '#'+label.color} } />
+              { label.name }
             </span>
           ))
         }
