@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { block } from '../utils'
 import StatusItem from './StatusItem'
 import { setGrouper } from '../actions'
-
+import './Grouper.sass'
 
 const b = block('Grouper')
 function Grouper({grouper, onStatusItemClick}) {

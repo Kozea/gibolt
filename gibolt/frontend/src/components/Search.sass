@@ -1,0 +1,19 @@
+@import ../vars
+
+.Search
+  background: lighten($aside, 25%)
+  margin-right: 0
+  padding: 1em
+
+  &__input
+    background: url('./Search.svg') no-repeat lighten($aside, 25%)
+    border: 0
+    color: #fff
+    font-size: 1em
+    margin: 0
+    padding: 0 0 0 1.5em
+    transition: 0.5s
+    width: 0
+
+    &:focus, &:not([value=""])
+      width: 10em
