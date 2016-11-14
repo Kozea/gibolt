@@ -1,0 +1,92 @@
+@import ../vars
+
+.Loading
+  margin: auto
+  animation: 1s appear cubic-bezier(0.755, 0.05, 0.855, 0.06) forwards
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background-color: rgba($body, .2)
+  z-index: 2
+  display: flex
+  justify-content: center
+  align-items: center
+  transition: filter 1s
+
+  & ~ article
+    animation: 1s blur cubic-bezier(0.755, 0.05, 0.855, 0.06) forwards
+
+  &__container
+    transform: translate(-109px, -94px)
+
+  /* inspired from http://cssload.net/en/3d-loaders */
+  &__box
+    width: 94px
+    height: 109px
+    position: absolute
+    transition: all ease 0.35s
+    background: url('data:image/svg+xml;utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 684"%3E%3Cpath fill="' + $primary + '" d="M305.7 0L0 170.9v342.3L305.7 684 612 513.2V170.9L305.7 0z"/%3E%3Cpath fill="#fff" d="M305.7 80.1l-233.6 131 233.6 131 234.2-131-234.2-131"/%3E%3C/svg%3E') no-repeat top center
+
+    &--n-1
+      animation: cssload-tetromino1 1.73s ease-out infinite
+
+    &--n-2
+      animation: cssload-tetromino2 1.73s ease-out infinite
+
+    &--n-3
+      animation: cssload-tetromino3 1.73s ease-out infinite
+      z-index: 2
+
+    &--n-4
+      animation: cssload-tetromino4 1.73s ease-out infinite
+
+
+@keyframes cssload-tetromino1
+  0%, 40%
+    transform: translate(0, 0)
+
+  50%
+    transform: translate(47px, -26px)
+
+  60%, 100%
+    transform: translate(94px, 0)
+
+@keyframes cssload-tetromino2
+  0%, 20%
+    transform: translate(94px, 0px)
+
+  40%, 100%
+    transform: translate(140px, 26px)
+
+@keyframes cssload-tetromino3
+  0%
+    transform: translate(140px, 26px)
+
+  20%, 60%
+    transform: translate(94px, 53px)
+
+  90%, 100%
+    transform: translate(47px, 26px)
+
+@keyframes cssload-tetromino4
+  0%, 60%
+    transform: translate(47px, 26px)
+
+  90%, 100%
+    transform: translate(0, 0)
+
+@keyframes appear
+  from
+    opacity: 0
+
+  to
+    opacity: 1
+
+@keyframes blur
+  from
+    filter: blur(0px)
+
+  to
+    filter: blur(5px)

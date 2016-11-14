@@ -90,7 +90,7 @@ const issues = (state=[], action) => {
     case 'SEARCH':
     case 'SET_PRESET':
       return {
-        list: [],
+        ...state,
         loading: true,
         mustLoad: false
       }
