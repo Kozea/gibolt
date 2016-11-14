@@ -6,11 +6,12 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 // Getting static server bind from environment
 var staticServer = process.env.STATIC_SERVER || 'http://localhost:8000';
 var [bind, port] = staticServer.split('//')[1].split(':');
-var publicPath = staticServer + '/static/';
 
 // Check production status
 // Production is used when building
 var DEBUG = process.env.NODE_ENV !== 'production';
+
+var publicPath = (DEBUG ? staticServer : '') + '/static/';
 
 // Exporting setting for webpack
 module.exports = {
