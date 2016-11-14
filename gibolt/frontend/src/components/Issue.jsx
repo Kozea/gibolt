@@ -13,7 +13,7 @@ export default function Issue(props) {
       )}
       <a className={ b('link') } href={ props.url }>
         <span className={ b('title') }>{ props.title }</span>
-        <span className={ b('id') }>{ props.id }</span>
+        <span className={ b('id') }>#{ props.id }</span>
         <span className={ b('project') }>{ props.project }</span>
         {
           props.labels.map((label) => (
