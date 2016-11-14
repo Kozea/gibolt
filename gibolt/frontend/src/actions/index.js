@@ -39,8 +39,7 @@ const stateToParams = (state) => {
   }
 }
 
-const fetchIssues = (dispatch) => {
-  let state = store.getState()
+export const fetchIssues = (dispatch, state) => {
   fetch('/issues.json', {
     method: 'POST',
     credentials: 'same-origin',
@@ -60,31 +59,36 @@ const fetchIssues = (dispatch) => {
   })
 }
 
+export const fetchIssuesAction = () => {
+  return (dispatch, getState) => fetchIssues(dispatch, getState())
+}
+
+
 export const selectLabel = (label_type, label) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(_selectLabel(label_type, label))
-    fetchIssues(dispatch)
+    fetchIssues(dispatch, getState())
   }
 }
 
 export const selectOnlyLabel = (label_type, label) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(_selectOnlyLabel(label_type, label))
-    fetchIssues(dispatch)
+    fetchIssues(dispatch, getState())
   }
 }
 
 export const search = (search_) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(_search(search_))
-    fetchIssues(dispatch)
+    fetchIssues(dispatch, getState())
   }
 }
 
 export const setPreset = (preset) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(_setPreset(preset))
-    fetchIssues(dispatch)
+    fetchIssues(dispatch, getState())
   }
 }
 

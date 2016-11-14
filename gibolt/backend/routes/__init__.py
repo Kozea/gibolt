@@ -133,7 +133,8 @@ def index():
         'preset': 'my_sprint',
         'issues': {
             'list': [],
-            'loading': False
+            'loading': False,
+            'mustLoad': True
         }
     }
     return render_template('index.jinja2', state=state)

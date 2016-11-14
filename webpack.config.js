@@ -15,7 +15,7 @@ var DEBUG = process.env.NODE_ENV !== 'production';
 // Exporting setting for webpack
 module.exports = {
   // Not really sure but seems the fast way
-  devtool: DEBUG ? 'eval' : 'cheap-module-source-map',
+  devtool: DEBUG ? 'eval-source-map' : 'cheap-module-source-map',
 
   // Application entry points
   entry: (DEBUG ? [    // These defines hooks for hot reloading
