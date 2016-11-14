@@ -7,7 +7,8 @@ from functools import wraps
 import requests
 from dateutil.relativedelta import relativedelta
 from flask import (
-    Response, flash, redirect, render_template, request, session, url_for, jsonify)
+    Response, flash, redirect, render_template, request, session, url_for,
+    jsonify)
 
 import pytz
 from cachecontrol import CacheControl
@@ -152,91 +153,24 @@ def my_tickets():
 @autologin
 def issues():
     params = request.get_json()
-    return jsonify({
-        'params': params,
-        'issues': [{
-            'id': '42',
-            'title': 'Réécrire gibolt',
-            'users': [{
-                'name': 'paradoxxxzero',
-                'avatar': "https://avatars.githubusercontent.com/u/271144?v=3"
-            }],
-            'milestone': None,
-            'state': 'open',
-            'project': 'gibolt',
-            'labels': ['sprint', 'design', 'tool'],
-            'selected': False
-        }, {
-            'id': '1337',
-            'title': 'Passer à react redux',
-            'users': [{
-                'name': 'paradoxxxzero',
-                'avatar': "https://avatars.githubusercontent.com/u/271144?v=3"
-            }, {
-                'name': 'yobuntu',
-                'avatar': "https://avatars.githubusercontent.com/u/2544762?v=3"
-            }],
-            'milestone': 'Important',
-            'state': 'closed',
-            'project': 'gibolt',
-            'labels': ['must', 'document', 'star'],
-            'selected': False
-        }]
-    })
-    filters = dict(
-        (key, ','.join(values)) for (key, values) in request.args.lists())
-    groupby = filters.pop('groupby', None)
     url = 'search/issues'
     end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
     query = ''
-    if 'complex_query' in request.args:
-        query += '+' + request.args.get('complex_query')
-    else:
-        for (key, values) in request.args.lists():
-            if key == 'state' and 'all' in values:
-                continue
-            if key == 'groupby':
-                continue
-            if key == 'simple_query':
-                query += '+{0}'.format('+'.join(values))
-                continue
-            if key in ('type', 'priority'):
-                key = 'label'
-            for value in values:
-                if value:
-                    query += "+{0}:{1}".format(key, value)
+    for value in [value for values in params.get('labels', {'': []}).values() for value in values]:
+        query += "+label:{0}".format(value)
+    if params.get('search'):
+        query += "+search:{0}".format(params['search'])
     # use new github api with this additional header allow to get assignees.
     headers = {'Accept': 'application/vnd.github.cerberus-preview'}
     response = github.get(
         url + end_url + query, all_pages=True, headers=headers)
     issues = response.get('items')
 
-    for issue in issues:
-        issue['opened'] = (issue.get('body').count('- [ ]') if
-                           issue.get('body') else 0)
-        issue['closed'] = (issue.get('body').count('- [x]') if
-                           issue.get('body') else 0)
-        if len(issue['assignees']) > 1:
-            issue['assignee']['logins'] = "{0} and {1}".format(
-                ', '.join([assignee['login'] for
-                           assignee in issue['assignees']][:-1]),
-                issue['assignees'][-1]['login'])
-        elif issue['assignees']:
-            issue['assignee']['logins'] = issue['assignees'][0]['login']
-
-    noned_issues = []
-    opened = len([issue for issue in issues if issue['state'] == 'open'])
-    closed = len([issue for issue in issues if issue['state'] == 'closed'])
-
-    if groupby and '.' in groupby:
-        first_group = groupby.split('.')[0]
-        noned_issues = [issue for issue in issues if not issue[first_group]]
-        issues = [issue for issue in issues if issue[first_group]]
-
-    return render_template(
-        'issues.jinja2', issues=issues, noned_issues=noned_issues,
-        opened=opened, closed=closed, groupby=groupby,
-        filters=filters, groupers=GROUPERS)
+    print(issues[0])
+    return jsonify({
+        'params': params,
+        'issues': issues
+    })
 
 
 @app.route('/apply_labels', methods=["POST"])
