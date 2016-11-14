@@ -6,47 +6,7 @@ import Loading from './Loading'
 import { filterIssues, groupIssues, sortGroupIssues, sortIssues } from '../utils'
 import './Issues.sass'
 
-const filterIssues = (issues, state) => {
-  return issues.filter((issue) => {
-    return (
-      state.issuesState == 'all' || state.issuesState == issue.state
-    )
-  })
-}
 
-const groupIssues = (issues, grouper) => {
-  if (grouper == 'nogroup') {
-    return [{
-      group: 'Overall',
-      issues
-    }]
-  }
-  if (grouper == 'assignee') {
-    let grouped = issues.reduce((groups, issue) => {
-      if (groups[issue['assignee']] == undefined) {
-        groups[issues[grouper]] = []
-      }
-      groups[issues[grouper]].push(issue)
-      return groups
-    }, {})
-
-    return Object.keys(grouped).map((key) => ({
-      group:key,
-      issues: grouped[key]
-    }))
-  }
-  let grouped = issues.reduce((groups, issue) => {
-    if (groups[issue[grouper]] == undefined) {
-      groups[issue[grouper]] = []
-    }
-    groups[issue[grouper]].push(issue)
-    return groups
-  }, {})
-  return Object.keys(grouped).map((key) => ({
-    group: key,
-    issues: grouped[key]
-  }))
-}
 
 const b = block('Issues')
 function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels }) {
