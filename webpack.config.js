@@ -53,6 +53,9 @@ module.exports = {
                 fallbackLoader: 'style-loader',
                 loader: ['css-loader', 'sass-loader']
             })
+      }, {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loader: 'file-loader'
       }
     ]
   },
