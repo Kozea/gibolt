@@ -5,7 +5,7 @@ import { createStore, applyMiddleware, dispatch } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
-import { fetchIssuesAction } from './actions'
+import { fetchIssues } from './actions'
 import reducer from './reducers'
 import App from './components/App'
 
@@ -21,7 +21,7 @@ let render = () => {
   ReactDOM.render(
     <Provider store={store}>
       <App dispatchFirstLoad={ () => {
-          store.getState().issues.mustLoad && store.dispatch(fetchIssuesAction())
+          store.getState().issues.mustLoad && store.dispatch(fetchIssues())
       } }/>
     </Provider>,
     rootNode

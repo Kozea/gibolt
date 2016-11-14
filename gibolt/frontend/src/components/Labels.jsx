@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { block } from '../utils'
 import Label from './Label'
-import { selectLabel, selectOnlyLabel } from '../actions/'
+import { selectLabel, selectOnlyLabel, fetchIssues } from '../actions/'
 import './Labels.sass'
 
 const b = block('Labels')
@@ -32,6 +32,7 @@ export default connect((state) => {
       onLabelItemClick: (label_type, label, multiple) => {
         dispatch((multiple ? selectLabel : selectOnlyLabel)(
           label_type, label))
+        dispatch(fetchIssues())
       }
     }
   }
