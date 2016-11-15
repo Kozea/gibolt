@@ -100,10 +100,20 @@ const issues = (state=emptyIssues, action) => {
       return {
         ...state,
         list: state.list.map(issue => {
-          if (issue.id !== action.issueId) {
-            return issue
+          if (issue.id == action.issueId) {
+            return {...issue, selected: !issue.selected}
           }
-          return {...issue, selected: !issue.selected}
+          return issue
+        })
+      }
+    case 'SET_ISSUES_SELECTNESS':
+      return {
+        ...state,
+        list: state.list.map(issue => {
+          if (action.issuesId.indexOf(issue.id) > -1) {
+            return {...issue, selected: action.isSelected}
+          }
+          return issue
         })
       }
     default:

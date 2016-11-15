@@ -4,13 +4,23 @@ import { block } from '../utils'
 import Issue from './Issue'
 import Loading from './Loading'
 import { filterIssues, groupIssues, sortGroupIssues, sortIssues } from '../utils'
-import { toggleIssue } from '../actions'
+import { toggleIssue, setIssuesSelectness } from '../actions'
 import './Issues.sass'
 
+function checkboxState(issues) {
+  var selectedIssues = issues.filter((issue) => issue.selected).length
+  if (selectedIssues == 0) {
+    return 'unchecked'
+  }
+  if (selectedIssues == issues.length) {
+    return 'checked'
+  }
+  return 'indeterminate'
+}
 
 
 const b = block('Issues')
-function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error, onFormChange }) {
+function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error, onFormChange, onToggleGrouper}) {
   let issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
   let len = issues.length
   let closedLen = allIssues.filter((issue) => issue.state == 'closed').length
@@ -22,7 +32,10 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
         { issues.length } {
           issuesState == 'all' ? '' : ` ${ issuesState }`} issues {
            issuesState == 'all' ? '' : `over ${ allIssues.length } `}
-        grouped by { grouper } <input type="checkbox" />
+        grouped by { grouper } <input type="checkbox"
+          checked={ checkboxState(issues) == 'checked'}
+          ref={elem => elem && (elem.indeterminate = checkboxState(issues) == 'indeterminate')}
+          onChange={ () => onToggleGrouper(issues.map((issue) => issue.id), (checkboxState(issues) != 'checked')) }/>
         <progress value={ closedLen / allIssues.length } title={ progressTitle }>{ closedLen }/{ len }</progress>
       </h1>
       { loading && <Loading /> }
@@ -35,7 +48,11 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
       { issuesByGroup.map(({ id, group, issues }) =>
         <article key={ id } className={ b('group') }>
           <h2>
-            { group } <sup>({ issues.length })</sup> <input type="checkbox" />
+            { group } <sup>({ issues.length })</sup>
+            <input type="checkbox"
+             checked={ checkboxState(issues) == 'checked'}
+             ref={ elem => elem && (elem.indeterminate = checkboxState(issues) == 'indeterminate' ) }
+             onChange={ () => onToggleGrouper(issues.map((issue) => issue.id), (checkboxState(issues) != 'checked')) }/>
           </h2>
           <ul>
             { sortIssues(issues, grouper).map((issue) =>
@@ -76,6 +93,9 @@ export default connect((state) => {
     return {
       onFormChange: (issueId) => {
         dispatch(toggleIssue(issueId))
+      },
+      onToggleGrouper: (issuesId, isSelected) => {
+        dispatch(setIssuesSelectness(issuesId, isSelected))
       }
     }
   }

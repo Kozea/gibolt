@@ -119,12 +119,13 @@ def issues():
             'labels', {'': []}).values() for value in values]:
         query += "+label:{0}".format(value)
     if params.get('search'):
-        query += "+search:{0}".format(params['search'])
+        query += "+{0}".format(params['search'])
     # use new github api with this additional header allow to get assignees.
     headers = {'Accept': 'application/vnd.github.cerberus-preview'}
     response = github.get(
         url + end_url + query, all_pages=True, headers=headers)
     issues = response.get('items')
+    import wdb; wdb.set_trace()
     for issue in issues:
         issue['selected'] = True
     return jsonify({
