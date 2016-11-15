@@ -4,11 +4,13 @@ import { block } from '../utils'
 import Issue from './Issue'
 import Loading from './Loading'
 import { filterIssues, groupIssues, sortGroupIssues, sortIssues } from '../utils'
+import { toggleIssue } from '../actions'
 import './Issues.sass'
 
 
+
 const b = block('Issues')
-function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error }) {
+function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, onFormChange }) {
   let issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
   let len = issues.length
   let closedLen = allIssues.filter((issue) => issue.state == 'closed').length
@@ -46,7 +48,9 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
                 avatars={ issue.avatars }
                 project={ issue.project }
                 labels={ issue.labels }
+                selected={ issue.selected }
                 url={ issue.html_url }
+                onBoxChange={() => onFormChange(issue.id)}
               />
             )}
           </ul>
@@ -67,6 +71,12 @@ export default connect((state) => {
       availableLabels: state.labels.available.priority.concat(
         state.labels.available.qualifier),
       error: state.issues.error
+    }
+  }, (dispatch) => {
+    return {
+      onFormChange: (issueId) => {
+        dispatch(toggleIssue(issueId))
+      }
     }
   }
 )(Issues)

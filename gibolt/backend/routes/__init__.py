@@ -112,6 +112,7 @@ def show_sprint_s():
 @autologin
 def index():
     state = {
+        'user': session['login'],
         'labels': {
             'available': {
                 'priority': [{
@@ -167,7 +168,8 @@ def issues():
     response = github.get(
         url + end_url + query, all_pages=True, headers=headers)
     issues = response.get('items')
-
+    for issue in issues:
+        issue['selected'] = True
     return jsonify({
         'params': params,
         'issues': issues

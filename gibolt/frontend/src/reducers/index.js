@@ -112,11 +112,22 @@ const issues = (state=emptyIssues, action) => {
         mustLoad: false,
         error: action.error
       }
+    case 'TOGGLE_ISSUE':
+      return {
+        ...state,
+        list: state.list.map(issue => {
+          if (issue.id !== action.issueId) {
+            return issue
+          }
+          return {...issue, selected: !issue.selected}
+        })
+      }
     default:
       return state
   }
 }
 
+const user = (state=[], action) => state
 
 const reducer = combineReducers({
   labels,
@@ -124,7 +135,8 @@ const reducer = combineReducers({
   grouper,
   search,
   preset,
-  issues
+  issues,
+  user,
 })
 
 export default reducer

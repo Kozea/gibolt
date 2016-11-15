@@ -99,3 +99,10 @@ export const fetchIssues = () => {
     .catch(error => dispatch(setIssuesError(error.toString())))
   }
 }
+
+export const toggleIssue = (issueId) => {
+  return {
+    type: 'TOGGLE_ISSUE',
+    issueId
+  }
+}
