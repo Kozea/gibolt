@@ -31,8 +31,6 @@ export const setPreset = (preset) => {
   }
 }
 
-
-
 export const setIssuesState = (issuesState) => {
   return {
     type: 'SET_ISSUES_STATE',
@@ -85,5 +83,12 @@ export const fetchIssues = () => {
     })
     .then(response => response.json())
     .then(json => dispatch(maybeSetIssues(json)))
+  }
+}
+
+export const toggleIssue = (issueId) => {
+  return {
+    type: 'TOGGLE_ISSUE',
+    issueId
   }
 }

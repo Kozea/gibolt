@@ -7,7 +7,7 @@ const b = block('Issue')
 export default function Issue(props) {
   return (
     <li className={ b({status: props.state}) }>
-      <input type="checkbox" />
+      <input type="checkbox" checked={ props.selected } onChange={props.onBoxChange}/>
       {props.users.map((user) =>
         <img key={ user.id } className={ b('avatar') } src={ user.avatar_url } alt="avatar" title={ user.login } />
       )}
