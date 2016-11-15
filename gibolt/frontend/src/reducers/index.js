@@ -61,7 +61,7 @@ const grouper = (state='state', action) => {
 
 const search = (state='', action) => {
   switch (action.type) {
-    case 'SET_SEARCH':
+    case 'SEARCH':
       return action.search
     default:
       return state

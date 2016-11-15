@@ -1,9 +1,9 @@
-import { connect } from 'react-redux'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { block } from '../utils'
-import Preset from '../components/Preset'
-import './Presets.sass'
+import Preset from './Preset'
 import { setPreset, fetchIssues } from '../actions'
+import './Presets.sass'
 
 
 const b = block('Presets')
