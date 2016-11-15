@@ -1,31 +1,23 @@
 import React, { Component } from 'react'
 import { block } from '../utils'
-import Presets from './Presets'
-import Status from './Status'
-import Labels from './Labels'
-import Issues from './Issues'
 import './App.sass'
 
 const b = block('App')
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props)
+    this.props = props
   }
-
-  componentDidMount() {
-    this.props.dispatchFirstLoad()
-  }
+  //
+  // componentDidMount() {
+  //   this.props.dispatchFirstLoad()
+  // }
 
   render() {
     return (
-      <main className={ b }>
-        <Presets />
-        <Status />
-        <Labels />
-        <Issues />
-      </main>
+      <div className={ b }>
+        { this.props.children }
+      </div>
     )
   }
 }
-
-export default App

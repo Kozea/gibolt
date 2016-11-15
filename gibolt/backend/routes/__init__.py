@@ -108,9 +108,35 @@ def show_sprint_s():
     return redirect(url_for('show_issues', **filters))
 
 
-@app.route('/')
+@app.route('/issues.json', methods=['GET', 'POST'])
 @autologin
-def index():
+def issues():
+    params = request.get_json()
+    url = 'search/issues'
+    end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
+    query = ''
+    for value in [value for values in params.get(
+            'labels', {'': []}).values() for value in values]:
+        query += "+label:{0}".format(value)
+    if params.get('search'):
+        query += "+search:{0}".format(params['search'])
+    # use new github api with this additional header allow to get assignees.
+    headers = {'Accept': 'application/vnd.github.cerberus-preview'}
+    response = github.get(
+        url + end_url + query, all_pages=True, headers=headers)
+    issues = response.get('items')
+    for issue in issues:
+        issue['selected'] = True
+    return jsonify({
+        'params': params,
+        'issues': issues
+    })
+
+
+@app.route('/')
+@app.route('/<path:path>')
+@autologin
+def index(path=None):
     state = {
         'user': session['login'],
         'labels': {
@@ -135,7 +161,7 @@ def index():
         'preset': 'my_sprint',
         'issues': {
             'list': [],
-            'loading': True,
+            'loading': False,
             'mustLoad': True
         }
     }
@@ -149,31 +175,6 @@ def my_tickets():
         'involves': session['login'], 'state': 'open',
         'groupby': 'repository_url'}
     return redirect(url_for('show_issues', **filters))
-
-
-@app.route('/issues.json', methods=['GET', 'POST'])
-@autologin
-def issues():
-    params = request.get_json()
-    url = 'search/issues'
-    end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
-    query = ''
-    for value in [value for values in params.get(
-            'labels', {'': []}).values() for value in values]:
-        query += "+label:{0}".format(value)
-    if params.get('search'):
-        query += "+search:{0}".format(params['search'])
-    # use new github api with this additional header allow to get assignees.
-    headers = {'Accept': 'application/vnd.github.cerberus-preview'}
-    response = github.get(
-        url + end_url + query, all_pages=True, headers=headers)
-    issues = response.get('items')
-    for issue in issues:
-        issue['selected'] = True
-    return jsonify({
-        'params': params,
-        'issues': issues
-    })
 
 
 @app.route('/apply_labels', methods=["POST"])

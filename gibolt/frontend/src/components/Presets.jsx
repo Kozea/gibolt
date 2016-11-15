@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router'
 import { block } from '../utils'
 import Preset from './Preset'
 import { setPreset, fetchIssues } from '../actions'
@@ -19,7 +20,7 @@ function Presets({preset, onPresetClick}) {
           <Preset action="my_tickets" active={preset == 'my_tickets'} onLinkClick={() => onPresetClick('my_tickets')}>
             My Tickets
           </Preset>
-          <Preset action="show_now">
+          <Preset action="/timeline">
             Timeline
           </Preset>
           <Preset action="show_sprint_issues" active={preset == 'show_sprint_issues'} onLinkClick={() => onPresetClick('show_sprint_issues')}>

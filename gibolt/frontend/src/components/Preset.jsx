@@ -1,13 +1,17 @@
 import React, { Component }  from 'react'
+import { Link }  from 'react-router'
 import { block } from '../utils'
 import './Preset.sass'
 
 
 const b = block('Preset')
-export default function Preset(props) {
+export default function Preset({ active, action, children, onLinkClick }) {
   return (
-    <li className={ b('item', {active: props.active}) }>
-      <span className={ b('link') } href={props.action} onClick={props.onLinkClick}>{props.children}</span>
+    <li className={ b('item', { active: active }) }>
+      { action.charAt(0) == '/' ?
+        <Link className={ b('link') } to={ action }>{ children }</Link> :
+        <span className={ b('link') } onClick={ onLinkClick }>{ children }</span>
+      }
     </li>
   )
 }
