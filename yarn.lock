@@ -2633,7 +2633,7 @@ hoek@2.x.x:
   version "2.16.3"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
-hoist-non-react-statics@^1.0.3, hoist-non-react-statics@^1.2.0:
+hoist-non-react-statics@^1.0.3:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
 
@@ -2815,9 +2815,15 @@ interpret@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.0.1.tgz#d579fb7f693b858004947af39fa0db49f795602c"
 
-invariant@^2.0.0, invariant@^2.2.0, invariant@^2.2.1:
+invariant@^2.0.0, invariant@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.1.tgz#b097010547668c7e337028ebe816ebe36c8a8d54"
+  dependencies:
+    loose-envify "^1.0.0"
+
+invariant@^2.2.1:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
   dependencies:
     loose-envify "^1.0.0"
 
@@ -4674,16 +4680,6 @@ react-redux:
     lodash "^4.2.0"
     loose-envify "^1.1.0"
 
-react-router:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-3.0.0.tgz#3f313e4dbaf57048c48dd0a8c3cac24d93667dff"
-  dependencies:
-    history "^3.0.0"
-    hoist-non-react-statics "^1.2.0"
-    invariant "^2.2.1"
-    loose-envify "^1.2.0"
-    warning "^3.0.0"
-
 react-test-renderer:
   version "15.3.2"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-15.3.2.tgz#d8f083d37d2d41e97bbdc26a1dd9282f0baf7857"
@@ -4789,6 +4785,14 @@ redux:
 redux-devtools-extension:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/redux-devtools-extension/-/redux-devtools-extension-1.0.0.tgz#f8bf7a2a093b648054a3814d6d120ad8bc8beaa9"
+
+redux-little-router:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/redux-little-router/-/redux-little-router-12.0.0.tgz#bfdb097425814f72ea01e616008b59b9f66c33c3"
+  dependencies:
+    history "^3.0.0"
+    lodash.assign "^4.2.0"
+    url-pattern "^1.0.1"
 
 redux-logger:
   version "2.7.0"
@@ -5491,6 +5495,10 @@ url-parse@1.0.x:
   dependencies:
     querystringify "0.0.x"
     requires-port "1.0.x"
+
+url-pattern@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/url-pattern/-/url-pattern-1.0.2.tgz#cc7a8bc813558c9ddf56f7b02b8104df436008e9"
 
 url@~0.11.0:
   version "0.11.0"

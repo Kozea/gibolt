@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
+import { RouterProvider, routerForBrowser, initializeCurrentLocation } from 'redux-little-router'
 import { createStore, applyMiddleware, dispatch } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import createLogger from 'redux-logger'
@@ -11,27 +11,38 @@ import reducer from './reducers'
 
 const logger = createLogger()
 let rootNode = document.getElementById('root')
+
+const {
+  routerEnhancer,
+  routerMiddleware
+} = routerForBrowser({
+  routes: {
+    '/': 'Issues',
+    '/timeline':'Timeline'
+  }
+})
+
+
 let serverState = window.__PRELOADED_STATE__ || undefined
 let store = createStore(reducer, serverState, composeWithDevTools(
-  applyMiddleware(thunk)))
+  routerEnhancer, applyMiddleware(routerMiddleware, thunk)))
 
-const dispatchFirstLoad = () => {
-  store.getState().issues.mustLoad && store.dispatch(fetchIssues())
+const initialLocation = store.getState().router
+if (initialLocation) {
+  store.dispatch(initializeCurrentLocation(initialLocation))
 }
+
+// const dispatchFirstLoad = () => {
+//   store.getState().issues.mustLoad && store.dispatch(fetchIssues())
+// }
 
 let render = () => {
   const App = require('./components/App').default
-  const PageIssues = require('./components/PageIssues').default
-  const PageTimeline = require('./components/PageTimeline').default
-
   ReactDOM.render(
     <Provider store={ store }>
-      <Router history={ browserHistory }>
-        <Route path="/" component={ App }>
-          <IndexRoute component={ PageIssues } />
-          <Route path="timeline" component={ PageTimeline } />
-        </Route>
-      </Router>
+      <RouterProvider store={ store }>
+        <App />
+      </RouterProvider>
     </Provider>,
     rootNode
   )

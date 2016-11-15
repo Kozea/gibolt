@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
+import { AbsoluteFragment } from 'redux-little-router';
 import { block } from '../utils'
+import PageIssues from './PageIssues'
+import PageTimeline from './PageTimeline'
 import './App.sass'
+
 
 const b = block('App')
 export default class App extends Component {
@@ -15,9 +19,14 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className={ b }>
-        { this.props.children }
-      </div>
+      <main className={ b }>
+        <AbsoluteFragment forRoute='/'>
+          <PageIssues />
+        </AbsoluteFragment>
+        <AbsoluteFragment forRoute='/timeline'>
+          <PageTimeline />
+        </AbsoluteFragment>
+      </main>
     )
   }
 }
