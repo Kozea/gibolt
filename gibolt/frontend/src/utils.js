@@ -62,6 +62,9 @@ export const sortIssues = (issues, grouper) => {
 }
 
 export const sortGroupIssues = (issues, grouper) => {
+  if (grouper == 'state') {
+    return issues.sort((a, b) => a.group == 'open' && 1 || -1)
+  }
   return issues.sort((a, b) => {
     if(a.group.toLowerCase() < b.group.toLowerCase()) {
       return -1

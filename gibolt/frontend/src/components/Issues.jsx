@@ -26,14 +26,14 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
       { loading && <Loading /> }
       { error && (
         <article className={ b('group', { error: true }) }>
-          <h2>Error during issue fetch: </h2>
+          <h2>Error during issue fetch</h2>
           <code>{ error }</code>
         </article>
       )}
       { issuesByGroup.map(({ id, group, issues }) =>
         <article key={ id } className={ b('group') }>
           <h2>
-            { group } <input type="checkbox" />
+            { group } <sup>({ issues.length })</sup> <input type="checkbox" />
           </h2>
           <ul>
             { sortIssues(issues, grouper).map((issue) =>
