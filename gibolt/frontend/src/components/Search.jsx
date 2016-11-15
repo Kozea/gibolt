@@ -6,11 +6,11 @@ import './Search.sass'
 
 
 const b = block('Search')
-function Search({ value, onSearchChange }) {
+function Search({ search, onSearchChange }) {
   return (
     <div className={ b }>
       <input type="text" className={ b('input') }
-        value={ value }
+        value={ search }
         onChange={ (e) => onSearchChange(e.target.value) } />
     </div>
   )

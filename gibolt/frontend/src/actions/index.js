@@ -52,6 +52,13 @@ export const setIssues = (issues) => {
   }
 }
 
+export const setIssuesError = (error) => {
+  return {
+    type: 'SET_ISSUES_ERROR',
+    error
+  }
+}
+
 const stateToParams = (state) => {
   return {
     labels: state.labels.selected,
@@ -81,8 +88,15 @@ export const fetchIssues = () => {
       },
       body: JSON.stringify(stateToParams(state))
     })
+    .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          return response
+        }
+        throw new Error(`[${ response.status }] ${ response.statusText }`)
+    })
     .then(response => response.json())
     .then(json => dispatch(maybeSetIssues(json)))
+    .catch(error => dispatch(setIssuesError(error.toString())))
   }
 }
 
