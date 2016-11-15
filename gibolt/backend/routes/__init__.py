@@ -155,7 +155,6 @@ def index(path=None):
                 'qualifier': []
             }
         },
-        'issuesState': 'all',
         'grouper': 'state',
         'search': '',
         'preset': 'my_sprint',

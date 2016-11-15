@@ -31,13 +31,6 @@ export const setPreset = (preset) => {
   }
 }
 
-export const setIssuesState = (issuesState) => {
-  return {
-    type: 'SET_ISSUES_STATE',
-    issuesState
-  }
-}
-
 export const setGrouper = (grouper) => {
   return {
     type: 'SET_GROUPER',
