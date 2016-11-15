@@ -10,7 +10,7 @@ import './Issues.sass'
 
 
 const b = block('Issues')
-function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, onFormChange }) {
+function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error, onFormChange }) {
   let issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
   let len = issues.length
   let closedLen = allIssues.filter((issue) => issue.state == 'closed').length
