@@ -31,8 +31,6 @@ export const setPreset = (preset) => {
   }
 }
 
-
-
 export const setIssuesState = (issuesState) => {
   return {
     type: 'SET_ISSUES_STATE',
@@ -51,6 +49,13 @@ export const setIssues = (issues) => {
   return {
     type: 'SET_ISSUES',
     issues
+  }
+}
+
+export const setIssuesError = (error) => {
+  return {
+    type: 'SET_ISSUES_ERROR',
+    error
   }
 }
 
@@ -83,7 +88,14 @@ export const fetchIssues = () => {
       },
       body: JSON.stringify(stateToParams(state))
     })
+    .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          return response
+        }
+        throw new Error(`[${ response.status }] ${ response.statusText }`)
+    })
     .then(response => response.json())
     .then(json => dispatch(maybeSetIssues(json)))
+    .catch(error => dispatch(setIssuesError(error.toString())))
   }
 }

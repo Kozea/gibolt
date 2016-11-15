@@ -8,7 +8,7 @@ import './Issues.sass'
 
 
 const b = block('Issues')
-function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels }) {
+function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error }) {
   let issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
   let len = issues.length
   let closedLen = allIssues.filter((issue) => issue.state == 'closed').length
@@ -24,6 +24,12 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
         <progress value={ closedLen / allIssues.length } title={ progressTitle }>{ closedLen }/{ len }</progress>
       </h1>
       { loading && <Loading /> }
+      { error && (
+        <article className={ b('group', { error: true }) }>
+          <h2>Error during issue fetch: </h2>
+          <code>{ error }</code>
+        </article>
+      )}
       { issuesByGroup.map(({ id, group, issues }) =>
         <article key={ id } className={ b('group') }>
           <h2>
@@ -59,7 +65,8 @@ export default connect((state) => {
       grouper: state.grouper,
       issuesState: state.issuesState,
       availableLabels: state.labels.available.priority.concat(
-        state.labels.available.qualifier)
+        state.labels.available.qualifier),
+      error: state.issues.error
     }
   }
 )(Issues)

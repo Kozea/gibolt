@@ -77,13 +77,22 @@ const preset = (state='my_sprint', action) => {
   }
 }
 
-const issues = (state=[], action) => {
+const emptyIssues = {
+  list: [],
+  loading: false,
+  mustLoad: true,
+  error: null
+}
+
+const issues = (state=emptyIssues, action) => {
   switch (action.type) {
     case 'SET_ISSUES':
       return {
+        ...state,
         list: action.issues,
         loading: false,
-        mustLoad: false
+        mustLoad: false,
+        error: null
       }
     case 'SELECT_LABEL':
     case 'SELECT_ONLY_LABEL':
@@ -92,7 +101,16 @@ const issues = (state=[], action) => {
       return {
         ...state,
         loading: true,
-        mustLoad: false
+        mustLoad: false,
+        error: null
+      }
+    case 'SET_ISSUES_ERROR':
+      return {
+        ...state,
+        list: [],
+        loading: false,
+        mustLoad: false,
+        error: action.error
       }
     default:
       return state
