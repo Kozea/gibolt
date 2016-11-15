@@ -108,49 +108,6 @@ def show_sprint_s():
     return redirect(url_for('show_issues', **filters))
 
 
-@app.route('/')
-@autologin
-def index():
-    state = {
-        'user': session['login'],
-        'labels': {
-            'available': {
-                'priority': [{
-                    'text': text,
-                    'color': '#%s' % color
-                } for text, color in app.config['PRIORITY_LABELS']],
-                'qualifier': [{
-                    'text': text,
-                    'color': '#%s' % color
-                } for text, color in app.config['QUALIFIER_LABELS']]
-            },
-            'selected': {
-                'priority': ['sprint'],
-                'qualifier': []
-            }
-        },
-        'issuesState': 'all',
-        'grouper': 'state',
-        'search': '',
-        'preset': 'my_sprint',
-        'issues': {
-            'list': [],
-            'loading': True,
-            'mustLoad': True
-        }
-    }
-    return render_template('index.jinja2', state=state)
-
-
-@app.route('/my_tickets')
-@autologin
-def my_tickets():
-    filters = {
-        'involves': session['login'], 'state': 'open',
-        'groupby': 'repository_url'}
-    return redirect(url_for('show_issues', **filters))
-
-
 @app.route('/issues.json', methods=['GET', 'POST'])
 @autologin
 def issues():
@@ -175,6 +132,49 @@ def issues():
         'params': params,
         'issues': issues
     })
+
+
+@app.route('/')
+@app.route('/<path:path>')
+@autologin
+def index(path=None):
+    state = {
+        'user': session['login'],
+        'labels': {
+            'available': {
+                'priority': [{
+                    'text': text,
+                    'color': '#%s' % color
+                } for text, color in app.config['PRIORITY_LABELS']],
+                'qualifier': [{
+                    'text': text,
+                    'color': '#%s' % color
+                } for text, color in app.config['QUALIFIER_LABELS']]
+            },
+            'selected': {
+                'priority': ['sprint'],
+                'qualifier': []
+            }
+        },
+        'grouper': 'state',
+        'search': '',
+        'preset': 'my_sprint',
+        'issues': {
+            'list': [],
+            'loading': False,
+            'mustLoad': True
+        }
+    }
+    return render_template('index.jinja2', state=state)
+
+
+@app.route('/my_tickets')
+@autologin
+def my_tickets():
+    filters = {
+        'involves': session['login'], 'state': 'open',
+        'groupby': 'repository_url'}
+    return redirect(url_for('show_issues', **filters))
 
 
 @app.route('/apply_labels', methods=["POST"])

@@ -34,22 +34,6 @@ const labels = (state=initialLabels, action) => {
   }
 }
 
-const issuesState = (state='open', action) => {
-  switch (action.type) {
-    case 'SET_ISSUES_STATE':
-      return action.issuesState
-    case 'SET_PRESET':
-      switch (action.preset) {
-        case 'my_sprint':
-          return 'open'
-        default:
-          return 'all'
-      }
-    default:
-      return state
-  }
-}
-
 const grouper = (state='state', action) => {
   switch (action.type) {
     case 'SET_GROUPER':
@@ -152,7 +136,6 @@ const user = (state=[], action) => state
 
 const reducer = combineReducers({
   labels,
-  issuesState,
   grouper,
   search,
   preset,

@@ -7,10 +7,15 @@ block.setup({
   modValue: '-'
 })
 
+export const issuesStateFromState = (state) => (
+  state.router.query['state'] || 'open'
+)
+
 export const filterIssues = (issues, state) => {
+  const issuesState = issuesStateFromState(state)
   return issues.filter((issue) => {
     return (
-      state.issuesState == 'all' || state.issuesState == issue.state
+      issuesState == 'all' || issuesState == issue.state
     )
   })
 }

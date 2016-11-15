@@ -1,28 +1,48 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
+import { RouterProvider, routerForBrowser, initializeCurrentLocation } from 'redux-little-router'
 import { createStore, applyMiddleware, dispatch } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { fetchIssues } from './actions'
 import reducer from './reducers'
-import App from './components/App'
 
 const logger = createLogger()
 let rootNode = document.getElementById('root')
+
+const {
+  routerEnhancer,
+  routerMiddleware
+} = routerForBrowser({
+  routes: {
+    '/': 'Issues',
+    '/timeline':'Timeline'
+  }
+})
+
+
 let serverState = window.__PRELOADED_STATE__ || undefined
 let store = createStore(reducer, serverState, composeWithDevTools(
-  applyMiddleware(thunk)))
+  routerEnhancer, applyMiddleware(routerMiddleware, thunk)))
 
+const initialLocation = store.getState().router
+if (initialLocation) {
+  store.dispatch(initializeCurrentLocation(initialLocation))
+}
+
+// const dispatchFirstLoad = () => {
+//   store.getState().issues.mustLoad && store.dispatch(fetchIssues())
+// }
 
 let render = () => {
   const App = require('./components/App').default
   ReactDOM.render(
-    <Provider store={store}>
-      <App dispatchFirstLoad={ () => {
-          store.getState().issues.mustLoad && store.dispatch(fetchIssues())
-      } }/>
+    <Provider store={ store }>
+      <RouterProvider store={ store }>
+        <App />
+      </RouterProvider>
     </Provider>,
     rootNode
   )
@@ -56,5 +76,3 @@ if (module.hot) {
 }
 
 render()
-
-export default store
