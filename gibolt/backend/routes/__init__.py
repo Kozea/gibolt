@@ -168,9 +168,9 @@ def issues():
     response = github.get(
         url + end_url + query, all_pages=True, headers=headers)
     issues = response.get('items')
-    import wdb; wdb.set_trace()
     for issue in issues:
-        issue['selected'] = True
+        issue['selected'] = False
+        issue['expanded'] = False
     return jsonify({
         'params': params,
         'issues': issues

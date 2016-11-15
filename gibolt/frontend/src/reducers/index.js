@@ -132,6 +132,17 @@ const issues = (state=emptyIssues, action) => {
           return issue
         })
       }
+    case 'TOGGLE_EXPANDED':
+      return {
+        ...state,
+        list: state.list.map(issue => {
+          if (issue.id == action.issueId) {
+            return {...issue, expanded: !issue.expanded}
+          }
+          return issue
+        })
+
+      }
     default:
       return state
   }
