@@ -106,3 +106,11 @@ export const toggleIssue = (issueId) => {
     issueId
   }
 }
+
+export const setIssuesSelectness = (issuesId, isSelected) => {
+  return {
+    type: 'SET_ISSUES_SELECTNESS',
+    issuesId,
+    isSelected
+  }
+}
