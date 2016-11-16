@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+var ReactMarkdown = require('react-markdown')
 import { block } from '../utils'
 import './Issue.sass'
 
@@ -6,7 +7,7 @@ import './Issue.sass'
 const b = block('Issue')
 export default function Issue(props) {
   return (
-    <li className={ b({status: props.state}) }>
+    <li className={ b({status: props.state})}>
       <input type="checkbox" checked={ props.selected } onChange={props.onBoxChange}/>
       {props.users.map((user) =>
         <img key={ user.id } className={ b('avatar') } src={ user.avatar_url } alt="avatar" title={ user.login } />
@@ -24,6 +25,11 @@ export default function Issue(props) {
           ))
         }
       </a>
+      { props.body && (
+        <div onClick={props.onClick}>
+          { props.expanded ? <ReactMarkdown className={ b('body').toString() } source={ props.body }/> : <span>show body</span> }
+        </div>
+      )}
     </li>
   )
 }

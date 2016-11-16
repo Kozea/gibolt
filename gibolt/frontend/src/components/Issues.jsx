@@ -4,7 +4,7 @@ import { block, grouperFromState, issuesStateFromState } from '../utils'
 import Issue from './Issue'
 import Loading from './Loading'
 import { filterIssues, groupIssues, sortGroupIssues, sortIssues } from '../utils'
-import { toggleIssue, setIssuesSelectness } from '../actions'
+import { toggleIssue, setIssuesSelectness, toggleExpanded } from '../actions'
 import './Issues.sass'
 
 function checkboxState(issues) {
@@ -20,7 +20,7 @@ function checkboxState(issues) {
 
 
 const b = block('Issues')
-function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error, onFormChange, onToggleGrouper}) {
+function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error, onToggleSelected, onToggleGrouper, onToggleExpanded}) {
   let issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
   let len = issues.length
   let closedLen = allIssues.filter((issue) => issue.state == 'closed').length
@@ -61,13 +61,16 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
                 id={ issue.number }
                 state={ issue.state }
                 title={ issue.title }
+                body={ issue.body }
                 users={ issue.assignees }
                 avatars={ issue.avatars }
                 project={ issue.project }
                 labels={ issue.labels }
                 selected={ issue.selected }
                 url={ issue.html_url }
-                onBoxChange={() => onFormChange(issue.id)}
+                expanded={ issue.expanded }
+                onBoxChange={() => onToggleSelected(issue.id)}
+                onClick={() => onToggleExpanded(issue.id)}
               />
             )}
           </ul>
@@ -91,8 +94,11 @@ export default connect((state) => {
     }
   }, (dispatch) => {
     return {
-      onFormChange: (issueId) => {
+      onToggleSelected: (issueId) => {
         dispatch(toggleIssue(issueId))
+      },
+      onToggleExpanded: (issueId) => {
+        dispatch(toggleExpanded(issueId))
       },
       onToggleGrouper: (issuesId, isSelected) => {
         dispatch(setIssuesSelectness(issuesId, isSelected))

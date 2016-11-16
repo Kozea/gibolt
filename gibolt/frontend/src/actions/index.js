@@ -83,3 +83,10 @@ export const setIssuesSelectness = (issuesId, isSelected) => {
     isSelected
   }
 }
+
+export const toggleExpanded = (issueId) => {
+  return {
+    type: 'TOGGLE_EXPANDED',
+    issueId
+  }
+}

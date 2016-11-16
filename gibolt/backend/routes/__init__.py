@@ -126,7 +126,8 @@ def issues():
         url + end_url + query, all_pages=True, headers=headers)
     issues = response.get('items')
     for issue in issues:
-        issue['selected'] = True
+        issue['selected'] = False
+        issue['expanded'] = False
     return jsonify({
         'params': params,
         'issues': issues
