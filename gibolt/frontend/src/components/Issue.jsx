@@ -25,7 +25,8 @@ export default function Issue(props) {
           ))
         }
       </a>
-      { props.expanded && <ReactMarkdown className={ b('body').toString } source={ props.body }/>  }
+      { (props.body && !props.expanded) && <div>show body</div> }
+      { props.expanded && <ReactMarkdown className={ b('body').toString() } source={ props.body }/>  }
     </li>
   )
 }
