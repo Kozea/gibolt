@@ -6,56 +6,48 @@ import equal from 'deep-equal'
 import { setPreset, fetchIssues } from '../actions'
 import './Presets.sass'
 
-const PRESETS = {
+const PRESETS = (user) => ({
   my_sprint: {
     state: 'all',
     grouper: 'state',
-    labels: ['sprint']
+    priority: 'sprint',
+    assigned: user
   },
   my_tickets: {
     state: 'open',
     grouper: 'project',
-    labels: []
+    priority: '',
+    involved: user
   },
   sprint_issues: {
     state: 'all',
     grouper: 'nogroup',
-    labels: ['sprint']
+    priority: 'sprint'
   }
-}
-
-const presetLink = (pathname, query, preset) => {
-  return {
-      pathname: '/',
-      query: {
-        ...query,
-        ...PRESETS.my_sprint
-      }
-    }
-}
-
+})
 
 const b = block('Presets')
-function Presets({ pathname, query }) {
-  let pathquery = { pathname, query }
+function Presets({ pathname, query, user }) {
+  let userPreset = PRESETS(user)
   return (
     <header className={ b }>
       <h1 className={ b('title') }>Gibolt</h1>
       <nav>
         <ul className={ b('nav') }>
-          <Preset action={ presetLink('/', query, PRESETS.my_sprint) }
-                  active={ equal(pathquery, presetLink('/', query, PRESETS.my_sprint)) }>
+          <Preset action={{ pathname: '/', query: userPreset.my_sprint }}
+                  active={ pathname == '/' && equal(query, userPreset.my_sprint) }>
             My Sprint
           </Preset>
-            <Preset action={ presetLink('/', query, PRESETS.my_ticket) }
-                    active={ equal(pathquery, presetLink('/', query, PRESETS.my_ticket)) }>
+            <Preset action={{ pathname: '/', query: userPreset.my_tickets }}
+                    active={ pathname == '/' && equal(query, userPreset.my_tickets) }>
+
             My Tickets
           </Preset>
           <Preset action="/timeline" active={pathname == '/timeline'}>
             Timeline
           </Preset>
-            <Preset action={ presetLink('/', query, PRESETS.sprint_issues) }
-                    active={ equal(pathquery, presetLink('/', query, PRESETS.sprint_issues)) }>
+            <Preset action={{ pathname: '/', query: userPreset.sprint_issues }}
+                    active={ pathname == '/' && equal(query, userPreset.sprint_issues) }>
             Issues
           </Preset>
           <Preset action="show_assigned_issues">
@@ -73,6 +65,7 @@ function Presets({ pathname, query }) {
 export default connect((state) => {
   return {
     query: state.router.query,
+    user: state.user,
     pathname: state.router.pathname
   }
 })(Presets)
