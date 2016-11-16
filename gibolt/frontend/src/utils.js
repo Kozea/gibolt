@@ -11,6 +11,20 @@ export const issuesStateFromState = (state) => (
   state.router.query['state'] || 'open'
 )
 
+export const grouperFromState = (state) => (
+  state.router.query['grouper'] || 'state'
+)
+
+const strToList = (strOrList) => (
+  strOrList && strOrList.constructor == Array)  ? strOrList : [strOrList]
+
+export const labelsFromState = (state) => (
+  {
+    priority: strToList(state.router.query['priority']) || ['sprint'],
+    qualifier: strToList(state.router.query['qualifier']) || []
+  }
+)
+
 export const filterIssues = (issues, state) => {
   const issuesState = issuesStateFromState(state)
   return issues.filter((issue) => {

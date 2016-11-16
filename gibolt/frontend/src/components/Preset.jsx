@@ -8,10 +8,7 @@ const b = block('Preset')
 export default function Preset({ active, action, children, onLinkClick }) {
   return (
     <li className={ b('item', { active: active }) }>
-      { action.charAt(0) == '/' ?
-        <Link className={ b('link') } href={ action }>{ children }</Link> :
-        <span className={ b('link') } onClick={ onLinkClick }>{ children }</span>
-      }
+      <Link className={ b('link') } href={ action }>{ children }</Link>
     </li>
   )
 }

@@ -9,16 +9,16 @@ import './IssuesState.sass'
 
 const b = block('IssuesState')
 
-function IssuesState({issuesState, onStatusItemClick}) {
+function IssuesState({ issuesState, query }) {
   return (
     <ul className={ b }>
-      <StatusItem action="open" active={issuesState == 'open'}>
+      <StatusItem action="open" type="state" query={ query } active={ issuesState == 'open' }>
         Open
       </StatusItem>
-      <StatusItem action="closed" active={issuesState == 'closed'}>
+      <StatusItem action="closed" type="state" query={ query } active={ issuesState == 'closed' }>
         Closed
       </StatusItem>
-      <StatusItem action="all" active={issuesState == 'all'}>
+      <StatusItem action="all" type="state" query={ query } active={ issuesState == 'all' }>
         All
       </StatusItem>
     </ul>
@@ -26,5 +26,8 @@ function IssuesState({issuesState, onStatusItemClick}) {
 }
 
 export default connect((state) => {
-  return {issuesState: issuesStateFromState(state)}
+  return {
+    issuesState: issuesStateFromState(state),
+    query: state.router.query
+  }
 })(IssuesState)

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { block } from '../utils'
+import { block, grouperFromState, issuesStateFromState } from '../utils'
 import Issue from './Issue'
 import Loading from './Loading'
 import { filterIssues, groupIssues, sortGroupIssues, sortIssues } from '../utils'
@@ -88,10 +88,10 @@ export default connect((state) => {
       issues: filterIssues(state.issues.list, state),
       allIssues: state.issues.list,
       loading: state.issues.loading,
-      grouper: state.grouper,
-      issuesState: state.issuesState,
-      availableLabels: state.labels.available.priority.concat(
-        state.labels.available.qualifier),
+      grouper: grouperFromState(state),
+      issuesState: issuesStateFromState(state),
+      availableLabels: state.labels.priority.concat(
+        state.labels.qualifier),
       error: state.issues.error
     }
   }, (dispatch) => {

@@ -141,24 +141,16 @@ def index(path=None):
     state = {
         'user': session['login'],
         'labels': {
-            'available': {
-                'priority': [{
-                    'text': text,
-                    'color': '#%s' % color
-                } for text, color in app.config['PRIORITY_LABELS']],
-                'qualifier': [{
-                    'text': text,
-                    'color': '#%s' % color
-                } for text, color in app.config['QUALIFIER_LABELS']]
-            },
-            'selected': {
-                'priority': ['sprint'],
-                'qualifier': []
-            }
+            'priority': [{
+                'text': text,
+                'color': '#%s' % color
+            } for text, color in app.config['PRIORITY_LABELS']],
+            'qualifier': [{
+                'text': text,
+                'color': '#%s' % color
+            } for text, color in app.config['QUALIFIER_LABELS']]
         },
-        'grouper': 'state',
         'search': '',
-        'preset': 'my_sprint',
         'issues': {
             'list': [],
             'loading': False,
