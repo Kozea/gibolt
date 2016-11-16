@@ -11,13 +11,13 @@ const PRESETS = (user) => ({
     state: 'all',
     grouper: 'state',
     priority: 'sprint',
-    assigned: user
+    assignee: user
   },
   my_tickets: {
     state: 'open',
     grouper: 'project',
     priority: '',
-    involved: user
+    involves: user
   },
   sprint_issues: {
     state: 'all',
