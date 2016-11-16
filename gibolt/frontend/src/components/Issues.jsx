@@ -76,6 +76,8 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
           </ul>
         </article>
       )}
+    <button type="submit" onClick={ () => changePriority('increment') }>Increment priority</button>
+    <button type="submit" onClick={ () => changePriority('removeTop') }>Remove top priority</button>
     </section>
   )
 }
