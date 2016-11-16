@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { block, grouperFromState, issuesStateFromState } from '../utils'
 import Issue from './Issue'
 import Loading from './Loading'
+import Progress from './Progress'
 import { filterIssues, groupIssues, sortGroupIssues, sortIssues } from '../utils'
 import { toggleIssue, setIssuesSelectness, toggleExpanded } from '../actions'
 import './Issues.sass'
@@ -22,9 +23,7 @@ function checkboxState(issues) {
 const b = block('Issues')
 function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error, onToggleSelected, onToggleGrouper, onToggleExpanded}) {
   let issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
-  let len = issues.length
   let closedLen = allIssues.filter((issue) => issue.state == 'closed').length
-  let progressTitle = `${closedLen}/${allIssues.length} ${closedLen/allIssues.length}%`
 
   return (
     <section className={ b }>
@@ -36,7 +35,7 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
           checked={ checkboxState(issues) == 'checked'}
           ref={elem => elem && (elem.indeterminate = checkboxState(issues) == 'indeterminate')}
           onChange={ () => onToggleGrouper(issues.map((issue) => issue.id), (checkboxState(issues) != 'checked')) }/>
-        <progress value={ closedLen / allIssues.length } title={ progressTitle }>{ closedLen }/{ len }</progress>
+        <Progress val={ closedLen } total={ allIssues.length } />
       </h1>
       { loading && <Loading /> }
       { error && (
@@ -48,11 +47,13 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
       { issuesByGroup.map(({ id, group, issues }) =>
         <article key={ id } className={ b('group') }>
           <h2>
-            { group } <sup>({ issues.length })</sup>
-            <input type="checkbox"
+            { group } <sup>
+              ({ issues.length })
+            </sup> <input type="checkbox"
              checked={ checkboxState(issues) == 'checked'}
              ref={ elem => elem && (elem.indeterminate = checkboxState(issues) == 'indeterminate' ) }
              onChange={ () => onToggleGrouper(issues.map((issue) => issue.id), (checkboxState(issues) != 'checked')) }/>
+           <Progress val={ issues.filter(i => i.state == 'closed').length } total={ issues.length } />
           </h2>
           <ul>
             { sortIssues(issues, grouper).map((issue) =>
