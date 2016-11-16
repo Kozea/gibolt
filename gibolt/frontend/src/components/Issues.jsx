@@ -5,7 +5,7 @@ import Issue from './Issue'
 import Loading from './Loading'
 import Progress from './Progress'
 import { filterIssues, groupIssues, sortGroupIssues, sortIssues } from '../utils'
-import { toggleIssue, setIssuesSelectness, toggleExpanded } from '../actions'
+import { toggleIssue, setIssuesSelectness, toggleExpanded, postChangeSelectedIssuesPriority } from '../actions'
 import './Issues.sass'
 
 function checkboxState(issues) {
@@ -21,7 +21,7 @@ function checkboxState(issues) {
 
 
 const b = block('Issues')
-function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error, onToggleSelected, onToggleGrouper, onToggleExpanded}) {
+function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error, onToggleSelected, onToggleGrouper, onToggleExpanded, onChangePriority}) {
   let issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
   let closedLen = allIssues.filter((issue) => issue.state == 'closed').length
 
@@ -77,8 +77,8 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
           </ul>
         </article>
       )}
-    <button type="submit" onClick={ () => changePriority('increment') }>Increment priority</button>
-    <button type="submit" onClick={ () => changePriority('removeTop') }>Remove top priority</button>
+    <button type="submit" onClick={ () => onChangePriority('increment') }>Increment priority</button>
+    <button type="submit" onClick={ () => onChangePriority('removeTop') }>Remove top priority</button>
     </section>
   )
 }
@@ -105,6 +105,9 @@ export default connect((state) => {
       },
       onToggleGrouper: (issuesId, isSelected) => {
         dispatch(setIssuesSelectness(issuesId, isSelected))
+      },
+      onChangePriority: (change) => {
+        dispatch(postChangeSelectedIssuesPriority(change))
       }
     }
   }

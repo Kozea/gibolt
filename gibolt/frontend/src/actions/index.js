@@ -75,6 +75,33 @@ export const fetchIssues = () => {
   }
 }
 
+export const postChangeSelectedIssuesPriority = (change) => {
+  return (dispatch, getState) => {
+    let state = getState()
+    fetch('/apply_labels', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify({
+        issuesIds: state.issues.list.filter((issue) => issue.isSelected).map((issue) => issue.id),
+        action: change
+      })
+    })
+    .then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          return response
+        }
+        throw new Error(`[${ response.status }] ${ response.statusText }`)
+    })
+    .then(response => response.json())
+    .then(json => dispatch(maybeSetIssues(json)))
+    .catch(error => dispatch(setIssuesError(error.toString())))
+  }
+}
+
 export const toggleIssue = (issueId) => {
   return {
     type: 'TOGGLE_ISSUE',
