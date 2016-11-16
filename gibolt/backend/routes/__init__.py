@@ -137,10 +137,21 @@ def issues():
     })
 
 
+@app.route('/users.json', methods=['GET', 'POST'])
+@autologin
+def users():
+    url = 'orgs/{0}/members'.format(app.config['ORGANISATION'])
+    response = github.get(url, all_pages=True)
+    return jsonify(response)
+
+
 @app.route('/')
 @app.route('/<path:path>')
 @autologin
 def index(path=None):
+    url = 'orgs/{0}/members'.format(app.config['ORGANISATION'])
+    users = github.get(url, all_pages=True)
+
     state = {
         'user': session['login'],
         'labels': {
@@ -158,7 +169,8 @@ def index(path=None):
             'list': [],
             'loading': False,
             'mustLoad': True
-        }
+        },
+        'users': [user['login'] for user in users]
     }
     return render_template('index.jinja2', state=state)
 
@@ -175,6 +187,8 @@ def my_tickets():
 @app.route('/apply_labels', methods=["POST"])
 @autologin
 def apply_labels():
+    print('query apply_labels')
+    return '', 200
     for issue_id in request.form.getlist('issues'):
         repo, number, labels = issue_id.split('$')
         labels = labels.split(',')
