@@ -8,7 +8,7 @@ block.setup({
 })
 
 export const issuesStateFromState = (state) => (
-  state.router.query['state'] || 'open'
+  state.router.query['state'] || 'all'
 )
 
 export const grouperFromState = (state) => (
@@ -18,6 +18,12 @@ export const grouperFromState = (state) => (
 export const strToList = (strOrList) => (
   (strOrList || strOrList == '') && (strOrList.constructor == Array  ? strOrList : [strOrList])
 )
+
+export const usersFromState = (state) => ({
+  assignee: strToList(state.router.query['assignee'])  || [state.user],
+  involves: strToList(state.router.query['involves']) || []
+})
+
 
 export const labelsFromState = (state) => ({
   priority: strToList(state.router.query['priority']) || ['sprint'],

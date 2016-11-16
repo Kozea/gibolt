@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import equal from 'deep-equal'
 import { PUSH } from 'redux-little-router'
-import { allLabelsFromState } from '../utils'
+import { allLabelsFromState, usersFromState } from '../utils'
 
 
 export const search = (search) => {
@@ -32,11 +32,12 @@ export const setIssuesError = (error) => {
 }
 
 const stateToParams = (state) => {
+  let users = usersFromState(state)
   return {
     labels: allLabelsFromState(state).filter(x => x != ''),
     search: state.search,
-    assignee: state.router.query.assignee || '',
-    involves: state.router.query.involves || '',
+    assignee: users.assignee[0] || '',
+    involves: users.involves[0] || '',
   }
 }
 

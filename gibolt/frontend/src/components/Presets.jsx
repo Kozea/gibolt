@@ -35,7 +35,7 @@ function Presets({ pathname, query, user }) {
       <nav>
         <ul className={ b('nav') }>
           <Preset action={{ pathname: '/', query: userPreset.my_sprint }}
-                  active={ pathname == '/' && equal(query, userPreset.my_sprint) }>
+                  active={ pathname == '/' && equal({...userPreset.my_sprint, ...query}, userPreset.my_sprint) }>
             My Sprint
           </Preset>
             <Preset action={{ pathname: '/', query: userPreset.my_tickets }}
