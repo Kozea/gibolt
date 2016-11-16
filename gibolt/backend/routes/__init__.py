@@ -111,14 +111,18 @@ def show_sprint_s():
 @app.route('/issues.json', methods=['GET', 'POST'])
 @autologin
 def issues():
-    params = request.get_json()
+    params = dict(request.get_json())
     url = 'search/issues'
     end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
     query = ''
-    for value in params.get('labels', []):
+    for value in params.pop('labels', []):
         query += "+label:{0}".format(value)
-    if params.get('search'):
+    search = params.pop('search')
+    if search:
         query += "+{0}".format(params['search'])
+    for key, value in params.items():
+        if value:
+            query += "+{0}:{1}".format(key, value)
     # use new github api with this additional header allow to get assignees.
     headers = {'Accept': 'application/vnd.github.cerberus-preview'}
     response = github.get(
@@ -128,7 +132,7 @@ def issues():
         issue['selected'] = False
         issue['expanded'] = False
     return jsonify({
-        'params': params,
+        'params': request.get_json(),
         'issues': issues
     })
 
