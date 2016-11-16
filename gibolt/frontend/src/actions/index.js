@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import equal from 'deep-equal'
 import { allLabelsFromState } from '../utils'
 
 
@@ -33,18 +34,19 @@ const stateToParams = (state) => {
   return {
     labels: allLabelsFromState(state).filter(x => x != ''),
     search: state.search,
-    assigned: state.router.query.assigned,
-    involved: state.router.query.involved,
+    assigned: state.router.query.assigned || '',
+    involved: state.router.query.involved || '',
   }
 }
 
 const maybeSetIssues = (json) => {
   return (dispatch, getState) => {
     let state = getState()
-    if (JSON.stringify(json.params) == JSON.stringify(stateToParams(state))) {
+    if (equal(json.params, stateToParams(state))) {
       dispatch(setIssues(json.issues))
     } else {
-      console.log('State is not coherent with fetch response', json.params, state)
+      console.log('State is not coherent with fetch response',
+        json.params, stateToParams(state))
     }
   }
 }
