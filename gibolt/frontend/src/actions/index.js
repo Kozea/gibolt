@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import equal from 'deep-equal'
+import { PUSH } from 'redux-little-router'
 import { allLabelsFromState } from '../utils'
 
 
@@ -34,8 +35,8 @@ const stateToParams = (state) => {
   return {
     labels: allLabelsFromState(state).filter(x => x != ''),
     search: state.search,
-    assigned: state.router.query.assigned || '',
-    involved: state.router.query.involved || '',
+    assignee: state.router.query.assignee || '',
+    involves: state.router.query.involves || '',
   }
 }
 
@@ -120,5 +121,12 @@ export const toggleExpanded = (issueId) => {
   return {
     type: 'TOGGLE_EXPANDED',
     issueId
+  }
+}
+
+export const push = (payload) => {
+  return {
+    type: PUSH,
+    payload: payload
   }
 }

@@ -84,12 +84,14 @@ const issues = (state=emptyIssues, action) => {
   }
 }
 
+const users = (state=['paradoxxxzero', 'yobuntu'], action) => state
 const user = (state=[], action) => state
 
 const reducer = combineReducers({
   labels,
   search,
   issues,
+  users,
   user,
 })
 

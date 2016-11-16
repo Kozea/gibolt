@@ -33,7 +33,9 @@ const autoLoadMiddleware = ({ getState, dispatch }) => {
           const newState = getState()
           if (state.issues.mustLoad || (
               state.router.query.priority != newState.router.query.priority) || (
-                state.router.query.qualifier != newState.router.query.qualifier) ) {
+                state.router.query.qualifier != newState.router.query.qualifier) || (
+                  state.router.query.involves != newState.router.query.involves) || (
+                    state.router.query.assignee != newState.router.query.assignee)) {
             dispatch(setLoading())
             dispatch(fetchIssues())
           }

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { block, strToList, labelsFromState } from '../utils'
 import Label from './Label'
+import User from './User'
 import { selectLabel, selectOnlyLabel, fetchIssues } from '../actions/'
 import './Labels.sass'
 
@@ -21,18 +22,19 @@ const b = block('Labels')
 function Labels({ labels, query, queryLabels }) {
   return (
     <aside className={ b }>
-    { ['priority', 'qualifier'].map((type) =>
-      <ul key={ type } className={ b('set', { type }) }>
-        { labels[type].map((label) =>
-          <Label
-            key={ label.text }
-            label={ label.text }
-            color={ label.color }
-            action={{ pathname: '/', query: makeQuery(label.text, query, type, queryLabels[type]) }}
-            active={ queryLabels[type].find((x) => (x == label.text)) !== undefined } />
-        )}
-      </ul>
-    )}
+      { ['priority', 'qualifier'].map((type) =>
+        <ul key={ type } className={ b('set', { type }) }>
+          { labels[type].map((label) =>
+            <Label
+              key={ label.text }
+              label={ label.text }
+              color={ label.color }
+              action={{ pathname: '/', query: makeQuery(label.text, query, type, queryLabels[type]) }}
+              active={ queryLabels[type].find((x) => (x == label.text)) !== undefined } />
+          )}
+        </ul>
+      )}
+      <User />
     </aside>
   )
 }
