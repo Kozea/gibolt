@@ -16,14 +16,19 @@ export const grouperFromState = (state) => (
 )
 
 const strToList = (strOrList) => (
-  strOrList && strOrList.constructor == Array)  ? strOrList : [strOrList]
+  strOrList && (strOrList.constructor == Array  ? strOrList : [strOrList]))
 
-export const labelsFromState = (state) => (
+  export const labelsFromState = (state) => (
   {
     priority: strToList(state.router.query['priority']) || ['sprint'],
     qualifier: strToList(state.router.query['qualifier']) || []
   }
 )
+
+export const allLabelsFromState = (state) => {
+  let labels = labelsFromState(state)
+  return labels.priority.concat(labels.qualifier)
+}
 
 export const filterIssues = (issues, state) => {
   const issuesState = issuesStateFromState(state)

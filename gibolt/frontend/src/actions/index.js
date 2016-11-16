@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { allLabelsFromState } from '../utils'
 
 
 export const search = (search) => {
@@ -30,7 +31,7 @@ export const setIssuesError = (error) => {
 
 const stateToParams = (state) => {
   return {
-    labels: state.labels.selected,
+    labels: allLabelsFromState(state),
     search: state.search
   }
 }

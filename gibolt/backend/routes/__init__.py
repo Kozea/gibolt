@@ -115,8 +115,7 @@ def issues():
     url = 'search/issues'
     end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
     query = ''
-    for value in [value for values in params.get(
-            'labels', {'': []}).values() for value in values]:
+    for value in params.get('labels', []):
         query += "+label:{0}".format(value)
     if params.get('search'):
         query += "+{0}".format(params['search'])
