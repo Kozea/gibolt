@@ -31,7 +31,7 @@ export const setIssuesError = (error) => {
 
 const stateToParams = (state) => {
   return {
-    labels: allLabelsFromState(state),
+    labels: allLabelsFromState(state).filter(x => x != ''),
     search: state.search
   }
 }

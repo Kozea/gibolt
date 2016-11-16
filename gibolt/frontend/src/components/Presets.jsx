@@ -10,52 +10,42 @@ const PRESETS = {
   my_sprint: {
     state: 'all',
     grouper: 'state',
-    labels: ['sprint']
+    priority: 'sprint'
+
   },
   my_tickets: {
     state: 'open',
     grouper: 'project',
-    labels: []
+    priority: ''
   },
   sprint_issues: {
     state: 'all',
     grouper: 'nogroup',
-    labels: ['sprint']
+    priority: 'sprint'
   }
 }
 
-const presetLink = (pathname, query, preset) => {
-  return {
-      pathname: '/',
-      query: {
-        ...query,
-        ...PRESETS.my_sprint
-      }
-    }
-}
-
-
 const b = block('Presets')
 function Presets({ pathname, query }) {
-  let pathquery = { pathname, query }
   return (
     <header className={ b }>
       <h1 className={ b('title') }>Gibolt</h1>
       <nav>
         <ul className={ b('nav') }>
-          <Preset action={ presetLink('/', query, PRESETS.my_sprint) }
-                  active={ equal(pathquery, presetLink('/', query, PRESETS.my_sprint)) }>
+          <Preset action={{ pathname: '/', query: PRESETS.my_sprint }}
+                  active={ pathname == '/' && equal(query, PRESETS.my_sprint) }>
             My Sprint
           </Preset>
-            <Preset action={ presetLink('/', query, PRESETS.my_ticket) }
-                    active={ equal(pathquery, presetLink('/', query, PRESETS.my_ticket)) }>
+            <Preset action={{ pathname: '/', query: PRESETS.my_tickets }}
+                    active={ pathname == '/' && equal(query, PRESETS.my_tickets) }>
+
             My Tickets
           </Preset>
           <Preset action="/timeline" active={pathname == '/timeline'}>
             Timeline
           </Preset>
-            <Preset action={ presetLink('/', query, PRESETS.sprint_issues) }
-                    active={ equal(pathquery, presetLink('/', query, PRESETS.sprint_issues)) }>
+            <Preset action={{ pathname: '/', query: PRESETS.sprint_issues }}
+                    active={ pathname == '/' && equal(query, PRESETS.sprint_issues) }>
             Issues
           </Preset>
           <Preset action="show_assigned_issues">
