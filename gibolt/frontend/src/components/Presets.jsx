@@ -2,27 +2,60 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { block } from '../utils'
 import Preset from './Preset'
+import equal from 'deep-equal'
 import { setPreset, fetchIssues } from '../actions'
 import './Presets.sass'
 
+const PRESETS = {
+  my_sprint: {
+    state: 'all',
+    grouper: 'state',
+    labels: ['sprint']
+  },
+  my_tickets: {
+    state: 'open',
+    grouper: 'project',
+    labels: []
+  },
+  sprint_issues: {
+    state: 'all',
+    grouper: 'nogroup',
+    labels: ['sprint']
+  }
+}
+
+const presetLink = (pathname, query, preset) => {
+  return {
+      pathname: '/',
+      query: {
+        ...query,
+        ...PRESETS.my_sprint
+      }
+    }
+}
+
 
 const b = block('Presets')
-function Presets({preset, onPresetClick}) {
+function Presets({ pathname, query }) {
+  let pathquery = { pathname, query }
   return (
     <header className={ b }>
       <h1 className={ b('title') }>Gibolt</h1>
       <nav>
         <ul className={ b('nav') }>
-          <Preset action="my_sprint" active={preset == 'my_sprint'} onLinkClick={() => onPresetClick('my_sprint')}>
+          <Preset action={ presetLink('/', query, PRESETS.my_sprint) }
+                  active={ equal(pathquery, presetLink('/', query, PRESETS.my_sprint)) }>
             My Sprint
           </Preset>
-          <Preset action="my_tickets" active={preset == 'my_tickets'} onLinkClick={() => onPresetClick('my_tickets')}>
+            <Preset action={ presetLink('/', query, PRESETS.my_ticket) }
+                    active={ equal(pathquery, presetLink('/', query, PRESETS.my_ticket)) }>
             My Tickets
           </Preset>
-          <Preset action="/timeline">
+          <Preset action="/timeline" active={pathname == '/timeline'}>
             Timeline
           </Preset>
-          <Preset action="show_sprint_issues" active={preset == 'show_sprint_issues'} onLinkClick={() => onPresetClick('show_sprint_issues')}>
+            <Preset action={ presetLink('/', query, PRESETS.sprint_issues) }
+                    active={ equal(pathquery, presetLink('/', query, PRESETS.sprint_issues)) }>
             Issues
           </Preset>
           <Preset action="show_assigned_issues">
@@ -38,12 +71,8 @@ function Presets({preset, onPresetClick}) {
 }
 
 export default connect((state) => {
-  return {preset: state.preset}
-}, (dispatch) => {
   return {
-    onPresetClick: (preset) => {
-      dispatch(setPreset(preset))
-      dispatch(fetchIssues())
-    }
+    query: state.router.query,
+    pathname: state.router.pathname
   }
 })(Presets)

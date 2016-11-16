@@ -125,7 +125,6 @@ def issues():
     response = github.get(
         url + end_url + query, all_pages=True, headers=headers)
     issues = response.get('items')
-    import wdb; wdb.set_trace()
     for issue in issues:
         issue['selected'] = True
     return jsonify({
@@ -141,24 +140,16 @@ def index(path=None):
     state = {
         'user': session['login'],
         'labels': {
-            'available': {
-                'priority': [{
-                    'text': text,
-                    'color': '#%s' % color
-                } for text, color in app.config['PRIORITY_LABELS']],
-                'qualifier': [{
-                    'text': text,
-                    'color': '#%s' % color
-                } for text, color in app.config['QUALIFIER_LABELS']]
-            },
-            'selected': {
-                'priority': ['sprint'],
-                'qualifier': []
-            }
+            'priority': [{
+                'text': text,
+                'color': '#%s' % color
+            } for text, color in app.config['PRIORITY_LABELS']],
+            'qualifier': [{
+                'text': text,
+                'color': '#%s' % color
+            } for text, color in app.config['QUALIFIER_LABELS']]
         },
-        'grouper': 'state',
         'search': '',
-        'preset': 'my_sprint',
         'issues': {
             'list': [],
             'loading': False,

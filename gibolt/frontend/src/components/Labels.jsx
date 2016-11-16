@@ -1,23 +1,23 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { block } from '../utils'
+import { block, labelsFromState } from '../utils'
 import Label from './Label'
 import { selectLabel, selectOnlyLabel, fetchIssues } from '../actions/'
 import './Labels.sass'
 
 const b = block('Labels')
-function Labels({ labels, onLabelItemClick }) {
+function Labels({ labels, query, queryLabels }) {
   return (
     <aside className={ b }>
     { ['priority', 'qualifier'].map((type) =>
       <ul key={ type } className={ b('set', { type }) }>
-        { labels.available[type].map((label) =>
+        { labels[type].map((label) =>
           <Label
             key={ label.text }
             label={ label.text }
             color={ label.color }
-            active={ labels.selected[type].find((x) => (x == label.text)) !== undefined }
-            onClick={ (e) => { onLabelItemClick(type, label.text, e.shiftKey) } }/>
+            action={{ pathname: '/', query: { ...query, [type]: [label.text] } }}
+            active={ queryLabels[type].find((x) => (x == label.text)) !== undefined } />
         )}
       </ul>
     )}
@@ -26,14 +26,9 @@ function Labels({ labels, onLabelItemClick }) {
 }
 
 export default connect((state) => {
-    return {labels: state.labels}
-  }, (dispatch) => {
-    return {
-      onLabelItemClick: (label_type, label, multiple) => {
-        dispatch((multiple ? selectLabel : selectOnlyLabel)(
-          label_type, label))
-        dispatch(fetchIssues())
-      }
-    }
+  return {
+    query: state.router.query,
+    queryLabels: labelsFromState(state),
+    labels: state.labels
   }
-)(Labels)
+})(Labels)

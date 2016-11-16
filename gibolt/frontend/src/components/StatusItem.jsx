@@ -5,15 +5,16 @@ import './StatusItem.sass'
 
 
 const b = block('StatusItem')
-export default function StatusItem(props) {
+export default function StatusItem({ active, action, type, query, children }) {
   return (
-    <li className={ b({active: props.active}) }>
+    <li className={ b({ active: active }) }>
       <Link className={ b('link') } href={{
           pathname: '/',
           query: {
-            state: props.action
+            ...query,
+            [type]: action
           }
-        }}>{props.children}</Link>
+        }}>{ children }</Link>
     </li>
   )
 }

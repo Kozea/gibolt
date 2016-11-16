@@ -1,22 +1,6 @@
 import fetch from 'isomorphic-fetch'
 
 
-export const selectLabel = (label_type, label) => {
-  return {
-    type: 'SELECT_LABEL',
-    label_type,
-    label
-  }
-}
-
-export const selectOnlyLabel = (label_type, label) => {
-  return {
-    type: 'SELECT_ONLY_LABEL',
-    label_type,
-    label
-  }
-}
-
 export const search = (search) => {
   return {
     type: 'SEARCH',
@@ -24,17 +8,9 @@ export const search = (search) => {
   }
 }
 
-export const setPreset = (preset) => {
+export const setLoading = () => {
   return {
-    type: 'SET_PRESET',
-    preset
-  }
-}
-
-export const setGrouper = (grouper) => {
-  return {
-    type: 'SET_GROUPER',
-    grouper
+    type: 'SET_LOADING'
   }
 }
 
