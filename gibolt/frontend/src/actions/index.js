@@ -32,7 +32,9 @@ export const setIssuesError = (error) => {
 const stateToParams = (state) => {
   return {
     labels: allLabelsFromState(state).filter(x => x != ''),
-    search: state.search
+    search: state.search,
+    assigned: state.router.query.assigned,
+    involved: state.router.query.involved,
   }
 }
 
