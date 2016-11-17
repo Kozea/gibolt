@@ -41,7 +41,7 @@ const autoLoadMiddleware = ({ getState, dispatch }) => {
           }
         } else if (action.payload.pathname == '/timeline') {
           const newState = getState()
-          if (state.issues.mustLoad || (
+          if (state.timeline.mustLoad || (
               state.router.query.start != newState.router.query.start) || (
                 state.router.query.stop != newState.router.query.stop)) {
             dispatch(setTimelineLoading())
