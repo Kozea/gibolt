@@ -137,6 +137,32 @@ def issues():
     })
 
 
+@app.route('/timeline.json', methods=['GET', 'POST'])
+@autologin
+def timeline():
+    params = dict(request.get_json())
+    repos_name = cache['users'].get(session['user'])
+    repos = []
+    milestones = []
+    user = session.get('user')
+    start = params.get('start')
+    stop = params.get('stop')
+    with ThreadPoolExecutor(max_workers=50) as executor:
+        for name in repos_name:
+            repo = {}
+            repos.append(repo)
+            executor.submit(refresh_repo_milestones, name, repo, user)
+    for repo in repos:
+        milestones.extend(repo.get('milestones', []))
+    stones = get_stones_by_step(
+        milestones, date_from_iso(start), date_from_iso(stop),
+        relativedelta(months=1))
+    return jsonify({
+        'params': request.get_json(),
+        'timeline': stones
+    })
+
+
 @app.route('/users.json', methods=['GET', 'POST'])
 @autologin
 def users():
@@ -153,7 +179,6 @@ def index(path=None):
     users = github.get(url, all_pages=True)
 
     state = {
-        'user': session['login'],
         'labels': {
             'priority': [{
                 'text': text,
@@ -168,9 +193,17 @@ def index(path=None):
         'issues': {
             'list': [],
             'loading': False,
-            'mustLoad': True
+            'mustLoad': True,
+            'error': None
         },
-        'users': [user['login'] for user in users]
+        'timeline': {
+            'list': [],
+            'loading': False,
+            'mustLoad': True,
+            'error': None
+        },
+        'users': [user['login'] for user in users],
+        'user': session['login'],
     }
     return render_template('index.jinja2', state=state)
 
@@ -275,26 +308,6 @@ def refresh_repo_milestones(repo_name, repo, access_token):
             milestone['progress'] = (
                 milestone['closed_issues'] / (total or float('inf')))
 
-
-@app.route('/stones/<start>/<stop>')
-@autologin
-def show(start, stop):
-    repos_name = cache['users'].get(session['user'])
-    repos = []
-    milestones = []
-    user = session.get('user')
-    with ThreadPoolExecutor(max_workers=50) as executor:
-        for name in repos_name:
-            repo = {}
-            repos.append(repo)
-            executor.submit(refresh_repo_milestones, name, repo, user)
-    for repo in repos:
-        milestones.extend(repo.get('milestones', []))
-    stones = get_stones_by_step(
-        milestones, date_from_iso(start), date_from_iso(stop),
-        relativedelta(months=1))
-    return render_template(
-        'stones.jinja2', start=date_from_iso(start), stones_by_step=stones)
 
 
 @app.route('/css/dynamic')

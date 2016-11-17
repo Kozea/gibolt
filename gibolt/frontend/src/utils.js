@@ -1,4 +1,5 @@
 import block from 'bem-cn'
+import moment from 'moment'
 
 
 block.setup({
@@ -34,6 +35,15 @@ export const allLabelsFromState = (state) => {
   let labels = labelsFromState(state)
   return labels.priority.concat(labels.qualifier)
 }
+
+export const timelineRangeFromState = (state) => {
+  let startOfMonth = moment().startOf('month')
+  return {
+    start: state.router.query['start'] || startOfMonth.format('YYYY-MM-DD'),
+    stop: state.router.query['stop'] || startOfMonth.add(1, 'y').format('YYYY-MM-DD')
+  }
+}
+
 
 export const filterIssues = (issues, state) => {
   const issuesState = issuesStateFromState(state)

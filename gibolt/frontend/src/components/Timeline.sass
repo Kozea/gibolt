@@ -1,0 +1,45 @@
+@import ../vars
+
+.Timeline
+  flex: 1
+  overflow: auto
+  position: relative
+
+  &__head
+    align-items: center
+    background: $issues-header
+    color: $issues-header-fg
+    display: flex
+    font-size: 1.2em
+    font-weight: 400
+    margin: 0
+    padding: 0.8em
+    text-transform: uppercase
+
+    input
+      margin: 0 0.5em
+
+  &__group
+    margin-left: 1em
+    sup
+      color: #999
+      font-size: .65em
+
+  progress[value]
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+    border: none
+    height: 0.8em
+    margin: 0 0.5em
+
+    &::-webkit-progress-bar
+      background-color: #c5d4df
+      box-shadow: none
+
+    &::-moz-progress-bar
+      background-color: $progress
+      border: none
+
+    &::-webkit-progress-value
+      background: #fe8d53

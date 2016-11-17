@@ -6,7 +6,7 @@ import { createStore, applyMiddleware, dispatch } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
-import { fetchIssues, setLoading } from './actions'
+import { fetchIssues, setIssuesLoading, fetchTimeline, setTimelineLoading } from './actions'
 import reducer from './reducers'
 
 const logger = createLogger()
@@ -36,8 +36,16 @@ const autoLoadMiddleware = ({ getState, dispatch }) => {
                 state.router.query.qualifier != newState.router.query.qualifier) || (
                   state.router.query.involves != newState.router.query.involves) || (
                     state.router.query.assignee != newState.router.query.assignee)) {
-            dispatch(setLoading())
+            dispatch(setIssuesLoading())
             dispatch(fetchIssues())
+          }
+        } else if (action.payload.pathname == '/timeline') {
+          const newState = getState()
+          if (state.issues.mustLoad || (
+              state.router.query.start != newState.router.query.start) || (
+                state.router.query.stop != newState.router.query.stop)) {
+            dispatch(setTimelineLoading())
+            dispatch(fetchTimeline())
           }
         }
       }

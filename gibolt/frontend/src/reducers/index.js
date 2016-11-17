@@ -33,7 +33,7 @@ const issues = (state=emptyIssues, action) => {
         mustLoad: false,
         error: null
       }
-    case 'SET_LOADING':
+    case 'SET_ISSUES_LOADING':
       return {
         ...state,
         loading: true,
@@ -84,13 +84,52 @@ const issues = (state=emptyIssues, action) => {
   }
 }
 
-const users = (state=['paradoxxxzero', 'yobuntu'], action) => state
+const emptyTimeline = {
+  list: [],
+  loading: false,
+  mustLoad: true,
+  error: null
+}
+
+
+const timeline = (state=emptyTimeline, action) => {
+  switch (action.type) {
+    case 'SET_TIMELINE':
+      return {
+        ...state,
+        list: action.timeline,
+        loading: false,
+        mustLoad: false,
+        error: null
+      }
+    case 'SET_TIMELINE_LOADING':
+      return {
+        ...state,
+        loading: true,
+        mustLoad: false,
+        error: null
+      }
+    case 'SET_TIMELINE_ERROR':
+      return {
+        ...state,
+        list: [],
+        loading: false,
+        mustLoad: false,
+        error: action.error
+      }
+    default:
+      return state
+  }
+}
+
+const users = (state=[], action) => state
 const user = (state=[], action) => state
 
 const reducer = combineReducers({
   labels,
   search,
   issues,
+  timeline,
   users,
   user,
 })
