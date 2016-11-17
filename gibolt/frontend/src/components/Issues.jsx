@@ -30,8 +30,8 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
       <h1 className={ b('head') }>
         { issues.length } {
           issuesState == 'all' ? '' : ` ${ issuesState }`} issues {
-           issuesState == 'all' ? '' : `over ${ allIssues.length } `}
-        grouped by { grouper } <input type="checkbox"
+           issuesState == 'all' ? '' : `over ${ allIssues.length } in total `}
+        { grouper != 'nogroup' && `grouped by ${ grouper }`} <input type="checkbox"
           checked={ checkboxState(issues) == 'checked'}
           ref={elem => elem && (elem.indeterminate = checkboxState(issues) == 'indeterminate')}
           onChange={ () => onToggleGrouper(issues.map((issue) => issue.id), (checkboxState(issues) != 'checked')) }/>
