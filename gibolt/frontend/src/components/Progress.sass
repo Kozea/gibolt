@@ -1,0 +1,24 @@
+@import ../vars
+
+.Progress
+  &__bar
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+    border: none
+    height: 0.8em
+    margin: 0 0.5em
+
+    &::-webkit-progress-bar
+      background-color: #c5d4df
+      box-shadow: none
+
+    &::-moz-progress-bar
+      background-color: $progress
+      border: none
+
+    &::-webkit-progress-value
+      background: #fe8d53
+
+  &__status
+    font-size: .75em

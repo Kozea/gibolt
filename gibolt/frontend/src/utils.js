@@ -1,4 +1,5 @@
 import block from 'bem-cn'
+import moment from 'moment'
 
 
 block.setup({
@@ -8,7 +9,7 @@ block.setup({
 })
 
 export const issuesStateFromState = (state) => (
-  state.router.query['state'] || 'open'
+  state.router.query['state'] || 'all'
 )
 
 export const grouperFromState = (state) => (
@@ -18,6 +19,12 @@ export const grouperFromState = (state) => (
 export const strToList = (strOrList) => (
   (strOrList || strOrList == '') && (strOrList.constructor == Array  ? strOrList : [strOrList])
 )
+
+export const usersFromState = (state) => ({
+  assignee: strToList(state.router.query['assignee'])  || [state.user],
+  involves: strToList(state.router.query['involves']) || []
+})
+
 
 export const labelsFromState = (state) => ({
   priority: strToList(state.router.query['priority']) || ['sprint'],
@@ -29,6 +36,15 @@ export const allLabelsFromState = (state) => {
   return labels.priority.concat(labels.qualifier)
 }
 
+export const timelineRangeFromState = (state) => {
+  let startOfMonth = moment().startOf('month')
+  return {
+    start: state.router.query['start'] || startOfMonth.format('YYYY-MM-DD'),
+    stop: state.router.query['stop'] || startOfMonth.add(1, 'y').format('YYYY-MM-DD')
+  }
+}
+
+
 export const filterIssuesOnState = (issues, state) => {
   const issuesState = issuesStateFromState(state)
   return issues.filter((issue) => issuesState == 'all' || issuesState == issue.state)
@@ -36,7 +52,9 @@ export const filterIssuesOnState = (issues, state) => {
 
 export const filterIssuesOnLabels = (issues, state) => {
   const labels = allLabelsFromState(state)
-  debugger
+  if (labels.length == 1 && labels[0] == "") {
+    return issues
+  }
   return issues.filter((issue) =>
     (labels.filter(label => !issue.labels.find(({ name }) => label == name)).length == 0)
   )
@@ -65,8 +83,10 @@ const getLabels = {
   assignee: (i, id) => i.assignees.filter((a) => a.id == id)[0].login
 }
 
+export const values = (mapping) => Object.keys(mapping).map((key) => mapping[key])
+
 export const groupIssues = (issues, grouper) => {
-  let grouped = issues.reduce((groups, issue) => {
+  return values(issues.reduce((groups, issue) => {
     let getId = getIds[grouper],
         getLabel = getLabels[grouper],
         ids = getId(issue)
@@ -81,8 +101,7 @@ export const groupIssues = (issues, grouper) => {
       groups[id].issues.push(issue)
     })
     return groups
-  }, {})
-  return Object.keys(grouped).map((key) => grouped[key])
+  }, {}))
 }
 
 export const sortIssues = (issues, grouper) => {

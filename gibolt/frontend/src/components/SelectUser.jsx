@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import { Link }  from 'redux-little-router'
 import { push } from '../actions'
-import { block } from '../utils'
+import { block, usersFromState } from '../utils'
 import './SelectUser.sass'
 
 
 const b = block('SelectUser')
-function SelectUser({ type, query, users, onChangeUser }) {
+function SelectUser({ type, query, users, values, user, onChangeUser }) {
   return (
-    <select className={ b({ type: type }) } value={ query[type] || '' }
+    <select className={ b({ type: type }) } value={ values[type][0] }
             onChange={ e => onChangeUser(e.target.value, type, query)}>
       <option value="">Anybody</option>
       { users.map(user =>
@@ -24,6 +24,8 @@ function SelectUser({ type, query, users, onChangeUser }) {
 
 export default connect(state => ({
   query: state.router.query,
+  values: usersFromState(state),
+  user: state.user,
   users: state.users
 }), dispatch => ({
   onChangeUser: (user, type, query) => {
