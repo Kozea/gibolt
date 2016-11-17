@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { block, grouperFromState, issuesStateFromState } from '../utils'
+import {
+  block, grouperFromState, issuesStateFromState, filterIssuesOnState, filterIssuesOnLabels,
+  groupIssues, sortGroupIssues, sortIssues } from '../utils'
 import Issue from './Issue'
 import Loading from './Loading'
-import { filterIssues, groupIssues, sortGroupIssues, sortIssues } from '../utils'
 import { toggleIssue, setIssuesSelectness, toggleExpanded, postChangeSelectedIssuesPriority } from '../actions'
 import './Issues.sass'
 
@@ -85,7 +86,7 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
 
 export default connect((state) => {
     return {
-      issues: filterIssues(state.issues.list, state),
+      issues: filterIssuesOnLabels(filterIssuesOnState(state.issues.list, state), state),
       allIssues: state.issues.list,
       loading: state.issues.loading,
       grouper: grouperFromState(state),

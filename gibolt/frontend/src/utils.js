@@ -29,14 +29,19 @@ export const allLabelsFromState = (state) => {
   return labels.priority.concat(labels.qualifier)
 }
 
-export const filterIssues = (issues, state) => {
+export const filterIssuesOnState = (issues, state) => {
   const issuesState = issuesStateFromState(state)
-  return issues.filter((issue) => {
-    return (
-      issuesState == 'all' || issuesState == issue.state
-    )
-  })
+  return issues.filter((issue) => issuesState == 'all' || issuesState == issue.state)
 }
+
+export const filterIssuesOnLabels = (issues, state) => {
+  const labels = allLabelsFromState(state)
+  debugger
+  return issues.filter((issue) =>
+    (labels.filter(label => !issue.labels.find(({ name }) => label == name)).length == 0)
+  )
+}
+
 
 const getProject = (issue) => {
   return issue.repository_url.split('/').slice(-1)[0]
