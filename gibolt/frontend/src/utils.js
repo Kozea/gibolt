@@ -22,7 +22,7 @@ export const strToList = (strOrList) => (
 
 export const usersFromState = (state) => ({
   assignee: strToList(state.router.query['assignee'])  || [state.user],
-  involves: strToList(state.router.query['involves']) || []
+  involves: strToList(state.router.query['involves']) || ['']
 })
 
 
