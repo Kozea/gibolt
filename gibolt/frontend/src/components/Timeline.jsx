@@ -1,22 +1,43 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import { push } from '../actions'
-import { block, timelineRangeFromState } from '../utils'
+import { block, values, timelineRangeFromState } from '../utils'
 import Loading from './Loading'
+import Milestone from './Milestone'
 import './Timeline.sass'
 
 
 const b = block('Timeline')
-function Timeline({ range, query, loading, error, timeline, onDateChange }) {
+function Timeline({ range, query, loading, error, milestones, onDateChange }) {
+  let milestonesByMonth = values(milestones.reduce((months, milestone) => {
+    if (!milestone.due_on) {
+      return months
+    }
+    let month = moment(milestone.due_on).startOf('month')
+    let monthStr = month.format('LL')
+    if (months[monthStr] == undefined) {
+      months[monthStr] = {
+        id: milestone.id,
+        month: month,
+        milestones: []
+      }
+    }
+    months[monthStr].milestones.push(milestone)
+    return months
+  }, {}))
+  milestonesByMonth = milestonesByMonth.sort((a, b) => (
+    a.month - b.month
+  ))
   return (
     <section className={ b }>
       <h1 className={ b('head') }>
         Timeline from
         <input type="date" value={ range.start }
-               onChange={ e => onDateChange(e.target.value, 'start', query)} />
+          onChange={ e => onDateChange(e.target.value, 'start', query)} />
          to
          <input type="date" value={ range.stop }
-           onChange={ e => onDateChange(e.target.value, 'stop', query)} />.
+          onChange={ e => onDateChange(e.target.value, 'stop', query)} />.
       </h1>
       { loading && <Loading /> }
       { error && (
@@ -25,14 +46,23 @@ function Timeline({ range, query, loading, error, timeline, onDateChange }) {
           <code>{ error }</code>
         </article>
       )}
-      { timeline.map(([date, lines]) =>
-        <article key={ date } className={ b('date') }>
-          <h2>{ date }</h2>
+      { milestonesByMonth.map(({ id, month, milestones }) =>
+        <article key={ month.format('LL') } className={ b('date') }>
+          <h2>{ month.format('LL') } <sup>
+            ({ milestones.length })
+            </sup>
+          </h2>
           <ul>
-            { lines.map(line =>
-              <li key={ line.id }>
-                { line.title }
-              </li>
+            { milestones.map(milestone =>
+              <Milestone key={ milestone.id }
+                state={ milestone.state }
+                due_on={ milestone.due_on }
+                repo={ milestone.repo }
+                html_url={ milestone.html_url }
+                title={ milestone.title }
+                open_issues={ milestone.open_issues }
+                closed_issues={ milestone.closed_issues }
+                />
             )}
           </ul>
         </article>
@@ -42,7 +72,7 @@ function Timeline({ range, query, loading, error, timeline, onDateChange }) {
 }
 export default connect(state => ({
     query: state.router.query,
-    timeline: state.timeline.list,
+    milestones: state.timeline.list,
     loading: state.timeline.loading,
     error: state.timeline.error,
     range: timelineRangeFromState(state)

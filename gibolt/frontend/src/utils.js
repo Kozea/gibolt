@@ -76,8 +76,10 @@ const getLabels = {
   assignee: (i, id) => i.assignees.filter((a) => a.id == id)[0].login
 }
 
+export const values = (mapping) => Object.keys(mapping).map((key) => mapping[key])
+
 export const groupIssues = (issues, grouper) => {
-  let grouped = issues.reduce((groups, issue) => {
+  return values(issues.reduce((groups, issue) => {
     let getId = getIds[grouper],
         getLabel = getLabels[grouper],
         ids = getId(issue)
@@ -92,8 +94,7 @@ export const groupIssues = (issues, grouper) => {
       groups[id].issues.push(issue)
     })
     return groups
-  }, {})
-  return Object.keys(grouped).map((key) => grouped[key])
+  }, {}))
 }
 
 export const sortIssues = (issues, grouper) => {

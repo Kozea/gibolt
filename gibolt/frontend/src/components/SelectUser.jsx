@@ -9,7 +9,6 @@ import './SelectUser.sass'
 
 const b = block('SelectUser')
 function SelectUser({ type, query, users, values, user, onChangeUser }) {
-  console.log(values[type])
   return (
     <select className={ b({ type: type }) } value={ values[type][0] }
             onChange={ e => onChangeUser(e.target.value, type, query)}>

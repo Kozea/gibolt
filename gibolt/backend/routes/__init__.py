@@ -159,7 +159,10 @@ def timeline():
         relativedelta(months=1))
     return jsonify({
         'params': request.get_json(),
-        'timeline': stones
+        'timeline': [
+            milestone for milestone in milestones
+            if milestone.get('due_on') and
+            date_from_iso(start) <= milestone['due_on'] < date_from_iso(stop)]
     })
 
 

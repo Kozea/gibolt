@@ -13,7 +13,7 @@ export default function Progress({ val, total }) {
         className={ b('bar') }
         value={ val / total }
         title={ `${ val }/${ total } ${ val / total }%` }>
-        { val / total }
+        { (100 * val / total).toFixed() }%
       </progress>
       <span className={ b('status') }>{ (100 * val / total).toFixed() }%</span>
     </span>
