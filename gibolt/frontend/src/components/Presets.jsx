@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { block } from '../utils'
 import Preset from './Preset'
 import equal from 'deep-equal'
-import { setPreset, fetchIssues } from '../actions'
+import { setPreset } from '../actions'
 import './Presets.sass'
 
 const PRESETS = (user) => ({
@@ -45,17 +45,17 @@ function Presets({ pathname, query, user }) {
 
             My Tickets
           </Preset>
-          <Preset action="/timeline" active={pathname == '/timeline'}>
+          <Preset action="/timeline" active={ pathname == '/timeline' }>
             Timeline
           </Preset>
             <Preset action={{ pathname: '/', query: userPreset.sprint_issues }}
                     active={ pathname == '/' && equal(query, userPreset.sprint_issues) }>
             Issues
           </Preset>
-          <Preset action="show_assigned_issues">
+          <Preset action="/report" active={pathname == '/report'}>
             Report
           </Preset>
-          <Preset action="repositories">
+          <Preset action="/repositories" active={pathname == '/repositories'}>
             Repositories
           </Preset>
         </ul>

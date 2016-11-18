@@ -251,7 +251,7 @@ def index(path=None):
             'mustLoad': True,
             'error': None
         },
-        'repository': {
+        'repositories': {
             'results': {
                 'repositories': []
             },

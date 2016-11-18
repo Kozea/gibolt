@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { AbsoluteFragment } from 'redux-little-router';
+import { AbsoluteFragment } from 'redux-little-router'
 import { block } from '../utils'
 import PageIssues from './PageIssues'
 import PageTimeline from './PageTimeline'
+import PageReport from './PageReport'
+import PageRepositories from './PageRepositories'
 import './App.sass'
 
 
@@ -12,10 +14,6 @@ export default class App extends Component {
     super(props)
     this.props = props
   }
-  //
-  // componentDidMount() {
-  //   this.props.dispatchFirstLoad()
-  // }
 
   render() {
     return (
@@ -25,6 +23,12 @@ export default class App extends Component {
         </AbsoluteFragment>
         <AbsoluteFragment forRoute='/timeline'>
           <PageTimeline />
+        </AbsoluteFragment>
+        <AbsoluteFragment forRoute='/report'>
+          <PageReport />
+        </AbsoluteFragment>
+        <AbsoluteFragment forRoute='/repositiories'>
+          <PageRepositories />
         </AbsoluteFragment>
       </main>
     )

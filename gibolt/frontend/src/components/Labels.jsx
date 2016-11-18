@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { block, strToList, labelsFromState } from '../utils'
 import Label from './Label'
 import User from './User'
-import { selectLabel, selectOnlyLabel, fetchIssues } from '../actions/'
+import { selectLabel, selectOnlyLabel } from '../actions/'
 import './Labels.sass'
 
 const makeQuery = (label, query, type, queryTypeLabels) => {

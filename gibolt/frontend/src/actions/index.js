@@ -1,7 +1,8 @@
 import fetch from 'isomorphic-fetch'
 import equal from 'deep-equal'
 import { PUSH } from 'redux-little-router'
-import { allLabelsFromState, usersFromState, timelineRangeFromState } from '../utils'
+import { allLabelsFromState, usersFromState,
+         timelineRangeFromState, reportRangeFromState } from '../utils'
 
 
 export const search = (search) => {
@@ -48,7 +49,7 @@ const stateToParams = (state, target) => {
       return timelineRangeFromState(state)
     case 'report':
       return reportRangeFromState(state)
-    case 'repository':
+    case 'repositories':
       return {}
   }
 }
@@ -112,7 +113,7 @@ export const postChangeSelectedIssuesPriority = (change) => {
         throw new Error(`[${ response.status }] ${ response.statusText }`)
     })
     .then(response => response.json())
-    .then(() => dispatch(fetchIssues()))
+    .then(() => dispatch(fetchResults('issues')))
   }
 }
 

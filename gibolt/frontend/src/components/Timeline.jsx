@@ -42,7 +42,7 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
       { loading && <Loading /> }
       { error && (
         <article className={ b('date', { error: true }) }>
-          <h2>Error during issue fetch</h2>
+          <h2>Error during timeline fetch</h2>
           <code>{ error }</code>
         </article>
       )}

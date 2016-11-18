@@ -18,7 +18,9 @@ const {
 } = routerForBrowser({
   routes: {
     '/': 'Issues',
-    '/timeline':'Timeline'
+    '/timeline': 'Timeline',
+    '/report': 'Report',
+    '/repositories': 'Repositories'
   }
 })
 
@@ -55,11 +57,11 @@ const autoLoadMiddleware = ({ getState, dispatch }) => {
             dispatch(setLoading('report'))
             dispatch(fetchResults('report'))
           }
-        } else if (action.payload.pathname == '/repository') {
+        } else if (action.payload.pathname == '/repositories') {
           const newState = getState()
-          if (state.repository.mustLoad) {
-            dispatch(setLoading('repository'))
-            dispatch(fetchResults('repository'))
+          if (state.repositories.mustLoad) {
+            dispatch(setLoading('repositories'))
+            dispatch(fetchResults('repositories'))
           }
         }
       }

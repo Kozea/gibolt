@@ -43,7 +43,7 @@ const empty = {
       issues: []
     }
   },
-  'repository': {
+  'repositories': {
     ...emptyResults,
     results: {
       repositories: []
@@ -135,8 +135,8 @@ const report = (state=empty.report, action) => {
   return handleResultsLoadingAndError(state, 'report', action)
 }
 
-const repository = (state=empty.repository, action) => {
-  return handleResultsLoadingAndError(state, 'repository', action)
+const repositories = (state=empty.repositories, action) => {
+  return handleResultsLoadingAndError(state, 'repositories', action)
 }
 
 const users = (state=[], action) => state
@@ -148,7 +148,7 @@ const reducer = combineReducers({
   issues,
   timeline,
   report,
-  repository,
+  repositories,
   users,
   user,
 })

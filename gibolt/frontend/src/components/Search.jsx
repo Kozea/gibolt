@@ -1,7 +1,7 @@
 import React, { Component }  from 'react'
 import { connect } from 'react-redux'
 import { block } from '../utils'
-import { search, fetchIssues } from '../actions'
+import { search, fetchResults } from '../actions'
 import './Search.sass'
 
 
@@ -22,7 +22,7 @@ export default connect((state) => {
   return {
     onSearchChange: (value) => {
       dispatch(search(value))
-      dispatch(fetchIssues())
+      dispatch(fetchResults('issues'))
     }
   }
 })(Search)
