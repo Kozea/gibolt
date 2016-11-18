@@ -35,7 +35,7 @@ export default connect(state => ({
       pathname: '/',
       query: {
         ...query,
-        [type]: user
+        [type]: user || (type == 'assignee' ? user : undefined)
       }
     }))
   }
