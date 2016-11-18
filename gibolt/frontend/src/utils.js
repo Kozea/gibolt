@@ -51,9 +51,10 @@ export const filterIssuesOnState = (issues, state) => {
 }
 
 export const filterIssuesOnLabels = (issues, state) => {
-  const labels = allLabelsFromState(state)
-  if (labels.length == 1 && labels[0] == "") {
-    return issues
+  var labels = allLabelsFromState(state)
+  let index = labels.indexOf("")
+  if (index > -1) {
+    labels.splice(index, 1)
   }
   return issues.filter((issue) =>
     (labels.filter(label => !issue.labels.find(({ name }) => label == name)).length == 0)
