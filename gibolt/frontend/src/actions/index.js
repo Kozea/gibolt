@@ -99,7 +99,9 @@ export const postChangeSelectedIssuesPriority = (change) => {
       },
 
       body: JSON.stringify({
-        issuesIds: state.issues.results.issues.filter((issue) => issue.isSelected).map((issue) => issue.id),
+        issues: state.issues.results.issues.filter((issue) => issue.selected).map((issue) => {
+          return {url: issue.url, labels: issue.labels}
+        }),
         action: change
       })
     })
@@ -110,8 +112,7 @@ export const postChangeSelectedIssuesPriority = (change) => {
         throw new Error(`[${ response.status }] ${ response.statusText }`)
     })
     .then(response => response.json())
-    .then(json => dispatch(maybeSetIssues(json)))
-    .catch(error => dispatch(setIssuesError(error.toString())))
+    .then(() => dispatch(fetchIssues()))
   }
 }
 

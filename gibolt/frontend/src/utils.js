@@ -45,14 +45,21 @@ export const timelineRangeFromState = (state) => {
 }
 
 
-export const filterIssues = (issues, state) => {
+export const filterIssuesOnState = (issues, state) => {
   const issuesState = issuesStateFromState(state)
-  return issues.filter((issue) => {
-    return (
-      issuesState == 'all' || issuesState == issue.state
-    )
-  })
+  return issues.filter((issue) => issuesState == 'all' || issuesState == issue.state)
 }
+
+export const filterIssuesOnLabels = (issues, state) => {
+  const labels = allLabelsFromState(state)
+  if (labels.length == 1 && labels[0] == "") {
+    return issues
+  }
+  return issues.filter((issue) =>
+    (labels.filter(label => !issue.labels.find(({ name }) => label == name)).length == 0)
+  )
+}
+
 
 const getProject = (issue) => {
   return issue.repository_url.split('/').slice(-1)[0]

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { block, grouperFromState, issuesStateFromState } from '../utils'
+import {
+  block, grouperFromState, issuesStateFromState, filterIssuesOnState, filterIssuesOnLabels,
+  groupIssues, sortGroupIssues, sortIssues } from '../utils'
 import Issue from './Issue'
 import Loading from './Loading'
 import Progress from './Progress'
-import { filterIssues, groupIssues, sortGroupIssues, sortIssues } from '../utils'
 import { toggleIssue, setIssuesSelectness, toggleExpanded, postChangeSelectedIssuesPriority } from '../actions'
 import './Issues.sass'
 
@@ -21,21 +22,21 @@ function checkboxState(issues) {
 
 
 const b = block('Issues')
-function Issues({ issues, issuesState, allIssues, loading, grouper, availableLabels, error, onToggleSelected, onToggleGrouper, onToggleExpanded, onChangePriority}) {
+function Issues({ labelFilteredIssues, issues, issuesState, loading, grouper, availableLabels, error, onToggleSelected, onToggleGrouper, onToggleExpanded, onChangePriority}) {
   let issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
-  let closedLen = allIssues.filter((issue) => issue.state == 'closed').length
+  let closedLen = labelFilteredIssues.filter((issue) => issue.state == 'closed').length
 
   return (
     <section className={ b }>
       <h1 className={ b('head') }>
         { issues.length } {
           issuesState == 'all' ? '' : ` ${ issuesState }`} issues {
-           issuesState == 'all' ? '' : `over ${ allIssues.length } in total `}
+           issuesState == 'all' ? '' : `over ${ labelFilteredIssues.length } in total `}
         { grouper != 'nogroup' && `grouped by ${ grouper }`} <input type="checkbox"
           checked={ checkboxState(issues) == 'checked'}
           ref={elem => elem && (elem.indeterminate = checkboxState(issues) == 'indeterminate')}
           onChange={ () => onToggleGrouper(issues.map((issue) => issue.id), (checkboxState(issues) != 'checked')) }/>
-        <Progress val={ closedLen } total={ allIssues.length } />
+        <Progress val={ closedLen } total={ labelFilteredIssues.length } />
       </h1>
       { loading && <Loading /> }
       { error && (
@@ -85,9 +86,10 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
 
 
 export default connect((state) => {
+    let labelFilteredIssues = filterIssuesOnLabels(state.issues.results.issues, state)
     return {
-      issues: filterIssues(state.issues.results.issues, state),
-      allIssues: state.issues.results.issues,
+      labelFilteredIssues,
+      issues: filterIssuesOnState(labelFilteredIssues, state),
       loading: state.issues.loading,
       grouper: grouperFromState(state),
       issuesState: issuesStateFromState(state),
