@@ -86,8 +86,8 @@ function Issues({ issues, issuesState, allIssues, loading, grouper, availableLab
 
 export default connect((state) => {
     return {
-      issues: filterIssues(state.issues.list, state),
-      allIssues: state.issues.list,
+      issues: filterIssues(state.issues.results.issues, state),
+      allIssues: state.issues.results.issues,
       loading: state.issues.loading,
       grouper: grouperFromState(state),
       issuesState: issuesStateFromState(state),

@@ -133,7 +133,9 @@ def issues():
         issue['expanded'] = False
     return jsonify({
         'params': request.get_json(),
-        'issues': issues
+        'results': {
+            'issues': issues
+        }
     })
 
 
@@ -154,15 +156,47 @@ def timeline():
             executor.submit(refresh_repo_milestones, name, repo, user)
     for repo in repos:
         milestones.extend(repo.get('milestones', []))
-    stones = get_stones_by_step(
-        milestones, date_from_iso(start), date_from_iso(stop),
-        relativedelta(months=1))
     return jsonify({
         'params': request.get_json(),
-        'timeline': [
-            milestone for milestone in milestones
-            if milestone.get('due_on') and
-            date_from_iso(start) <= milestone['due_on'] < date_from_iso(stop)]
+        'results': {
+            'milestones': [
+                milestone for milestone in milestones
+                if milestone.get('due_on') and
+                date_from_iso(start) <= milestone['due_on'] < date_from_iso(stop)
+            ]
+        }
+    })
+
+
+@app.route('/report.json', methods=['GET', 'POST'])
+@autologin
+def report():
+    params = dict(request.get_json())
+
+    today = date.today()
+    start = params.get('start')
+    stop = params.get('stop')
+    start = date_from_iso(start)
+    stop = date_from_iso(stop)
+
+    since = start.strftime('%Y-%m-%dT00:00:00Z')
+    url = (
+        'orgs/{0}/issues?per_page=100&state=closed&filter=all&since={1}'
+        .format(app.config['ORGANISATION'], since))
+    issues = github.get(url, all_pages=True)
+    ok_issues = []
+    # assignees = []
+    for issue in issues:
+        if (issue.get('assignee') and
+                start < date_from_iso(issue['closed_at']) < stop):
+            issue['closed_month'] = issue['closed_at'][:7]
+            ok_issues.append(issue)
+            # assignees.append(issue['assignee']['login'])
+    return jsonify({
+        'params': request.get_json(),
+        'results': {
+            'issues': ok_issues
+        }
     })
 
 
@@ -194,13 +228,33 @@ def index(path=None):
         },
         'search': '',
         'issues': {
-            'list': [],
+            'results': {
+                'issues': []
+            },
             'loading': False,
             'mustLoad': True,
             'error': None
         },
         'timeline': {
-            'list': [],
+            'results': {
+                'milestones': []
+            },
+            'loading': False,
+            'mustLoad': True,
+            'error': None
+        },
+        'report': {
+            'results': {
+                'issues': []
+            },
+            'loading': False,
+            'mustLoad': True,
+            'error': None
+        },
+        'repository': {
+            'results': {
+                'repositories': []
+            },
             'loading': False,
             'mustLoad': True,
             'error': None
@@ -252,35 +306,6 @@ def apply_labels():
         except GitHubError:
             flash("Unable to change issue {} of {}".format(number, repo))
     return redirect(request.referrer)
-
-
-@app.route('/assigned/<start>/<stop>')
-@app.route('/assigned')
-@autologin
-def show_assigned_issues(start=None, stop=None):
-    today = date.today()
-
-    start = start or request.args.get('start')
-    start = date_from_iso(start) if start else date(today.year, today.month, 1)
-    stop = stop or request.args.get('stop')
-    stop = date_from_iso(stop) if stop else today
-
-    since = start.strftime('%Y-%m-%dT00:00:00Z')
-    url = (
-        'orgs/{0}/issues?per_page=100&state=closed&filter=all&since={1}'
-        .format(app.config['ORGANISATION'], since))
-    issues = github.get(url, all_pages=True)
-    ok_issues = []
-    assignees = []
-    for issue in issues:
-        if (issue.get('assignee') and
-                start < date_from_iso(issue['closed_at']) < stop):
-            issue['closed_month'] = issue['closed_at'][:7]
-            ok_issues.append(issue)
-            assignees.append(issue['assignee']['login'])
-    return render_template(
-        'assigned_issues.jinja2', issues=ok_issues, start=start, stop=stop,
-        users=set(assignees))
 
 
 @app.route('/issues/form_query')

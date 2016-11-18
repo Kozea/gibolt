@@ -16,110 +16,123 @@ const search = (state='', action) => {
   }
 }
 
-const emptyIssues = {
-  list: [],
-  loading: false,
-  mustLoad: true,
-  error: null
-}
 
-const issues = (state=emptyIssues, action) => {
+const handleResultsLoadingAndError = (state, type, action) => {
+  if (action.target != type) {
+    return state
+  }
   switch (action.type) {
-    case 'SET_ISSUES':
+    case 'SET_RESULTS':
       return {
         ...state,
-        list: action.issues,
+        results: action.results,
         loading: false,
         mustLoad: false,
         error: null
       }
-    case 'SET_ISSUES_LOADING':
+    case 'SET_LOADING':
       return {
         ...state,
         loading: true,
         mustLoad: false,
         error: null
       }
-    case 'SET_ISSUES_ERROR':
+    case 'SET_ERROR':
       return {
         ...state,
-        list: [],
+        results: action.results,
         loading: false,
         mustLoad: false,
         error: action.error
       }
+    }
+    return state
+}
+
+const emptyResults = {
+  results: {},
+  loading: false,
+  mustLoad: true,
+  error: null
+}
+
+const emptyIssues = {
+  ...emptyResults,
+  results: {
+    issues: []
+  }
+}
+const issues = (state={...emptyResults}, action) => {
+  switch (action.type) {
     case 'TOGGLE_ISSUE':
       return {
         ...state,
-        list: state.list.map(issue => {
-          if (issue.id == action.issueId) {
-            return {...issue, selected: !issue.selected}
-          }
-          return issue
-        })
+        results: {
+          issues: state.results.issues.map(issue => {
+            if (issue.id == action.issueId) {
+              return {...issue, selected: !issue.selected}
+            }
+            return issue
+          })
+        }
       }
     case 'SET_ISSUES_SELECTNESS':
       return {
         ...state,
-        list: state.list.map(issue => {
-          if (action.issuesId.indexOf(issue.id) > -1) {
-            return {...issue, selected: action.isSelected}
-          }
-          return issue
-        })
+        results: {
+          issues: state.results.issues.map(issue => {
+            if (action.issuesId.indexOf(issue.id) > -1) {
+              return {...issue, selected: action.isSelected}
+            }
+            return issue
+          })
+        }
       }
     case 'TOGGLE_EXPANDED':
       return {
         ...state,
-        list: state.list.map(issue => {
-          if (issue.id == action.issueId) {
-            return {...issue, expanded: !issue.expanded}
-          }
-          return issue
-        })
-
+        results: {
+          issues: state.results.issues.map(issue => {
+            if (issue.id == action.issueId) {
+              return {...issue, expanded: !issue.expanded}
+            }
+            return issue
+          })
+        }
       }
     default:
-      return state
+      return handleResultsLoadingAndError(state, 'issues', action)
   }
 }
 
 const emptyTimeline = {
-  list: [],
-  loading: false,
-  mustLoad: true,
-  error: null
+  ...emptyResults,
+  results: {
+    milestones: []
+  }
+}
+const timeline = (state={...emptyResults}, action) => {
+  return handleResultsLoadingAndError(state, 'timeline', action)
 }
 
-
-const timeline = (state=emptyTimeline, action) => {
-  switch (action.type) {
-    case 'SET_TIMELINE':
-      return {
-        ...state,
-        list: action.timeline,
-        loading: false,
-        mustLoad: false,
-        error: null
-      }
-    case 'SET_TIMELINE_LOADING':
-      return {
-        ...state,
-        loading: true,
-        mustLoad: false,
-        error: null
-      }
-    case 'SET_TIMELINE_ERROR':
-      return {
-        ...state,
-        list: [],
-        loading: false,
-        mustLoad: false,
-        error: action.error
-      }
-    default:
-      return state
+const emptyReport = {
+  ...emptyResults,
+  results: {
+    issues: []
   }
+}
+const report = (state={...emptyResults}, action) => {
+  return handleResultsLoadingAndError(state, 'report', action)
+}
+
+const emptyRepository = {
+  ...emptyResults,
+  results: {
+    repositories: []
+  }
+}
+const repository = (state={...emptyResults}, action) => {
+  return handleResultsLoadingAndError(state, 'repository', action)
 }
 
 const users = (state=[], action) => state
@@ -130,6 +143,8 @@ const reducer = combineReducers({
   search,
   issues,
   timeline,
+  report,
+  repository,
   users,
   user,
 })

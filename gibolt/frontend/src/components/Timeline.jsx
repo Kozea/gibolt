@@ -18,7 +18,7 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
     let monthStr = month.format('LL')
     if (months[monthStr] == undefined) {
       months[monthStr] = {
-        id: milestone.id,
+        id: milestone.id,
         month: month,
         milestones: []
       }
@@ -72,7 +72,7 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
 }
 export default connect(state => ({
     query: state.router.query,
-    milestones: state.timeline.list,
+    milestones: state.timeline.results.milestones,
     loading: state.timeline.loading,
     error: state.timeline.error,
     range: timelineRangeFromState(state)

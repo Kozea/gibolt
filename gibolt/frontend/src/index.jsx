@@ -6,7 +6,7 @@ import { createStore, applyMiddleware, dispatch } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
-import { fetchIssues, setIssuesLoading, fetchTimeline, setTimelineLoading } from './actions'
+import { fetchResults, setLoading } from './actions'
 import reducer from './reducers'
 
 const logger = createLogger()
@@ -36,16 +36,30 @@ const autoLoadMiddleware = ({ getState, dispatch }) => {
                 state.router.query.qualifier != newState.router.query.qualifier) || (
                   state.router.query.involves != newState.router.query.involves) || (
                     state.router.query.assignee != newState.router.query.assignee)) {
-            dispatch(setIssuesLoading())
-            dispatch(fetchIssues())
+            dispatch(setLoading('issues'))
+            dispatch(fetchResults('issues'))
           }
         } else if (action.payload.pathname == '/timeline') {
           const newState = getState()
           if (state.timeline.mustLoad || (
               state.router.query.start != newState.router.query.start) || (
                 state.router.query.stop != newState.router.query.stop)) {
-            dispatch(setTimelineLoading())
-            dispatch(fetchTimeline())
+            dispatch(setLoading('timeline'))
+            dispatch(fetchResults('timeline'))
+          }
+        } else if (action.payload.pathname == '/report') {
+          const newState = getState()
+          if (state.report.mustLoad || (
+              state.router.query.start != newState.router.query.start) || (
+                state.router.query.stop != newState.router.query.stop)) {
+            dispatch(setLoading('report'))
+            dispatch(fetchResults('report'))
+          }
+        } else if (action.payload.pathname == '/repository') {
+          const newState = getState()
+          if (state.repository.mustLoad) {
+            dispatch(setLoading('repository'))
+            dispatch(fetchResults('repository'))
           }
         }
       }

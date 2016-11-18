@@ -11,78 +11,70 @@ export const search = (search) => {
   }
 }
 
-export const setIssuesLoading = () => {
+export const setLoading = (target) => {
   return {
-    type: 'SET_ISSUES_LOADING'
+    type: 'SET_LOADING',
+    target
   }
 }
 
-export const setIssues = (issues) => {
+export const setResults = (results, target) => {
   return {
-    type: 'SET_ISSUES',
-    issues
+    type: 'SET_RESULTS',
+    results,
+    target
   }
 }
 
-export const setIssuesError = (error) => {
+export const setError = (error, target) => {
   return {
-    type: 'SET_ISSUES_ERROR',
-    error
+    type: 'SET_ERROR',
+    error,
+    target
   }
 }
 
-export const setTimelineLoading = () => {
-  return {
-    type: 'SET_TIMELINE_LOADING'
+const stateToParams = (state, target) => {
+  switch (target) {
+    case 'issues':
+      let users = usersFromState(state)
+      return {
+        labels: allLabelsFromState(state).filter(x => x != ''),
+        search: state.search,
+        assignee: users.assignee[0] || '',
+        involves: users.involves[0] || '',
+      }
+    case 'timeline':
+      return timelineRangeFromState(state)
+    case 'report':
+      return reportRangeFromState(state)
+    case 'repository':
+      return {}
   }
 }
 
-export const setTimeline = (timeline) => {
-  return {
-    type: 'SET_TIMELINE',
-    timeline
-  }
-}
-
-export const setTimelineError = (error) => {
-  return {
-    type: 'SET_TIMELINE_ERROR',
-    error
-  }
-}
-
-const stateToParams = (state) => {
-  let users = usersFromState(state)
-  return {
-    labels: allLabelsFromState(state).filter(x => x != ''),
-    search: state.search,
-    assignee: users.assignee[0] || '',
-    involves: users.involves[0] || '',
-  }
-}
-
-const maybeSetIssues = (json) => {
+const maybeSetResults = (json, target) => {
   return (dispatch, getState) => {
     let state = getState()
-    if (equal(json.params, stateToParams(state))) {
-      dispatch(setIssues(json.issues))
+    if (equal(json.params, stateToParams(state, target))) {
+      dispatch(setResults(json.results, target))
     } else {
       console.log('State is not coherent with fetch response',
-        json.params, stateToParams(state))
+        json.params, stateToParams(state, target))
     }
   }
 }
 
-export const fetchIssues = () => {
+export const fetchResults = (target) => {
   return (dispatch, getState) => {
     let state = getState()
-    fetch('/issues.json', {
+    fetch(`/${ target }.json`, {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(stateToParams(state))
+      body: JSON.stringify(stateToParams(state, target))
     })
     .then(response => {
         if (response.status >= 200 && response.status < 300) {
@@ -91,8 +83,8 @@ export const fetchIssues = () => {
         throw new Error(`[${ response.status }] ${ response.statusText }`)
     })
     .then(response => response.json())
-    .then(json => dispatch(maybeSetIssues(json)))
-    .catch(error => dispatch(setIssuesError(error.toString())))
+    .then(json => dispatch(maybeSetResults(json, target)))
+    .catch(error => dispatch(setError(error.toString(), target)))
   }
 }
 
@@ -107,7 +99,7 @@ export const postChangeSelectedIssuesPriority = (change) => {
       },
 
       body: JSON.stringify({
-        issuesIds: state.issues.list.filter((issue) => issue.isSelected).map((issue) => issue.id),
+        issuesIds: state.issues.results.issues.filter((issue) => issue.isSelected).map((issue) => issue.id),
         action: change
       })
     })
@@ -142,41 +134,6 @@ export const toggleExpanded = (issueId) => {
   return {
     type: 'TOGGLE_EXPANDED',
     issueId
-  }
-}
-
-const maybeSetTimeline = (json) => {
-  return (dispatch, getState) => {
-    let state = getState()
-    if (equal(json.params, timelineRangeFromState(state))) {
-      dispatch(setTimeline(json.timeline))
-    } else {
-      console.log('State is not coherent with fetch response',
-        json.params, timelineRangeFromState(state))
-    }
-  }
-}
-
-export const fetchTimeline = () => {
-  return (dispatch, getState) => {
-    let state = getState()
-    fetch('/timeline.json', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(timelineRangeFromState(state))
-    })
-    .then(response => {
-        if (response.status >= 200 && response.status < 300) {
-          return response
-        }
-        throw new Error(`[${ response.status }] ${ response.statusText }`)
-    })
-    .then(response => response.json())
-    .then(json => dispatch(maybeSetTimeline(json)))
-    .catch(error => dispatch(setTimelineError(error.toString())))
   }
 }
 
