@@ -17,6 +17,41 @@ const search = (state='', action) => {
 }
 
 
+const emptyResults = {
+  results: {},
+  loading: false,
+  mustLoad: true,
+  error: null
+}
+
+const empty = {
+  'issues': {
+    ...emptyResults,
+    results: {
+      issues: []
+    }
+  },
+  'timeline': {
+    ...emptyResults,
+    results: {
+      milestones: []
+    }
+  },
+  'report': {
+    ...emptyResults,
+    results: {
+      issues: []
+    }
+  },
+  'repository': {
+    ...emptyResults,
+    results: {
+      repositories: []
+    }
+  }
+}
+
+
 const handleResultsLoadingAndError = (state, type, action) => {
   if (action.target != type) {
     return state
@@ -40,7 +75,7 @@ const handleResultsLoadingAndError = (state, type, action) => {
     case 'SET_ERROR':
       return {
         ...state,
-        results: action.results,
+        results: { ...empty[type].results },
         loading: false,
         mustLoad: false,
         error: action.error
@@ -49,20 +84,7 @@ const handleResultsLoadingAndError = (state, type, action) => {
     return state
 }
 
-const emptyResults = {
-  results: {},
-  loading: false,
-  mustLoad: true,
-  error: null
-}
-
-const emptyIssues = {
-  ...emptyResults,
-  results: {
-    issues: []
-  }
-}
-const issues = (state={...emptyResults}, action) => {
+const issues = (state=empty.issues, action) => {
   switch (action.type) {
     case 'TOGGLE_ISSUE':
       return {
@@ -105,33 +127,15 @@ const issues = (state={...emptyResults}, action) => {
   }
 }
 
-const emptyTimeline = {
-  ...emptyResults,
-  results: {
-    milestones: []
-  }
-}
-const timeline = (state={...emptyResults}, action) => {
+const timeline = (state=empty.timeline, action) => {
   return handleResultsLoadingAndError(state, 'timeline', action)
 }
 
-const emptyReport = {
-  ...emptyResults,
-  results: {
-    issues: []
-  }
-}
-const report = (state={...emptyResults}, action) => {
+const report = (state=empty.report, action) => {
   return handleResultsLoadingAndError(state, 'report', action)
 }
 
-const emptyRepository = {
-  ...emptyResults,
-  results: {
-    repositories: []
-  }
-}
-const repository = (state={...emptyResults}, action) => {
+const repository = (state=empty.repository, action) => {
   return handleResultsLoadingAndError(state, 'repository', action)
 }
 
