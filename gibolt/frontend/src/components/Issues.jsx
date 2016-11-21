@@ -78,8 +78,10 @@ function Issues({ labelFilteredIssues, issues, issuesState, loading, grouper, av
           </ul>
         </article>
       )}
-    <button type="submit" onClick={ () => onChangePriority('increment') }>Increment priority</button>
-    <button type="submit" onClick={ () => onChangePriority('removeTop') }>Remove top priority</button>
+      <article className={ b('action') }>
+        <button type="submit" onClick={ () => onChangePriority('increment') }>Increment priority</button>
+        <button type="submit" onClick={ () => onChangePriority('removeTop') }>Remove top priority</button>
+      </article>
     </section>
   )
 }

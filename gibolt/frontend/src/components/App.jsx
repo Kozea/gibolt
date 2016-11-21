@@ -29,7 +29,7 @@ export default class App extends Component {
         <AbsoluteFragment forRoute='/report'>
           <Report />
         </AbsoluteFragment>
-        <AbsoluteFragment forRoute='/repositiories'>
+        <AbsoluteFragment forRoute='/repositories'>
           <Repositories />
         </AbsoluteFragment>
       </main>

@@ -203,6 +203,19 @@ def report():
     })
 
 
+@app.route('/repositories.json', methods=['GET', 'POST'])
+@autologin
+def repositories():
+    params = dict(request.get_json())
+    app.config['ORGANISATION']
+    return jsonify({
+        'params': request.get_json(),
+        'results': {
+            'repositories': get_allowed_repos()
+        }
+    })
+
+
 @app.route('/users.json', methods=['GET', 'POST'])
 @autologin
 def users():
@@ -382,15 +395,6 @@ def get_stones_by_step(all_stones, start, end, step):
         result.append((current, stones))
         current += step
     return result
-
-
-@app.route('/repositories')
-@autologin
-def repositories():
-    app.config['ORGANISATION']
-    repositories = get_allowed_repos()
-    return render_template(
-        'repository_list.html.jinja2', repositories=repositories)
 
 
 @app.route('/repository/<string:repository_name>', methods=['GET', 'POST'])

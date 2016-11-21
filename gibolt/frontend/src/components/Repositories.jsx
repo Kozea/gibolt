@@ -20,12 +20,21 @@ function Repositories({ loading, error, repositories }) {
           <code>{ error }</code>
         </article>
       )}
+      <article className={ b('repositories') }>
+        <ul>
+          { repositories.map(repository =>
+            <li key={ repository } className={ b('item') }>
+              { repository }
+            </li>
+          )}
+        </ul>
+      </article>
     </section>
   )
 }
 export default connect(state => ({
-    repositiories: state.report.results.repositiories,
-    loading: state.report.loading,
-    error: state.report.error
+    repositories: state.repositories.results.repositories,
+    loading: state.repositories.loading,
+    error: state.repositories.error
   })
 )(Repositories)
