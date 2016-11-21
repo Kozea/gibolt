@@ -39,7 +39,8 @@ function Labels({ labels, query, queryLabels }) {
   )
 }
 
-export default connect((state) => {
+export default connect(state => {
+  console.log(state.router)
   return {
     query: state.router.query,
     queryLabels: labelsFromState(state),

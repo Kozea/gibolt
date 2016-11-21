@@ -13,7 +13,7 @@ from flask import (
 import pytz
 from cachecontrol import CacheControl
 from flask_github import GitHub, GitHubError
-
+from ..utils import render_component
 from .. import app
 
 GROUPERS = OrderedDict((
@@ -206,7 +206,6 @@ def report():
 @app.route('/repositories.json', methods=['GET', 'POST'])
 @autologin
 def repositories():
-    params = dict(request.get_json())
     app.config['ORGANISATION']
     return jsonify({
         'params': request.get_json(),
@@ -278,7 +277,8 @@ def index(path=None):
         'users': [user['login'] for user in users],
         'user': session['login'],
     }
-    return render_template('index.jinja2', state=state)
+    rendered = render_component(state)
+    return render_template('index.jinja2', rendered=rendered, state=state)
 
 
 @app.route('/my_tickets')

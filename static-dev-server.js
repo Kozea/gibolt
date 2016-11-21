@@ -3,7 +3,7 @@ var WebpackDevServer = require('webpack-dev-server')
 var config = require('./webpack.config')
 
 new WebpackDevServer(webpack(config), config.devServer)
-  .listen(config.devServer.port, config.devServer.bind, function (err, result) {
+  .listen(config.devServer.port, config.devServer.bind, (err, result) => {
   if (err) {
     return console.log(err)
   }

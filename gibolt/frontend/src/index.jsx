@@ -4,24 +4,18 @@ import { Provider } from 'react-redux'
 import { RouterProvider, routerForBrowser, initializeCurrentLocation } from 'redux-little-router'
 import { createStore, applyMiddleware, dispatch } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
 import { fetchResults, setLoading } from './actions'
+import routes from './routes'
 import reducer from './reducers'
 
-const logger = createLogger()
 let rootNode = document.getElementById('root')
 
 const {
   routerEnhancer,
   routerMiddleware
 } = routerForBrowser({
-  routes: {
-    '/': 'Issues',
-    '/timeline': 'Timeline',
-    '/report': 'Report',
-    '/repositories': 'Repositories'
-  }
+  routes
 })
 
 const autoLoadMiddleware = ({ getState, dispatch }) => {
