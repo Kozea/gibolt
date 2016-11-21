@@ -1,5 +1,3 @@
-import os
-from json import dumps, loads
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 

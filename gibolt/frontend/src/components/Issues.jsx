@@ -66,7 +66,7 @@ function Issues({ labelFilteredIssues, issues, issuesState, loading, grouper, av
                 body={ issue.body }
                 users={ issue.assignees }
                 avatars={ issue.avatars }
-                project={ issue.project }
+                project={ issue.repository_url.split('/').splice(-1)[0] }
                 labels={ issue.labels }
                 selected={ issue.selected }
                 url={ issue.html_url }

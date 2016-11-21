@@ -60,7 +60,7 @@ export const filterIssuesOnState = (issues, state) => {
 
 export const filterIssuesOnLabels = (issues, state) => {
   var labels = allLabelsFromState(state)
-  let index = labels.indexOf("")
+  let index = labels.indexOf('')
   if (index > -1) {
     labels.splice(index, 1)
   }
