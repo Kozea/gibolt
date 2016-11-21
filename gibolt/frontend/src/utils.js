@@ -48,7 +48,7 @@ export const reportRangeFromState = (state) => {
   let startOfMonth = moment().startOf('month')
   return {
     start: state.router.query['start'] || startOfMonth.format('YYYY-MM-DD'),
-    stop: state.router.query['stop'] || moment().format('YYYY-MM-DD')
+    stop: state.router.query['stop'] || startOfMonth.add(1, 'y').format('YYYY-MM-DD')
   }
 }
 
@@ -92,7 +92,9 @@ const getLabels = {
   assignee: (i, id) => i.assignees.filter((a) => a.id == id)[0].login
 }
 
-export const values = (mapping) => Object.keys(mapping).map((key) => mapping[key])
+export const values = (mapping) => Object.keys(mapping).map((key) => (
+  { ...mapping[key], id: key })
+)
 
 export const groupIssues = (issues, grouper) => {
   return values(issues.reduce((groups, issue) => {
@@ -102,7 +104,6 @@ export const groupIssues = (issues, grouper) => {
     ids.map((id) => {
       if (groups[id] == undefined) {
         groups[id] = {
-          id,
           group: getLabel(issue, id),
           issues: []
         }

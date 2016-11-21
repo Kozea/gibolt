@@ -18,7 +18,6 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
     let monthStr = month.format('LL')
     if (months[monthStr] == undefined) {
       months[monthStr] = {
-        id: milestone.id,
         month: month,
         milestones: []
       }
@@ -47,7 +46,7 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
         </article>
       )}
       { milestonesByMonth.map(({ id, month, milestones }) =>
-        <article key={ month.format('LL') } className={ b('date') }>
+        <article key={ id } className={ b('date') }>
           <h2>{ month.format('LL') } <sup>
             ({ milestones.length })
             </sup>

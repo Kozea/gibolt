@@ -156,11 +156,17 @@ def timeline():
             executor.submit(refresh_repo_milestones, name, repo, user)
     for repo in repos:
         milestones.extend(repo.get('milestones', []))
+
+    def milestoneDateToIso(milestone):
+        if milestone.get('due_on'):
+            milestone['due_on'] = milestone['due_on'].isoformat()
+        return milestone
+
     return jsonify({
         'params': request.get_json(),
         'results': {
             'milestones': [
-                milestone for milestone in milestones
+                milestoneDateToIso(milestone) for milestone in milestones
                 if milestone.get('due_on') and
                 date_from_iso(start) <= milestone['due_on'] < date_from_iso(stop)
             ]
@@ -172,8 +178,6 @@ def timeline():
 @autologin
 def report():
     params = dict(request.get_json())
-
-    today = date.today()
     start = params.get('start')
     stop = params.get('stop')
     start = date_from_iso(start)
@@ -189,7 +193,6 @@ def report():
     for issue in issues:
         if (issue.get('assignee') and
                 start < date_from_iso(issue['closed_at']) < stop):
-            issue['closed_month'] = issue['closed_at'][:7]
             ok_issues.append(issue)
             # assignees.append(issue['assignee']['login'])
     return jsonify({

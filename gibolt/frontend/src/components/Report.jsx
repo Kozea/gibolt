@@ -8,27 +8,55 @@ import Milestone from './Milestone'
 import './Report.sass'
 
 
+const groupByMonth = (issues) => {
+  return values(issues.reduce((months, issue) => {
+    if (!issue.closed_at) {
+      return months
+    }
+    let month = moment(issue.closed_at).startOf('month')
+    let monthStr = month.format('LL')
+    if (months[monthStr] == undefined) {
+      months[monthStr] = {
+        month: month,
+        issues: []
+      }
+    }
+    months[monthStr].issues.push(issue)
+    return months
+  }, {})).sort((a, b) => (a.month - b.month))
+}
+
+const groupByUser = (issues) => {
+  return values(issues.reduce((users, issue) => {
+    if (users[issue.assignee.login] == undefined) {
+      users[issue.assignee.login] = {
+        user: issue.assignee,
+        issues: []
+      }
+    }
+    users[issue.assignee.login].issues.push(issue)
+    return users
+  }, {})).sort((a, b) => (a.user - b.user))
+}
+
+const groupByRepository = (issues) => {
+  return values(issues.reduce((repositories, issue) => {
+    if (repositories[issue.repository.full_name] == undefined) {
+      repositories[issue.repository.full_name] = {
+        repository: issue.repository,
+        issues: []
+      }
+    }
+    repositories[issue.repository.full_name].issues.push(issue)
+    return repositories
+  }, {})).sort((a, b) => (a.user - b.user))
+}
+
 const b = block('Report')
 function Report({ range, query, loading, error, issues, onDateChange }) {
-  // let milestonesByMonth = values(milestones.reduce((months, milestone) => {
-  //   if (!milestone.due_on) {
-  //     return months
-  //   }
-  //   let month = moment(milestone.due_on).startOf('month')
-  //   let monthStr = month.format('LL')
-  //   if (months[monthStr] == undefined) {
-  //     months[monthStr] = {
-  //       id: milestone.id,
-  //       month: month,
-  //       milestones: []
-  //     }
-  //   }
-  //   months[monthStr].milestones.push(milestone)
-  //   return months
-  // }, {}))
-  // milestonesByMonth = milestonesByMonth.sort((a, b) => (
-  //   a.month - b.month
-  // ))
+  let issuesByMonth = groupByMonth(issues)
+  let issuesByUser = groupByUser(issues)
+
   return (
     <section className={ b }>
       <h1 className={ b('head') }>
@@ -46,8 +74,51 @@ function Report({ range, query, loading, error, issues, onDateChange }) {
           <code>{ error }</code>
         </article>
       )}
-      { issues.map(issue =>
-        <div>{ issue.title }</div>
+      <article className={ b('user') }>
+        <h2>Overall</h2>
+        { issuesByMonth.map(({ id, month, issues: monthIssues }) =>
+          <article key={ id } className={ b('month') }>
+            <h3>
+              { month.format('LL') }
+            </h3>
+            <ul>
+              { groupByRepository(monthIssues)
+                .sort((a, b) => b.issues.length - a.issues.length)
+                .map(({ id, repository, issues }) =>
+                <li key={ id } className={ b('item') }>
+                  <span className={ b('repo') }>{ repository.name } ({  Math.round((100 * (issues.length / monthIssues.length))).toFixed() }%)</span>
+                </li>
+              )}
+            </ul>
+          </article>
+        )}
+      </article>
+
+      { issuesByUser.map(({ id, user, issues: userIssues }) =>
+        <article className={ b('user') }>
+          <h2>{ user.login }</h2>
+          { groupByMonth(userIssues).map(({ id, month, issues: monthIssues }) =>
+            <article key={ id } className={ b('month') }>
+              <h3>
+                { month.format('LL') }
+              </h3>
+              <ul>
+                { groupByRepository(monthIssues)
+                  .sort((a, b) => b.issues.length - a.issues.length)
+                  .map(({ id, repository, issues }) =>
+                  <li key={ id } className={ b('item') }>
+                    <span className={ b('repo') }>{ repository.name } ({ Math.round((100 * (issues.length / monthIssues.length))).toFixed() }%)</span>
+                    <ul className={ b('issues') }>
+                      { issues.map(issue =>
+                        <li>{ issue.title }</li>
+                      )}
+                    </ul>
+                  </li>
+                )}
+              </ul>
+            </article>
+          )}
+        </article>
       )}
     </section>
   )
