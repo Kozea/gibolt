@@ -10,7 +10,7 @@ export default function Milestone(props) {
   return (
     <li className={ b({status: props.state})}>
       <span className={ b('day') }>
-        { moment(props.due_on).day() }
+        { moment(props.due_on).date() }
       </span>
       <span className={ b('repo') }>
         { props.repo }
@@ -18,7 +18,7 @@ export default function Milestone(props) {
       <a className={ b('link') } href={ props.html_url }>
         { props.title }
       </a>
-      <Progress val={ props.open_issues } total={ props.open_issues + props.closed_issues } />
+      <Progress val={ props.closed_issues } total={ props.open_issues + props.closed_issues } />
     </li>
   )
 }
