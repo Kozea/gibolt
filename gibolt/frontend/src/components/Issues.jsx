@@ -6,7 +6,7 @@ import {
 import Issue from './Issue'
 import Loading from './Loading'
 import Progress from './Progress'
-import { toggleIssue, setIssuesSelectness, toggleExpanded, postChangeSelectedIssuesPriority } from '../actions'
+import { toggleIssue, setIssuesSelectness, toggleExpanded, postChangeSelectedIssuesPriority, setLoading } from '../actions'
 import './Issues.sass'
 
 function checkboxState(issues) {
@@ -111,6 +111,7 @@ export default connect((state) => {
         dispatch(setIssuesSelectness(issuesId, isSelected))
       },
       onChangePriority: (change) => {
+        dispatch(setLoading('issues'))
         dispatch(postChangeSelectedIssuesPriority(change))
       }
     }

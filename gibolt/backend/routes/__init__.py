@@ -206,7 +206,6 @@ def report():
 @app.route('/repositories.json', methods=['GET', 'POST'])
 @autologin
 def repositories():
-    params = dict(request.get_json())
     app.config['ORGANISATION']
     return jsonify({
         'params': request.get_json(),
@@ -374,7 +373,6 @@ def refresh_repo_milestones(repo_name, repo, access_token):
             total = milestone['closed_issues'] + milestone['open_issues']
             milestone['progress'] = (
                 milestone['closed_issues'] / (total or float('inf')))
-
 
 
 @app.route('/css/dynamic')
