@@ -246,7 +246,7 @@ def index(path=None):
             'results': {
                 'issues': []
             },
-            'loading': False,
+            'loading': True,
             'mustLoad': True,
             'error': None
         },
@@ -254,7 +254,7 @@ def index(path=None):
             'results': {
                 'milestones': []
             },
-            'loading': False,
+            'loading': True,
             'mustLoad': True,
             'error': None
         },
@@ -262,7 +262,7 @@ def index(path=None):
             'results': {
                 'issues': []
             },
-            'loading': False,
+            'loading': True,
             'mustLoad': True,
             'error': None
         },
@@ -270,7 +270,7 @@ def index(path=None):
             'results': {
                 'repositories': []
             },
-            'loading': False,
+            'loading': True,
             'mustLoad': True,
             'error': None
         },

@@ -1,3 +1,4 @@
+from json import dumps
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -12,7 +13,13 @@ def render_component(state):
     rq = Request(
         '%s%s' % (
             current_app.config['RENDER_SERVER'],
-            request.path))
+            request.path
+        ), dumps({
+            'state': state,
+            'query': request.query_string.decode('utf-8')
+        }).encode('utf-8'),
+        {'Content-Type': 'application/json'}
+    )
 
     try:
         response = urlopen(rq)

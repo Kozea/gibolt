@@ -9,6 +9,7 @@ import { Provider } from 'react-redux'
 import { createStore, compose, applyMiddleware } from 'redux'
 import createLogger from 'redux-logger'
 import thunk from 'redux-thunk'
+import querystring from 'querystring'
 import reducer from './reducers'
 import routes from './routes'
 import App from './components/App'
@@ -19,14 +20,27 @@ const server_url = url.parse(process.env.RENDER_SERVER)
 var app = express()
 var server = http.Server(app)
 
+app.use(bodyParser.json())
 app.use('/', (req, res) => {
-	const router = routerForExpress({
+  let state = {}
+  let request = req
+  if(req.method == 'POST') {
+    state = req.body && req.body.state
+    request = {
+      path: req.path,
+      baseUrl: '',
+      query: querystring.parse(req.body && req.body.query)
+    }
+  }
+
+  const router = routerForExpress({
 		routes,
-		request: req
+		request
 	})
 
 	const store = createStore(
 		reducer,
+    state,
 		compose(
 			router.routerEnhancer,
 			applyMiddleware(

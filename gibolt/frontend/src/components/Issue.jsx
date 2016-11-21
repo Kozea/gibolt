@@ -7,9 +7,9 @@ import './Issue.sass'
 const b = block('Issue')
 export default function Issue(props) {
   return (
-    <li className={ b({status: props.state})}>
+    <li className={ b({status: props.state}) }>
       <input type="checkbox" checked={ props.selected } onChange={props.onBoxChange}/>
-      {props.users.map((user) =>
+      {props.users.map(user =>
         <img key={ user.id } className={ b('avatar') } src={ user.avatar_url } alt="avatar" title={ user.login } />
       )}
       <a className={ b('link') } href={ props.url }>

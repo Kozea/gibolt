@@ -64,7 +64,7 @@ function Presets({ pathname, query, user }) {
   )
 }
 
-export default connect((state) => {
+export default connect(state => {
   return {
     query: state.router.query,
     user: state.user,
