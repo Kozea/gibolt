@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { AbsoluteFragment } from 'redux-little-router'
 import { block } from '../utils'
-import PageIssues from './PageIssues'
-import PageTimeline from './PageTimeline'
-import PageReport from './PageReport'
-import PageRepositories from './PageRepositories'
+import IssuesDashboard from './IssuesDashboard'
+import Timeline from './Timeline'
+import Report from './Report'
+import Repositories from './Repositories'
+import Presets from './Presets'
 import './App.sass'
 
 
@@ -18,17 +19,18 @@ export default class App extends Component {
   render() {
     return (
       <main className={ b }>
+        <Presets />
         <AbsoluteFragment forRoute='/'>
-          <PageIssues />
+          <IssuesDashboard />
         </AbsoluteFragment>
         <AbsoluteFragment forRoute='/timeline'>
-          <PageTimeline />
+          <Timeline />
         </AbsoluteFragment>
         <AbsoluteFragment forRoute='/report'>
-          <PageReport />
+          <Report />
         </AbsoluteFragment>
         <AbsoluteFragment forRoute='/repositiories'>
-          <PageRepositories />
+          <Repositories />
         </AbsoluteFragment>
       </main>
     )
