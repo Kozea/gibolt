@@ -70,6 +70,7 @@ function Issues({ labelFilteredIssues, issues, issuesState, loading, grouper, av
                 labels={ issue.labels }
                 selected={ issue.selected }
                 url={ issue.html_url }
+                pull_request={issue.pull_request}
                 expanded={ issue.expanded }
                 onBoxChange={() => onToggleSelected(issue.id)}
                 onClick={() => onToggleExpanded(issue.id)}
