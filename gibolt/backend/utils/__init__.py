@@ -24,12 +24,8 @@ def render_component(state):
     try:
         response = urlopen(rq)
     except HTTPError as e:
-        if not current_app.debug:
-            raise HTTPError('[ERROR %d on renderering server]' % e.code)
-        current_app.logger.warn(
+        current_app.logger.exception(
             'Error on rendering server, see on client rendering.')
-        return 'NO SERVER RENDERING'
+        return 'NO SERVER RENDERING (%d) % e.code'
 
-    response = response.read()
-
-    return response.decode('utf-8')
+    return response.read().decode('utf-8')
