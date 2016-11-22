@@ -3,7 +3,8 @@ include Makefile.config
 all: install serve
 
 install-node:
-	$(NPM) install
+	$(NPM) install yarn
+	$(YARN) install
 
 install-python:
 	test -d $(VENV) || virtualenv $(VENV)
