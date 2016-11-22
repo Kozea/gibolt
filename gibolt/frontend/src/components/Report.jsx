@@ -95,7 +95,7 @@ function Report({ range, query, loading, error, issues, onDateChange }) {
       </article>
 
       { issuesByUser.map(({ id, user, issues: userIssues }) =>
-        <article className={ b('user') }>
+        <article key={ id } className={ b('user') }>
           <h2>{ user.login }</h2>
           { groupByMonth(userIssues).map(({ id, month, issues: monthIssues }) =>
             <article key={ id } className={ b('month') }>
@@ -110,7 +110,7 @@ function Report({ range, query, loading, error, issues, onDateChange }) {
                     <span className={ b('repo') }>{ repository.name } ({ Math.round((100 * (issues.length / monthIssues.length))).toFixed() }%)</span>
                     <ul className={ b('issues') }>
                       { issues.map(issue =>
-                        <li>{ issue.title }</li>
+                        <li key={ issue.id }>{ issue.title }</li>
                       )}
                     </ul>
                   </li>
