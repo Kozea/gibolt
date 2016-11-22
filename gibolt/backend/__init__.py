@@ -3,15 +3,10 @@ import os
 import pkg_resources
 from flask import Flask
 
-
-__version__ = pkg_resources.require("gibolt")[0].version
-
-
-# TODO: remove this when https://github.com/pallets/flask/issues/1907 is fixed
-# class Flask(Flask):
-#     def create_jinja_environment(self):
-#         self.config['TEMPLATES_AUTO_RELOAD'] = True
-#         return super().create_jinja_environment()
+try:
+    __version__ = pkg_resources.require("gibolt")[0].version
+except pkg_resources.DistributionNotFound:
+    __version__ = 'GIBOLT not installed in path'
 
 
 app = Flask(__name__)
