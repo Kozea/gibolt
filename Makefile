@@ -35,8 +35,10 @@ check-node:
 
 check: check-python check-node
 
-build: clean lint
+build-node: clean lint-node
 	NODE_ENV=production $(NPM) run build
+
+build: build-node
 
 serve-python:
 	$(FLASK) run
