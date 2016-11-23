@@ -15,6 +15,6 @@
       </script>
     {% endif %}
 
-    <script src="{{ config.get('STATIC_SERVER', '') }}{{ url_for('static', filename='bundle.js') }}"></script>
+    <script src="{{ config.get('STATIC_SERVER') or '' }}{{ url_for('static', filename='bundle.js') }}"></script>
   </body>
 </html>

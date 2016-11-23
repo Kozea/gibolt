@@ -67,7 +67,7 @@
   "private": true,
   "scripts": {
     "static-server": "node static-dev-server.js",
-    "render-server": "node render-server.js",
+    "render-server": "nodemon --watch gibolt/frontend/src -e js,jsx render-server.js",
     "build": "webpack --progress --profile --colors",
     "lint": "eslint --ext .jsx --ext .js gibolt/frontend/src/",
     "test": "jest"
@@ -83,6 +83,7 @@
     "isomorphic-fetch": "^2.2.1",
     "json-loader": "^0.5.4",
     "moment": "^2.16.0",
+    "nodemon": "^1.11.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-markdown": "^2.4.2",
