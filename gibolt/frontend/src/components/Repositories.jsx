@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link }  from 'redux-little-router'
 import { block, values } from '../utils'
 import Loading from './Loading'
 import './Repositories.sass'
@@ -24,7 +25,9 @@ function Repositories({ loading, error, repositories }) {
         <ul>
           { repositories.map(repository =>
             <li key={ repository } className={ b('item') }>
-              { repository }
+              <Link className={ b('link') } href={{pathname: "/repository", query: {name: repository}}} >
+                { repository }
+              </Link>
             </li>
           )}
         </ul>

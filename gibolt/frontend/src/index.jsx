@@ -57,6 +57,12 @@ const autoLoadMiddleware = ({ getState, dispatch }) => {
             dispatch(setLoading('repositories'))
             dispatch(fetchResults('repositories'))
           }
+        } else if (action.payload.pathname == '/repository') {
+          const newState = getState()
+          if (state.repository.mustLoad) {
+            dispatch(setLoading('repository'))
+            dispatch(fetchResults('repository'))
+          }
         }
       }
       return rv

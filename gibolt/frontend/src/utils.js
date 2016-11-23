@@ -52,6 +52,12 @@ export const reportRangeFromState = (state) => {
   }
 }
 
+export const repositoryNameFromState = (state) => {
+  return {
+    name: state.router.query['name']
+  }
+}
+
 
 export const filterIssuesOnState = (issues, state) => {
   const issuesState = issuesStateFromState(state)

@@ -5,6 +5,7 @@ import IssuesDashboard from './IssuesDashboard'
 import Timeline from './Timeline'
 import Report from './Report'
 import Repositories from './Repositories'
+import Repository from './Repository'
 import Presets from './Presets'
 import './App.sass'
 
@@ -31,6 +32,9 @@ export default class App extends Component {
         </AbsoluteFragment>
         <AbsoluteFragment forRoute='/repositories'>
           <Repositories />
+        </AbsoluteFragment>
+        <AbsoluteFragment forRoute='/repository'>
+          <Repository />
         </AbsoluteFragment>
       </main>
     )
