@@ -25,7 +25,7 @@ function Repositories({ loading, error, repositories }) {
         <ul>
           { repositories.map(repository =>
             <li key={ repository } className={ b('item') }>
-              <Link className={ b('link') } href={{pathname: "/repository", query: {name: repository}}} >
+              <Link className={ b('link') } href={{pathname: '/repository', query: {name: repository}}} >
                 { repository }
               </Link>
             </li>
