@@ -16,7 +16,6 @@ const search = (state='', action) => {
   }
 }
 
-
 const emptyResults = {
   results: {},
   loading: false,
