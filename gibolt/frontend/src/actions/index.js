@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch'
 import equal from 'deep-equal'
 import { PUSH } from 'redux-little-router'
 import { allLabelsFromState, usersFromState,
-         timelineRangeFromState, reportRangeFromState } from '../utils'
+         timelineRangeFromState, reportRangeFromState, repositoryNameFromState } from '../utils'
 
 
 export const search = (search) => {
@@ -51,6 +51,8 @@ const stateToParams = (state, target) => {
       return reportRangeFromState(state)
     case 'repositories':
       return {}
+    case 'repository':
+      return repositoryNameFromState(state)
   }
 }
 

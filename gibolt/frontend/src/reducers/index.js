@@ -47,6 +47,12 @@ const empty = {
     results: {
       repositories: []
     }
+  },
+  'repository': {
+    ...emptyResults,
+    results: {
+      labels: []
+    }
   }
 }
 
@@ -138,6 +144,10 @@ const repositories = (state=empty.repositories, action) => {
   return handleResultsLoadingAndError(state, 'repositories', action)
 }
 
+const repository = (state=empty.repository, action) => {
+  return handleResultsLoadingAndError(state, 'repository', action)
+}
+
 const users = (state=[], action) => state
 const user = (state=[], action) => state
 
@@ -148,6 +158,7 @@ const reducer = combineReducers({
   timeline,
   report,
   repositories,
+  repository,
   users,
   user,
 })

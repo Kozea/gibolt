@@ -101,13 +101,6 @@ def get_allowed_repos():
     return [repo['name'] for repo in repos]
 
 
-@app.route('/gibols/sprint')
-@autologin
-def show_sprint_s():
-    filters = {'priority': 'sprint', 'state': 'all'}
-    return redirect(url_for('show_issues', **filters))
-
-
 @app.route('/issues.json', methods=['GET', 'POST'])
 @autologin
 def issues():
@@ -215,6 +208,54 @@ def repositories():
     })
 
 
+@app.route('/repository.json', methods=['GET', 'POST'])
+@autologin
+def repository():
+    repository_name = request.get_json()['repository.name']
+    repository = github.get('repos/{0}/{1}'.format(
+        app.config['ORGANISATION'], repository_name))
+    current_labels = github.get('repos/{0}/{1}/labels'.format(
+        app.config['ORGANISATION'], repository_name))
+    config_labels = (
+        app.config.get('PRIORITY_LABELS') + app.config.get('QUALIFIER_LABELS'))
+    missing_labels = []
+    overly_labels = []
+    for name, color in config_labels:
+        if not any(d['name'] == name for d in current_labels):
+            missing_labels.append((name, color))
+
+    for label in current_labels:
+        if not any(name == label['name'] for name, color in config_labels):
+            overly_labels.append((label['name'], label['color']))
+
+    if request.method == 'POST':
+        if 'add_missing' in request.form:
+            for name, color in missing_labels:
+                data = {'name': name, 'color': color}
+                github.post(
+                    'repos/{0}/{1}/labels'.format(
+                        app.config.get('ORGANISATION'), repository_name),
+                    data=data)
+        if 'delete_overly' in request.form:
+            for name, color in overly_labels:
+                github.delete('repos/{0}/{1}/labels/{2}'.format(
+                    app.config.get('ORGANISATION'), repository_name, name))
+        return redirect(url_for('repository', repository_name=repository_name))
+
+    return jsonify({
+        'params': request.get_json(),
+        'results': {
+            'missing_labels': missing_labels,
+            'overly_labels': overy_labels,
+            'labels': current_labels,
+        }
+    })
+    return render_template(
+        'repository_read.html.jinja2', labels=current_labels,
+        missing_labels=missing_labels, overly_labels=overly_labels,
+        repository=repository)
+
+
 @app.route('/users.json', methods=['GET', 'POST'])
 @autologin
 def users():
@@ -269,6 +310,14 @@ def index(path=None):
         'repositories': {
             'results': {
                 'repositories': []
+            },
+            'loading': True,
+            'mustLoad': True,
+            'error': None
+        },
+        'repository': {
+            'results': {
+                'labels': []
             },
             'loading': True,
             'mustLoad': True,
@@ -398,7 +447,7 @@ def get_stones_by_step(all_stones, start, end, step):
 
 @app.route('/repository/<string:repository_name>', methods=['GET', 'POST'])
 @autologin
-def repository(repository_name):
+def old_repository(repository_name):
     repository = github.get('repos/{0}/{1}'.format(
         app.config['ORGANISATION'], repository_name))
     current_labels = github.get('repos/{0}/{1}/labels'.format(
