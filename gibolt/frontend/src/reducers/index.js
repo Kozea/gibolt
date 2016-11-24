@@ -51,7 +51,10 @@ const empty = {
   'repository': {
     ...emptyResults,
     results: {
-      labels: []
+      labels: [],
+      missingLabels: [],
+      overlyLabels: [],
+      repository: {permissions: {push: false}}
     }
   }
 }

@@ -26,6 +26,6 @@ def render_component(state):
     except HTTPError as e:
         current_app.logger.exception(
             'Error on rendering server, see on client rendering.')
-        return 'NO SERVER RENDERING (%d) % e.code'
+        return 'NO SERVER RENDERING (%d)' % e.code
 
     return response.read().decode('utf-8')

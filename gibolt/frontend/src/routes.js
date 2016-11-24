@@ -1,7 +1,7 @@
 export default {
-  '/': 'Issues',
-  '/timeline': 'Timeline',
-  '/report': 'Report',
-  '/repositories': 'Repositories',
-  '/repository': 'Repository'
+  '/': {'title': 'Issues'},
+  '/timeline': {'title': 'Timeline'},
+  '/report': {'title': 'Report'},
+  '/repositories': {'title': 'Repositories'},
+  '/repository': {'title': 'Repository'}
 }

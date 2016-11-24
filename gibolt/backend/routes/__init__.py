@@ -1,48 +1,17 @@
 import json
-from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from functools import wraps
 
 import requests
-from dateutil.relativedelta import relativedelta
 from flask import (
-    Response, flash, redirect, render_template, request, session, url_for,
-    jsonify)
+    flash, redirect, render_template, request, session, url_for, jsonify)
 
 import pytz
 from cachecontrol import CacheControl
 from flask_github import GitHub, GitHubError
 from ..utils import render_component
 from .. import app
-
-GROUPERS = OrderedDict((
-    ('', ''),
-    ('assignee.logins', 'Assignee'),
-    ('milestone.title', 'Milestone'),
-    ('state', 'State'),
-    ('repository_url', 'Project')))
-
-
-@app.template_filter('sort_by_len')
-def sort_by_len(values, reverse=False):
-    """Sort the ``values`` list by the length of its second item."""
-    return sorted(values, key=lambda item: len(item[1]), reverse=reverse)
-
-
-@app.template_filter('format_date')
-def format_date_filter(isodate, dateformat):
-    """Transform an ISO-date to a string following ``dateformat``."""
-    numbers = [int(number) for number in isodate.split('-')]
-    while len(numbers) < 3:
-        numbers.append(1)
-    return date(*numbers).strftime(dateformat)
-
-
-@app.template_filter('short_name')
-def short_name(full_name):
-    """Split a full name after a slash to display only the projet name."""
-    return full_name.split('/')[-1]
 
 
 github = GitHub(app)
@@ -211,8 +180,8 @@ def repositories():
 @app.route('/repository.json', methods=['GET', 'POST'])
 @autologin
 def repository():
-    repository_name = request.get_json()['repository.name']
-    repository = github.get('repos/{0}/{1}'.format(
+    repository_name = request.get_json()['name']
+    repository = repository = github.get('repos/{0}/{1}'.format(
         app.config['ORGANISATION'], repository_name))
     current_labels = github.get('repos/{0}/{1}/labels'.format(
         app.config['ORGANISATION'], repository_name))
@@ -223,37 +192,43 @@ def repository():
     for name, color in config_labels:
         if not any(d['name'] == name for d in current_labels):
             missing_labels.append((name, color))
-
     for label in current_labels:
         if not any(name == label['name'] for name, color in config_labels):
             overly_labels.append((label['name'], label['color']))
-
-    if request.method == 'POST':
-        if 'add_missing' in request.form:
-            for name, color in missing_labels:
-                data = {'name': name, 'color': color}
-                github.post(
-                    'repos/{0}/{1}/labels'.format(
-                        app.config.get('ORGANISATION'), repository_name),
-                    data=data)
-        if 'delete_overly' in request.form:
-            for name, color in overly_labels:
-                github.delete('repos/{0}/{1}/labels/{2}'.format(
-                    app.config.get('ORGANISATION'), repository_name, name))
-        return redirect(url_for('repository', repository_name=repository_name))
-
     return jsonify({
         'params': request.get_json(),
         'results': {
-            'missing_labels': missing_labels,
-            'overly_labels': overy_labels,
+            'missingLabels': missing_labels,
+            'overlyLabels': overly_labels,
             'labels': current_labels,
+            'repository': repository,
         }
     })
-    return render_template(
-        'repository_read.html.jinja2', labels=current_labels,
-        missing_labels=missing_labels, overly_labels=overly_labels,
-        repository=repository)
+
+
+@app.route('/repository/create_labels', methods=['POST'])
+@autologin
+def create_repository_labels():
+    repository_name = request.get_json()['name']
+    labels = request.get_json()['labels']
+    for name, color in labels:
+        data = {'name': name, 'color': color}
+        github.post(
+            'repos/{0}/{1}/labels'.format(
+                app.config.get('ORGANISATION'), repository_name),
+            data=data)
+    return jsonify({'params': request.get_json()})
+
+
+@app.route('/repository/delete_labels', methods=['POST'])
+@autologin
+def delete_repository_labels():
+    repository_name = request.get_json()['name']
+    labels = request.get_json()['labels']
+    for name, color in labels:
+        github.delete('repos/{0}/{1}/labels/{2}'.format(
+            app.config.get('ORGANISATION'), repository_name, name))
+    return jsonify({'params': request.get_json()})
 
 
 @app.route('/users.json', methods=['GET', 'POST'])
@@ -317,7 +292,10 @@ def index(path=None):
         },
         'repository': {
             'results': {
-                'labels': []
+                'labels': [],
+                'overlyLabels': [],
+                'missingLabels': [],
+                'repository': {'permissions': {'push': False}},
             },
             'loading': True,
             'mustLoad': True,
@@ -328,15 +306,6 @@ def index(path=None):
     }
     rendered = render_component(state)
     return render_template('index.jinja2', rendered=rendered, state=state)
-
-
-@app.route('/my_tickets')
-@autologin
-def my_tickets():
-    filters = {
-        'involves': session['login'], 'state': 'open',
-        'groupby': 'repository_url'}
-    return redirect(url_for('show_issues', **filters))
 
 
 @app.route('/apply_labels', methods=["POST"])
@@ -396,22 +365,6 @@ def apply_labels():
     return redirect(request.referrer)
 
 
-@app.route('/issues/form_query')
-@autologin
-def show_form_query():
-    # parse form then redirect to show issues
-    return redirect(url_for('show_issues', **request.args))
-
-
-@app.route('/stones')
-@autologin
-def show_now():
-    today = date.today()
-    start = date(today.year, today.month, 1) + relativedelta(months=-1)
-    stop = start + relativedelta(months=12)
-    return redirect(url_for('show', start=start, stop=stop))
-
-
 def refresh_repo_milestones(repo_name, repo, access_token):
     url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
         app.config['ORGANISATION'], repo_name)
@@ -423,62 +376,3 @@ def refresh_repo_milestones(repo_name, repo, access_token):
             total = milestone['closed_issues'] + milestone['open_issues']
             milestone['progress'] = (
                 milestone['closed_issues'] / (total or float('inf')))
-
-
-@app.route('/css/dynamic')
-def dynamic_css():
-    labels = (app.config.get('PRIORITY_LABELS') +
-              app.config.get('QUALIFIER_LABELS'))
-    return Response(render_template('dynamic_css.jinja2', labels=labels),
-                    mimetype='text/css')
-
-
-def get_stones_by_step(all_stones, start, end, step):
-    current = start
-    result = []
-    while current < end:
-        stones = [
-            stone for stone in all_stones
-            if stone['due_on'] and current <= stone['due_on'] < current + step]
-        result.append((current, stones))
-        current += step
-    return result
-
-
-@app.route('/repository/<string:repository_name>', methods=['GET', 'POST'])
-@autologin
-def old_repository(repository_name):
-    repository = github.get('repos/{0}/{1}'.format(
-        app.config['ORGANISATION'], repository_name))
-    current_labels = github.get('repos/{0}/{1}/labels'.format(
-        app.config['ORGANISATION'], repository_name))
-    config_labels = (
-        app.config.get('PRIORITY_LABELS') + app.config.get('QUALIFIER_LABELS'))
-    missing_labels = []
-    overly_labels = []
-    for name, color in config_labels:
-        if not any(d['name'] == name for d in current_labels):
-            missing_labels.append((name, color))
-
-    for label in current_labels:
-        if not any(name == label['name'] for name, color in config_labels):
-            overly_labels.append((label['name'], label['color']))
-
-    if request.method == 'POST':
-        if 'add_missing' in request.form:
-            for name, color in missing_labels:
-                data = {'name': name, 'color': color}
-                github.post(
-                    'repos/{0}/{1}/labels'.format(
-                        app.config.get('ORGANISATION'), repository_name),
-                    data=data)
-        if 'delete_overly' in request.form:
-            for name, color in overly_labels:
-                github.delete('repos/{0}/{1}/labels/{2}'.format(
-                    app.config.get('ORGANISATION'), repository_name, name))
-        return redirect(url_for('repository', repository_name=repository_name))
-
-    return render_template(
-        'repository_read.html.jinja2', labels=current_labels,
-        missing_labels=missing_labels, overly_labels=overly_labels,
-        repository=repository)

@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-fetch'
 import equal from 'deep-equal'
 import { PUSH } from 'redux-little-router'
-import { allLabelsFromState, usersFromState,
-         timelineRangeFromState, reportRangeFromState, repositoryNameFromState } from '../utils'
+import { allLabelsFromState, usersFromState, timelineRangeFromState,
+  reportRangeFromState, repositoryNameFromState } from '../utils'
 
 
 export const search = (search) => {
@@ -116,6 +116,37 @@ export const postChangeSelectedIssuesPriority = (change) => {
     })
     .then(response => response.json())
     .then(() => dispatch(fetchResults('issues')))
+  }
+}
+
+export const createLabels = () => {
+  return (dispatch, getState) => {
+    let state = getState()
+    fetch('/repository/create_labels', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        labels: state.repository.results.missingLabels,
+        name: repositoryNameFromState(state)['name'],
+      })
+    })
+    .then(response => {
+      if (response.status >= 200 && response.status < 300) {
+        return response
+      }
+      throw new Error(`[${ response.status }] ${ response.statusText }`)
+    })
+    .then(response => response.json())
+    .then(() => dispatch(fetchResults('issues')))
+  }
+}
+
+
+export const deleteLabels = () => {
+  return (dispatch, getState) => {
   }
 }
 
