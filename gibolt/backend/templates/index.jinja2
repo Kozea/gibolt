@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+    <meta name="mobile-web-app-capable" content="yes">
     <title>gibolt</title>
     {% if not config.get('STATIC_SERVER', '') %}
       <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" />
