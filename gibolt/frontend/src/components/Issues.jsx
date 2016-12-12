@@ -54,7 +54,9 @@ function Issues({ labelFilteredIssues, issues, issuesState, loading, grouper, av
              checked={ checkboxState(issues) == 'checked'}
              ref={ elem => elem && (elem.indeterminate = checkboxState(issues) == 'indeterminate' ) }
              onChange={ () => onToggleGrouper(issues.map((issue) => issue.id), (checkboxState(issues) != 'checked')) }/>
-           <Progress val={ issues.filter(i => i.state == 'closed').length } total={ issues.length } />
+
+          { issuesState == 'all' && grouper != 'state' && <Progress val={ issues.filter(i => i.state == 'closed').length } total={ issues.length } />}
+
           </h2>
           <ul>
             { sortIssues(issues, grouper).map((issue) =>

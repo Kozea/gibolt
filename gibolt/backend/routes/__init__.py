@@ -1,4 +1,3 @@
-import json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from functools import wraps
@@ -211,13 +210,15 @@ def repository():
 def create_repository_labels():
     repository_name = request.get_json()['name']
     labels = request.get_json()['labels']
+    created = []
     for name, color in labels:
         data = {'name': name, 'color': color}
         github.post(
             'repos/{0}/{1}/labels'.format(
                 app.config.get('ORGANISATION'), repository_name),
             data=data)
-    return jsonify({'params': request.get_json()})
+        created.append(data)
+    return jsonify({'params': request.get_json(), 'created': created})
 
 
 @app.route('/repository/delete_labels', methods=['POST'])
@@ -225,10 +226,12 @@ def create_repository_labels():
 def delete_repository_labels():
     repository_name = request.get_json()['name']
     labels = request.get_json()['labels']
+    deleted = []
     for name, color in labels:
         github.delete('repos/{0}/{1}/labels/{2}'.format(
             app.config.get('ORGANISATION'), repository_name, name))
-    return jsonify({'params': request.get_json()})
+        deleted.append(name)
+    return jsonify({'params': request.get_json(), 'deleted': deleted})
 
 
 @app.route('/users.json', methods=['GET', 'POST'])
@@ -335,34 +338,6 @@ def apply_labels():
             issue['error'] = 'githubError'
             patched_issues.append(issue)
     return jsonify(patched_issues)
-
-    for issue_id in request.form.getlist('issues'):
-        repo, number, labels = issue_id.split('$')
-        labels = labels.split(',')
-        priority_labels = [
-            label for label, color in app.config.get('PRIORITY_LABELS')]
-        if 'increment_priority' in request.form:
-            current_priority = set(labels).intersection(priority_labels)
-            if current_priority:
-                current_priority = current_priority.pop()
-            current_priority_index = priority_labels.index(current_priority)
-            if current_priority_index > 0:
-                labels.remove(current_priority)
-                labels.append(priority_labels[current_priority_index - 1])
-
-        elif 'delete_top_priority' in request.form:
-            if priority_labels[0] in labels:
-                labels.remove(priority_labels[0])
-
-        data = json.dumps({'labels': labels})
-        try:
-            github.patch(
-                'repos/{0}/{1}/issues/{2}'.format(
-                    app.config['ORGANISATION'], repo, number),
-                data=data)
-        except GitHubError:
-            flash("Unable to change issue {} of {}".format(number, repo))
-    return redirect(request.referrer)
 
 
 def refresh_repo_milestones(repo_name, repo, access_token):
