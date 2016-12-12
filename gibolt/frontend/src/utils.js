@@ -37,7 +37,7 @@ export const allLabelsFromState = (state) => {
 }
 
 export const timelineRangeFromState = (state) => {
-  let startOfMonth = moment().startOf('month')
+  let startOfMonth = moment().startOf('month').subtract(1, 'month')
   return {
     start: state.router.query['start'] || startOfMonth.format('YYYY-MM-DD'),
     stop: state.router.query['stop'] || startOfMonth.add(1, 'y').format('YYYY-MM-DD')
@@ -85,7 +85,7 @@ const getIds = {
   state: (i) => [i.state],
   milestone: (i) => [(i.milestone && i.milestone.id) || i.repository_url],
   project: (i) => [i.repository_url],
-  assignee: (i) => i.assignees && i.assignees.map((a) => a.id) || ['UNASSIGNED'],
+  assignee: (i) => i.assignees.length > 0 ? i.assignees.map((a) => a.id) : ['UNASSIGNED'],
 }
 
 const getLabels = {
@@ -95,7 +95,7 @@ const getLabels = {
     getProject(i) } ⦔ ${ i.milestone.title }`) || `${
       getProject(i) } ⦔ No milestone`,
   project: getProject,
-  assignee: (i, id) => i.assignees.filter((a) => a.id == id)[0].login
+  assignee: (i, id) => i.assignees.length > 0 ? i.assignees.filter((a) => a.id == id)[0].login : 'Unassigned'
 }
 
 export const values = (mapping) => Object.keys(mapping).map((key) => (
