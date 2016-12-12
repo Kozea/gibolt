@@ -119,6 +119,13 @@ export const postChangeSelectedIssuesPriority = (change) => {
   }
 }
 
+export const createRepositoryLabels = (createdLabels) => {
+  return {
+    type: 'CREATE_LABELS',
+    created: createdLabels,
+  }
+}
+
 export const createLabels = () => {
   return (dispatch, getState) => {
     let state = getState()
@@ -140,13 +147,39 @@ export const createLabels = () => {
       throw new Error(`[${ response.status }] ${ response.statusText }`)
     })
     .then(response => response.json())
-    .then(() => dispatch(fetchResults('issues')))
+    .then(json => dispatch(createRepositoryLabels(json.created)))
   }
 }
 
+export const deleteRepositoryLabels = (deletedLabels) => {
+  return {
+    type: 'DELETE_LABELS',
+    deleted: deletedLabels,
+  }
+}
 
 export const deleteLabels = () => {
   return (dispatch, getState) => {
+    let state = getState()
+    fetch('/repository/delete_labels', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        labels: state.repository.results.overlyLabels,
+        name: repositoryNameFromState(state)['name'],
+      })
+    })
+    .then(response => {
+      if (response.status >= 200 && response.status < 300) {
+        return response
+      }
+      throw new Error(`[${ response.status }] ${ response.statusText }`)
+    })
+    .then(response => response.json())
+    .then(json => dispatch(deleteRepositoryLabels(json.deleted)))
   }
 }
 

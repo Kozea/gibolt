@@ -71,8 +71,8 @@ export default connect(state => ({
       onCreateLabels: () => {
         dispatch(createLabels())
       },
-      onDeletLabels: () => {
-        dispatch(DeleteLabels())
+      onDeleteLabels: () => {
+        dispatch(deleteLabels())
       }
     }
   }

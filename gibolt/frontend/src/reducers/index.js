@@ -148,7 +148,30 @@ const repositories = (state=empty.repositories, action) => {
 }
 
 const repository = (state=empty.repository, action) => {
-  return handleResultsLoadingAndError(state, 'repository', action)
+  switch (action.type) {
+    case 'DELETE_LABELS':
+      return {
+        ...state,
+        results: {
+          ...state.results,
+          labels: state.results.labels.filter(label => action.deleted.indexOf(label.name) == -1),
+          overlyLabels: state.results.overlyLabels.filter(label => action.deleted.indexOf(label[0]) == -1),
+        }
+      }
+    case 'CREATE_LABELS':
+      return {
+        ...state,
+        results: {
+          ...state.results,
+          missingLabels: state.results.missingLabels.filter(label => {
+            return action.created.find((createdLabel) => label.name == createdLabel.name)
+          }),
+          labels : state.results.labels.concat(action.created),
+        }
+      }
+    default:
+      return handleResultsLoadingAndError(state, 'repository', action)
+  }
 }
 
 const users = (state=[], action) => state

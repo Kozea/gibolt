@@ -1,4 +1,3 @@
-import json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from functools import wraps
@@ -211,13 +210,15 @@ def repository():
 def create_repository_labels():
     repository_name = request.get_json()['name']
     labels = request.get_json()['labels']
+    created = []
     for name, color in labels:
         data = {'name': name, 'color': color}
         github.post(
             'repos/{0}/{1}/labels'.format(
                 app.config.get('ORGANISATION'), repository_name),
             data=data)
-    return jsonify({'params': request.get_json()})
+        created.append(data)
+    return jsonify({'params': request.get_json(), 'created': created})
 
 
 @app.route('/repository/delete_labels', methods=['POST'])
@@ -225,10 +226,12 @@ def create_repository_labels():
 def delete_repository_labels():
     repository_name = request.get_json()['name']
     labels = request.get_json()['labels']
+    deleted = []
     for name, color in labels:
         github.delete('repos/{0}/{1}/labels/{2}'.format(
             app.config.get('ORGANISATION'), repository_name, name))
-    return jsonify({'params': request.get_json()})
+        deleted.append(name)
+    return jsonify({'params': request.get_json(), 'deleted': deleted})
 
 
 @app.route('/users.json', methods=['GET', 'POST'])
@@ -329,7 +332,6 @@ def apply_labels():
             if priority_labels[0] in labels:
                 labels.remove(priority_labels[0])
         try:
-            import wdb; wdb.set_trace()
             patched_issues.append(
                 github.patch(issue['url'], data={'labels': labels}))
         except GitHubError:
