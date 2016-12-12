@@ -329,40 +329,13 @@ def apply_labels():
             if priority_labels[0] in labels:
                 labels.remove(priority_labels[0])
         try:
+            import wdb; wdb.set_trace()
             patched_issues.append(
                 github.patch(issue['url'], data={'labels': labels}))
         except GitHubError:
             issue['error'] = 'githubError'
             patched_issues.append(issue)
     return jsonify(patched_issues)
-
-    for issue_id in request.form.getlist('issues'):
-        repo, number, labels = issue_id.split('$')
-        labels = labels.split(',')
-        priority_labels = [
-            label for label, color in app.config.get('PRIORITY_LABELS')]
-        if 'increment_priority' in request.form:
-            current_priority = set(labels).intersection(priority_labels)
-            if current_priority:
-                current_priority = current_priority.pop()
-            current_priority_index = priority_labels.index(current_priority)
-            if current_priority_index > 0:
-                labels.remove(current_priority)
-                labels.append(priority_labels[current_priority_index - 1])
-
-        elif 'delete_top_priority' in request.form:
-            if priority_labels[0] in labels:
-                labels.remove(priority_labels[0])
-
-        data = json.dumps({'labels': labels})
-        try:
-            github.patch(
-                'repos/{0}/{1}/issues/{2}'.format(
-                    app.config['ORGANISATION'], repo, number),
-                data=data)
-        except GitHubError:
-            flash("Unable to change issue {} of {}".format(number, repo))
-    return redirect(request.referrer)
 
 
 def refresh_repo_milestones(repo_name, repo, access_token):
