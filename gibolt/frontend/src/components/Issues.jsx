@@ -99,7 +99,8 @@ export default connect((state) => {
       grouper: grouperFromState(state),
       issuesState: issuesStateFromState(state),
       availableLabels: state.labels.priority.concat(
-        state.labels.qualifier),
+        state.labels.ack.concat(
+          state.labels.qualifier)),
       error: state.issues.error
     }
   }, (dispatch) => {

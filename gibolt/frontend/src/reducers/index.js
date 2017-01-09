@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
 
 const initialLabels = {
-    priority: [{text: 'sprint', color: '#009800'}],
+    priority: [{text: 'Urgent', color: '#e73c7d'}],
+    ack: [],
     qualifier: []
 }
 

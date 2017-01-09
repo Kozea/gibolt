@@ -2,7 +2,11 @@
 
 .Label
   &__item--active &__link
-      background: $checked-label
+      background: $active-label
+      color: #fefeff
+
+  &__item--negative &__link
+      background: $negative-label
       color: #fefeff
 
   &__link
@@ -11,7 +15,7 @@
     color: #fefeff
 
     &:hover
-      background: $checked-label
+      background: $active-label
       cursor: pointer
 
   &__bullet

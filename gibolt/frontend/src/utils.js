@@ -27,13 +27,14 @@ export const usersFromState = (state) => ({
 
 
 export const labelsFromState = (state) => ({
-  priority: strToList(state.router.query['priority']) || ['sprint'],
+  priority: strToList(state.router.query['priority']) || ['Urgent'],
+  ack: strToList(state.router.query['ack']) || [],
   qualifier: strToList(state.router.query['qualifier']) || []
 })
 
 export const allLabelsFromState = (state) => {
   let labels = labelsFromState(state)
-  return labels.priority.concat(labels.qualifier)
+  return labels.priority.concat(labels.ack.concat(labels.qualifier))
 }
 
 export const timelineRangeFromState = (state) => {
@@ -65,13 +66,12 @@ export const filterIssuesOnState = (issues, state) => {
 }
 
 export const filterIssuesOnLabels = (issues, state) => {
-  var labels = allLabelsFromState(state)
-  let index = labels.indexOf('')
-  if (index > -1) {
-    labels.splice(index, 1)
-  }
+  const labels = allLabelsFromState(state).filter(x => x != '')
+  const positiveLabels = labels.filter(x => x[0] != '-')
+  const negativeLabels = labels.filter(x => x[0] == '-').map(x => x.slice(1))
   return issues.filter((issue) =>
-    (labels.filter(label => !issue.labels.find(({ name }) => label == name)).length == 0)
+    (positiveLabels.filter(label => !issue.labels.find(({ name }) => label == name)).length == 0) &&
+    (negativeLabels.filter(label => issue.labels.find(({ name }) => label == name)).length == 0)
   )
 }
 

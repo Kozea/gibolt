@@ -7,16 +7,18 @@ import { setPreset } from '../actions'
 import './Presets.sass'
 
 const PRESETS = (user) => ({
-  my_sprint: {
+  urgent: {
     state: 'all',
     grouper: 'state',
-    priority: 'sprint',
+    priority: 'Urgent',
+    ack: '',
     assignee: user
   },
   my_tickets: {
     state: 'open',
     grouper: 'project',
     priority: '',
+    ack: '',
     assignee: '',
     involves: user
   },
@@ -24,6 +26,7 @@ const PRESETS = (user) => ({
     state: 'all',
     grouper: 'nogroup',
     priority: 'sprint',
+    ack: '',
     assignee: ''
   }
 })
@@ -36,9 +39,9 @@ function Presets({ pathname, query, user }) {
       <h1 className={ b('title') }>Gibolt</h1>
       <nav>
         <ul className={ b('nav') }>
-          <Preset action={{ pathname: '/', query: userPreset.my_sprint }}
-                  active={ pathname == '/' && equal({...userPreset.my_sprint, ...query}, userPreset.my_sprint) }>
-            My Sprint
+          <Preset action={{ pathname: '/', query: userPreset.urgent }}
+                  active={ pathname == '/' && equal({...userPreset.urgent, ...query}, userPreset.urgent) }>
+            My urgency
           </Preset>
             <Preset action={{ pathname: '/', query: userPreset.my_tickets }}
                     active={ pathname == '/' && equal(query, userPreset.my_tickets) }>

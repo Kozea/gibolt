@@ -185,7 +185,9 @@ def repository():
     current_labels = github.get('repos/{0}/{1}/labels'.format(
         app.config['ORGANISATION'], repository_name))
     config_labels = (
-        app.config.get('PRIORITY_LABELS') + app.config.get('QUALIFIER_LABELS'))
+        app.config.get('PRIORITY_LABELS') +
+        app.config.get('ACK_LABELS') +
+        app.config.get('QUALIFIER_LABELS'))
     missing_labels = []
     overly_labels = []
     for name, color in config_labels:
@@ -255,6 +257,10 @@ def index(path=None):
                 'text': text,
                 'color': '#%s' % color
             } for text, color in app.config['PRIORITY_LABELS']],
+            'ack': [{
+                'text': text,
+                'color': '#%s' % color
+            } for text, color in app.config['ACK_LABELS']],
             'qualifier': [{
                 'text': text,
                 'color': '#%s' % color

@@ -11,17 +11,23 @@ const b = block('Labels')
 function Labels({ labels, query, queryLabels, modifiers }) {
 
   const makeQuery = (label, type) => {
+    const nLabel = `-${label}`
     if (modifiers.shift || modifiers.ctrl) {
       if (queryLabels[type].find(x => x == label)) {
-        return { ...query, [type]: queryLabels[type].filter(x => x != label) }
+        return { ...query, [type]: [...queryLabels[type].filter(x => x != label), nLabel] }
+      } else if (queryLabels[type].find(x => x == nLabel)) {
+        return { ...query, [type]: queryLabels[type].filter(x => x != nLabel) }
       }
       return { ...query, [type]: [...queryLabels[type], label] }
     }
 
-    if (type == 'priority' &&
-        queryLabels[type].find(x => x == label) &&
-        queryLabels[type].filter(x => x != label).length == 1) {
-      return { ...query, [type]: ['']}
+    if (queryLabels[type].find(x => x == label)) {
+      return { ...query, [type]: [...queryLabels[type].filter(x => x != label), nLabel] }
+    }
+
+    if (queryLabels[type].find(x => x == nLabel) &&
+        queryLabels[type].filter(x => x != nLabel).length == 0) {
+      return { ...query, [type]: [''] }
     }
 
     return { ...query, [type]: [label] }
@@ -29,7 +35,7 @@ function Labels({ labels, query, queryLabels, modifiers }) {
 
   return (
     <aside className={ b }>
-      { ['priority', 'qualifier'].map((type) =>
+      { ['priority', 'ack', 'qualifier'].map((type) =>
         <ul key={ type } className={ b('set', { type }) }>
           { labels[type].map((label) =>
             <Label
@@ -37,7 +43,8 @@ function Labels({ labels, query, queryLabels, modifiers }) {
               label={ label.text }
               color={ label.color }
               action={{ pathname: '/', query: makeQuery(label.text, type) }}
-              active={ queryLabels[type].find((x) => (x == label.text)) !== undefined } />
+              active={{ active: queryLabels[type].find(x => x == label.text) != undefined,
+                negative: queryLabels[type].find(x => x == `-${label.text}`) != undefined }} />
           )}
         </ul>
       )}

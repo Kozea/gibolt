@@ -10,7 +10,7 @@ export default function Label({ action, active, label, color, onClick}) {
     e.shiftKey = e.altKey = e.ctrlKey = false
   }
   return (
-    <li className={ b('item', { active: active }) }>
+    <li className={ b('item', active) }>
       <Link className={ b('link') } href={ action } onClick={ removeModifiers }>
         <span className={ b('bullet') } style={{ backgroundColor: color }}/>
         { label }
