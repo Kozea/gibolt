@@ -35,6 +35,14 @@ export const setError = (error, target) => {
   }
 }
 
+export const setModifier = (modifier, state) => {
+  return {
+    type: 'SET_MODIFIER',
+    modifier,
+    state
+  }
+}
+
 const stateToParams = (state, target) => {
   switch (target) {
     case 'issues':

@@ -6,9 +6,12 @@ import './Label.sass'
 
 const b = block('Label')
 export default function Label({ action, active, label, color, onClick}) {
+  const removeModifiers = e => {
+    e.shiftKey = e.altKey = e.ctrlKey = false
+  }
   return (
     <li className={ b('item', { active: active }) }>
-      <Link className={ b('link') } href={ action } >
+      <Link className={ b('link') } href={ action } onClick={ removeModifiers }>
         <span className={ b('bullet') } style={{ backgroundColor: color }}/>
         { label }
       </Link>

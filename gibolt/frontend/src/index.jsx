@@ -5,7 +5,7 @@ import { RouterProvider, routerForBrowser, initializeCurrentLocation } from 'red
 import { createStore, applyMiddleware, dispatch } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
-import { fetchResults, setLoading } from './actions'
+import { fetchResults, setLoading, setModifier } from './actions'
 import routes from './routes'
 import reducer from './reducers'
 
@@ -70,6 +70,21 @@ let serverState = window.__PRELOADED_STATE__ || undefined
 let store = createStore(reducer, serverState, composeWithDevTools(
   routerEnhancer, applyMiddleware(routerMiddleware, autoLoadMiddleware, thunk)))
 
+;['keydown', 'keyup'].map(event =>
+  window.addEventListener(event, (e) => {
+    switch(e.keyCode) {
+      case 16:
+        store.dispatch(setModifier('shift', event == 'keydown'))
+        break
+      case 17:
+        store.dispatch(setModifier('ctrl', event == 'keydown'))
+        break
+      case 18:
+        store.dispatch(setModifier('alt', event == 'keydown'))
+        break
+    }
+  })
+)
 const initialLocation = store.getState().router
 if (initialLocation) {
   store.dispatch(initializeCurrentLocation(initialLocation))

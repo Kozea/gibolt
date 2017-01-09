@@ -177,6 +177,18 @@ const repository = (state=empty.repository, action) => {
 const users = (state=[], action) => state
 const user = (state=[], action) => state
 
+const modifiers = (state={ ctrl: false, shift: false, alt: false }, action) => {
+  switch (action.type) {
+    case 'SET_MODIFIER':
+      return {
+        ...state,
+        [action.modifier]: action.state
+      }
+    default:
+      return state
+  }
+}
+
 const reducer = combineReducers({
   labels,
   search,
@@ -187,6 +199,7 @@ const reducer = combineReducers({
   repository,
   users,
   user,
+  modifiers,
 })
 
 export default reducer

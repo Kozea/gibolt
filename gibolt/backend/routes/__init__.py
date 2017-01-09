@@ -304,6 +304,11 @@ def index(path=None):
             'mustLoad': True,
             'error': None
         },
+        'modifiers': {
+            'ctrl': False,
+            'shift': False,
+            'alt': False,
+        },
         'users': [user['login'] for user in users],
         'user': session['login'],
     }
