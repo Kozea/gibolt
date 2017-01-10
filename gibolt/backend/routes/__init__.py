@@ -77,7 +77,11 @@ def issues():
     end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
     query = ''
     for value in params.pop('labels', []):
-        query += "+label:{0}".format(value)
+        query += '+'
+        if value[0] == '-':
+            query += '+-label:"{0}"'.format(value[1:])
+        else:
+            query += '+label:"{0}"'.format(value)
     search = params.pop('search')
     if search:
         query += "+{0}".format(search)
