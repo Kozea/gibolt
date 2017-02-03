@@ -1,7 +1,7 @@
 image: python:3.5
 
 before_script:
-  - apt-get update && apt-get install nodejs npm
+  - apt-get update && apt-get install -y nodejs npm
   - npm install -G yarn
 
 
