@@ -1,11 +1,11 @@
-image: python:3.5
+#image: python:3.5
+#
+#before_script:
+#  - apt-get update && apt-get install -y nodejs npm
+#  - npm install -G yarn
 
-before_script:
-  - apt-get update && apt-get install -y nodejs npm
-  - npm install -G yarn
 
-
-#image: paradoxxxzero/python-node-yarn-postgresql
+image: paradoxxxzero/python-node-yarn-postgresql:3.5-7.2-9.6
 
 #before_script:
 #  - apt-get update && apt-get install apt-transport-https
@@ -56,7 +56,7 @@ test3.5:
 
 
 install_latest:
-  image: python:latest
+  image: paradoxxxzero/python-node-yarn-postgresql:3.6-7.5-9.6
   stage: install
   script:
     - make install
@@ -66,7 +66,7 @@ install_latest:
       - .env/
 
 build_latest:
-  image: python:latest
+  image: paradoxxxzero/python-node-yarn-postgresql:3.6-7.5-9.6
   stage: build
   script: make build
   artifacts:
@@ -76,14 +76,14 @@ build_latest:
     - install_latest
 
 lint_latest:
-  image: python:latest
+  image: paradoxxxzero/python-node-yarn-postgresql:3.6-7.5-9.6
   stage: test
   script: make lint
   dependencies:
     - build_latest
 
 test_latest:
-  image: python:latest
+  image: paradoxxxzero/python-node-yarn-postgresql:3.6-7.5-9.6
   stage: test
   script: make check
   dependencies:
