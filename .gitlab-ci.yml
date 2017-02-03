@@ -1,7 +1,11 @@
 image: python:3.5
 
 services:
-  - kkarczmarczyk/node-yarn:latest
+  - node:latest
+
+before_script:
+  - npm install -G yarn
+
 
 #image: paradoxxxzero/python-node-yarn-postgresql
 
