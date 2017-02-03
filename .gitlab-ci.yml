@@ -1,24 +1,35 @@
-image: python:3.5
+image: paradoxxxzero/python-node-yarn-postgresql
 
 cache:
    key: "$CI_BUILD_REF_NAME"
    untracked: true
 
 stages:
+  - install
   - build
   - test
 
 install:
-  stage: build
-  script: make install
+  stage: install
+  script:
+    - make install
+
+  artifacts:
+    paths:
+      - node_modules/
+      - .env/
 
 build:
   stage: build
   script: make build
 
+  artifacts:
+    paths:
+      - gibolt/frontend/static/
+
 lint:
   stage: test
-  script: make
+  script: make lint
 
 test:
   stage: test
