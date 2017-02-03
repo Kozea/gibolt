@@ -1,4 +1,9 @@
-image: paradoxxxzero/python-node-yarn-postgresql
+image: python:3.5
+
+services:
+    - kkarczmarczyk:node-yarn
+
+#image: paradoxxxzero/python-node-yarn-postgresql
 
 #before_script:
 #  - apt-get update && apt-get install apt-transport-https
