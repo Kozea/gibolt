@@ -1,7 +1,7 @@
 image: python:3.5
 
 services:
-    - kkarczmarczyk:node-yarn
+  - kkarczmarczyk/node-yarn:latest
 
 #image: paradoxxxzero/python-node-yarn-postgresql
 
