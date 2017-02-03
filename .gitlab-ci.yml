@@ -1,4 +1,9 @@
-image: paradoxxxzero/python-node-yarn-postgresql
+image: python:3.5
+
+before_script:
+  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+  - apt-get update && apt-get install yarn
 
 cache:
    key: "$CI_BUILD_REF_NAME"
@@ -9,28 +14,67 @@ stages:
   - build
   - test
 
-install:
+install3.5:
   stage: install
   script:
     - make install
-
   artifacts:
     paths:
       - node_modules/
       - .env/
 
-build:
+build3.5:
   stage: build
   script: make build
-
   artifacts:
     paths:
       - gibolt/frontend/static/
+  dependencies:
+    - install3.5
 
-lint:
+lint3.5:
   stage: test
   script: make lint
+  dependencies:
+    - build3.5
 
-test:
+test3.5:
   stage: test
   script: make check
+  dependencies:
+    - build3.5
+
+
+install_latest:
+  image: python:latest
+  stage: install
+  script:
+    - make install
+  artifacts:
+    paths:
+      - node_modules/
+      - .env/
+
+build_latest:
+  image: python:latest
+  stage: build
+  script: make build
+  artifacts:
+    paths:
+      - gibolt/frontend/static/
+  dependencies:
+    - install_latest
+
+lint_latest:
+  image: python:latest
+  stage: test
+  script: make lint
+  dependencies:
+    - build_latest
+
+test_latest:
+  image: python:latest
+  stage: test
+  script: make check
+  dependencies:
+    - build_latest
