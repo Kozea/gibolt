@@ -1,19 +1,4 @@
-#image: python:3.5
-#
-#before_script:
-#  - apt-get update && apt-get install -y nodejs npm
-#  - npm install -G yarn
-
-
 image: paradoxxxzero/python-node-yarn-postgresql:3.5-7.2-9.6
-
-#before_script:
-#  - apt-get update && apt-get install apt-transport-https
-#  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-#  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-#  - apt-get update && apt-get install yarn npm
-#  - export PATH="$PATH:`yarn global bin`"
-#  - npm install nodejs
 
 cache:
    key: "$CI_BUILD_REF_NAME"
@@ -39,6 +24,8 @@ build3.5:
   artifacts:
     paths:
       - gibolt/frontend/static/
+      - node_modules/
+      - .env/
   dependencies:
     - install3.5
 
@@ -72,6 +59,8 @@ build_latest:
   artifacts:
     paths:
       - gibolt/frontend/static/
+      - node_modules/
+      - .env/
   dependencies:
     - install_latest
 
