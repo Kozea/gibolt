@@ -84,6 +84,4 @@
 
 
 deploy_test:
-  stage: deploy_test
-  script:
-      - curl -m 3600 -H "Content-Type: application/json" -X POST -d '{"token":"$TOKEN", "url":"$CI_BUILD_REPO"}' $GERALDINE/deploy_test
+  script: 'curl -m 3600 -H "Content-Type: application/json" -X POST -d \'{"token":"$TOKEN", "url":"$CI_BUILD_REPO"}\' $GERALDINE/deploy_test'
