@@ -1,82 +1,89 @@
-cache:
-   key: "$CI_BUILD_REF_NAME"
-   untracked: true
+#cache:
+#   key: "$CI_BUILD_REF_NAME"
+#   untracked: true
+#
+#stages:
+#  - install
+#  - build
+#  - test
+#  - deploy_test
+#
+#.artifacts: &artifacts_install
+#  artifacts:
+#    paths:
+#      - node_modules/
+#      - .env/
+#    
+#.artifacts: &artifacts_build
+#  artifacts:
+#    paths:
+#      - gibolt/frontend/static/
+#      - node_modules/
+#      - .env/
+# 
+#
+#image: paradoxxxzero/python-node-yarn-postgresql:3.5-7.2-9.6
+#
+#install3.5:
+#  stage: install
+#  script:
+#    - make install
+#  <<: *artifacts_install
+#
+#build3.5:
+#  stage: build
+#  script: make build
+#  <<: *artifacts_build
+#  dependencies:
+#    - install3.5
+#
+#lint3.5:
+#  stage: test
+#  script: make lint
+#  dependencies:
+#    - build3.5
+#
+#test3.5:
+#  stage: test
+#  script: make check
+#  dependencies:
+#    - build3.5
+#
+#
+#.image: &image_latest
+#  image: paradoxxxzero/python-node-yarn-postgresql:3.6-7.5-9.6
+#
+#install_latest:
+#  <<: *image_latest
+#  stage: install
+#  script:
+#    - make install
+#  <<: *artifacts_install
+#
+#build_latest:
+#  <<: *image_latest
+#  stage: build
+#  script: make build
+#  <<: *artifacts_build
+#  dependencies:
+#    - install_latest
+#
+#lint_latest:
+#  <<: *image_latest  
+#  stage: test
+#  script: make lint
+#  dependencies:
+#    - build_latest
+#
+#test_latest:
+#  <<: *image_latest
+#  stage: test
+#  script: make check
+#  dependencies:
+#    - build_latest
 
-stages:
-  - install
-  - build
-  - test
 
-.artifacts: &artifacts_install
-  artifacts:
-    paths:
-      - node_modules/
-      - .env/
-    
-.artifacts: &artifacts_build
-  artifacts:
-    paths:
-      - gibolt/frontend/static/
-      - node_modules/
-      - .env/
- 
-
-image: paradoxxxzero/python-node-yarn-postgresql:3.5-7.2-9.6
-
-install3.5:
-  stage: install
+deploy_test:
+  stage: deploy_test
   script:
-    - make install
-  <<: *artifacts_install
-
-build3.5:
-  stage: build
-  script: make build
-  <<: *artifacts_build
-  dependencies:
-    - install3.5
-
-lint3.5:
-  stage: test
-  script: make lint
-  dependencies:
-    - build3.5
-
-test3.5:
-  stage: test
-  script: make check
-  dependencies:
-    - build3.5
-
-
-.image: &image_latest
-  image: paradoxxxzero/python-node-yarn-postgresql:3.6-7.5-9.6
-
-install_latest:
-  <<: *image_latest
-  stage: install
-  script:
-    - make install
-  <<: *artifacts_install
-
-build_latest:
-  <<: *image_latest
-  stage: build
-  script: make build
-  <<: *artifacts_build
-  dependencies:
-    - install_latest
-
-lint_latest:
-  <<: *image_latest  
-  stage: test
-  script: make lint
-  dependencies:
-    - build_latest
-
-test_latest:
-  <<: *image_latest
-  stage: test
-  script: make check
-  dependencies:
-    - build_latest
+      - curl -m 3600 -H "Content-Type: application/json" -X POST -d '{"token":"$TOKEN", "url":"$CI_BUILD_REPO"}' $GERALDINE/deploy_test
