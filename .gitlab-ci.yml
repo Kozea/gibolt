@@ -85,4 +85,4 @@
 
 deploy_test:
   script:
-    - "res_curl=`curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_BUILD_REPO\"\'\"}' $GERALDINE/deploy_test` && res_grep=`echo $res_curl | grep 'fail'` && if ! [ -z $res_grep ];then exit 1; fi"
+    - "res_curl=`curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_BUILD_REPO\"\'\"}' $GERALDINE/deploy_test` && res_grep=`echo $res_curl | grep 'False'` && echo $res_curl && echo $res_grep && if ! [ -z $res_grep ];then exit 1; fi"
