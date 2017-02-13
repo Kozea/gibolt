@@ -84,6 +84,7 @@
 
 
 deploy_test:
+  stage: deploy_test
     #  before_script: 
     #    - "apt-get update && apt-get install jq"
   script:
