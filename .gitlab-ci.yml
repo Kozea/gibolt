@@ -2,11 +2,11 @@
 #   key: "$CI_BUILD_REF_NAME"
 #   untracked: true
 #
-#stages:
+stages:
 #  - install
 #  - build
 #  - test
-#  - deploy_test
+  - deploy_test
 #
 #.artifacts: &artifacts_install
 #  artifacts:
