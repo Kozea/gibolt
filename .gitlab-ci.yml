@@ -88,4 +88,4 @@ deploy_test:
   before_script: 
     - "apt-get update && apt-get install jq"
   script:
-    - "res_curl=`curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_BUILD_REPO\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'` | exit $res_curl"
+    - "exit `curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_BUILD_REPO\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'`"
