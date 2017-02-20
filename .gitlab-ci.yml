@@ -91,7 +91,7 @@ deploy_test:
   script:
     - "exit `curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_BUILD_REPO\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'`"
   dependencies: []
-  except: 
+  only: 
     - branches
 
 
