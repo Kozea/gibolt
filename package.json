@@ -78,6 +78,7 @@
   "scripts": {
     "static-server": "node static-dev-server.js",
     "render-server": "nodemon --watch gibolt/frontend/src -e js,jsx render-server.js",
+    "render-server-production": "node render-server.js",
     "build": "webpack --progress --profile --colors",
     "lint": "eslint --ext .jsx --ext .js gibolt/frontend/src/",
     "test": "node --harmony ./node_modules/jest-cli/bin/jest.js --no-cache"
