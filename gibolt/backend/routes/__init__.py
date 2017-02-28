@@ -43,7 +43,6 @@ def autologin(f):
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     return github.authorize(scope="repo", redirect_uri=app.config['GITHUB_REDIRECT'])
-)
 
 
 @github.access_token_getter
