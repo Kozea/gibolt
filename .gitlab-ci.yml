@@ -91,14 +91,12 @@ deploy_test:
   script:
       - "exit `curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_BUILD_REPO\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\", \"branch\":\"\'\"$CI_BUILD_REF_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'`"
   dependencies: []
-  only: 
-    - branches
 
 
 deploy_prod:
   stage: deploy_prod
   script:
-    - echo "deploy_prod"
+    - "exit `curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'`"
   dependencies: []
   only: 
     - master
