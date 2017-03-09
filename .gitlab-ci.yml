@@ -84,7 +84,11 @@ test_latest:
     - build_latest
 
 
+.image: &image_deploy_jobs
+  image: debian:latest
+      
 deploy_test:
+  <<: *image_deploy_jobs
   stage: deploy_test
   before_script: 
     - "apt-get update && apt-get install jq"
@@ -94,6 +98,7 @@ deploy_test:
 
 
 deploy_prod:
+  <<: *image_deploy_jobs
   stage: deploy_prod
   script:
     - "exit `curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'`"
