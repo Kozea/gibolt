@@ -91,7 +91,7 @@ deploy_test:
   <<: *image_deploy_jobs
   stage: deploy_test
   before_script: 
-    - "apt-get update && apt-get install jq"
+    - "apt-get update && apt-get install jq curl"
   script:
       - "exit `curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_BUILD_REPO\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\", \"branch\":\"\'\"$CI_BUILD_REF_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'`"
   dependencies: []
@@ -100,6 +100,8 @@ deploy_test:
 deploy_prod:
   <<: *image_deploy_jobs
   stage: deploy_prod
+  before_script:
+    - "apt-get update && apt-get install curl"
   script:
     - "exit `curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'`"
   dependencies: []
