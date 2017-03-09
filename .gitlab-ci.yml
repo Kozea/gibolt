@@ -103,7 +103,7 @@ deploy_prod:
   before_script:
     - "apt-get update && apt-get install -y curl"
   script:
-    - "exit `curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'`"
+    - "exit `curl -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"token\":\"\'\"$TOKEN\"\'\", \"build_stage\":\"\'\"$CI_BUILD_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\", \"branch\":\"\'\"$CI_BUILD_REF_NAME\"\'\"}' $GERALDINE/deploy | jq -r \'.success\'`"
   dependencies: []
   only: 
     - master
