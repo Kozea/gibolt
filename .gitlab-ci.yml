@@ -1,7 +1,3 @@
-cache:
-   key: "$CI_COMMIT_REF_NAME"
-   untracked: true
-
 stages:
   - install
   - build
