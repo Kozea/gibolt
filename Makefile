@@ -8,7 +8,7 @@ install-node:
 # https://github.com/pypa/setuptools/issues/951
 install-python:
 	test -d $(VENV) || virtualenv $(VENV)
-	$(PIP) install --upgrade --no-cache pip setuptools==33.1.1 -e .[test]
+	$(PIP) install --upgrade --no-cache pip setuptools -e .[test]
 
 install: install-node install-python
 
