@@ -93,16 +93,13 @@ export const fetchResults = (target) => {
       body: JSON.stringify(stateToParams(state, target))
     })
     .then(response => {
-        return {'json': response.json(), 'response': response}
+      if (response.status >= 200 && response.status < 300) {
+        return response.json()
+      }
+      throw (new Error(`[${ response.status }] ${ response.statusText }`))
     })
-    .then(json_and_response => {
-          var json = json_and_response.json
-          var response = json_and_response.response
-          if (response.status >= 200 && response.status < 300) {
-            dispatch(maybeSetResults(json, target))
-          }
-          throw (new Error(`[${ response.status }] ${ response.statusText } ${json}`))
-
+    .then(json => {
+      dispatch(maybeSetResults(json, target))
     })
     .catch(error => dispatch(setError(error.toString(), target)))
   }
