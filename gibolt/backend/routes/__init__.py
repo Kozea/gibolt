@@ -7,8 +7,8 @@ import requests
 from cachecontrol import CacheControl
 from cachecontrol.caches.file_cache import FileCache
 from cachecontrol.controller import CacheController
-from flask import (
-    flash, jsonify, redirect, render_template, request, session, url_for)
+from flask import (flash, jsonify, redirect, render_template, request, session,
+                   url_for)
 from flask_github import GitHub, GitHubError
 
 from .. import app
@@ -68,7 +68,7 @@ class GitHubController(CacheController):
 github = GitHub(app)
 github.session = CacheControl(
     requests.Session(),
-    cache=FileCache('.web_cache'),
+    cache=FileCache('/tmp/gibolt-cache'),
     controller_class=GitHubController
 )
 cache = {'users': {}}
