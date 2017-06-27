@@ -12,6 +12,9 @@ install-python:
 
 install: install-node install-python
 
+install-dev:
+	$(PIP) install --upgrade devcore
+
 clean:
 	rm -fr dist
 
