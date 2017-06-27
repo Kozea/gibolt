@@ -2,19 +2,75 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from functools import wraps
 
-import requests
-from flask import (
-    flash, redirect, render_template, request, session, url_for, jsonify)
-
 import pytz
+import requests
 from cachecontrol import CacheControl
+from cachecontrol.caches.file_cache import FileCache
+from cachecontrol.controller import CacheController
+from flask import (
+    flash, jsonify, redirect, render_template, request, session, url_for)
 from flask_github import GitHub, GitHubError
-from ..utils import render_component
+
 from .. import app
+from ..utils import render_component
+
+
+class GitHubController(CacheController):
+    def update_cached_response(self, request, response):
+        """On a 304 we will get a new set of headers that we want to
+        update our cached value with, assuming we have one.
+
+        This should only ever be called when we've sent an ETag and
+        gotten a 304 as the response.
+        """
+        cache_url = self.cache_url(request.url)
+
+        cached_response = self.serializer.loads(
+            request,
+            self.cache.get(cache_url)
+        )
+
+        if not cached_response:
+            # we didn't have a cached response
+            return response
+
+        # Lets update our headers with the headers from the new request:
+        # http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-26#section-4.1
+        #
+        # The server isn't supposed to send headers that would make
+        # the cached body invalid. But... just in case, we'll be sure
+        # to strip out ones we know that might be problmatic due to
+        # typical assumptions.
+        # the big change is here as flask_github check for content_type we want
+        # to keep the original content-type
+        excluded_headers = [
+            "content-length",
+            "content-type",
+        ]
+
+        cached_response.headers.update(
+            dict((k, v) for k, v in response.headers.items()
+                 if k.lower() not in excluded_headers)
+        )
+
+        # we want a 200 b/c we have content via the cache
+        cached_response.status = 200
+
+        # update our cache
+        self.cache.set(
+            cache_url,
+            self.serializer.dumps(request, cached_response),
+        )
+
+        return cached_response
 
 
 github = GitHub(app)
-github.session = CacheControl(requests.session())
+github.session = CacheControl(
+    requests.Session(),
+    cache=FileCache('.web_cache'),
+    controller_class=GitHubController
+)
 cache = {'users': {}}
 
 
@@ -91,8 +147,12 @@ def issues():
             query += "+{0}:{1}".format(key, value)
     # use new github api with this additional header allow to get assignees.
     headers = {'Accept': 'application/vnd.github.cerberus-preview'}
-    response = github.get(
-        url + end_url + query, all_pages=True, headers=headers)
+    try:
+        response = github.get(
+            url + end_url + query, all_pages=True, headers=headers)
+    except GitHubError as e:
+        message = return_github_message(e.response)
+        return message
     issues = response.get('items')
     for issue in issues:
         issue['selected'] = False
@@ -119,7 +179,10 @@ def timeline():
         for name in repos_name:
             repo = {}
             repos.append(repo)
-            executor.submit(refresh_repo_milestones, name, repo, user)
+            try:
+                executor.submit(refresh_repo_milestones, name, repo, user)
+            except GitHubError:
+                return GitHubError.__str__(), 403
     for repo in repos:
         milestones.extend(repo.get('milestones', []))
 
@@ -153,7 +216,10 @@ def report():
     url = (
         'orgs/{0}/issues?per_page=100&state=closed&filter=all&since={1}'
         .format(app.config['ORGANISATION'], since))
-    issues = github.get(url, all_pages=True)
+    try:
+        issues = github.get(url, all_pages=True)
+    except GitHubError:
+        return GitHubError.__str__(), 403
     ok_issues = []
     # assignees = []
     for issue in issues:
@@ -255,7 +321,12 @@ def users():
 def index(path=None):
     url = 'orgs/{0}/members'.format(app.config['ORGANISATION'])
     users = github.get(url, all_pages=True)
-
+    assert isinstance(users, list)
+    # j'arrive pas à le faire replanté mais je pense que le problème viens du
+    # de mon patch sur flask_github.py ligne 180, si on a une response,
+    # c'est que le content-type n'est pa application/json alors que ça devrait
+    # si une erreur se produit il faut voir ce que contient
+    # users.headers['Content-Type'] et corriger la lib
     state = {
         'labels': {
             'priority': [{
@@ -367,3 +438,8 @@ def refresh_repo_milestones(repo_name, repo, access_token):
             total = milestone['closed_issues'] + milestone['open_issues']
             milestone['progress'] = (
                 milestone['closed_issues'] / (total or float('inf')))
+
+
+def return_github_message(github_response):
+    return (
+        github_response.json()['message'], github_response.status_code)

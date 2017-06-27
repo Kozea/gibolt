@@ -1,7 +1,10 @@
-import React, { Component } from 'react'
-var ReactMarkdown = require('react-markdown')
-import { block } from '../utils'
 import './Issue.sass'
+
+import React, { Component } from 'react'
+
+import { block } from '../utils'
+
+var ReactMarkdown = require('react-markdown')
 
 
 const b = block('Issue')

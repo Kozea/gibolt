@@ -29,6 +29,7 @@ setup(
         "Flask>=0.10.0",
         "GitHub-Flask>=3.1.2",
         "CacheControl",
+        "lockfile",
         "python-dateutil",
         "pytz"
     ],

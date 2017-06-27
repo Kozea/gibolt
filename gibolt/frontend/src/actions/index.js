@@ -1,9 +1,14 @@
-import fetch from 'isomorphic-fetch'
-import equal from 'deep-equal'
-import { PUSH } from 'redux-little-router'
-import { allLabelsFromState, usersFromState, timelineRangeFromState,
-  reportRangeFromState, repositoryNameFromState } from '../utils'
+import {
+  allLabelsFromState,
+  reportRangeFromState,
+  repositoryNameFromState,
+  timelineRangeFromState,
+  usersFromState,
+} from '../utils'
 
+import { PUSH } from 'redux-little-router'
+import equal from 'deep-equal'
+import fetch from 'isomorphic-fetch'
 
 export const search = (search) => {
   return {
@@ -88,16 +93,21 @@ export const fetchResults = (target) => {
       body: JSON.stringify(stateToParams(state, target))
     })
     .then(response => {
-        if (response.status >= 200 && response.status < 300) {
-          return response
-        }
-        throw new Error(`[${ response.status }] ${ response.statusText }`)
+        return {'json': response.json(), 'response': response}
     })
-    .then(response => response.json())
-    .then(json => dispatch(maybeSetResults(json, target)))
+    .then(json_and_response => {
+          var json = json_and_response.json
+          var response = json_and_response.response
+          if (response.status >= 200 && response.status < 300) {
+            dispatch(maybeSetResults(json, target))
+          }
+          throw (new Error(`[${ response.status }] ${ response.statusText } ${json}`))
+
+    })
     .catch(error => dispatch(setError(error.toString(), target)))
   }
 }
+
 
 export const postChangeSelectedIssuesPriority = (change) => {
   return (dispatch, getState) => {
@@ -120,7 +130,10 @@ export const postChangeSelectedIssuesPriority = (change) => {
         if (response.status >= 200 && response.status < 300) {
           return response
         }
-        throw new Error(`[${ response.status }] ${ response.statusText }`)
+        response.text().then(text => {
+            throw new Error(`[${ response.status }] ${ response.statusText } ${ text }`)
+        })
+
     })
     .then(response => response.json())
     .then(() => dispatch(fetchResults('issues')))
