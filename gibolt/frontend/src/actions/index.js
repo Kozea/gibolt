@@ -82,26 +82,42 @@ const maybeSetResults = (json, target) => {
 }
 
 export const fetchResults = (target) => {
-  return (dispatch, getState) => {
-    let state = getState()
-    fetch(`/${ target }.json`, {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(stateToParams(state, target))
-    })
-    .then(response => {
-      if (response.status >= 200 && response.status < 300) {
-        return response.json()
+  return async (dispatch, getState) => {
+    let response, json
+    try {
+      let state = getState()
+      response = await fetch(`/${ target }.json`, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(stateToParams(state, target))
+      })
+    } catch (e) {
+      console.error(e)
+      return dispatch(setError('Erreur pendant la récupération des données'))
+    }
+    if (response.status >= 200 && response.status < 300) {
+      try {
+        json = await response.json()
+      } catch (e) {
+        return dispatch(setError('La réponse ne contient pas de json'))
       }
-      throw (new Error(`[${ response.status }] ${ response.statusText }`))
-    })
-    .then(json => {
-      dispatch(maybeSetResults(json, target))
-    })
-    .catch(error => dispatch(setError(error.toString(), target)))
+      return dispatch(maybeSetResults(json, target))
+    } else {
+      try {
+        json = await response.json()
+      } catch (e) {
+        return dispatch(setError('La réponse ne contient pas de json'))
+      }
+      return dispatch(
+        setError(
+          `${response.status}: ${response.statusText} ${json.message}`,
+          target
+        )
+      )
+    }
   }
 }
 

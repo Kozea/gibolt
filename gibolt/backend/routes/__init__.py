@@ -151,8 +151,7 @@ def issues():
         response = github.get(
             url + end_url + query, all_pages=True, headers=headers)
     except GitHubError as e:
-        message = return_github_message(e.response)
-        return message
+        return e.response.content, e.response.status_code
     issues = response.get('items')
     for issue in issues:
         issue['selected'] = False
@@ -181,8 +180,8 @@ def timeline():
             repos.append(repo)
             try:
                 executor.submit(refresh_repo_milestones, name, repo, user)
-            except GitHubError:
-                return GitHubError.__str__(), 403
+            except GitHubError as e:
+                return e.response.content, e.response.status_code
     for repo in repos:
         milestones.extend(repo.get('milestones', []))
 
@@ -218,8 +217,8 @@ def report():
         .format(app.config['ORGANISATION'], since))
     try:
         issues = github.get(url, all_pages=True)
-    except GitHubError:
-        return GitHubError.__str__(), 403
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
     ok_issues = []
     # assignees = []
     for issue in issues:
