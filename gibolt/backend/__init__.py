@@ -10,8 +10,7 @@ except pkg_resources.DistributionNotFound:
 
 
 app = Flask(__name__)
-app.config.from_pyfile(os.getenv('FLASK_CONFIG'))
-app.config.from_envvar('GIBOLT_SETTINGS', silent=True)
+app.config.from_envvar('FLASK_CONFIG')
 
 app.config['RENDER_SERVER'] = os.getenv('RENDER_SERVER')
 app.config['STATIC_SERVER'] = os.getenv('STATIC_SERVER')
