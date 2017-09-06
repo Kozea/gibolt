@@ -91,7 +91,7 @@ deploy_test:
   script:
     - "branch_name=`echo $CI_COMMIT_REF_NAME | tr -cd '[[:alnum:]]'`"
     - "url_test=https://test-$CI_PROJECT_NAME-$branch_name.kozea.fr"
-    - "res_curl=`curl --http1.1 -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"job_id\":\"'\"$CI_JOB_ID\"'\", \"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_REPOSITORY_URL\"\'\", \"build_stage\":\"\'\"$CI_JOB_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\", \"branch\":\"\'\"$CI_COMMIT_REF_NAME\"\'\", \"password\":\"\'\"$PASSWD\"\'\", \"commit_sha\":\"\'\"$COMMIT_SHA\"\'\", \"url_test\":\"\'\"$url_test\"\'\"}' $JUNKRAT | jq -r \'.success\'`"
+    - "res_curl=`curl --http1.1 -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"job_id\":\"'\"$CI_JOB_ID\"'\", \"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_REPOSITORY_URL\"\'\", \"build_stage\":\"\'\"$CI_JOB_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\", \"branch\":\"\'\"$CI_COMMIT_REF_NAME\"\'\", \"password\":\"\'\"$PASSWD\"\'\", \"commit_sha\":\"\'\"$CI_COMMIT_SHA\"\'\", \"url_test\":\"\'\"$url_test\"\'\"}' $JUNKRAT | jq -r \'.success\'`"
     - "if [[ $res_curl = 1 ]]; then exit $res_curl;fi"
     - "get=`curl -u $CI_PROJECT_NAME:$PASSWD -s -o -I -w \"%{http_code}\" $url_test`"
     - "([[ $get = 302 || $get = 200 ]] && [[ $res_curl = 0 ]]) && exit_val=0 || exit_val=1 && exit $exit_val"
