@@ -152,14 +152,15 @@ export default connect(
       state.issues.results.issues,
       state
     )
+    const labels = state.labels.results
     return {
       labelFilteredIssues,
       issues: filterIssuesOnState(labelFilteredIssues, state),
       loading: state.issues.loading,
       grouper: grouperFromState(state),
       issuesState: issuesStateFromState(state),
-      availableLabels: state.labels.priority.concat(
-        state.labels.ack.concat(state.labels.qualifier)
+      availableLabels: labels.priority.concat(
+        labels.ack.concat(labels.qualifier)
       ),
       error: state.issues.error,
     }

@@ -371,10 +371,10 @@ def return_github_message(github_response):
     return (github_response.json()['message'], github_response.status_code)
 
 
-@app.route('/api/labels.json')
+@app.route('/api/labels.json', methods=['GET', 'POST'])
 def labels():
     return jsonify({
-        'labels': {
+        'results': {
             'priority': [{
                 'text': text,
                 'color': '#%s' % color
@@ -391,15 +391,15 @@ def labels():
     })
 
 
-@app.route('/api/user.json')
+@app.route('/api/user.json', methods=['GET', 'POST'])
 @autologin
 def user():
     return jsonify(({'user': session['login']}))
 
 
-@app.route('/api/users.json')
+@app.route('/api/users.json', methods=['GET', 'POST'])
 @autologin
 def users():
     url = 'orgs/{0}/members'.format(app.config['ORGANISATION'])
     users = github.get(url, all_pages=True)
-    return jsonify(({'users': users}))
+    return jsonify(({'results': users}))

@@ -16,9 +16,9 @@ function SelectUser({ type, query, users, values, onChangeUser }) {
       onChange={e => onChangeUser(e.target.value, type, query)}
     >
       <option value="">Anybody</option>
-      {users.map(user => (
-        <option key={user} value={user}>
-          {user}
+      {users.map(({ id, login }) => (
+        <option key={id} value={login}>
+          {login}
         </option>
       ))}
     </select>
@@ -30,7 +30,7 @@ export default connect(
     query: parse(state.router.location.search),
     values: usersFromState(state),
     user: state.user,
-    users: state.users,
+    users: state.users.results,
   }),
   dispatch => ({
     onChangeUser: (user, type, query) => {
