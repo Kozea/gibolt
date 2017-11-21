@@ -21,7 +21,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <main className={b}>
+      <main className={b()}>
         <Presets />
         <Switch>
           <Route path="/" component={IssuesDashboard} />
