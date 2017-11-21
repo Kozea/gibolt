@@ -7,7 +7,7 @@ import requests
 from cachecontrol import CacheControl
 from cachecontrol.caches.file_cache import FileCache
 from cachecontrol.controller import CacheController
-from flask import flash, jsonify, redirect, request, session, url_for
+from flask import abort, flash, jsonify, redirect, request, session, url_for
 from flask_github import GitHub, GitHubError
 
 from .. import app
@@ -109,13 +109,12 @@ def token_getter():
 @app.route('/api/callback')
 @github.authorized_handler
 def authorized(oauth_token):
-    next_url = request.args.get('next') or url_for('index')
     if oauth_token is None:
         flash("Authorization failed.")
-        return redirect(next_url)
+        return redirect('/oauth_error')
     session['user'] = oauth_token
     session['login'] = github.get('user')['login']
-    return redirect(next_url)
+    return redirect('/')
 
 
 def get_allowed_repos():
@@ -129,7 +128,6 @@ def get_allowed_repos():
 
 
 @app.route('/api/issues.json', methods=['GET', 'POST'])
-@autologin
 def issues():
     params = dict(request.get_json())
     url = 'search/issues'
@@ -168,7 +166,6 @@ def issues():
 
 
 @app.route('/api/timeline.json', methods=['GET', 'POST'])
-@autologin
 def timeline():
     params = dict(request.get_json())
     repos_name = cache['users'].get(session['user'])
@@ -206,7 +203,6 @@ def timeline():
 
 
 @app.route('/api/report.json', methods=['GET', 'POST'])
-@autologin
 def report():
     params = dict(request.get_json())
     start = params.get('start')
@@ -239,7 +235,6 @@ def report():
 
 
 @app.route('/api/repositories.json', methods=['GET', 'POST'])
-@autologin
 def repositories():
     app.config['ORGANISATION']
     return jsonify({
@@ -251,7 +246,6 @@ def repositories():
 
 
 @app.route('/api/repository.json', methods=['GET', 'POST'])
-@autologin
 def repository():
     repository_name = request.get_json()['name']
     repository = repository = github.get(
@@ -286,7 +280,6 @@ def repository():
 
 
 @app.route('/api/repository/create_labels', methods=['POST'])
-@autologin
 def create_repository_labels():
     repository_name = request.get_json()['name']
     labels = request.get_json()['labels']
@@ -304,7 +297,6 @@ def create_repository_labels():
 
 
 @app.route('/api/repository/delete_labels', methods=['POST'])
-@autologin
 def delete_repository_labels():
     repository_name = request.get_json()['name']
     labels = request.get_json()['labels']
@@ -320,7 +312,6 @@ def delete_repository_labels():
 
 
 @app.route('/api/apply_labels', methods=["POST"])
-@autologin
 def apply_labels():
     action = request.get_json().get('action')
     patched_issues = []
@@ -392,13 +383,13 @@ def labels():
 
 
 @app.route('/api/user.json', methods=['GET', 'POST'])
-@autologin
 def user():
-    return jsonify(({'user': session['login']}))
+    if 'login' not in session:
+        abort(403)
+    return jsonify({'user': session['login']})
 
 
 @app.route('/api/users.json', methods=['GET', 'POST'])
-@autologin
 def users():
     url = 'orgs/{0}/members'.format(app.config['ORGANISATION'])
     users = github.get(url, all_pages=True)

@@ -6,7 +6,7 @@ import RedBox from 'redbox-react'
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
-import { setModifier } from '../actions'
+import { setModifier, setUser } from '../actions'
 import App from '../components/App'
 import reducer from '../reducers'
 import Root from '../Root'
@@ -39,7 +39,20 @@ export const store = createStore(
   })
 )
 
-const renderRoot = handleError => {
+const renderRoot = async handleError => {
+  if (
+    location.pathname === '/oauth_error' ||
+    location.pathname === '/callback'
+  ) {
+    return
+  }
+  const response = await fetch('/api/user.json', { credentials: 'same-origin' })
+  if (response.status === 200) {
+    const { user } = await response.json()
+    store.dispatch(setUser(user))
+  } else {
+    location.href = '/api/login'
+  }
   try {
     // We render on dev server because there is no SSR
     const renderMode =
