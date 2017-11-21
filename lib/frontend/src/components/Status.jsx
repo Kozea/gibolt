@@ -1,23 +1,20 @@
-import React, { Component } from 'react'
-import { block } from '../utils'
-import IssuesState from './IssuesState'
-import Grouper from './Grouper'
-import Search from './Search'
 import './Status.sass'
 
-const b = block('Status')
-export default class Status extends Component {
-  constructor(props) {
-    super(props)
-  }
+import React from 'react'
 
-  render() {
-    return (
-      <aside className={ b }>
-        <IssuesState />
-        <Grouper />
-        <Search />
-      </aside>
-    )
-  }
+import { block } from '../utils'
+import Grouper from './Grouper'
+import IssuesState from './IssuesState'
+import Search from './Search'
+
+const b = block('Status')
+
+export default function Status() {
+  return (
+    <aside className={b()}>
+      <IssuesState />
+      <Grouper />
+      <Search />
+    </aside>
+  )
 }

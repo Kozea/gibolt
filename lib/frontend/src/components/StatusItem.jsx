@@ -1,20 +1,28 @@
-import React, { Component } from 'react'
-import { Link }  from 'redux-little-router'
-import { block } from '../utils'
 import './StatusItem.sass'
 
+import { stringify } from 'query-string'
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+import { block } from '../utils'
 
 const b = block('StatusItem')
+
 export default function StatusItem({ active, action, type, query, children }) {
   return (
-    <li className={ b({ active: active }) }>
-      <Link className={ b('link') } href={{
+    <li className={b({ active: active })}>
+      <Link
+        className={b('link')}
+        to={{
           pathname: '/',
-          query: {
+          search: stringify({
             ...query,
-            [type]: action
-          }
-        }}>{ children }</Link>
+            [type]: action,
+          }),
+        }}
+      >
+        {children}
+      </Link>
     </li>
   )
 }

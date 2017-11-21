@@ -1,28 +1,31 @@
-import React, { Component }  from 'react'
-import { connect } from 'react-redux'
-import { block } from '../utils'
-import { search, fetchResults } from '../actions'
 import './Search.sass'
 
+import React from 'react'
+
+import { fetchResults, search } from '../actions'
+import { block, connect } from '../utils'
 
 const b = block('Search')
+
 function Search({ search, onSearchChange }) {
   return (
-    <div className={ b }>
-      <input type="text" className={ b('input') }
-        value={ search }
-        onChange={ (e) => onSearchChange(e.target.value) } />
+    <div className={b()}>
+      <input
+        type="text"
+        className={b('input')}
+        value={search}
+        onChange={e => onSearchChange(e.target.value)}
+      />
     </div>
   )
 }
 
-export default connect((state) => {
-  return {search: state.search}
-}, (dispatch) => {
-  return {
-    onSearchChange: (value) => {
+export default connect(
+  state => ({ search: state.search }),
+  dispatch => ({
+    onSearchChange: value => {
       dispatch(search(value))
       dispatch(fetchResults('issues'))
-    }
-  }
-})(Search)
+    },
+  })
+)(Search)

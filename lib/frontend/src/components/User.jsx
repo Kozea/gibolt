@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Link }  from 'redux-little-router'
-import { block } from '../utils'
-import SelectUser from './SelectUser'
 import './User.sass'
 
+import React from 'react'
+
+import { block } from '../utils'
+import SelectUser from './SelectUser'
 
 const b = block('User')
-export default function User({ type, query, users, onChangeUser }) {
+
+export default function User() {
   return (
-    <div className={ b }>
+    <div className={b()}>
       <h3>Assignee</h3>
-      <SelectUser type='assignee' />
+      <SelectUser type="assignee" />
       <h3>Involves</h3>
-      <SelectUser type='involves' />
+      <SelectUser type="involves" />
     </div>
   )
 }

@@ -1,64 +1,111 @@
 include Makefile.config
+-include Makefile.custom.config
+.SILENT:
 
 all: install serve
 
+make-p:
+	# Launch all P targets in parallel and exit as soon as one exits.
+	set -m; (for p in $(P); do ($(MAKE) $$p || kill 0)& done; wait)
+
+env:
+	# Run $RUN with Makefile environ
+	$(RUN)
+
+fix-node-install:
+	# Rebuild node-sass on updates
+	test -d $(NODE_MODULES)/node-sass/vendor/ || npm rebuild node-sass
+	cd $(NODE_MODULES)/polyfill-service; npm run build --ignore-engines
+
 install-node:
-	$(NPM) install
+	$(NPM) install --ignore-engines
+	$(MAKE) fix-node-install
 
-# https://github.com/pypa/setuptools/issues/951
 install-python:
-	test -d $(VENV) || virtualenv $(VENV)
-	$(PIP) install --upgrade --no-cache pip setuptools -e .[test]
+	test -d $(VENV) || virtualenv $(VENV) -p $(PYTHON_VERSION)
+	# Deps
+	$(PIP) install --trusted-host github.com --upgrade --no-cache pip setuptools -e .[test]
 
-install: install-node install-python
+install:
+	$(MAKE) P="install-node install-python" make-p
 
 install-dev:
 	$(PIP) install --upgrade devcore
 
-clean:
+full-install: clean-install install install-dev
+
+clean-client:
+	rm -fr $(PWD)/lib/frontend/assets/*
+
+clean-server:
 	rm -fr dist
+
+clean: clean-client clean-server
 
 clean-install: clean
 	rm -fr $(NODE_MODULES)
 	rm -fr $(VENV)
+	rm -fr *.egg-info
 
 lint-python:
-	$(PYTEST) --flake8 -m flake8 $(PROJECT_NAME)
-	$(PYTEST) --isort -m isort $(PROJECT_NAME)
+	$(PYTEST) --flake8 --isort -m "flake8 or isort" lib --ignore=lib/frontend/static
 
 lint-node:
 	$(NPM) run lint
 
-lint: lint-python lint-node
+lint:
+	$(MAKE) P="lint-python lint-node" make-p
+
+fix-python:
+	$(VENV)/bin/yapf -p -i lib/**/*.py
+
+fix-node:
+	$(NPM) run fix
+
+fix:
+	$(MAKE) P="fix-python fix-node" make-p
 
 check-python:
-	$(PYTEST) $(PROJECT_NAME)
+	FLASK_CONFIG=$(FLASK_TEST_CONFIG) $(PYTEST) lib $(PYTEST_ARGS)
+
+check-node-debug:
+	$(NPM) run test-debug
 
 check-node:
 	$(NPM) run test
 
-check: check-python check-node
+check-outdated:
+	$(NPM) outdated ||:
+	$(PIP) list --outdated --format=columns ||:
 
-build-node: clean lint-node
-	NODE_ENV=production $(NPM) run build
+check: check-python check-node check-outdated
 
-build: build-node
+build-client: clean-client
+	$(NPM) run build-client
+
+build-server: clean-server
+	$(NPM) run build-server
+
+build: clean lint-node
+	$(MAKE) P="build-server build-client" make-p
 
 serve-python:
-	$(FLASK) run
+	$(FLASK) run --with-threads -h $(HOST) -p $(API_PORT)
 
-serve-static:
-	$(NPM) run static-server
+serve-node:
+	$(NPM) run serve
 
-serve-renderer:
-	$(NPM) run render-server
+serve-node-server:
+	$(NPM) run serve-server
 
-serve-production:
-	$(NPM) run render-server-production
+serve-node-client:
+	$(NPM) run serve-client
 
-build-check:
-	set -m; ((STATIC_SERVER= $(FLASK) run -h $(HOST) -p $(PYTHON_PORT); kill 0)& ($(NPM) run render-server; kill 0)& wait)
-
-serve:
+env-check:
 	test -d $(NODE_MODULES) || (echo 'Please run make install before serving.' && exit 1)
-	set -m; (($(FLASK) run -h $(HOST) -p $(PYTHON_PORT); kill 0)& ($(NPM) run static-server; kill 0)& ($(NPM) run render-server; kill 0)& wait)
+
+run:
+	FLASK_DEBUG=0 MOCK_NGINX=y $(MAKE) P="serve-python serve-node" make-p
+
+serve: env-check clean
+	$(MAKE) P="serve-node-client serve-node-server serve-python" make-p

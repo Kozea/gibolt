@@ -1,69 +1,69 @@
+import fs from 'fs'
+import path from 'path'
+import { PassThrough } from 'stream'
+import { promisify } from 'util'
 
-import http from 'http'
-import express from 'express'
-import bodyParser from 'body-parser'
+import fetch from 'isomorphic-fetch'
+import Koaze from 'koaze'
 import React from 'react'
-import { renderToString } from 'react-dom/server'
-import { RouterProvider, routerForExpress, initializeCurrentLocation } from 'redux-little-router'
-import { Provider } from 'react-redux'
-import { createStore, compose, applyMiddleware } from 'redux'
-import createLogger from 'redux-logger'
-import thunk from 'redux-thunk'
-import querystring from 'querystring'
-import reducer from './reducers'
-import routes from './routes'
+import { renderToNodeStream } from 'react-dom/server'
+
 import App from './components/App'
-import url from 'url'
+import {
+  apiUrl,
+  assetsUrl,
+  debug,
+  dirs,
+  mockNginx,
+  publicPath,
+  serverUrl,
+  verbose,
+} from './config'
+import Root from './Root'
+import { staticStoreAndHistory } from './utils'
 
-const server_url = url.parse(process.env.RENDER_SERVER)
-
-var app = express()
-var server = http.Server(app)
-
-app.use(bodyParser.json())
-app.use('/', (req, res) => {
-  let state = {}
-  let request = req
-  if(req.method == 'POST') {
-    state = req.body && req.body.state
-    request = {
-      path: req.path,
-      baseUrl: '',
-      query: querystring.parse(req.body && req.body.query)
-    }
-  }
-
-  const router = routerForExpress({
-		routes,
-		request
-	})
-
-	const store = createStore(
-		reducer,
-    state,
-		compose(
-			router.routerEnhancer,
-			applyMiddleware(
-				router.routerMiddleware,
-				thunk
-			)
-		)
-	)
-
-  const initialLocation = store.getState().router
-  if (initialLocation) {
-    store.dispatch(initializeCurrentLocation(initialLocation))
-  }
-
-	res.send(renderToString(
-		<Provider store={ store }>
-			<RouterProvider store={ store }>
-				<App />
-			</RouterProvider>
-		</Provider>
-	))
+const koaze = new Koaze({
+  debug,
+  mockNginx,
+  verbose,
+  faviconPath: path.resolve(__dirname, 'favicon.png'),
+  staticDirs: [],
+  apiUrl,
+  assetsUrl,
+  assetsDir: dirs.assets,
 })
 
-server.listen(server_url.port, server_url.hostname, function() {
-	console.log('React render server listening at ' + server_url.href)
+const readIndex = async () => {
+  if (debug) {
+    const response = await fetch(
+      `${assetsUrl.href.replace(/\/$/, '')}${publicPath}index.html`
+    )
+    return response.text()
+  }
+  return promisify(fs.readFile)(
+    path.resolve(dirs.assets, 'index.html'),
+    'utf-8'
+  )
+}
+
+koaze.router.get('/*', async ctx => {
+  const htmlStream = new PassThrough()
+  const index = await readIndex()
+  const [head, footer] = index.split('<!--REPLACEME-->')
+  htmlStream.write(head)
+  const { store, history } = staticStoreAndHistory(ctx.url)
+  const stream = renderToNodeStream(
+    <Root store={store} history={history}>
+      <App />
+    </Root>
+  )
+  stream.pipe(htmlStream, { end: false })
+  stream.on('end', () => {
+    htmlStream.write(footer)
+    htmlStream.end()
+  })
+  ctx.type = 'text/html'
+  ctx.body = htmlStream
 })
+
+koaze.serve(serverUrl, console.error.bind(console))

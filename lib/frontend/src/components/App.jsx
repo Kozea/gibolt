@@ -1,16 +1,18 @@
+import './App.sass'
+
 import React, { Component } from 'react'
-import { AbsoluteFragment } from 'redux-little-router'
+import { Route, Switch } from 'react-router-dom'
+
 import { block } from '../utils'
 import IssuesDashboard from './IssuesDashboard'
-import Timeline from './Timeline'
+import Presets from './Presets'
 import Report from './Report'
 import Repositories from './Repositories'
 import Repository from './Repository'
-import Presets from './Presets'
-import './App.sass'
-
+import Timeline from './Timeline'
 
 const b = block('App')
+
 export default class App extends Component {
   constructor(props) {
     super(props)
@@ -19,23 +21,15 @@ export default class App extends Component {
 
   render() {
     return (
-      <main className={ b }>
+      <main className={b}>
         <Presets />
-        <AbsoluteFragment forRoute='/'>
-          <IssuesDashboard />
-        </AbsoluteFragment>
-        <AbsoluteFragment forRoute='/timeline'>
-          <Timeline />
-        </AbsoluteFragment>
-        <AbsoluteFragment forRoute='/report'>
-          <Report />
-        </AbsoluteFragment>
-        <AbsoluteFragment forRoute='/repositories'>
-          <Repositories />
-        </AbsoluteFragment>
-        <AbsoluteFragment forRoute='/repository'>
-          <Repository />
-        </AbsoluteFragment>
+        <Switch>
+          <Route path="/" component={IssuesDashboard} />
+          <Route path="/timeline" component={Timeline} />
+          <Route path="/report" component={Report} />
+          <Route path="/repositories" component={Repositories} />
+          <Route path="/repository" component={Repository} />
+        </Switch>
       </main>
     )
   }

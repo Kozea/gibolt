@@ -1,18 +1,19 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { block } from '../utils'
-import Preset from './Preset'
-import equal from 'deep-equal'
-import { setPreset } from '../actions'
 import './Presets.sass'
 
-const PRESETS = (user) => ({
+import equal from 'deep-equal'
+import { parse, stringify } from 'query-string'
+import React from 'react'
+
+import { block, connect } from '../utils'
+import Preset from './Preset'
+
+const PRESETS = user => ({
   urgent: {
     state: 'all',
     grouper: 'state',
     priority: 'Urgent',
     ack: '',
-    assignee: user
+    assignee: user,
   },
   my_tickets: {
     state: 'open',
@@ -20,45 +21,65 @@ const PRESETS = (user) => ({
     priority: '',
     ack: '',
     assignee: '',
-    involves: user
+    involves: user,
   },
   sprint_issues: {
     state: 'all',
     grouper: 'nogroup',
     priority: 'sprint',
     ack: '',
-    assignee: ''
-  }
+    assignee: '',
+  },
 })
 
 const b = block('Presets')
-function Presets({ pathname, query, user }) {
-  let userPreset = PRESETS(user)
+function Presets({ location, user }) {
+  const userPreset = PRESETS(user)
+  const query = parse(location.search)
   return (
-    <header className={ b }>
-      <h1 className={ b('title') }>Gibolt</h1>
+    <header className={b()}>
+      <h1 className={b('title')}>Gibolt</h1>
       <nav>
-        <ul className={ b('nav') }>
-          <Preset action={{ pathname: '/', query: userPreset.urgent }}
-                  active={ pathname == '/' && equal({...userPreset.urgent, ...query}, userPreset.urgent) }>
+        <ul className={b('nav')}>
+          <Preset
+            action={{ pathname: '/', search: stringify(userPreset.urgent) }}
+            active={
+              location.pathname === '/' &&
+              equal({ ...userPreset.urgent, ...query }, userPreset.urgent)
+            }
+          >
             My urgency
           </Preset>
-            <Preset action={{ pathname: '/', query: userPreset.my_tickets }}
-                    active={ pathname == '/' && equal(query, userPreset.my_tickets) }>
-
+          <Preset
+            action={{ pathname: '/', search: stringify(userPreset.my_tickets) }}
+            active={
+              location.pathname === '/' && equal(query, userPreset.my_tickets)
+            }
+          >
             My Tickets
           </Preset>
-          <Preset action="/timeline" active={ pathname == '/timeline' }>
+          <Preset action="/timeline" active={location.pathname === '/timeline'}>
             Timeline
           </Preset>
-            <Preset action={{ pathname: '/', query: userPreset.sprint_issues }}
-                    active={ pathname == '/' && equal(query, userPreset.sprint_issues) }>
+          <Preset
+            action={{
+              pathname: '/',
+              search: stringify(userPreset.sprint_issues),
+            }}
+            active={
+              location.pathname === '/' &&
+              equal(query, userPreset.sprint_issues)
+            }
+          >
             Issues
           </Preset>
-          <Preset action="/report" active={pathname == '/report'}>
+          <Preset action="/report" active={location.pathname === '/report'}>
             Report
           </Preset>
-          <Preset action="/repositories" active={pathname == '/repositories'}>
+          <Preset
+            action="/repositories"
+            active={location.pathname === '/repositories'}
+          >
             Repositories
           </Preset>
         </ul>
@@ -67,10 +88,6 @@ function Presets({ pathname, query, user }) {
   )
 }
 
-export default connect(state => {
-  return {
-    query: state.router.query,
-    user: state.user,
-    pathname: state.router.pathname
-  }
-})(Presets)
+export default connect(state => ({
+  user: state.user,
+}))(Presets)
