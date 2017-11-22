@@ -1,3 +1,7 @@
+variables:
+  PYTHON_VERSION: python
+  STAGING: y
+
 stages:
   - install
   - build
@@ -10,14 +14,14 @@ stages:
     paths:
       - node_modules/
       - .env/
-    
+
 .artifacts: &artifacts_build
   artifacts:
     paths:
       - gibolt/frontend/static/
       - node_modules/
       - .env/
- 
+
 
 image: paradoxxxzero/python-node-yarn-postgresql:3.5-7.2-9.6
 
@@ -66,7 +70,7 @@ build_latest:
     - install_latest
 
 lint_latest:
-  <<: *image_latest  
+  <<: *image_latest
   stage: test
   script: make lint
   dependencies:
@@ -82,11 +86,11 @@ test_latest:
 
 .image: &image_deploy_jobs
   image: debian:latest
-      
+
 deploy_test:
   <<: *image_deploy_jobs
   stage: deploy_test
-  before_script: 
+  before_script:
     - "apt-get update && apt-get install -y jq curl"
   script:
     - "branch_name=`echo $CI_COMMIT_REF_NAME | tr -cd '[[:alnum:]]'`"
@@ -109,5 +113,5 @@ deploy_prod:
     - "get=`curl -s -o -I -w \"%{http_code}\" https://gibolt.kozea.fr`"
     - "([[ $get = 302 || $get = 200 ]] && [[ $res_curl = 0 ]]) && exit_val=0 || exit_val=1 && exit $exit_val"
   dependencies: []
-  only: 
+  only:
     - master
