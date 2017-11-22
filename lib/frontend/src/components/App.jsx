@@ -24,7 +24,7 @@ export default class App extends Component {
       <main className={b()}>
         <Presets />
         <Switch>
-          <Route path="/" component={IssuesDashboard} />
+          <Route exact path="/" component={IssuesDashboard} />
           <Route path="/timeline" component={Timeline} />
           <Route path="/report" component={Report} />
           <Route path="/repositories" component={Repositories} />
