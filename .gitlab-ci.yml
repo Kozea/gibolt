@@ -18,7 +18,7 @@ stages:
 .artifacts: &artifacts_build
   artifacts:
     paths:
-      - gibolt/frontend/static/
+      - lib/frontend/static/
       - node_modules/
       - .env/
 
