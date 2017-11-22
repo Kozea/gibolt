@@ -34,14 +34,12 @@ export default connect(
   }),
   dispatch => ({
     onChangeUser: (user, type, query) => {
-      // This seems to be broken as of now in redux-little-router
-      // https://github.com/FormidableLabs/redux-little-router/issues/87
       dispatch(
         push({
           pathname: '/',
           search: stringify({
             ...query,
-            [type]: user || (type === 'assignee' ? user : void 0),
+            [type]: user.login || (type === 'assignee' ? user.login : void 0),
           }),
         })
       )

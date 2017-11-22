@@ -7,7 +7,7 @@ import requests
 from cachecontrol import CacheControl
 from cachecontrol.caches.file_cache import FileCache
 from cachecontrol.controller import CacheController
-from flask import abort, flash, jsonify, redirect, request, session, url_for
+from flask import abort, flash, jsonify, redirect, request, session
 from flask_github import GitHub, GitHubError
 
 from .. import app
@@ -83,11 +83,11 @@ def date_from_iso(iso_date):
     return date(*[int(value) for value in iso_date[:10].split('-')])
 
 
-def autologin(f):
+def needlogin(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get('user') is None:
-            return redirect(url_for('login'))
+            abort(403)
         if cache['users'].get(session['user']) is None:
             cache['users'][session['user']] = get_allowed_repos()
         return f(*args, **kwargs)
@@ -128,6 +128,7 @@ def get_allowed_repos():
 
 
 @app.route('/api/issues.json', methods=['GET', 'POST'])
+@needlogin
 def issues():
     params = dict(request.get_json())
     url = 'search/issues'
@@ -166,6 +167,7 @@ def issues():
 
 
 @app.route('/api/timeline.json', methods=['GET', 'POST'])
+@needlogin
 def timeline():
     params = dict(request.get_json())
     repos_name = cache['users'].get(session['user'])
@@ -203,6 +205,7 @@ def timeline():
 
 
 @app.route('/api/report.json', methods=['GET', 'POST'])
+@needlogin
 def report():
     params = dict(request.get_json())
     start = params.get('start')
@@ -235,6 +238,7 @@ def report():
 
 
 @app.route('/api/repositories.json', methods=['GET', 'POST'])
+@needlogin
 def repositories():
     app.config['ORGANISATION']
     return jsonify({
@@ -246,6 +250,7 @@ def repositories():
 
 
 @app.route('/api/repository.json', methods=['GET', 'POST'])
+@needlogin
 def repository():
     repository_name = request.get_json()['name']
     repository = repository = github.get(
@@ -280,6 +285,7 @@ def repository():
 
 
 @app.route('/api/repository/create_labels', methods=['POST'])
+@needlogin
 def create_repository_labels():
     repository_name = request.get_json()['name']
     labels = request.get_json()['labels']
@@ -297,6 +303,7 @@ def create_repository_labels():
 
 
 @app.route('/api/repository/delete_labels', methods=['POST'])
+@needlogin
 def delete_repository_labels():
     repository_name = request.get_json()['name']
     labels = request.get_json()['labels']
@@ -312,6 +319,7 @@ def delete_repository_labels():
 
 
 @app.route('/api/apply_labels', methods=["POST"])
+@needlogin
 def apply_labels():
     action = request.get_json().get('action')
     patched_issues = []
@@ -363,6 +371,7 @@ def return_github_message(github_response):
 
 
 @app.route('/api/labels.json', methods=['GET', 'POST'])
+@needlogin
 def labels():
     return jsonify({
         'results': {
@@ -383,13 +392,13 @@ def labels():
 
 
 @app.route('/api/user.json', methods=['GET', 'POST'])
+@needlogin
 def user():
-    if 'login' not in session:
-        abort(403)
-    return jsonify({'user': session['login']})
+    return jsonify({'user': github.get('user')})
 
 
 @app.route('/api/users.json', methods=['GET', 'POST'])
+@needlogin
 def users():
     url = 'orgs/{0}/members'.format(app.config['ORGANISATION'])
     users = github.get(url, all_pages=True)

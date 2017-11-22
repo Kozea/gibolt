@@ -7,13 +7,13 @@ import React from 'react'
 import { block, connect } from '../utils'
 import Preset from './Preset'
 
-const PRESETS = user => ({
+const PRESETS = ({ login }) => ({
   urgent: {
     state: 'all',
     grouper: 'state',
     priority: 'Urgent',
     ack: '',
-    assignee: user,
+    assignee: login,
   },
   my_tickets: {
     state: 'open',
@@ -21,7 +21,7 @@ const PRESETS = user => ({
     priority: '',
     ack: '',
     assignee: '',
-    involves: user,
+    involves: login,
   },
   sprint_issues: {
     state: 'all',
