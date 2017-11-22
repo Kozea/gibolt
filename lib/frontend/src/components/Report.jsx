@@ -87,7 +87,7 @@ function Report({ range, query, loading, error, issues, onDateChange }) {
         <h2>Overall</h2>
         {issuesByMonth.map(({ id, month, issues: monthIssues }) => (
           <article key={id} className={b('month')}>
-            <h3>{month.format('LL')}</h3>
+            <h3>{format(month, 'LL')}</h3>
             <ul>
               {groupByRepository(monthIssues)
                 .sort((a, b) => b.issues.length - a.issues.length)
@@ -111,7 +111,7 @@ function Report({ range, query, loading, error, issues, onDateChange }) {
           {groupByMonth(userIssues).map(
             ({ id, month, issues: monthIssues }) => (
               <article key={id} className={b('month')}>
-                <h3>{month.format('LL')}</h3>
+                <h3>{format(month, 'LL')}</h3>
                 <ul>
                   {groupByRepository(monthIssues)
                     .sort((a, b) => b.issues.length - a.issues.length)

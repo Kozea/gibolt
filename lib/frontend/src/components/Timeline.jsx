@@ -56,7 +56,7 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
       {milestonesByMonth.map(({ id, month, milestones }) => (
         <article key={id} className={b('date')}>
           <h2>
-            {month.format('MMMM YYYY')} <sup>({milestones.length})</sup>
+            {format(month, 'MMMM YYYY')} <sup>({milestones.length})</sup>
           </h2>
           <ul>
             {milestones.map(milestone => (
