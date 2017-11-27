@@ -9,4 +9,4 @@ except pkg_resources.DistributionNotFound:
 app = Flask(__name__)
 app.config.from_envvar('FLASK_CONFIG')
 
-from .routes import *  # noqa
+from .routes import *  # noqa isort:skip
