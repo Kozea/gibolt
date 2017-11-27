@@ -15,10 +15,9 @@ env:
 fix-node-install:
 	# Rebuild node-sass on updates
 	test -d $(NODE_MODULES)/node-sass/vendor/ || npm rebuild node-sass
-	cd $(NODE_MODULES)/polyfill-service; npm run build --ignore-engines
 
 install-node:
-	$(NPM) install --ignore-engines
+	$(NPM) install
 	$(MAKE) fix-node-install
 
 install-python:

@@ -428,7 +428,7 @@
     "import/no-nodejs-modules": "off",
     "import/first": "warn",
     "import/no-duplicates": "error",
-    "import/no-namespace": "warn",
+    "import/no-namespace": "off",
     "import/extensions": "warn",
     "import/order": [
       "error",
