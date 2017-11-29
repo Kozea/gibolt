@@ -33,13 +33,13 @@ export default connect(
     users: state.users.results,
   }),
   dispatch => ({
-    onChangeUser: (user, type, query) => {
+    onChangeUser: (login, type, query) => {
       dispatch(
         push({
           pathname: '/',
           search: stringify({
             ...query,
-            [type]: user.login || (type === 'assignee' ? user.login : void 0),
+            [type]: login || (type === 'assignee' ? login : void 0),
           }),
         })
       )
