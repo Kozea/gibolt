@@ -52,7 +52,7 @@ test3.5:
 
 
 .image: &image_latest
-  image: paradoxxxzero/python-node-yarn-postgresql:3.6-7.5-9.6
+  image: paradoxxxzero/python-node-yarn-postgresql:3.6-8.6-9.6
 
 install_latest:
   <<: *image_latest
