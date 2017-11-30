@@ -11,7 +11,7 @@ import thunk from 'redux-thunk'
 import App from './components/App'
 import Root from './components/Root'
 import * as config from './config'
-import reducers from './reducers'
+import reducer from './reducer'
 import { renderHtml } from './render'
 
 const koaze = new Koaze({
@@ -24,7 +24,7 @@ const koaze = new Koaze({
 koaze.router.get('/*', ctx => {
   const history = createMemoryHistory({ initialEntries: [ctx.url] })
   const store = createStore(
-    reducers,
+    reducer,
     compose(applyMiddleware(routerMiddleware(history), thunk))
   )
 

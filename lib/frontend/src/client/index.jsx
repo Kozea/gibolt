@@ -9,7 +9,7 @@ import thunk from 'redux-thunk'
 import { setModifier, setUser } from '../actions'
 import App from '../components/App'
 import Root from '../components/Root'
-import reducer from '../reducers'
+import reducer from '../reducer'
 import autoLoadMiddleware from './autoLoadMiddleware'
 
 export const rootNode = document.getElementById('root')
@@ -117,7 +117,7 @@ if (process.env.NODE_ENV === 'development') {
 
   if (module.hot) {
     module.hot.accept('../components/App', () => renderRoot(handleError))
-    module.hot.accept('../reducers', () => {
+    module.hot.accept('../reducer', () => {
       store.replaceReducer(reducer)
     })
   }
