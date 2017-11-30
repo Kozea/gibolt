@@ -8,8 +8,8 @@ import thunk from 'redux-thunk'
 
 import { setModifier, setUser } from '../actions'
 import App from '../components/App'
+import Root from '../components/Root'
 import reducer from '../reducers'
-import Root from '../Root'
 import autoLoadMiddleware from './autoLoadMiddleware'
 
 export const rootNode = document.getElementById('root')

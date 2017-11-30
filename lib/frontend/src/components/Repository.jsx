@@ -1,6 +1,7 @@
 import './Repository.sass'
 
 import React from 'react'
+import { Helmet } from 'react-helmet'
 
 import { createLabels, deleteLabels } from '../actions'
 import { block, connect, repositoryNameFromState } from '../utils'
@@ -17,6 +18,9 @@ function Repository({
 }) {
   return (
     <section className={b()}>
+      <Helmet>
+        <title>Gibolt - Repository</title>
+      </Helmet>
       <h1>{reponame}</h1>
       {loading && <Loading />}
       <article>

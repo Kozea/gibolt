@@ -3,6 +3,7 @@ import './Timeline.sass'
 import { format, startOfMonth } from 'date-fns'
 import { parse, stringify } from 'query-string'
 import React from 'react'
+import { Helmet } from 'react-helmet'
 import { push } from 'react-router-redux'
 
 import { block, connect, timelineRangeFromState, values } from '../utils'
@@ -32,6 +33,9 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
   milestonesByMonth = milestonesByMonth.sort((a, b) => a.month - b.month)
   return (
     <section className={b()}>
+      <Helmet>
+        <title>Gibolt - Timeline</title>
+      </Helmet>
       <h1 className={b('head')}>
         Timeline from
         <input

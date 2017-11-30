@@ -1,10 +1,12 @@
 import './App.sass'
 
 import React, { Component } from 'react'
+import { Helmet } from 'react-helmet'
 import { Route, Switch } from 'react-router-dom'
 
 import { block } from '../utils'
 import IssuesDashboard from './IssuesDashboard'
+import NotFound from './NotFound'
 import Presets from './Presets'
 import Report from './Report'
 import Repositories from './Repositories'
@@ -22,6 +24,9 @@ export default class App extends Component {
   render() {
     return (
       <main className={b()}>
+        <Helmet>
+          <title>Gibolt</title>
+        </Helmet>
         <Presets />
         <Switch>
           <Route exact path="/" component={IssuesDashboard} />
@@ -29,6 +34,7 @@ export default class App extends Component {
           <Route path="/report" component={Report} />
           <Route path="/repositories" component={Repositories} />
           <Route path="/repository" component={Repository} />
+          <Route component={NotFound} />
         </Switch>
       </main>
     )

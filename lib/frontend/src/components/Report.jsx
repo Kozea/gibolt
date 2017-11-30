@@ -3,6 +3,7 @@ import './Report.sass'
 import { format, startOfMonth } from 'date-fns'
 import { parse, stringify } from 'query-string'
 import React from 'react'
+import { Helmet } from 'react-helmet'
 import { push } from 'react-router-redux'
 
 import { block, connect, reportRangeFromState, values } from '../utils'
@@ -62,6 +63,9 @@ function Report({ range, query, loading, error, issues, onDateChange }) {
 
   return (
     <section className={b()}>
+      <Helmet>
+        <title>Gibolt - Report</title>
+      </Helmet>
       <h1 className={b('head')}>
         Report from
         <input

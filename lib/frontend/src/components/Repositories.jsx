@@ -2,6 +2,7 @@ import './Repositories.sass'
 
 import { stringify } from 'query-string'
 import React from 'react'
+import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
 import { block, connect } from '../utils'
@@ -12,6 +13,9 @@ const b = block('Repositories')
 function Repositories({ loading, error, repositories }) {
   return (
     <section className={b()}>
+      <Helmet>
+        <title>Gibolt - Repositories</title>
+      </Helmet>
       <h1 className={b('head')}>Repositories</h1>
       {loading && <Loading />}
       {error && (

@@ -1,17 +1,18 @@
-import fs from 'fs'
 import path from 'path'
-import { PassThrough } from 'stream'
-import { promisify } from 'util'
 
-import fetch from 'isomorphic-fetch'
+import { createMemoryHistory } from 'history'
 import Koaze from 'koaze'
 import React from 'react'
-import { renderToNodeStream } from 'react-dom/server'
+import { renderToString } from 'react-dom/server'
+import { routerMiddleware } from 'react-router-redux'
+import { applyMiddleware, compose, createStore } from 'redux'
+import thunk from 'redux-thunk'
 
 import App from './components/App'
+import Root from './components/Root'
 import * as config from './config'
-import Root from './Root'
-import { staticStoreAndHistory } from './utils'
+import reducers from './reducers'
+import { renderHtml } from './render'
 
 const koaze = new Koaze({
   ...config,
@@ -20,39 +21,30 @@ const koaze = new Koaze({
   assetsDir: config.dirs.assets,
 })
 
-const readIndex = async () => {
-  if (config.debug) {
-    const response = await fetch(
-      `${config.assetsUrl.href.replace(/\/$/, '')}${
-        config.publicPath
-      }index.html`
-    )
-    return response.text()
-  }
-  return promisify(fs.readFile)(
-    path.resolve(config.dirs.assets, 'index.html'),
-    'utf-8'
+koaze.router.get('/*', ctx => {
+  const history = createMemoryHistory({ initialEntries: [ctx.url] })
+  const store = createStore(
+    reducers,
+    compose(applyMiddleware(routerMiddleware(history), thunk))
   )
-}
 
-koaze.router.get('/*', async ctx => {
-  const htmlStream = new PassThrough()
-  const index = await readIndex()
-  const [head, footer] = index.split('<!--REPLACEME-->')
-  htmlStream.write(head)
-  const { store, history } = staticStoreAndHistory(ctx.url)
-  const stream = renderToNodeStream(
+  // Render app and get side effects
+  const app = renderToString(
     <Root store={store} history={history}>
       <App />
     </Root>
   )
-  stream.pipe(htmlStream, { end: false })
-  stream.on('end', () => {
-    htmlStream.write(footer)
-    htmlStream.end()
-  })
+  // Get status from side effect
+  const { status } = store.getState()
+  ctx.status = status.code
+
+  if ([301, 302].includes(status.code)) {
+    ctx.redirect(status.url)
+    return
+  }
+
   ctx.type = 'text/html'
-  ctx.body = htmlStream
+  ctx.body = renderHtml(app, store)
 })
 
 koaze.serve(console.error.bind(console))
