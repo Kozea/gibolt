@@ -23,7 +23,7 @@ stages:
       - .env/
 
 
-image: paradoxxxzero/python-node-yarn-postgresql:3.5-7.2-9.6
+image: paradoxxxzero/python-node-yarn-postgresql:3.5-8.6-10
 
 install3.5:
   stage: install
