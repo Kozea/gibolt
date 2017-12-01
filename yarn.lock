@@ -6487,9 +6487,9 @@ react-helmet@^5.2.0:
     prop-types "^15.5.4"
     react-side-effect "^1.1.0"
 
-react-markdown@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-3.0.2.tgz#e6e25a9c141a5dbada2fb016513cc5398515205c"
+react-markdown@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-markdown/-/react-markdown-3.1.0.tgz#b83ee8457496b1edb0c1b6250755971b752858c3"
   dependencies:
     prop-types "^15.6.0"
     remark-parse "^4.0.0"
@@ -6685,9 +6685,9 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "^0.4.2"
 
-redux-http-status@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/redux-http-status/-/redux-http-status-0.0.4.tgz#f1db1f6d748a4a978e2d8f888c8e456bce6609a3"
+redux-http-status@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/redux-http-status/-/redux-http-status-0.0.7.tgz#bdf9b827cb815baeec4a129184a62099b0f19341"
 
 redux-thunk@2.2.0:
   version "2.2.0"
@@ -8205,9 +8205,9 @@ webpack-sources@^1.0.1:
     source-list-map "^2.0.0"
     source-map "~0.5.3"
 
-webpack@3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.9.0.tgz#7d65ca4ba92ae1b67be2c00b217fb990b8ffa97f"
+webpack@3.9.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.9.1.tgz#9a60aa544ed5d4d454c069e3f521aa007e02643c"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"
