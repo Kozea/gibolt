@@ -13,18 +13,18 @@ const assets = {}
 const getAssets = () => {
   if (Object.keys(assets).length === 0) {
     if (config.debug) {
-      assets.css = []
-      assets.js = ['manifest.js', 'vendor.js', 'client.js'].map(
+      assets.links = []
+      assets.scripts = ['manifest.js', 'vendor.js', 'client.js'].map(
         file => `${config.publicPath}${file}`
       )
     } else {
       const manifest = JSON.parse(
         readFileSync(path.resolve(config.dirs.assets, 'manifest.json'), 'utf8')
       )
-      assets.css = ['client.css'].map(
+      assets.links = ['client.css'].map(
         file => `${config.publicPath}${manifest[file]}`
       )
-      assets.js = [
+      assets.scripts = [
         '/polyfill.js',
         ...['manifest.js', 'vendor.js', 'client.js'].map(
           file => `${config.publicPath}${manifest[file]}`
@@ -44,8 +44,8 @@ export const renderHtml = (app, store) =>
           __STATE__: store.getState(),
         }
       }
-      css={getAssets().css}
-      js={getAssets().js}
+      links={getAssets().links}
+      scripts={getAssets().scripts}
       app={app}
     />
   )}`

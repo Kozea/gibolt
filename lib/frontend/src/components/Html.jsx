@@ -1,6 +1,23 @@
 import React from 'react'
 
-export default function Html({ helmet, js, css, window, app, children }) {
+export default function Html({
+  helmet,
+  scripts,
+  links,
+  window,
+  app,
+  children,
+  extraScript,
+}) {
+  // Normalize
+  scripts = scripts.map(s => (typeof s === 'object' ? s : { src: s }))
+  links = links.map(
+    l =>
+      typeof l === 'object'
+        ? { rel: 'stylesheet', ...l }
+        : { rel: 'stylesheet', href: l }
+  )
+
   return (
     <html
       lang="en"
@@ -15,7 +32,7 @@ export default function Html({ helmet, js, css, window, app, children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {helmet.meta.toComponent()}
         {helmet.base.toString() ? helmet.base.toComponent() : <base href="/" />}
-        <link rel="stylesheet" href={css} />
+        {links.map(attrs => <link key={attrs.href} {...attrs} />)}
         {helmet.link.toComponent()}
         {helmet.style.toComponent()}
         {helmet.script.toComponent()}
@@ -29,19 +46,25 @@ export default function Html({ helmet, js, css, window, app, children }) {
         >
           {children}
         </div>
-        <script
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{
-            __html:
-              window &&
-              Object.keys(window).reduce(
+        {window && (
+          <script
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{
+              __html: Object.keys(window).reduce(
                 (out, key) =>
                   (out += `window.${key}=${JSON.stringify(window[key])};`),
                 ''
               ),
-          }}
-        />
-        {js.map(src => <script key={src} src={src} />)}
+            }}
+          />
+        )}
+        {scripts.map(attrs => <script key={attrs.src} {...attrs} />)}
+        {extraScript && (
+          <script
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: extraScript }}
+          />
+        )}
       </body>
     </html>
   )
