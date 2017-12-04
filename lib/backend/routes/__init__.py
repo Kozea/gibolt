@@ -1,3 +1,4 @@
+import json
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from functools import wraps
@@ -9,8 +10,17 @@ from cachecontrol.caches.file_cache import FileCache
 from cachecontrol.controller import CacheController
 from flask import abort, flash, jsonify, redirect, request, session
 from flask_github import GitHub, GitHubError
+from sqlalchemy import (Column, DateTime, ForeignKey, Integer, String,
+                        create_engine)
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
+from unrest import UnRest
 
 from .. import app
+
+
+engine = create_engine('sqlite:///database.db', echo=True)
+Base = declarative_base()
 
 
 class GitHubController(CacheController):
@@ -83,6 +93,10 @@ def date_from_iso(iso_date):
     return date(*[int(value) for value in iso_date[:10].split('-')])
 
 
+def init_db():
+    Base.metadata.create_all(engine)
+
+
 def needlogin(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -106,6 +120,12 @@ def token_getter():
     return session.get('user')
 
 
+@app.cli.command('initdb')
+def initdb_command():
+    init_db()
+    print('Initialized the database.')
+
+
 @app.route('/api/callback')
 @github.authorized_handler
 def authorized(oauth_token):
@@ -117,6 +137,71 @@ def authorized(oauth_token):
     return redirect('/')
 
 
+class Circle(Base):
+    __tablename__ = 'circle'
+    circle_id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        nullable=False)
+    circle_name = Column(String, unique=True)
+    circle_purpose = Column(String)
+    circle_domain = Column(String)
+    circle_accountabilities = Column(String)
+
+
+class Role(Base):
+    __tablename__ = 'role'
+    role_id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        nullable=False)
+    user_id = Column(Integer)
+    circle_id = Column(
+        String,
+        ForeignKey("circle.circle_id"))
+    role_name = Column(String)
+    role_purpose = Column(String)
+    role_domain = Column(String)
+    role_accountabilities = Column(String)
+    role_checklist = Column(String)
+    circle = relationship(Circle, backref='roles')
+
+
+class Report(Base):
+    __tablename__ = 'report'
+    report_id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        nullable=True)
+    circle_id = Column(
+        String,
+        ForeignKey("circle.circle_id"))
+    type = Column(String)
+    created_at = Column(DateTime)
+
+
+Session = sessionmaker(bind=engine, autoflush=False)
+Session.configure(bind=engine)
+session_unrest = Session()
+
+# Declare rest endpoints for gibolt Database
+
+rest = UnRest(app, session_unrest)
+rest(
+    Circle,
+    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    relationships={
+        'roles': rest(Role, only=['role_id']),
+    },
+    name='circles'
+)
+rest(Role, methods=['GET', 'PUT', 'POST', 'DELETE'], name='roles')
+rest(Report, methods=['GET', 'PUT', 'POST', 'DELETE'], name='reports')
+
+
 def get_allowed_repos():
     repos = github.get(
         'orgs/{0}/repos?type=all&per_page=100'.format(
@@ -125,6 +210,689 @@ def get_allowed_repos():
         all_pages=True
     )
     return [repo['name'] for repo in repos]
+
+
+@app.route('/api/repos', methods=['GET'])
+@needlogin
+def list_repos():
+    repo_request = github.get(
+        'orgs/{0}/repos?type=all&per_page=100'.format(
+            app.config['ORGANISATION']), all_pages=True)
+    response = [{'repo_id': repository['id'], 'repo_name': repository['name'],
+                 'description': repository['description'],
+                 'permissions':{
+                     'admin': repository['permissions']['admin'],
+                     'push': repository['permissions']['push'],
+                     'pull': repository['permissions']['pull']}
+                 }
+                for repository in repo_request]
+    objects = {'objects': response, 'occurences': len(response)}
+    return jsonify(objects)
+
+
+@app.route('/api/repos/<string:repo_name>', methods=['GET'])
+@needlogin
+def get_a_repo(repo_name):
+    repo_request = github.get(
+        'repos/{0}/{1}?type=all&per_page=100'.format(
+            app.config['ORGANISATION'], repo_name), all_pages=True)
+    response = {
+        'repo_id': repo_request['id'],
+        'repo_name': repo_request['name'],
+        'description': repo_request['description'],
+        'permissions': {
+            'admin': repo_request['permissions']['admin'],
+            'push': repo_request['permissions']['push'],
+            'pull': repo_request['permissions']['pull']}}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [repo_name]}
+    return jsonify(objects)
+
+
+@app.route('/api/repos/<string:repo_name>/milestones', methods=['GET'])
+@needlogin
+def list_milestones(repo_name):
+    milestone_request = github.get(
+        'repos/{0}/{1}/milestones?type=all&per_page=100'.format(
+            app.config['ORGANISATION'], repo_name), all_pages=True)
+    response = [{'milestone_number': milestone['number'],
+                 'repo_name': repo_name,
+                 'milestone_id': milestone['id'],
+                 'milestone_title': milestone['title'],
+                 'description': milestone['description'],
+                 'html_url':milestone['html_url'],
+                 'open_issues': milestone['open_issues'],
+                 'closed_issues': milestone['closed_issues'],
+                 'state': milestone['state'],
+                 'updated_at': milestone['updated_at'],
+                 'due_on': milestone['due_on'],
+                 'closed_at': milestone['closed_at']}
+                for milestone in milestone_request]
+    objects = {'objects': response, 'occurences': len(response)}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/milestones/<milestone_number>',
+    methods=['GET'])
+@needlogin
+def get_a_milestone(repo_name, milestone_number):
+    milestone_request = github.get(
+        'repos/{0}/{1}/milestones/{2}?type=all&per_page=100'.format(
+            app.config['ORGANISATION'], repo_name, milestone_number),
+        all_pages=True)
+    response = {
+        'milestone_number': milestone_request['number'],
+        'repo_name': repo_name,
+        'milestone_id': milestone_request['id'],
+        'milestone_title': milestone_request['title'],
+        'description': milestone_request['description'],
+        'html_url': milestone_request['html_url'],
+        'open_issues': milestone_request['open_issues'],
+        'closed_issues': milestone_request['closed_issues'],
+        'state': milestone_request['state'],
+        'updated_at': milestone_request['updated_at'],
+        'due_on': milestone_request['due_on'],
+        'closed_at': milestone_request['closed_at']}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [
+            'repo_name',
+            'milestone_number']}
+    return jsonify(objects)
+
+
+@app.route('/api/repos/<string:repo_name>/milestones', methods=['POST'])
+@needlogin
+def create_milestone(repo_name):
+    data = request.get_json()
+    if data.get('milestone_title'):
+        data['title'] = data.get('milestone_title')
+    data = json.dumps(data)
+    milestone_request = github.request(
+        'POST',
+        'repos/{0}/{1}/milestones?type=all&per_page=100'.format(
+            app.config['ORGANISATION'], repo_name), data=data)
+    response = {
+        'milestone_number': milestone_request['number'],
+        'repo_name': repo_name,
+        'milestone_id': milestone_request['id'],
+        'milestone_title': milestone_request['title'],
+        'description': milestone_request['description'],
+        'html_url': milestone_request['html_url'],
+        'open_issues': milestone_request['open_issues'],
+        'closed_issues': milestone_request['closed_issues'],
+        'state': milestone_request['state'],
+        'updated_at': milestone_request['updated_at'],
+        'due_on': milestone_request['due_on'],
+        'closed_at': milestone_request['closed_at']}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': ['repo_name']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/milestones/<milestone_number>',
+    methods=['PUT'])
+@needlogin
+def update_a_milestone(repo_name, milestone_number):
+    data = request.get_json()
+    if data.get('milestone_title'):
+        data['title'] = data.get('milestone_title')
+    data = json.dumps(data)
+    milestone_request = github.request(
+        'PATCH',
+        'repos/{0}/{1}/milestones/{2}?state=all&per_page=100'.format(
+            app.config['ORGANISATION'], repo_name, milestone_number),
+        data=data)
+    response = {
+        'milestone_number': milestone_request['number'],
+        'repo_name': repo_name,
+        'milestone_id': milestone_request['id'],
+        'milestone_title': milestone_request['title'],
+        'description': milestone_request['description'],
+        'html_url': milestone_request['html_url'],
+        'open_issues': milestone_request['open_issues'],
+        'closed_issues': milestone_request['closed_issues'],
+        'state': milestone_request['state'],
+        'updated_at': milestone_request['updated_at'],
+        'due_on': milestone_request['due_on'],
+        'closed_at': milestone_request['closed_at']}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [
+            'repo_name',
+            'milestone_number']}
+    return jsonify(objects)
+
+
+@app.route('/api/tickets')
+@needlogin
+def list_tickets():
+    params = request.args.copy()
+    url = 'search/issues'
+    end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
+    query = ''
+    for value in params.poplist('labels'):
+        if value[0] == '-':
+            query += '+-label:"{0}"'.format(value[1:])
+        else:
+            query += '+label:"{0}"'.format(value)
+    search = params.pop('search')
+    if search:
+        query += "+{0}".format(search)
+    for key, value in params.items():
+        if value:
+            query += "+{0}:{1}".format(key, value)
+    # use new github api with this additional header allow to get assignees.
+    headers = {'Accept': 'application/vnd.github.cerberus-preview'}
+    try:
+        ticket_request = github.get(
+            url + end_url + query, all_pages=True, headers=headers)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+    response = [{'ticket_id': ticket['id'],
+                 'ticket_number': ticket['number'],
+                 'ticket_title': ticket['title'],
+                 'body': ticket['body'],
+                 'html_url': ticket['html_url'],
+                 'user': {'user_id': ticket['user']['id'],
+                          'user_name': ticket['user']['login']},
+                 'state': ticket['state'],
+                 'milestone_id': (
+                 ticket['milestone']['id'] if ticket['milestone'] else None),
+                 'milestone_title': (
+                     ticket['milestone']['title']
+                     if ticket['milestone'] else None),
+                 'updated_at': ticket['updated_at'],
+                 'closed_at': ticket['closed_at'],
+                 'repo_name': ticket['repository_url'].split('/')[-1],
+                 'assignees': [
+                 {
+                     'user_id': assignee['id'],
+                     'user_name': assignee['login'],
+                     'avatar_url': assignee['avatar_url']
+                 } for assignee in ticket.get('assignees', [])],
+                 'labels': [
+                 {'label_id': label['id'], 'label_name': label['name'],
+                  'label_color': label['color']}
+                     for label in ticket.get('labels', [])]}
+                for ticket in ticket_request['items']]
+    for ticket in response:
+        ticket['selected'] = False
+        ticket['expanded'] = False
+    objects = {'objects': response, 'occurences': len(response)}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<repo_name>/tickets/<ticket_number>',
+    methods=['GET'])
+@needlogin
+def get_a_ticket(repo_name, ticket_number):
+    ticket_request = github.get(
+        'repos/{0}/{1}/issues/{2}?state=all'.format
+        (app.config['ORGANISATION'],
+            repo_name, ticket_number), all_pages=True)
+    response = {
+        'ticket_id': ticket_request['id'],
+        'ticket_number': ticket_request['number'],
+        'ticket_title': ticket_request['title'],
+        'body': ticket_request['body'],
+        'html_url': ticket_request['html_url'],
+        'user': {
+            'user_id': ticket_request['user']['id']},
+        'state': ticket_request['state'],
+        'milestone_id': ticket_request['milestone']['id'],
+        'milestone_title': (
+            ticket_request['milestone']['title']
+            if ticket_request['milestone'] else None),
+        'updated_at': ticket_request['updated_at'],
+        'closed_at': ticket_request['closed_at'],
+        'repo_name': repo_name,
+        'assignees': [
+            {
+                'user_id': assignee['id'],
+                'user_name': assignee['login'],
+                'avatar_url': assignee['avatar_url']
+            } for assignee in ticket_request.get('assignees', [])],
+        'labels': [
+            {
+                'label_id': label['id'], 'label_color': label['color'],
+                'label_name': label['name']} for label in ticket_request.get(
+                'labels',
+                [])]}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [
+            'repo_name',
+            'ticket_number']}
+    return jsonify(objects)
+
+
+@app.route('/api/repos/<repo_name>/tickets', methods=['POST'])
+@needlogin
+def create_a_ticket(repo_name):
+    data = request.get_json()
+    if data.get('ticket_title'):
+        data['title'] = data.pop('ticket_title')
+    if data.get('milestone_number'):
+        data['milestone'] = data.pop('milestone_number')
+    data = json.dumps(data)
+    ticket_request = github.request('POST',
+                                    'repos/{0}/{1}/issues'.format(
+                                        app.config['ORGANISATION'],
+                                        repo_name), data=data)
+    response = {
+        'ticket_id': ticket_request['id'],
+        'ticket_number': ticket_request['number'],
+        'ticket_title': ticket_request['title'],
+        'body': ticket_request['body'],
+        'html_url': ticket_request['html_url'],
+        'user': {
+            'user_id': ticket_request['user']['id']},
+        'state': ticket_request['state'],
+        'milestone_id': ticket_request['milestone']['id'],
+        'milestone_title': (
+            ticket_request['milestone']['title']
+            if ticket_request['milestone'] else None),
+        'updated_at': ticket_request['updated_at'],
+        'closed_at': ticket_request['closed_at'],
+        'repo_name': repo_name,
+        'assignees': [
+            {
+                'user_name': assignee['login'],
+                'avatar_url': assignee['avatar_url']
+            }for assignee in ticket_request.get('assignees', [])],
+        'labels': [
+            {
+                'label_color': label['color'],
+                'label_name': label['name']} for label in ticket_request.get(
+                'labels',
+                [])]}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': ['repo_name']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/tickets/<ticket_number>',
+    methods=['PUT'])
+@needlogin
+def update_a_ticket(repo_name, ticket_number):
+    data = request.get_json()
+    if data.get('ticket_title'):
+        data['title'] = data.get('ticket_title')
+    if data.get('milestone_number'):
+        data['milestone'] = data.get('milestone_number')
+    if data.get('labels'):
+        data['labels'] = [label['label_name'] for label in data.get('labels')]
+    data = json.dumps(data)
+    try:
+        ticket_request = github.request(
+            'PATCH',
+            'repos/{0}/{1}/issues/{2}'.format(
+                app.config['ORGANISATION'],
+                repo_name, ticket_number),
+            data=data)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
+    response = {
+        'ticket_id': ticket_request['id'],
+        'ticket_number': ticket_request['number'],
+        'ticket_title': ticket_request['title'],
+        'body': ticket_request['body'],
+        'html_url': ticket_request['html_url'],
+        'user': {
+            'user_id': ticket_request['user']['id']},
+        'state': ticket_request['state'],
+        'milestone_id': (
+            ticket_request['milestone']['id']
+            if ticket_request['milestone'] else None),
+        'milestone_title': (
+            ticket_request['milestone']['title']
+            if ticket_request['milestone'] else None),
+        'updated_at': ticket_request['updated_at'],
+        'closed_at': ticket_request['closed_at'],
+        'repo_name': repo_name,
+        'assignees': [
+            {
+                'user_id': assignee['id'],
+                'user_name': assignee['login'],
+                'avatar_url': assignee['avatar_url']
+            } for assignee in ticket_request.get('assignees', [])],
+        'labels': [
+            {
+                'label_id': label['id'],
+                'label_color': label['color'],
+                'label_name': label['name']} for label in ticket_request.get(
+                'labels',
+                [])]}
+    objects = [{'objects': [response]}]
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [
+            'repo_name',
+            'ticket_number']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/tickets/<ticket_number>/comments',
+    methods=['GET'])
+@needlogin
+def list_comments(repo_name, ticket_number):
+    comment_request = github.get(
+        'repos/{0}/{1}/issues/{2}/comments?type=all&per_page=100'.format(
+            app.config['ORGANISATION'],
+            repo_name, ticket_number), all_pages=True)
+    response = [{'comment_id': comment['id'],
+                 'repo_name': repo_name,
+                 'ticket_number': ticket_number,
+                 'user':{'user_id': comment['user']['id'],
+                         'user_name': comment['user']['login'],
+                         'avatar_url': comment['user']['avatar_url']},
+                 'created_at': comment['created_at'],
+                 'updtated_at': comment['updated_at'],
+                 'body': comment['body']} for comment in comment_request]
+    objects = [{'objects': [response]}]
+    objects = {'objects': response, 'occurences': len(response)}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/tickets/comments/<comment_id>',
+    methods=['GET'])
+@needlogin
+def get_a_comment(repo_name, comment_id):
+    comment_request = github.get(
+        'repos/{0}/{1}/issues/comments/{2}?type=all&per_page=100'.format(
+            app.config['ORGANISATION'],
+            repo_name, comment_id), all_pages=True)
+    response = {
+        'comment_id': comment_request['id'],
+        'repo_name': repo_name,
+        'user': {'user_id': comment_request['user']['id'],
+                 'user_name': comment_request['user']['login'],
+                 'avatar_url': comment_request['user']['avatar_url']},
+        'created_at': comment_request['created_at'],
+        'updtated_at': comment_request['updated_at'],
+        'body': comment_request['body']}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [
+            'repo_name',
+            'comment_id']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<repo_name>/tickets/<ticket_number>/comments',
+    methods=['POST'])
+@needlogin
+def create_a_comment(repo_name, ticket_number):
+    data = request.get_json()
+    data = json.dumps(data)
+    comment_request = github.request(
+        'POST',
+        'repos/{0}/{1}/issues/{2}/comments'.format(
+            app.config['ORGANISATION'],
+            repo_name, ticket_number), data=data)
+    response = {
+        'comment_id': comment_request['id'],
+        'repo_name': repo_name,
+        'user': {'user_id': comment_request['user']['id'],
+                 'user_name': comment_request['user']['login'],
+                 'avatar_url': comment_request['user']['avatar_url']},
+        'created_at': comment_request['created_at'],
+        'updtated_at': comment_request['updated_at'],
+        'body': comment_request['body']}
+    objects = [{'objects': [response]}]
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [
+            'repo_name',
+            'ticket_number']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<repo_name>/tickets/comments/<comment_id>',
+    methods=['PUT'])
+@needlogin
+def update_a_comment(repo_name, comment_id):
+    data = request.get_json()
+    data = json.dumps(data)
+    comment_request = github.request(
+        'PATCH',
+        'repos/{0}/{1]/issues/comments/{2}'.format(
+            app.config['ORGANISATION'],
+            repo_name, comment_id), data=data)
+    response = {
+        'comment_id': comment_request['id'],
+        'repo_name': repo_name,
+        'user': {'user_id': comment_request['user']['id'],
+                 'user_name': comment_request['user']['login'],
+                 'avatar_url': comment_request['user']['avatar_url']},
+        'created_at': comment_request['created_at'],
+        'updtated_at': comment_request['updated_at'],
+        'body': comment_request['body']}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [
+            'repo_name',
+            'comment_id']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<repo_name>/tickets/comments/<comment_id>',
+    methods=['DELETE'])
+@needlogin
+def delete_a_comment(repo_name, comment_id):
+    comment_request = github.request(
+        'DELETE',
+        'repos/{0}/{1}/issues/comments/{2}'.format(
+            app.config['ORGANISATION'], repo_name, comment_id))
+    response = [{'comment_id': comment['id'],
+                 'user':{'user_id': comment['user']['id'],
+                         'user_name': comment['user']['login'],
+                         'avatar_url': comment['user']['avatar_url']},
+                 'created_at': comment['created_at'],
+                 'updtated_at': comment['updated_at'],
+                 'body': comment['body']} for comment in comment_request]
+    objects = {
+        'objects': response,
+        'occurences': len(response),
+        'primary_keys': [
+            repo_name,
+            comment_id]}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/milestones/<milestone_number>/labels',
+    methods=['GET'])
+@needlogin
+def list_repo_milestone_labels(repo_name, milestone_number):
+    label_request = github.get(
+        'repos/{0}/{1}/milestones/{2}/labels?type=all&per_page=100'.format(
+            app.config['ORGANISATION'], repo_name, milestone_number),
+        all_pages=True)
+    response = [{'label_id': label['id'],
+                 'repo_name': repo_name,
+                 'label_name':label['name'],
+                 'color':label['color']} for label in label_request]
+    objects = {
+        'objects': response,
+        'occurences': len(response),
+        'primary_keys': [
+            'repo_name',
+            'label_name']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/labels',
+    methods=['GET'])
+@needlogin
+def list_repo_labels(repo_name):
+    label_request = github.get(
+        'repos/{0}/{1}/labels?type=all&per_page=100'.format(
+            app.config['ORGANISATION'], repo_name),
+        all_pages=True)
+    response = [{'label_id': label['id'],
+                 'repo_name': repo_name,
+                 'label_name':label['name'],
+                 'color':label['color']} for label in label_request]
+    objects = {
+        'objects': response,
+        'occurences': len(response),
+        'primary_keys': [
+            'repo_name',
+            'label_name']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/labels/<string:label_name>',
+    methods=['GET'])
+@needlogin
+def get_a_label(repo_name, label_name):
+    label_request = github.get(
+        'repos/{0}/{1}/labels/{2}?type=all&per_page=100'.format(
+            app.config['ORGANISATION'], repo_name, label_name),
+        all_pages=True)
+    response = {
+        'label_id': label_request['id'],
+        'repo_name': repo_name,
+        'label_name': label_request['name'],
+        'color': label_request['color']}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [
+            'repo_name',
+            'label_name']}
+    return jsonify(objects)
+
+
+@app.route('/api/repos/<repo_name>/labels', methods=['POST'])
+@needlogin
+def create_a_label(repo_name):
+    data = request.get_json()
+    if data.get('label_name'):
+        data['name'] = data.pop('label_name')
+    label_request = github.post('repos/{0}/{1}/labels'.format(
+                                app.config['ORGANISATION'],
+                                repo_name), data=data)
+    response = {
+        'label_id': label_request['id'],
+        'repo_name': repo_name,
+        'label_name': label_request['name'],
+        'color': label_request['color']
+    }
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': ['repo_name']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/labels/<label_name>',
+    methods=['PUT'])
+@needlogin
+def update_a_label(repo_name, label_name):
+    data = request.get_json()
+    if data.get('label_name'):
+        data['name'] = data.get('label_name')
+    data = json.dumps(data)
+    label_request = github.request('PATCH',
+                                   'repos/{0}/{1}/labels/{2}'.format(
+                                       app.config['ORGANISATION'],
+                                       repo_name, label_name), data=data)
+    response = {
+        'label_id': label_request['id'],
+        'repo_name': repo_name,
+        'label_name': label_request['name'],
+        'color': label_request['color']}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [
+            'repo_name',
+            'label_name']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/repos/<string:repo_name>/labels/<string:label_name>',
+    methods=['DELETE'])
+@needlogin
+def delete_a_label(repo_name, label_name):
+    label_request = github.request('DELETE',
+                                   'repos/{0}/{1}/labels/{2}'.format(
+                                       app.config['ORGANISATION'],
+                                       repo_name, label_name))
+    response = [{'label_id': label['id'],
+                 'repo_name': repo_name,
+                 'label_name': label['name'],
+                 'color': label['color']} for label in label_request]
+    objects = {
+        'objects': response,
+        'occurences': len(response),
+        'primary_keys': [
+            'repo_name',
+            'label_name']}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/users',
+    methods=['GET'])
+@needlogin
+def list_users():
+    user_request = github.get(
+        'orgs/{0}/members?type=all&per_page=100'.format(
+            app.config['ORGANISATION']), all_pages=True)
+    response = [{'user_id': user['id'],
+                 'user_name': user['login'],
+                 'avatar_url': user['avatar_url']} for user in user_request]
+    objects = {'objects': response, 'occurences': len(response)}
+    return jsonify(objects)
+
+
+@app.route(
+    '/api/users/<string:user_name>',
+    methods=['GET'])
+@needlogin
+def get_a_user(user_name):
+    user_request = github.get(
+        'users/' + user_name + '?type=all&per_page=100', all_pages=True)
+    response = {
+        'user_id': user_request['id'],
+        'user_name': user_request['login'],
+        'avatar_url': user_request['avatar_url']}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [user_name]}
+    return jsonify(objects)
 
 
 @app.route('/api/issues.json', methods=['GET', 'POST'])
