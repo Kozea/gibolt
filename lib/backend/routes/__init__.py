@@ -230,7 +230,7 @@ def list_repos():
     objects = {'results': {
         'repositories': response},
         'occurences': len(response)
-        }
+    }
     return jsonify(objects)
 
 
@@ -1009,69 +1009,69 @@ def report():
     })
 
 
-@app.route('/api/repositories.json', methods=['GET', 'POST'])
-@needlogin
-def repositories():
-    app.config['ORGANISATION']
-    return jsonify({
-        'params': request.get_json(),
-        'results': {
-            'repositories': get_allowed_repos()
-        }
-    })
+# @app.route('/api/repositories.json', methods=['GET', 'POST'])
+# @needlogin
+# def repositories():
+#     app.config['ORGANISATION']
+#     return jsonify({
+#         'params': request.get_json(),
+#         'results': {
+#             'repositories': get_allowed_repos()
+#         }
+#     })
 
 
-@app.route('/api/repository.json', methods=['GET', 'POST'])
-@needlogin
-def repository():
-    repository_name = request.get_json()['name']
-    repository = repository = github.get(
-        'repos/{0}/{1}'.format(app.config['ORGANISATION'], repository_name)
-    )
-    current_labels = github.get(
-        'repos/{0}/{1}/labels'.format(
-            app.config['ORGANISATION'], repository_name
-        )
-    )
-    config_labels = (
-        app.config.get('PRIORITY_LABELS') + app.config.get('ACK_LABELS') +
-        app.config.get('QUALIFIER_LABELS')
-    )
-    missing_labels = []
-    overly_labels = []
-    for name, color in config_labels:
-        if not any(d['name'] == name for d in current_labels):
-            missing_labels.append((name, color))
-    for label in current_labels:
-        if not any(name == label['name'] for name, color in config_labels):
-            overly_labels.append((label['name'], label['color']))
-    return jsonify({
-        'params': request.get_json(),
-        'results': {
-            'missingLabels': missing_labels,
-            'overlyLabels': overly_labels,
-            'labels': current_labels,
-            'repository': repository,
-        }
-    })
+# @app.route('/api/repository.json', methods=['GET', 'POST'])
+# @needlogin
+# def repository():
+#     repository_name = request.get_json()['name']
+#     repository = repository = github.get(
+#         'repos/{0}/{1}'.format(app.config['ORGANISATION'], repository_name)
+#     )
+#     current_labels = github.get(
+#         'repos/{0}/{1}/labels'.format(
+#             app.config['ORGANISATION'], repository_name
+#         )
+#     )
+#     config_labels = (
+#         app.config.get('PRIORITY_LABELS') + app.config.get('ACK_LABELS') +
+#         app.config.get('QUALIFIER_LABELS')
+#     )
+#     missing_labels = []
+#     overly_labels = []
+#     for name, color in config_labels:
+#         if not any(d['name'] == name for d in current_labels):
+#             missing_labels.append((name, color))
+#     for label in current_labels:
+#         if not any(name == label['name'] for name, color in config_labels):
+#             overly_labels.append((label['name'], label['color']))
+#     return jsonify({
+#         'params': request.get_json(),
+#         'results': {
+#             'missingLabels': missing_labels,
+#             'overlyLabels': overly_labels,
+#             'labels': current_labels,
+#             'repository': repository,
+#         }
+#     })
 
 
-@app.route('/api/repository/create_labels', methods=['POST'])
-@needlogin
-def create_repository_labels():
-    repository_name = request.get_json()['name']
-    labels = request.get_json()['labels']
-    created = []
-    for name, color in labels:
-        data = {'name': name, 'color': color}
-        github.post(
-            'repos/{0}/{1}/labels'.format(
-                app.config.get('ORGANISATION'), repository_name
-            ),
-            data=data
-        )
-        created.append(data)
-    return jsonify({'params': request.get_json(), 'created': created})
+# @app.route('/api/repository/create_labels', methods=['POST'])
+# @needlogin
+# def create_repository_labels():
+#     repository_name = request.get_json()['name']
+#     labels = request.get_json()['labels']
+#     created = []
+#     for name, color in labels:
+#         data = {'name': name, 'color': color}
+#         github.post(
+#             'repos/{0}/{1}/labels'.format(
+#                 app.config.get('ORGANISATION'), repository_name
+#             ),
+#             data=data
+#         )
+#         created.append(data)
+#     return jsonify({'params': request.get_json(), 'created': created})
 
 
 @app.route('/api/repository/delete_labels', methods=['POST'])

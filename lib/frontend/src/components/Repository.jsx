@@ -18,7 +18,6 @@ function Repository({
   onDeleteLabels,
 }) {
   const confLabels = labels.priority.concat(labels.ack, labels.qualifier)
-
   const missingLabels = confLabels.filter(
     confLabel =>
       results.labels
@@ -66,7 +65,7 @@ function Repository({
         </ul>
         {results.repository.permissions.push ? (
           <article className={b('action')}>
-            <button type="submit" onClick={() => onCreateLabels()}>
+            <button type="submit" onClick={() => onCreateLabels(missingLabels)}>
               Add missing labels
             </button>
           </article>
