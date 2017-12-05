@@ -30,11 +30,6 @@ function Repository({
       confLabels.map(label => label.text).indexOf(resultLabel.label_name) === -1
   )
 
-  console.log('Labels')
-  console.log(confLabels)
-  console.log(missingLabels)
-  console.log(results.labels)
-
   return (
     <section className={b()}>
       <Helmet>
