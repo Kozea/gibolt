@@ -10,12 +10,31 @@ import Loading from './Loading'
 const b = block('Repository')
 
 function Repository({
+  labels,
   loading,
   results,
   reponame,
   onCreateLabels,
   onDeleteLabels,
 }) {
+  const confLabels = labels.priority.concat(labels.ack, labels.qualifier)
+
+  const missingLabels = confLabels.filter(
+    confLabel =>
+      results.labels
+        .map(resultLabel => resultLabel.label_name)
+        .indexOf(confLabel.text) === -1
+  )
+  const overlyLabels = results.labels.filter(
+    resultLabel =>
+      confLabels.map(label => label.text).indexOf(resultLabel.label_name) === -1
+  )
+
+  console.log('Labels')
+  console.log(confLabels)
+  console.log(missingLabels)
+  console.log(results.labels)
+
   return (
     <section className={b()}>
       <Helmet>
@@ -39,17 +58,17 @@ function Repository({
       </article>
       <article>
         <h2>Missing labels</h2>
-        {/* <ul>
-          {results.missingLabels.map(label => (
-            <li key={label[0].label_id} className={b('label')}>
-          <span
-          className={b('bullet')}
-          style={{ backgroundColor: `#${label[1]}` }}
-          />
-          {label[0].label_name}
+        <ul>
+          {missingLabels.map(label => (
+            <li key={label.text} className={b('label')}>
+              <span
+                className={b('bullet')}
+                style={{ backgroundColor: `#${label}` }}
+              />
+              {label.text}
             </li>
           ))}
-        </ul> */}
+        </ul>
         {results.repository.permissions.push ? (
           <article className={b('action')}>
             <button type="submit" onClick={() => onCreateLabels()}>
@@ -65,17 +84,17 @@ function Repository({
       </article>
       <article>
         <h2>Unconfigured labels</h2>
-        {/* <ul>
-          {results.overlyLabels.map(label => (
-            <li key={label[0].label_id} className={b('label')}>
-          <span
-          className={b('bullet')}
-          style={{ backgroundColor: `#${label[1]}` }}
-          />
-          {label[0].label_name}
+        <ul>
+          {overlyLabels.map(label => (
+            <li key={label.label_id} className={b('label')}>
+              <span
+                className={b('bullet')}
+                style={{ backgroundColor: `#${label}` }}
+              />
+              {label.label_name}
             </li>
           ))}
-        </ul> */}
+        </ul>
         {results.repository.permissions.push ? (
           <article className={b('action')}>
             <button type="submit" onClick={() => onDeleteLabels()}>
@@ -94,6 +113,7 @@ function Repository({
 }
 export default connect(
   state => ({
+    labels: state.labels.results,
     results: state.repository.results,
     loading: state.repository.loading,
     error: state.repository.error,
