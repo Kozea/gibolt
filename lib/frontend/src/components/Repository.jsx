@@ -65,7 +65,7 @@ function Repository({
         </ul>
         {results.repository.permissions.push ? (
           <article className={b('action')}>
-            <button type="submit" onClick={() => onCreateLabels(missingLabels)}>
+            <button type="submit" onClick={() => onCreateLabels()}>
               Add missing labels
             </button>
           </article>
