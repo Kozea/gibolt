@@ -27,29 +27,29 @@ function Repository({
         <h2>Current labels</h2>
         <ul>
           {results.labels.map(label => (
-            <li key={label.id} className={b('label')}>
+            <li key={label.label_id} className={b('label')}>
               <span
                 className={b('bullet')}
                 style={{ backgroundColor: `#${label.color}` }}
               />
-              {label.name}
+              {label.label_name}
             </li>
           ))}
         </ul>
       </article>
       <article>
         <h2>Missing labels</h2>
-        <ul>
+        {/* <ul>
           {results.missingLabels.map(label => (
-            <li key={label[0]} className={b('label')}>
-              <span
-                className={b('bullet')}
-                style={{ backgroundColor: `#${label[1]}` }}
-              />
-              {label[0]}
+            <li key={label[0].label_id} className={b('label')}>
+          <span
+          className={b('bullet')}
+          style={{ backgroundColor: `#${label[1]}` }}
+          />
+          {label[0].label_name}
             </li>
           ))}
-        </ul>
+        </ul> */}
         {results.repository.permissions.push ? (
           <article className={b('action')}>
             <button type="submit" onClick={() => onCreateLabels()}>
@@ -65,17 +65,17 @@ function Repository({
       </article>
       <article>
         <h2>Unconfigured labels</h2>
-        <ul>
+        {/* <ul>
           {results.overlyLabels.map(label => (
-            <li key={label[0]} className={b('label')}>
-              <span
-                className={b('bullet')}
-                style={{ backgroundColor: `#${label[1]}` }}
-              />
-              {label[0]}
+            <li key={label[0].label_id} className={b('label')}>
+          <span
+          className={b('bullet')}
+          style={{ backgroundColor: `#${label[1]}` }}
+          />
+          {label[0].label_name}
             </li>
           ))}
-        </ul>
+        </ul> */}
         {results.repository.permissions.push ? (
           <article className={b('action')}>
             <button type="submit" onClick={() => onDeleteLabels()}>

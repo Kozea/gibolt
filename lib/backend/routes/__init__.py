@@ -230,7 +230,7 @@ def list_repos():
     objects = {'results': {
         'repositories': response},
         'occurences': len(response)
-    }
+        }
     return jsonify(objects)
 
 
