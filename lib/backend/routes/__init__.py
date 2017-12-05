@@ -226,7 +226,11 @@ def list_repos():
                      'pull': repository['permissions']['pull']}
                  }
                 for repository in repo_request]
-    objects = {'objects': response, 'occurences': len(response)}
+    # objects = {'objects': response, 'occurences': len(response)}
+    objects = {'results': {
+        'repositories': response},
+        'occurences': len(response)
+    }
     return jsonify(objects)
 
 
