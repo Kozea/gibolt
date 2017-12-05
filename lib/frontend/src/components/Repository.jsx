@@ -63,33 +63,41 @@ function Repository({
             </li>
           ))}
         </ul>
-        {results.repository.permissions.push ? (
-          <article className={b('action')}>
-            <button type="submit" onClick={() => onCreateLabels()}>
-              Add missing labels
-            </button>
-          </article>
+        {missingLabels.length > 0 ? (
+          results.repository.permissions.push ? (
+            <article className={b('action')}>
+              <button type="submit" onClick={() => onCreateLabels()}>
+                Add missing labels
+              </button>
+            </article>
+          ) : (
+            <p>
+              You can’t change labels on this repository, ask an admin for write
+              permission.
+            </p>
+          )
         ) : (
-          <p>
-            You can’t change labels on this repository, ask an admin for write
-            permission.
-          </p>
+          <p>None</p>
         )}
       </article>
       <article>
         <h2>Unconfigured labels</h2>
         <ul>
-          {overlyLabels.map(label => (
-            <li key={label.label_id} className={b('label')}>
-              <span
-                className={b('bullet')}
-                style={{ backgroundColor: `#${label}` }}
-              />
-              {label.label_name}
-            </li>
-          ))}
+          {overlyLabels.length > 0 ? (
+            overlyLabels.map(label => (
+              <li key={label.label_id} className={b('label')}>
+                <span
+                  className={b('bullet')}
+                  style={{ backgroundColor: `#${label}` }}
+                />
+                {label.label_name}
+              </li>
+            ))
+          ) : (
+            <p>None</p>
+          )}
         </ul>
-        {results.repository.permissions.push ? (
+        {overlyLabels && results.repository.permissions.push ? (
           <article className={b('action')}>
             <button type="submit" onClick={() => onDeleteLabels()}>
               Delete Unconfigured labels
