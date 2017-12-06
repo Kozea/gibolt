@@ -1,6 +1,6 @@
 import './Milestone.sass'
 
-import { format } from 'date-fns'
+import moment from 'moment'
 import React from 'react'
 
 import { block } from '../utils'
@@ -11,9 +11,7 @@ const b = block('Milestone')
 export default function Milestone(props) {
   return (
     <li className={b({ status: props.state })}>
-      <span className={b('day')}>
-        {format(new Date(props.due_on), 'DD/MM/YYYY')}
-      </span>
+      <span className={b('day')}>{moment(props.due_on).date()}</span>
       <span className={b('repo')}>{props.repo}</span>
       <a className={b('link')} href={props.html_url}>
         {props.title}

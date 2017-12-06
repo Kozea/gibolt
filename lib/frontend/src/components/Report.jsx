@@ -1,6 +1,6 @@
 import './Report.sass'
 
-import { format, startOfMonth } from 'date-fns'
+import moment from 'moment'
 import { parse, stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
@@ -15,9 +15,9 @@ const groupByMonth = issues =>
       if (!issue.closed_at) {
         return months
       }
-      const month = startOfMonth(new Date(issue.closed_at))
-      const monthStr = format(month, 'LL')
-      if (months[monthStr] === void 0) {
+      const month = moment(issue.closed_at).startOf('month')
+      const monthStr = month.format('LL')
+      if (months[monthStr] === undefined) {
         months[monthStr] = {
           month: month,
           issues: [],
@@ -45,7 +45,7 @@ const groupByUser = issues =>
 const groupByRepository = issues =>
   values(
     issues.reduce((repositories, issue) => {
-      if (repositories[issue.repository.full_name] === void 0) {
+      if (repositories[issue.repository.full_name] === undefined) {
         repositories[issue.repository.full_name] = {
           repository: issue.repository,
           issues: [],
@@ -91,7 +91,7 @@ function Report({ range, query, loading, error, issues, onDateChange }) {
         <h2>Overall</h2>
         {issuesByMonth.map(({ id, month, issues: monthIssues }) => (
           <article key={id} className={b('month')}>
-            <h3>{format(month, 'LL')}</h3>
+            <h3>{month.format('LL')}</h3>
             <ul>
               {groupByRepository(monthIssues)
                 .sort((a, b) => b.issues.length - a.issues.length)
@@ -115,7 +115,7 @@ function Report({ range, query, loading, error, issues, onDateChange }) {
           {groupByMonth(userIssues).map(
             ({ id, month, issues: monthIssues }) => (
               <article key={id} className={b('month')}>
-                <h3>{format(month, 'LL')}</h3>
+                <h3>{month.format('LL')}</h3>
                 <ul>
                   {groupByRepository(monthIssues)
                     .sort((a, b) => b.issues.length - a.issues.length)
@@ -144,7 +144,7 @@ function Report({ range, query, loading, error, issues, onDateChange }) {
 }
 export default connect(
   state => ({
-    query: parse(state.router.location.search),
+    query: state.router.query,
     issues: state.report.results.issues,
     loading: state.report.loading,
     error: state.report.error,
@@ -155,10 +155,10 @@ export default connect(
       dispatch(
         push({
           pathname: '/report',
-          search: stringify({
+          query: {
             ...query,
-            [type]: date || void 0,
-          }),
+            [type]: date || undefined,
+          },
         })
       )
     },
