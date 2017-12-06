@@ -35,6 +35,18 @@ function Repository({
         <title>Gibolt - Repository</title>
       </Helmet>
       <h1>{reponame}</h1>
+      {results.errors && (
+        <div>
+          <ul>
+            {results.errors.map((error, index) => (
+              <li key={index}>
+                <span className={b('bullet')} />
+                {error}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {loading && <Loading />}
       <article>
         <h2>Current labels</h2>
@@ -118,7 +130,6 @@ export default connect(
     labels: state.labels.results,
     results: state.repository.results,
     loading: state.repository.loading,
-    error: state.repository.error,
     reponame: repositoryNameFromState(state).name,
   }),
   dispatch => ({
