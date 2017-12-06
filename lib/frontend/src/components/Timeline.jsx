@@ -21,7 +21,7 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
       }
       const month = moment(milestone.due_on).startOf('month')
       const monthStr = month.format('LL')
-      if (months[monthStr] === undefined) {
+      if (months[monthStr] === void 0) {
         months[monthStr] = {
           month: month,
           milestones: [],
@@ -67,8 +67,6 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
           </h2>
           <ul>
             {milestones.map(milestone => (
-              // console.log('milestone'),
-              // console.log(milestones),
               <Milestone
                 key={milestone.id}
                 state={milestone.state}
@@ -101,7 +99,7 @@ export default connect(
           pathname: '/timeline',
           query: {
             ...query,
-            [type]: date || undefined,
+            [type]: date || void 0,
           },
         })
       )

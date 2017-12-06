@@ -1,7 +1,6 @@
 import './Report.sass'
 
 import moment from 'moment'
-import { parse, stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { push } from 'react-router-redux'
@@ -17,7 +16,7 @@ const groupByMonth = issues =>
       }
       const month = moment(issue.closed_at).startOf('month')
       const monthStr = month.format('LL')
-      if (months[monthStr] === undefined) {
+      if (months[monthStr] === void 0) {
         months[monthStr] = {
           month: month,
           issues: [],
@@ -45,7 +44,7 @@ const groupByUser = issues =>
 const groupByRepository = issues =>
   values(
     issues.reduce((repositories, issue) => {
-      if (repositories[issue.repository.full_name] === undefined) {
+      if (repositories[issue.repository.full_name] === void 0) {
         repositories[issue.repository.full_name] = {
           repository: issue.repository,
           issues: [],
@@ -157,7 +156,7 @@ export default connect(
           pathname: '/report',
           query: {
             ...query,
-            [type]: date || undefined,
+            [type]: date || void 0,
           },
         })
       )
