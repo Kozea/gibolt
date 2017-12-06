@@ -799,22 +799,32 @@ def get_a_label(repo_name, label_name):
 @needlogin
 def create_a_label(repo_name):
     data = request.get_json()
-    if data.get('label_name'):
-        data['name'] = data.pop('label_name')
-    label_request = github.post('repos/{0}/{1}/labels'.format(
-                                app.config['ORGANISATION'],
-                                repo_name), data=data)
-    response = {
-        'label_id': label_request['id'],
-        'repo_name': repo_name,
-        'label_name': label_request['name'],
-        'color': label_request['color']
-    }
-    objects = {
-        'objects': response,
-        'occurences': 1 if response else 0,
-        'primary_keys': ['repo_name']}
-    return jsonify(objects)
+
+    if not data.get('label_name'):
+        response = {
+            'status': 'error',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(objects), 400
+
+    data['name'] = data.pop('label_name')
+    try:
+        label_request = github.post('repos/{0}/{1}/labels'.format(
+                                    app.config['ORGANISATION'],
+                                    repo_name), data=data)
+        response = {
+            'label_id': label_request['id'],
+            'repo_name': repo_name,
+            'label_name': label_request['name'],
+            'color': label_request['color']
+        }
+        objects = {
+            'object': response,
+            'occurences': 1 if response else 0,
+            'primary_keys': ['repo_name']}
+        return jsonify(objects)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
 
 
 @app.route(
@@ -1008,22 +1018,6 @@ def report():
             'issues': ok_issues
         }
     })
-
-
-# @app.route('/api/repository/delete_labels', methods=['POST'])
-# @needlogin
-# def delete_repository_labels():
-#     repository_name = request.get_json()['name']
-#     labels = request.get_json()['labels']
-#     deleted = []
-#     for name, color in labels:
-#         github.delete(
-#             'repos/{0}/{1}/labels/{2}'.format(
-#                 app.config.get('ORGANISATION'), repository_name, name
-#             )
-#         )
-#         deleted.append(name)
-#     return jsonify({'params': request.get_json(), 'deleted': deleted})
 
 
 @app.route('/api/apply_labels', methods=["POST"])
