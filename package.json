@@ -45,11 +45,12 @@
   "license": "MIT",
   "dependencies": {
     "bem-cn": "2.1.3",
-    "date-fns": "2.0.0-alpha.7",
+    "date-fns": "^1.29.0",
     "deep-equal": "1.0.1",
     "history": "4.7.2",
     "isomorphic-fetch": "2.2.1",
     "koaze": "0.0.11",
+    "moment": "^2.19.3",
     "path-to-regexp": "2.1.0",
     "query-string": "5.0.1",
     "react": "16.2.0",
