@@ -849,21 +849,22 @@ def update_a_label(repo_name, label_name):
     methods=['DELETE'])
 @needlogin
 def delete_a_label(repo_name, label_name):
-    label_request = github.request('DELETE',
-                                   'repos/{0}/{1}/labels/{2}'.format(
-                                       app.config['ORGANISATION'],
-                                       repo_name, label_name))
-    response = [{'label_id': label['id'],
-                 'repo_name': repo_name,
-                 'label_name': label['name'],
-                 'color': label['color']} for label in label_request]
-    objects = {
-        'objects': response,
-        'occurences': len(response),
-        'primary_keys': [
-            'repo_name',
-            'label_name']}
-    return jsonify(objects)
+    try:
+        # Github API returns 204 (No content), if no error
+        response_github = github.request('DELETE',
+                                       'repos/{0}/{1}/labels/{2}'.format(
+                                           app.config['ORGANISATION'],
+                                           repo_name, label_name))
+        response = {
+           'status': 'success',
+           'message': 'Label {0} deleted for repo {1}.'.format(
+               label_name,
+               repo_name
+           )
+        }
+        return jsonify(response), response_github.status_code
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
 
 
 @app.route(
@@ -1009,85 +1010,20 @@ def report():
     })
 
 
-# @app.route('/api/repositories.json', methods=['GET', 'POST'])
+# @app.route('/api/repository/delete_labels', methods=['POST'])
 # @needlogin
-# def repositories():
-#     app.config['ORGANISATION']
-#     return jsonify({
-#         'params': request.get_json(),
-#         'results': {
-#             'repositories': get_allowed_repos()
-#         }
-#     })
-
-
-# @app.route('/api/repository.json', methods=['GET', 'POST'])
-# @needlogin
-# def repository():
-#     repository_name = request.get_json()['name']
-#     repository = repository = github.get(
-#         'repos/{0}/{1}'.format(app.config['ORGANISATION'], repository_name)
-#     )
-#     current_labels = github.get(
-#         'repos/{0}/{1}/labels'.format(
-#             app.config['ORGANISATION'], repository_name
-#         )
-#     )
-#     config_labels = (
-#         app.config.get('PRIORITY_LABELS') + app.config.get('ACK_LABELS') +
-#         app.config.get('QUALIFIER_LABELS')
-#     )
-#     missing_labels = []
-#     overly_labels = []
-#     for name, color in config_labels:
-#         if not any(d['name'] == name for d in current_labels):
-#             missing_labels.append((name, color))
-#     for label in current_labels:
-#         if not any(name == label['name'] for name, color in config_labels):
-#             overly_labels.append((label['name'], label['color']))
-#     return jsonify({
-#         'params': request.get_json(),
-#         'results': {
-#             'missingLabels': missing_labels,
-#             'overlyLabels': overly_labels,
-#             'labels': current_labels,
-#             'repository': repository,
-#         }
-#     })
-
-
-# @app.route('/api/repository/create_labels', methods=['POST'])
-# @needlogin
-# def create_repository_labels():
+# def delete_repository_labels():
 #     repository_name = request.get_json()['name']
 #     labels = request.get_json()['labels']
-#     created = []
+#     deleted = []
 #     for name, color in labels:
-#         data = {'name': name, 'color': color}
-#         github.post(
-#             'repos/{0}/{1}/labels'.format(
-#                 app.config.get('ORGANISATION'), repository_name
-#             ),
-#             data=data
+#         github.delete(
+#             'repos/{0}/{1}/labels/{2}'.format(
+#                 app.config.get('ORGANISATION'), repository_name, name
+#             )
 #         )
-#         created.append(data)
-#     return jsonify({'params': request.get_json(), 'created': created})
-
-
-@app.route('/api/repository/delete_labels', methods=['POST'])
-@needlogin
-def delete_repository_labels():
-    repository_name = request.get_json()['name']
-    labels = request.get_json()['labels']
-    deleted = []
-    for name, color in labels:
-        github.delete(
-            'repos/{0}/{1}/labels/{2}'.format(
-                app.config.get('ORGANISATION'), repository_name, name
-            )
-        )
-        deleted.append(name)
-    return jsonify({'params': request.get_json(), 'deleted': deleted})
+#         deleted.append(name)
+#     return jsonify({'params': request.get_json(), 'deleted': deleted})
 
 
 @app.route('/api/apply_labels', methods=["POST"])
