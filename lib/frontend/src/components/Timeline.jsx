@@ -1,13 +1,12 @@
 import './Timeline.sass'
 
-// import { format, startOfMonth } from 'date-fns'
-import moment from 'moment'
+import { format, startOfMonth } from 'date-fns'
+import { parse, stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { push } from 'react-router-redux'
-import { connect } from 'react-redux'
 
-import { block, timelineRangeFromState, values } from '../utils'
+import { block, connect, timelineRangeFromState, values } from '../utils'
 import Loading from './Loading'
 import Milestone from './Milestone'
 
@@ -19,8 +18,8 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
       if (!milestone.due_on) {
         return months
       }
-      const month = moment(milestone.due_on).startOf('month')
-      const monthStr = month.format('LL')
+      const month = startOfMonth(milestone.due_on)
+      const monthStr = format(month, 'LL')
       if (months[monthStr] === void 0) {
         months[monthStr] = {
           month: month,
@@ -33,8 +32,6 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
   )
   milestonesByMonth = milestonesByMonth.sort((a, b) => a.month - b.month)
   return (
-    // console.log('milestonesByMonth'),
-    // console.log(milestonesByMonth),
     <section className={b()}>
       <Helmet>
         <title>Gibolt - Timeline</title>
@@ -63,7 +60,7 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
       {milestonesByMonth.map(({ id, month, milestones }) => (
         <article key={id} className={b('date')}>
           <h2>
-            {month.format('MMMM YYYY')} <sup>({milestones.length})</sup>
+            {format(month, 'MMMM YYYY')} <sup>({milestones.length})</sup>
           </h2>
           <ul>
             {milestones.map(milestone => (
@@ -71,9 +68,9 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
                 key={milestone.id}
                 state={milestone.state}
                 due_on={milestone.due_on}
-                repo={milestone.repo_name}
+                repo={milestone.repo}
                 html_url={milestone.html_url}
-                title={milestone.milestone_title}
+                title={milestone.title}
                 open_issues={milestone.open_issues}
                 closed_issues={milestone.closed_issues}
               />
@@ -86,7 +83,7 @@ function Timeline({ range, query, loading, error, milestones, onDateChange }) {
 }
 export default connect(
   state => ({
-    query: state.router.query,
+    query: parse(state.router.location.search),
     milestones: state.timeline.results.milestones,
     loading: state.timeline.loading,
     error: state.timeline.error,
@@ -97,12 +94,13 @@ export default connect(
       dispatch(
         push({
           pathname: '/timeline',
-          query: {
+          search: stringify({
             ...query,
             [type]: date || void 0,
-          },
+          }),
         })
       )
     },
   })
 )(Timeline)
+
