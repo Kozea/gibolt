@@ -83,31 +83,31 @@ function Repository({
       <article>
         <h2>Unconfigured labels</h2>
         <ul>
-          {overlyLabels.length > 0 ? (
-            overlyLabels.map(label => (
-              <li key={label.label_id} className={b('label')}>
-                <span
-                  className={b('bullet')}
-                  style={{ backgroundColor: `#${label}` }}
-                />
-                {label.label_name}
-              </li>
-            ))
-          ) : (
-            <p>None</p>
-          )}
+          {overlyLabels.map(label => (
+            <li key={label.label_id} className={b('label')}>
+              <span
+                className={b('bullet')}
+                style={{ backgroundColor: `#${label}` }}
+              />
+              {label.label_name}
+            </li>
+          ))}
         </ul>
-        {overlyLabels && results.repository.permissions.push ? (
-          <article className={b('action')}>
-            <button type="submit" onClick={() => onDeleteLabels()}>
-              Delete Unconfigured labels
-            </button>
-          </article>
+        {overlyLabels.length > 0 ? (
+          results.repository.permissions.push ? (
+            <article className={b('action')}>
+              <button type="submit" onClick={() => onDeleteLabels()}>
+                Delete Unconfigured labels
+              </button>
+            </article>
+          ) : (
+            <p>
+              You can’t change labels on this repository, ask an admin for write
+              permission.
+            </p>
+          )
         ) : (
-          <p>
-            You can’t change labels on this repository, ask an admin for write
-            permission.
-          </p>
+          <p>None</p>
         )}
       </article>
     </section>
@@ -130,3 +130,4 @@ export default connect(
     },
   })
 )(Repository)
+
