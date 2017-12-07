@@ -10,7 +10,6 @@ import Loading from './Loading'
 const b = block('Repository')
 
 function Repository({
-  labels,
   loading,
   results,
   reponame,
@@ -26,10 +25,10 @@ function Repository({
       {results.errors && (
         <div>
           <ul>
-            {results.errors.map((error, index) => (
-              <li key={index}>
+            {results.errors.map(error => (
+              <li key={error.id}>
                 <span className={b('bullet')} />
-                {error}
+                {error.value}
               </li>
             ))}
           </ul>
@@ -115,7 +114,6 @@ function Repository({
 }
 export default connect(
   state => ({
-    labels: state.labels.results,
     results: state.repository.results,
     loading: state.repository.loading,
     reponame: repositoryNameFromState(state).name,

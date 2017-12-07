@@ -805,7 +805,7 @@ def create_a_label(repo_name):
             'status': 'error',
             'message': 'Invalid payload.'
         }
-        return jsonify(objects), 400
+        return jsonify(response), 400
 
     data['name'] = data.pop('label_name')
     try:
@@ -862,16 +862,12 @@ def delete_a_label(repo_name, label_name):
     try:
         # Github API returns 204 (No content), if no error
         response_github = github.request('DELETE',
-                                       'repos/{0}/{1}/labels/{2}'.format(
-                                           app.config['ORGANISATION'],
-                                           repo_name, label_name))
-        response = {
-           'status': 'success',
-           'message': 'Label {0} deleted for repo {1}.'.format(
-               label_name,
-               repo_name
-           )
-        }
+                                         'repos/{0}/{1}/labels/{2}'
+                                         .format(app.config['ORGANISATION'],
+                                                 repo_name, label_name))
+        response = {'status': 'success',
+                    'message': 'Label {0} deleted for repo {1}.'
+                    .format(label_name, repo_name)}
         return jsonify(response), response_github.status_code
     except GitHubError as e:
         return e.response.content, e.response.status_code
