@@ -23,11 +23,11 @@ export default function Issue(props) {
       />
       {props.users.map(user => (
         <img
-          key={user.id}
+          key={user.user_id}
           className={b('avatar')}
           src={user.avatar_url}
           alt="avatar"
-          title={user.login}
+          title={user.user_name}
         />
       ))}
       <a className={b('link')} href={props.url}>
