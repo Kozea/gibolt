@@ -17,18 +17,6 @@ function Repository({
   onCreateLabels,
   onDeleteLabels,
 }) {
-  const confLabels = labels.priority.concat(labels.ack, labels.qualifier)
-  const missingLabels = confLabels.filter(
-    confLabel =>
-      results.labels
-        .map(resultLabel => resultLabel.label_name)
-        .indexOf(confLabel.text) === -1
-  )
-  const overlyLabels = results.labels.filter(
-    resultLabel =>
-      confLabels.map(label => label.text).indexOf(resultLabel.label_name) === -1
-  )
-
   return (
     <section className={b()}>
       <Helmet>
@@ -65,7 +53,7 @@ function Repository({
       <article>
         <h2>Missing labels</h2>
         <ul>
-          {missingLabels.map(label => (
+          {results.missingLabels.map(label => (
             <li key={label.text} className={b('label')}>
               <span
                 className={b('bullet')}
@@ -75,7 +63,7 @@ function Repository({
             </li>
           ))}
         </ul>
-        {missingLabels.length > 0 ? (
+        {results.missingLabels.length > 0 ? (
           results.repository.permissions.push ? (
             <article className={b('action')}>
               <button type="submit" onClick={() => onCreateLabels()}>
@@ -95,7 +83,7 @@ function Repository({
       <article>
         <h2>Unconfigured labels</h2>
         <ul>
-          {overlyLabels.map(label => (
+          {results.overlyLabels.map(label => (
             <li key={label.label_id} className={b('label')}>
               <span
                 className={b('bullet')}
@@ -105,7 +93,7 @@ function Repository({
             </li>
           ))}
         </ul>
-        {overlyLabels.length > 0 ? (
+        {results.overlyLabels.length > 0 ? (
           results.repository.permissions.push ? (
             <article className={b('action')}>
               <button type="submit" onClick={() => onDeleteLabels()}>
