@@ -108,3 +108,6 @@ run:
 
 serve: env-check clean
 	$(MAKE) P="serve-node-client serve-node-server serve-python" make-p
+
+initdb:
+	$(FLASK) initdb

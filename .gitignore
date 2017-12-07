@@ -15,3 +15,5 @@ lib/frontend/assets/
 lib/frontend/static/
 Makefile.custom.config
 node_modules/
+.ropeproject/
+database.db

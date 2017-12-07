@@ -22,17 +22,29 @@ function Repository({
         <title>Gibolt - Repository</title>
       </Helmet>
       <h1>{reponame}</h1>
+      {results.errors && (
+        <div>
+          <ul>
+            {results.errors.map(error => (
+              <li key={error.id}>
+                <span className={b('bullet')} />
+                {error.value}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {loading && <Loading />}
       <article>
         <h2>Current labels</h2>
         <ul>
           {results.labels.map(label => (
-            <li key={label.id} className={b('label')}>
+            <li key={label.label_id} className={b('label')}>
               <span
                 className={b('bullet')}
                 style={{ backgroundColor: `#${label.color}` }}
               />
-              {label.name}
+              {label.label_name}
             </li>
           ))}
         </ul>
@@ -41,52 +53,60 @@ function Repository({
         <h2>Missing labels</h2>
         <ul>
           {results.missingLabels.map(label => (
-            <li key={label[0]} className={b('label')}>
+            <li key={label.text} className={b('label')}>
               <span
                 className={b('bullet')}
-                style={{ backgroundColor: `#${label[1]}` }}
+                style={{ backgroundColor: `#${label}` }}
               />
-              {label[0]}
+              {label.text}
             </li>
           ))}
         </ul>
-        {results.repository.permissions.push ? (
-          <article className={b('action')}>
-            <button type="submit" onClick={() => onCreateLabels()}>
-              Add missing labels
-            </button>
-          </article>
+        {results.missingLabels.length > 0 ? (
+          results.repository.permissions.push ? (
+            <article className={b('action')}>
+              <button type="submit" onClick={() => onCreateLabels()}>
+                Add missing labels
+              </button>
+            </article>
+          ) : (
+            <p>
+              You can’t change labels on this repository, ask an admin for write
+              permission.
+            </p>
+          )
         ) : (
-          <p>
-            You can’t change labels on this repository, ask an admin for write
-            permission.
-          </p>
+          <p>None</p>
         )}
       </article>
       <article>
         <h2>Unconfigured labels</h2>
         <ul>
           {results.overlyLabels.map(label => (
-            <li key={label[0]} className={b('label')}>
+            <li key={label.label_id} className={b('label')}>
               <span
                 className={b('bullet')}
-                style={{ backgroundColor: `#${label[1]}` }}
+                style={{ backgroundColor: `#${label}` }}
               />
-              {label[0]}
+              {label.label_name}
             </li>
           ))}
         </ul>
-        {results.repository.permissions.push ? (
-          <article className={b('action')}>
-            <button type="submit" onClick={() => onDeleteLabels()}>
-              Delete Unconfigured labels
-            </button>
-          </article>
+        {results.overlyLabels.length > 0 ? (
+          results.repository.permissions.push ? (
+            <article className={b('action')}>
+              <button type="submit" onClick={() => onDeleteLabels()}>
+                Delete Unconfigured labels
+              </button>
+            </article>
+          ) : (
+            <p>
+              You can’t change labels on this repository, ask an admin for write
+              permission.
+            </p>
+          )
         ) : (
-          <p>
-            You can’t change labels on this repository, ask an admin for write
-            permission.
-          </p>
+          <p>None</p>
         )}
       </article>
     </section>
@@ -96,7 +116,6 @@ export default connect(
   state => ({
     results: state.repository.results,
     loading: state.repository.loading,
-    error: state.repository.error,
     reponame: repositoryNameFromState(state).name,
   }),
   dispatch => ({

@@ -27,15 +27,15 @@ function Repositories({ loading, error, repositories }) {
       <article className={b('repositories')}>
         <ul>
           {repositories.map(repository => (
-            <li key={repository} className={b('item')}>
+            <li key={repository.repo_id} className={b('item')}>
               <Link
                 className={b('link')}
                 to={{
                   pathname: '/repository',
-                  search: stringify({ name: repository }),
+                  search: stringify({ name: repository.repo_name }),
                 }}
               >
-                {repository}
+                {repository.repo_name}
               </Link>
             </li>
           ))}
