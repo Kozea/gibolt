@@ -71,7 +71,7 @@ function Issues({
           }
           onChange={() =>
             onToggleGrouper(
-              issues.map(issue => issue.id),
+              issues.map(issue => issue.ticket_id),
               checkboxState(issues) !== 'checked'
             )
           }
@@ -85,7 +85,7 @@ function Issues({
           <code>{error}</code>
         </article>
       )}
-      {issuesByGroup.map(({ id, group, issues }) => (
+      {issuesByGroup.map(({ id, group }) => (
         <article key={id} className={b('group')}>
           <h2>
             {group} <sup>({issues.length})</sup>{' '}
@@ -98,7 +98,7 @@ function Issues({
               }
               onChange={() =>
                 onToggleGrouper(
-                  issues.map(issue => issue.id),
+                  issues.map(issue => issue.ticket_id),
                   checkboxState(issues) !== 'checked'
                 )
               }
@@ -114,21 +114,25 @@ function Issues({
           <ul>
             {sortIssues(issues, grouper).map(issue => (
               <Issue
-                key={issue.id}
-                id={issue.number}
+                key={issue.ticket_id}
+                id={issue.ticket_number}
                 state={issue.state}
-                title={issue.title}
+                closed_at={issue.closed_at}
+                title={issue.ticket_title}
                 body={issue.body}
+                assignee={issue.user}
                 users={issue.assignees}
-                avatars={issue.avatars}
-                project={issue.repository_url.split('/').splice(-1)[0]}
+                avatars={issue.avatar_url}
+                project={issue.repo_name}
                 labels={issue.labels}
+                milestone_id={issue.milestone_id}
+                milestone_title={issue.milestone_title}
                 selected={issue.selected}
                 url={issue.html_url}
                 pull_request={issue.pull_request}
                 expanded={issue.expanded}
-                onBoxChange={() => onToggleSelected(issue.id)}
-                onClick={() => onToggleExpanded(issue.id)}
+                onBoxChange={() => onToggleSelected(issue.ticket_id)}
+                onClick={() => onToggleExpanded(issue.ticket_id)}
               />
             ))}
           </ul>

@@ -38,7 +38,7 @@ export default function Issue(props) {
           <span key={label.name} className={b('label')}>
             <span
               className={b('bullet')}
-              style={{ backgroundColor: '#' + label.color }}
+              style={{ backgroundColor: `#${label.color}` }}
             />
             {label.name}
           </span>

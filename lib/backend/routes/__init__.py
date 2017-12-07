@@ -380,6 +380,13 @@ def update_a_milestone(repo_name, milestone_number):
 @needlogin
 def list_tickets():
     params = request.args.copy()
+    if len(params) == 0:
+        response = {
+            'status': 'error',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response), 400
+
     url = 'search/issues'
     end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
     query = ''
