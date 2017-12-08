@@ -3,9 +3,7 @@ import './Issues.sass'
 import React from 'react'
 
 import {
-  removeSelectedIssuesPriority,
-  incrementSelectedIssuesPriority,
-  closeSelectedIssues,
+  updateIssues,
   setIssuesSelectness,
   setLoading,
   toggleExpanded,
@@ -188,11 +186,11 @@ export default connect(
       dispatch(setLoading('issues'))
       switch (change) {
         case 'removeTop':
-          return dispatch(removeSelectedIssuesPriority())
+          return dispatch(updateIssues('removeSelectedIssuesPriority'))
         case 'increment':
-          return dispatch(incrementSelectedIssuesPriority())
+          return dispatch(updateIssues('incrementSelectedIssuesPriority'))
         case 'close':
-          return dispatch(closeSelectedIssues())
+          return dispatch(updateIssues('closeSelectedIssues'))
       }
     },
   })
