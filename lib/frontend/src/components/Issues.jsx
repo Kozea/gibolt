@@ -3,7 +3,9 @@ import './Issues.sass'
 import React from 'react'
 
 import {
-  postChangeSelectedIssuesPriority,
+  removeSelectedIssuesPriority,
+  incrementSelectedIssuesPriority,
+  closeSelectedIssues,
   setIssuesSelectness,
   setLoading,
   toggleExpanded,
@@ -46,7 +48,7 @@ function Issues({
   onToggleSelected,
   onToggleGrouper,
   onToggleExpanded,
-  onChangePriority,
+  onChangeTickets,
 }) {
   const issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
   const closedLen = labelFilteredIssues.filter(
@@ -139,11 +141,14 @@ function Issues({
         </article>
       ))}
       <article className={b('action')}>
-        <button type="submit" onClick={() => onChangePriority('increment')}>
+        <button type="submit" onClick={() => onChangeTickets('increment')}>
           Increment priority
         </button>
-        <button type="submit" onClick={() => onChangePriority('removeTop')}>
+        <button type="submit" onClick={() => onChangeTickets('removeTop')}>
           Remove top priority
+        </button>
+        <button type="submit" onClick={() => onChangeTickets('close')}>
+          Close ticket
         </button>
       </article>
     </section>
@@ -179,9 +184,16 @@ export default connect(
     onToggleGrouper: (issuesId, isSelected) => {
       dispatch(setIssuesSelectness(issuesId, isSelected))
     },
-    onChangePriority: change => {
+    onChangeTickets: change => {
       dispatch(setLoading('issues'))
-      dispatch(postChangeSelectedIssuesPriority(change))
+      switch (change) {
+        case 'removeTop':
+          return dispatch(removeSelectedIssuesPriority())
+        case 'increment':
+          return dispatch(incrementSelectedIssuesPriority())
+        case 'close':
+          return dispatch(closeSelectedIssues())
+      }
     },
   })
 )(Issues)
