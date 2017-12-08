@@ -85,7 +85,7 @@ function Issues({
           <code>{error}</code>
         </article>
       )}
-      {issuesByGroup.map(({ id, group }) => (
+      {issuesByGroup.map(({ id, group, issues }) => (
         <article key={id} className={b('group')}>
           <h2>
             {group} <sup>({issues.length})</sup>{' '}
