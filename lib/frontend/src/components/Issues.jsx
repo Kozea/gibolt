@@ -3,7 +3,7 @@ import './Issues.sass'
 import React from 'react'
 
 import {
-  postChangeSelectedIssuesPriority,
+  updateIssues,
   setIssuesSelectness,
   setLoading,
   toggleExpanded,
@@ -46,7 +46,7 @@ function Issues({
   onToggleSelected,
   onToggleGrouper,
   onToggleExpanded,
-  onChangePriority,
+  onChangeTickets,
 }) {
   const issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
   const closedLen = labelFilteredIssues.filter(
@@ -71,7 +71,7 @@ function Issues({
           }
           onChange={() =>
             onToggleGrouper(
-              issues.map(issue => issue.id),
+              issues.map(issue => issue.ticket_id),
               checkboxState(issues) !== 'checked'
             )
           }
@@ -98,7 +98,7 @@ function Issues({
               }
               onChange={() =>
                 onToggleGrouper(
-                  issues.map(issue => issue.id),
+                  issues.map(issue => issue.ticket_id),
                   checkboxState(issues) !== 'checked'
                 )
               }
@@ -114,32 +114,39 @@ function Issues({
           <ul>
             {sortIssues(issues, grouper).map(issue => (
               <Issue
-                key={issue.id}
-                id={issue.number}
+                key={issue.ticket_id}
+                id={issue.ticket_number}
                 state={issue.state}
-                title={issue.title}
+                closed_at={issue.closed_at}
+                title={issue.ticket_title}
                 body={issue.body}
+                assignee={issue.user}
                 users={issue.assignees}
-                avatars={issue.avatars}
-                project={issue.repository_url.split('/').splice(-1)[0]}
+                avatars={issue.avatar_url}
+                project={issue.repo_name}
                 labels={issue.labels}
+                milestone_id={issue.milestone_id}
+                milestone_title={issue.milestone_title}
                 selected={issue.selected}
                 url={issue.html_url}
                 pull_request={issue.pull_request}
                 expanded={issue.expanded}
-                onBoxChange={() => onToggleSelected(issue.id)}
-                onClick={() => onToggleExpanded(issue.id)}
+                onBoxChange={() => onToggleSelected(issue.ticket_id)}
+                onClick={() => onToggleExpanded(issue.ticket_id)}
               />
             ))}
           </ul>
         </article>
       ))}
       <article className={b('action')}>
-        <button type="submit" onClick={() => onChangePriority('increment')}>
+        <button type="submit" onClick={() => onChangeTickets('increment')}>
           Increment priority
         </button>
-        <button type="submit" onClick={() => onChangePriority('removeTop')}>
+        <button type="submit" onClick={() => onChangeTickets('removeTop')}>
           Remove top priority
+        </button>
+        <button type="submit" onClick={() => onChangeTickets('close')}>
+          Close ticket
         </button>
       </article>
     </section>
@@ -175,9 +182,16 @@ export default connect(
     onToggleGrouper: (issuesId, isSelected) => {
       dispatch(setIssuesSelectness(issuesId, isSelected))
     },
-    onChangePriority: change => {
+    onChangeTickets: change => {
       dispatch(setLoading('issues'))
-      dispatch(postChangeSelectedIssuesPriority(change))
+      switch (change) {
+        case 'removeTop':
+          return dispatch(updateIssues('removeSelectedIssuesPriority'))
+        case 'increment':
+          return dispatch(updateIssues('incrementSelectedIssuesPriority'))
+        case 'close':
+          return dispatch(updateIssues('closeSelectedIssues'))
+      }
     },
   })
 )(Issues)

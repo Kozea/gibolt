@@ -23,11 +23,11 @@ export default function Issue(props) {
       />
       {props.users.map(user => (
         <img
-          key={user.id}
+          key={user.user_id}
           className={b('avatar')}
           src={user.avatar_url}
           alt="avatar"
-          title={user.login}
+          title={user.user_name}
         />
       ))}
       <a className={b('link')} href={props.url}>
@@ -35,12 +35,12 @@ export default function Issue(props) {
         <span className={b('id')}>#{props.id}</span>
         <span className={b('project')}>{props.project}</span>
         {props.labels.map(label => (
-          <span key={label.name} className={b('label')}>
+          <span key={label.label_name} className={b('label')}>
             <span
               className={b('bullet')}
-              style={{ backgroundColor: '#' + label.color }}
+              style={{ backgroundColor: `#${label.label_color}` }}
             />
-            {label.name}
+            {label.label_name}
           </span>
         ))}
       </a>

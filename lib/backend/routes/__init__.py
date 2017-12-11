@@ -380,6 +380,13 @@ def update_a_milestone(repo_name, milestone_number):
 @needlogin
 def list_tickets():
     params = request.args.copy()
+    if len(params) == 0:
+        response = {
+            'status': 'error',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response), 400
+
     url = 'search/issues'
     end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
     query = ''
@@ -414,6 +421,8 @@ def list_tickets():
                  'milestone_title': (
                      ticket['milestone']['title']
                      if ticket['milestone'] else None),
+                 'nb_comments': ticket['comments'],
+                 'comments_url': ticket['comments_url'],
                  'updated_at': ticket['updated_at'],
                  'closed_at': ticket['closed_at'],
                  'repo_name': ticket['repository_url'].split('/')[-1],
@@ -581,7 +590,9 @@ def update_a_ticket(repo_name, ticket_number):
                 'label_color': label['color'],
                 'label_name': label['name']} for label in ticket_request.get(
                 'labels',
-                [])]}
+                [])],
+        'selected': False,
+        'expanded': False}
     objects = [{'objects': [response]}]
     objects = {
         'objects': response,
@@ -906,45 +917,6 @@ def get_a_user(user_name):
     return jsonify(objects)
 
 
-@app.route('/api/issues.json', methods=['GET', 'POST'])
-@needlogin
-def issues():
-    params = dict(request.get_json())
-    url = 'search/issues'
-    end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
-    query = ''
-    for value in params.pop('labels', []):
-        query += '+'
-        if value[0] == '-':
-            query += '+-label:"{0}"'.format(value[1:])
-        else:
-            query += '+label:"{0}"'.format(value)
-    search = params.pop('search')
-    if search:
-        query += "+{0}".format(search)
-    for key, value in params.items():
-        if value:
-            query += "+{0}:{1}".format(key, value)
-    # use new github api with this additional header allow to get assignees.
-    headers = {'Accept': 'application/vnd.github.cerberus-preview'}
-    try:
-        response = github.get(
-            url + end_url + query, all_pages=True, headers=headers
-        )
-    except GitHubError as e:
-        return e.response.content, e.response.status_code
-    issues = response.get('items')
-    for issue in issues:
-        issue['selected'] = False
-        issue['expanded'] = False
-    return jsonify({
-        'params': request.get_json(),
-        'results': {
-            'issues': issues
-        }
-    })
-
-
 @app.route('/api/timeline.json', methods=['GET', 'POST'])
 @needlogin
 def timeline():
@@ -1014,39 +986,6 @@ def report():
             'issues': ok_issues
         }
     })
-
-
-@app.route('/api/apply_labels', methods=["POST"])
-@needlogin
-def apply_labels():
-    action = request.get_json().get('action')
-    patched_issues = []
-    for issue in request.get_json().get('issues'):
-        labels = [label['name'] for label in issue['labels']]
-        priority_labels = [
-            label for label, color in app.config.get('PRIORITY_LABELS')
-        ]
-        if action == 'increment':
-            current_priority = set(labels).intersection(priority_labels)
-            if current_priority:
-                current_priority = current_priority.pop()
-            current_priority_index = priority_labels.index(current_priority)
-            if current_priority_index > 0:
-                labels.remove(current_priority)
-                labels.append(priority_labels[current_priority_index - 1])
-        elif action == 'removeTop':
-            if priority_labels[0] in labels:
-                labels.remove(priority_labels[0])
-        try:
-            patched_issues.append(
-                github.patch(issue['url'], data={
-                    'labels': labels
-                })
-            )
-        except GitHubError:
-            issue['error'] = 'githubError'
-            patched_issues.append(issue)
-    return jsonify(patched_issues)
 
 
 def refresh_repo_milestones(repo_name, repo, access_token):
