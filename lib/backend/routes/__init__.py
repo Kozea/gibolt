@@ -619,7 +619,7 @@ def list_comments(repo_name, ticket_number):
                          'user_name': comment['user']['login'],
                          'avatar_url': comment['user']['avatar_url']},
                  'created_at': comment['created_at'],
-                 'updtated_at': comment['updated_at'],
+                 'updated_at': comment['updated_at'],
                  'body': comment['body']} for comment in comment_request]
     objects = [{'objects': [response]}]
     objects = {'objects': response, 'occurences': len(response)}

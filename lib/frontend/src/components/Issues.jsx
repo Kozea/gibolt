@@ -131,6 +131,7 @@ function Issues({
                 url={issue.html_url}
                 pull_request={issue.pull_request}
                 expanded={issue.expanded}
+                comments={issue.comments}
                 onBoxChange={() => onToggleSelected(issue.ticket_id)}
                 onClick={() => onToggleExpanded(issue.ticket_id)}
               />

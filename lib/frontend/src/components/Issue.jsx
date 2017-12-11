@@ -1,6 +1,7 @@
 import './Issue.sass'
 
 import React from 'react'
+import { format } from 'date-fns'
 
 import { block } from '../utils'
 
@@ -44,13 +45,40 @@ export default function Issue(props) {
           </span>
         ))}
       </a>
-      {props.body && (
+      {(props.body || props.nb_comments > 0) && (
         <div onClick={props.onClick}>
           {props.expanded ? (
-            <ReactMarkdown
-              className={b('body').toString()}
-              source={props.body}
-            />
+            <div>
+              <ReactMarkdown
+                className={b('body').toString()}
+                source={props.body}
+              />
+              {props.comments.length > 0 && (
+                <div>
+                  {props.comments.map(comment => (
+                    <div key={comment.comment_id}>
+                      <img
+                        key={comment.user.user_id}
+                        className={b('avatar')}
+                        src={comment.user.avatar_url}
+                        alt="avatar"
+                        title={comment.user.user_name}
+                      />{' '}
+                      <span className={b('day')}>
+                        {format(
+                          new Date(comment.updated_at),
+                          'DD/MM/YYYY HH:MM:ss'
+                        )}
+                      </span>
+                      <ReactMarkdown
+                        className={b('comments').toString()}
+                        source={comment.body}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           ) : (
             <span>show body</span>
           )}
