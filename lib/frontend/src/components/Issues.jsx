@@ -82,7 +82,18 @@ function Issues({
       {error && (
         <article className={b('group', { error: true })}>
           <h2>Error during issue fetch</h2>
-          <code>{error}</code>
+          {typeof error === 'object' ? (
+            <ul>
+              {error.map(err => (
+                <li key={err.id}>
+                  <span className={b('bullet')} />
+                  {err.value}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <code>{error}</code>
+          )}
         </article>
       )}
       {issuesByGroup.map(({ id, group, issues }) => (
