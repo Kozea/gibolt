@@ -57,6 +57,7 @@ export default function Issue(props) {
                 <div>
                   {props.comments.map(comment => (
                     <div key={comment.comment_id}>
+                      <hr />
                       <img
                         key={comment.user.user_id}
                         className={b('avatar')}
