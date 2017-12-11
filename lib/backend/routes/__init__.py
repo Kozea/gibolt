@@ -421,6 +421,8 @@ def list_tickets():
                  'milestone_title': (
                      ticket['milestone']['title']
                      if ticket['milestone'] else None),
+                 'nb_comments': ticket['comments'],
+                 'comments_url': ticket['comments_url'],
                  'updated_at': ticket['updated_at'],
                  'closed_at': ticket['closed_at'],
                  'repo_name': ticket['repository_url'].split('/')[-1],
