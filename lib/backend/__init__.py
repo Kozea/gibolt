@@ -1,6 +1,14 @@
 import pkg_resources
 from flask import Flask
+from flask_github import GitHub
+import requests
+
+from cachecontrol import CacheControl
+from cachecontrol.caches.file_cache import FileCache
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from .models import Base, GitHubController  # noqa isort:skip
 
 try:
     __version__ = pkg_resources.require("gibolt")[0].version
@@ -12,8 +20,18 @@ app.config.from_envvar('FLASK_CONFIG')
 
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
+github = GitHub(app)
+github.session = CacheControl(
+    requests.Session(),
+    cache=FileCache('/tmp/gibolt-cache'),
+    controller_class=GitHubController
+)
+
+Session = sessionmaker(bind=engine, autoflush=False)
+Session.configure(bind=engine)
+session_unrest = Session()
+
 from .routes import *  # noqa isort:skip
-from .models import Base  # noqa isort:skip
 
 
 def init_db():

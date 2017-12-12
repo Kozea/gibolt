@@ -4,29 +4,14 @@ from datetime import date, datetime
 from functools import wraps
 
 import pytz
-import requests
-from cachecontrol import CacheControl
-from cachecontrol.caches.file_cache import FileCache
 from flask import abort, flash, jsonify, redirect, request, session
-from flask_github import GitHub, GitHubError
-from sqlalchemy.orm import sessionmaker
+from flask_github import GitHubError
 from unrest import UnRest
 
-from .. import app, engine
-from ..models import GitHubController, Circle, Report, Role
+from .. import app, github, session_unrest
+from ..models import Circle, Report, Role
 
-
-github = GitHub(app)
-github.session = CacheControl(
-    requests.Session(),
-    cache=FileCache('/tmp/gibolt-cache'),
-    controller_class=GitHubController
-)
 cache = {'users': {}}
-
-Session = sessionmaker(bind=engine, autoflush=False)
-Session.configure(bind=engine)
-session_unrest = Session()
 
 
 def date_from_iso(iso_date):
