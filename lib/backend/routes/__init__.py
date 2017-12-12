@@ -227,7 +227,7 @@ def list_repos():
                  }
                 for repository in repo_request]
     # objects = {'objects': response, 'occurences': len(response)}
-    objects = {'results': {
+    objects = {'objects': {
         'repositories': response},
         'occurences': len(response)
     }
@@ -883,6 +883,12 @@ def delete_a_label(repo_name, label_name):
         return e.response.content, e.response.status_code
 
 
+@app.route('/api/user', methods=['GET', 'POST'])
+@needlogin
+def user():
+    return jsonify({'user': github.get('user')})
+
+
 @app.route(
     '/api/users',
     methods=['GET'])
@@ -1025,17 +1031,3 @@ def labels():
             } for text, color in app.config['QUALIFIER_LABELS']]
         }
     })
-
-
-@app.route('/api/user.json', methods=['GET', 'POST'])
-@needlogin
-def user():
-    return jsonify({'user': github.get('user')})
-
-
-@app.route('/api/users.json', methods=['GET', 'POST'])
-@needlogin
-def users():
-    url = 'orgs/{0}/members'.format(app.config['ORGANISATION'])
-    users = github.get(url, all_pages=True)
-    return jsonify(({'results': users}))
