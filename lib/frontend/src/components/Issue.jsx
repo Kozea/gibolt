@@ -45,7 +45,7 @@ export default function Issue(props) {
           </span>
         ))}
       </a>
-      {(props.body || props.nb_comments > 0) && (
+      {(props.body || props.comments.length > 0) && (
         <div onClick={props.onClick}>
           {props.expanded ? (
             <div>
@@ -81,7 +81,7 @@ export default function Issue(props) {
               )}
             </div>
           ) : (
-            <span>show body</span>
+            <span>show body/comments</span>
           )}
         </div>
       )}
