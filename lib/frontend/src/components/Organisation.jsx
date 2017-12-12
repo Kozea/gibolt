@@ -1,15 +1,29 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
-// import Loading from './Loading'
+import { connect } from '../utils'
+import Loading from './Loading'
 
-export default function Organisation() {
+function Organisation(loading, error, circle) {
   return (
     <div>
       <Helmet>
         <title>Gibolt - Organisation</title>
-      </Helmet>Organisation
+      </Helmet>
+      {loading && <Loading />}
+      {error && (
+        <article>
+          <h2>Error during circles fetch</h2>
+          <code>{error}</code>
+        </article>
+      )}
+      Organisation
+      {(console.log('circles'), console.log(circle))}
     </div>
   )
 }
-// export default connect()(Organisation)
+export default connect(state => ({
+  circle: state.organisaton.results.circle,
+  loading: state.organisaton.loading,
+  error: state.organisaton.error,
+}))(Organisation)
