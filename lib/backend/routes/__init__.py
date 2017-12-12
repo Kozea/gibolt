@@ -227,7 +227,7 @@ def list_repos():
                  }
                 for repository in repo_request]
     # objects = {'objects': response, 'occurences': len(response)}
-    objects = {'results': {
+    objects = {'objects': {
         'repositories': response},
         'occurences': len(response)
     }
@@ -422,7 +422,6 @@ def list_tickets():
                      ticket['milestone']['title']
                      if ticket['milestone'] else None),
                  'nb_comments': ticket['comments'],
-                 'comments_url': ticket['comments_url'],
                  'updated_at': ticket['updated_at'],
                  'closed_at': ticket['closed_at'],
                  'repo_name': ticket['repository_url'].split('/')[-1],
@@ -440,6 +439,7 @@ def list_tickets():
     for ticket in response:
         ticket['selected'] = False
         ticket['expanded'] = False
+        ticket['comments_expanded'] = False
     objects = {'objects': response, 'occurences': len(response)}
     return jsonify(objects)
 
@@ -592,7 +592,8 @@ def update_a_ticket(repo_name, ticket_number):
                 'labels',
                 [])],
         'selected': False,
-        'expanded': False}
+        'expanded': False,
+        'comment_expanded': False}
     objects = [{'objects': [response]}]
     objects = {
         'objects': response,
@@ -619,7 +620,7 @@ def list_comments(repo_name, ticket_number):
                          'user_name': comment['user']['login'],
                          'avatar_url': comment['user']['avatar_url']},
                  'created_at': comment['created_at'],
-                 'updtated_at': comment['updated_at'],
+                 'updated_at': comment['updated_at'],
                  'body': comment['body']} for comment in comment_request]
     objects = [{'objects': [response]}]
     objects = {'objects': response, 'occurences': len(response)}
@@ -884,6 +885,12 @@ def delete_a_label(repo_name, label_name):
         return e.response.content, e.response.status_code
 
 
+@app.route('/api/user', methods=['GET', 'POST'])
+@needlogin
+def user():
+    return jsonify({'user': github.get('user')})
+
+
 @app.route(
     '/api/users',
     methods=['GET'])
@@ -955,7 +962,7 @@ def timeline():
     })
 
 
-@app.route('/api/report.json', methods=['GET', 'POST'])
+@app.route('/api/report', methods=['GET', 'POST'])
 @needlogin
 def report():
     params = dict(request.get_json())
@@ -1007,11 +1014,11 @@ def return_github_message(github_response):
     return (github_response.json()['message'], github_response.status_code)
 
 
-@app.route('/api/labels.json', methods=['GET', 'POST'])
+@app.route('/api/labels', methods=['GET', 'POST'])
 @needlogin
 def labels():
     return jsonify({
-        'results': {
+        'objects': {
             'priority': [{
                 'text': text,
                 'color': '#%s' % color
@@ -1026,17 +1033,3 @@ def labels():
             } for text, color in app.config['QUALIFIER_LABELS']]
         }
     })
-
-
-@app.route('/api/user.json', methods=['GET', 'POST'])
-@needlogin
-def user():
-    return jsonify({'user': github.get('user')})
-
-
-@app.route('/api/users.json', methods=['GET', 'POST'])
-@needlogin
-def users():
-    url = 'orgs/{0}/members'.format(app.config['ORGANISATION'])
-    users = github.get(url, all_pages=True)
-    return jsonify(({'results': users}))
