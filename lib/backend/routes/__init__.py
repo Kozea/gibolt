@@ -7,69 +7,13 @@ import pytz
 import requests
 from cachecontrol import CacheControl
 from cachecontrol.caches.file_cache import FileCache
-from cachecontrol.controller import CacheController
 from flask import abort, flash, jsonify, redirect, request, session
 from flask_github import GitHub, GitHubError
-from sqlalchemy import (Column, DateTime, ForeignKey, Integer, String,
-                        create_engine)
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import sessionmaker
 from unrest import UnRest
 
-from .. import app
-
-
-engine = create_engine('sqlite:///database.db', echo=True)
-Base = declarative_base()
-
-
-class GitHubController(CacheController):
-    def update_cached_response(self, request, response):
-        """On a 304 we will get a new set of headers that we want to
-        update our cached value with, assuming we have one.
-
-        This should only ever be called when we've sent an ETag and
-        gotten a 304 as the response.
-        """
-        cache_url = self.cache_url(request.url)
-
-        cached_response = self.serializer.loads(
-            request, self.cache.get(cache_url)
-        )
-
-        if not cached_response:
-            # we didn't have a cached response
-            return response
-
-        # Lets update our headers with the headers from the new request:
-        # http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-26#section-4.1
-        #
-        # The server isn't supposed to send headers that would make
-        # the cached body invalid. But... just in case, we'll be sure
-        # to strip out ones we know that might be problmatic due to
-        # typical assumptions.
-        # the big change is here as flask_github check for content_type we want
-        # to keep the original content-type
-        excluded_headers = [
-            "content-length",
-            "content-type",
-        ]
-
-        cached_response.headers.update(
-            dict((k, v) for k, v in response.headers.items()
-                 if k.lower() not in excluded_headers)
-        )
-
-        # we want a 200 b/c we have content via the cache
-        cached_response.status = 200
-
-        # update our cache
-        self.cache.set(
-            cache_url,
-            self.serializer.dumps(request, cached_response),
-        )
-
-        return cached_response
+from .. import app, engine
+from ..models import GitHubController, Circle, Report, Role
 
 
 github = GitHub(app)
@@ -79,6 +23,10 @@ github.session = CacheControl(
     controller_class=GitHubController
 )
 cache = {'users': {}}
+
+Session = sessionmaker(bind=engine, autoflush=False)
+Session.configure(bind=engine)
+session_unrest = Session()
 
 
 def date_from_iso(iso_date):
@@ -91,10 +39,6 @@ def date_from_iso(iso_date):
         localdate = absolutedate.astimezone(localzone)
         return localdate.date()
     return date(*[int(value) for value in iso_date[:10].split('-')])
-
-
-def init_db():
-    Base.metadata.create_all(engine)
 
 
 def needlogin(f):
@@ -120,12 +64,6 @@ def token_getter():
     return session.get('user')
 
 
-@app.cli.command('initdb')
-def initdb_command():
-    init_db()
-    print('Initialized the database.')
-
-
 @app.route('/api/callback')
 @github.authorized_handler
 def authorized(oauth_token):
@@ -137,58 +75,46 @@ def authorized(oauth_token):
     return redirect('/')
 
 
-class Circle(Base):
-    __tablename__ = 'circle'
-    circle_id = Column(
-        Integer,
-        primary_key=True,
-        autoincrement=True,
-        nullable=False)
-    circle_name = Column(String, unique=True)
-    circle_purpose = Column(String)
-    circle_domain = Column(String)
-    circle_accountabilities = Column(String)
+@app.route('/api/user', methods=['GET', 'POST'])
+@needlogin
+def user():
+    return jsonify({'user': github.get('user')})
 
 
-class Role(Base):
-    __tablename__ = 'role'
-    role_id = Column(
-        Integer,
-        primary_key=True,
-        autoincrement=True,
-        nullable=False)
-    user_id = Column(Integer)
-    circle_id = Column(
-        String,
-        ForeignKey("circle.circle_id"))
-    role_name = Column(String)
-    role_purpose = Column(String)
-    role_domain = Column(String)
-    role_accountabilities = Column(String)
-    role_checklist = Column(String)
-    circle = relationship(Circle, backref='roles')
+@app.route(
+    '/api/users',
+    methods=['GET'])
+@needlogin
+def list_users():
+    user_request = github.get(
+        'orgs/{0}/members?type=all&per_page=100'.format(
+            app.config['ORGANISATION']), all_pages=True)
+    response = [{'user_id': user['id'],
+                 'user_name': user['login'],
+                 'avatar_url': user['avatar_url']} for user in user_request]
+    objects = {'objects': response, 'occurences': len(response)}
+    return jsonify(objects)
 
 
-class Report(Base):
-    __tablename__ = 'report'
-    report_id = Column(
-        Integer,
-        primary_key=True,
-        autoincrement=True,
-        nullable=True)
-    circle_id = Column(
-        String,
-        ForeignKey("circle.circle_id"))
-    type = Column(String)
-    created_at = Column(DateTime)
+@app.route(
+    '/api/users/<string:user_name>',
+    methods=['GET'])
+@needlogin
+def get_a_user(user_name):
+    user_request = github.get(
+        'users/' + user_name + '?type=all&per_page=100', all_pages=True)
+    response = {
+        'user_id': user_request['id'],
+        'user_name': user_request['login'],
+        'avatar_url': user_request['avatar_url']}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': [user_name]}
+    return jsonify(objects)
 
-
-Session = sessionmaker(bind=engine, autoflush=False)
-Session.configure(bind=engine)
-session_unrest = Session()
 
 # Declare rest endpoints for gibolt Database
-
 rest = UnRest(app, session_unrest)
 rest(
     Circle,
@@ -883,45 +809,6 @@ def delete_a_label(repo_name, label_name):
         return jsonify(response), response_github.status_code
     except GitHubError as e:
         return e.response.content, e.response.status_code
-
-
-@app.route('/api/user', methods=['GET', 'POST'])
-@needlogin
-def user():
-    return jsonify({'user': github.get('user')})
-
-
-@app.route(
-    '/api/users',
-    methods=['GET'])
-@needlogin
-def list_users():
-    user_request = github.get(
-        'orgs/{0}/members?type=all&per_page=100'.format(
-            app.config['ORGANISATION']), all_pages=True)
-    response = [{'user_id': user['id'],
-                 'user_name': user['login'],
-                 'avatar_url': user['avatar_url']} for user in user_request]
-    objects = {'objects': response, 'occurences': len(response)}
-    return jsonify(objects)
-
-
-@app.route(
-    '/api/users/<string:user_name>',
-    methods=['GET'])
-@needlogin
-def get_a_user(user_name):
-    user_request = github.get(
-        'users/' + user_name + '?type=all&per_page=100', all_pages=True)
-    response = {
-        'user_id': user_request['id'],
-        'user_name': user_request['login'],
-        'avatar_url': user_request['avatar_url']}
-    objects = {
-        'objects': response,
-        'occurences': 1 if response else 0,
-        'primary_keys': [user_name]}
-    return jsonify(objects)
 
 
 @app.route('/api/timeline.json', methods=['GET', 'POST'])
