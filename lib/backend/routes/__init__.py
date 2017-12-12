@@ -960,7 +960,7 @@ def timeline():
     })
 
 
-@app.route('/api/report.json', methods=['GET', 'POST'])
+@app.route('/api/report', methods=['GET', 'POST'])
 @needlogin
 def report():
     params = dict(request.get_json())
