@@ -1012,11 +1012,11 @@ def return_github_message(github_response):
     return (github_response.json()['message'], github_response.status_code)
 
 
-@app.route('/api/labels.json', methods=['GET', 'POST'])
+@app.route('/api/labels', methods=['GET', 'POST'])
 @needlogin
 def labels():
     return jsonify({
-        'results': {
+        'objects': {
             'priority': [{
                 'text': text,
                 'color': '#%s' % color
