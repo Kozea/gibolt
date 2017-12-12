@@ -439,6 +439,7 @@ def list_tickets():
     for ticket in response:
         ticket['selected'] = False
         ticket['expanded'] = False
+        ticket['comments_expanded'] = False
     objects = {'objects': response, 'occurences': len(response)}
     return jsonify(objects)
 
@@ -591,7 +592,8 @@ def update_a_ticket(repo_name, ticket_number):
                 'labels',
                 [])],
         'selected': False,
-        'expanded': False}
+        'expanded': False,
+        'comment_expanded': False}
     objects = [{'objects': [response]}]
     objects = {
         'objects': response,
