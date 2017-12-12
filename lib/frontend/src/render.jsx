@@ -14,9 +14,12 @@ const getAssets = () => {
   if (Object.keys(assets).length === 0) {
     if (config.debug) {
       assets.links = []
-      assets.scripts = ['manifest.js', 'vendor.js', 'client.js'].map(
-        file => `${config.publicPath}${file}`
-      )
+      assets.scripts = [
+        'https://polyfill.kozea.fr/polyfill.min.js',
+        ...['manifest.js', 'vendor.js', 'client.js'].map(
+          file => `${config.publicPath}${file}`
+        ),
+      ]
     } else {
       const manifest = JSON.parse(
         readFileSync(path.resolve(config.dirs.assets, 'manifest.json'), 'utf8')
@@ -25,7 +28,7 @@ const getAssets = () => {
         file => `${config.publicPath}${manifest[file]}`
       )
       assets.scripts = [
-        '/polyfill.js',
+        'https://polyfill.kozea.fr/polyfill.min.js',
         ...['manifest.js', 'vendor.js', 'client.js'].map(
           file => `${config.publicPath}${manifest[file]}`
         ),
