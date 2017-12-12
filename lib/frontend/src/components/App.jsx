@@ -12,6 +12,7 @@ import Report from './Report'
 import Repositories from './Repositories'
 import Repository from './Repository'
 import Timeline from './Timeline'
+import Organisation from './Organisation'
 
 const b = block('App')
 
@@ -34,6 +35,7 @@ export default class App extends Component {
           <Route path="/report" component={Report} />
           <Route path="/repositories" component={Repositories} />
           <Route path="/repository" component={Repository} />
+          <Route path="/organisation" component={Organisation} />
           <Route component={NotFound} />
         </Switch>
       </main>
