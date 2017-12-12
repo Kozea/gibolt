@@ -7,6 +7,7 @@ import {
   setIssuesSelectness,
   setLoading,
   toggleExpanded,
+  toggleCommentsExpanded,
   toggleIssue,
 } from '../actions'
 import {
@@ -46,6 +47,7 @@ function Issues({
   onToggleSelected,
   onToggleGrouper,
   onToggleExpanded,
+  onToggleCommentsExpanded,
   onChangeTickets,
 }) {
   const issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
@@ -82,7 +84,18 @@ function Issues({
       {error && (
         <article className={b('group', { error: true })}>
           <h2>Error during issue fetch</h2>
-          <code>{error}</code>
+          {typeof error === 'object' ? (
+            <ul>
+              {error.map(err => (
+                <li key={err.id}>
+                  <span className={b('bullet')} />
+                  {err.value}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <code>{error}</code>
+          )}
         </article>
       )}
       {issuesByGroup.map(({ id, group, issues }) => (
@@ -131,8 +144,13 @@ function Issues({
                 url={issue.html_url}
                 pull_request={issue.pull_request}
                 expanded={issue.expanded}
+                comments_expanded={issue.comments_expanded}
+                comments={issue.comments}
                 onBoxChange={() => onToggleSelected(issue.ticket_id)}
                 onClick={() => onToggleExpanded(issue.ticket_id)}
+                onClickComments={() =>
+                  onToggleCommentsExpanded(issue.ticket_id)
+                }
               />
             ))}
           </ul>
@@ -178,6 +196,9 @@ export default connect(
     },
     onToggleExpanded: issueId => {
       dispatch(toggleExpanded(issueId))
+    },
+    onToggleCommentsExpanded: issueId => {
+      dispatch(toggleCommentsExpanded(issueId))
     },
     onToggleGrouper: (issuesId, isSelected) => {
       dispatch(setIssuesSelectness(issuesId, isSelected))

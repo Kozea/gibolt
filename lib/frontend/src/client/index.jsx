@@ -46,7 +46,7 @@ const renderRoot = async handleError => {
   ) {
     return
   }
-  const response = await fetch('/api/user.json', { credentials: 'same-origin' })
+  const response = await fetch('/api/user', { credentials: 'same-origin' })
   if (response.status === 200) {
     const { user } = await response.json()
     store.dispatch(setUser(user))
