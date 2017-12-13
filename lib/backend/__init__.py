@@ -8,7 +8,8 @@ from cachecontrol.caches.file_cache import FileCache
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from .models import Base, GitHubController  # noqa isort:skip
+from .api.models import Base
+from .routes.models import GitHubController
 
 try:
     __version__ = pkg_resources.require("gibolt")[0].version
@@ -31,7 +32,9 @@ Session = sessionmaker(bind=engine, autoflush=False)
 Session.configure(bind=engine)
 session_unrest = Session()
 
-from .routes import *  # noqa isort:skip
+from .api.gibolt import *  # noqa isort:skip
+from .routes.auth import *  # noqa isort:skip
+from .routes.github import *  # noqa isort:skip
 
 
 def init_db():
