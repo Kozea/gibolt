@@ -29,8 +29,8 @@ class GitHubController(CacheController):
         # the big change is here as flask_github check for content_type we want
         # to keep the original content-type
         excluded_headers = [
-            "content-length",
-            "content-type",
+            'content-length',
+            'content-type',
         ]
 
         cached_response.headers.update(

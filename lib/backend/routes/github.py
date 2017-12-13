@@ -246,10 +246,10 @@ def list_tickets():
             query += '+label:"{0}"'.format(value)
     search = params.pop('search')
     if search:
-        query += "+{0}".format(search)
+        query += '+{0}'.format(search)
     for key, value in params.items():
         if value:
-            query += "+{0}:{1}".format(key, value)
+            query += '+{0}:{1}'.format(key, value)
     # use new github api with this additional header allow to get assignees.
     headers = {'Accept': 'application/vnd.github.cerberus-preview'}
     try:

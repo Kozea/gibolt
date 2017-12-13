@@ -12,7 +12,7 @@ from .api.models import Base
 from .routes.models import GitHubController
 
 try:
-    __version__ = pkg_resources.require("gibolt")[0].version
+    __version__ = pkg_resources.require('gibolt')[0].version
 except pkg_resources.DistributionNotFound:
     __version__ = 'GIBOLT not installed in path'
 
