@@ -22,7 +22,7 @@ def needlogin(f):
 @app.route('/api/login', methods=('GET', 'POST'))
 def login():
     redirect = app.config['GITHUB_REDIRECT']
-    return github.authorize(scope="repo", redirect_uri=redirect)
+    return github.authorize(scope='repo', redirect_uri=redirect)
 
 
 @github.access_token_getter
@@ -34,7 +34,7 @@ def token_getter():
 @github.authorized_handler
 def authorized(oauth_token):
     if oauth_token is None:
-        flash("Authorization failed.")
+        flash('Authorization failed.')
         return redirect('/oauth_error')
     session['user'] = oauth_token
     session['login'] = github.get('user')['login']

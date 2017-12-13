@@ -28,7 +28,7 @@ class Role(Base):
     user_id = Column(Integer)
     circle_id = Column(
         String,
-        ForeignKey("circle.circle_id"))
+        ForeignKey('circle.circle_id'))
     role_name = Column(String)
     role_purpose = Column(String)
     role_domain = Column(String)
@@ -46,6 +46,6 @@ class Report(Base):
         nullable=True)
     circle_id = Column(
         String,
-        ForeignKey("circle.circle_id"))
+        ForeignKey('circle.circle_id'))
     type = Column(String)
     created_at = Column(DateTime)
