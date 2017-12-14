@@ -1,8 +1,12 @@
+from flask import jsonify
 from unrest import UnRest
 
-from .. import app, session_unrest
+from .. import app, Session, session_unrest
 from ..routes.auth import needlogin
 from .models import Circle, Item, Milestone_circle, Report, Role
+
+session = Session()
+
 
 # Declare rest endpoints for gibolt Database
 rest = UnRest(app, session_unrest)
@@ -13,8 +17,38 @@ rest(
     relationships={
         'roles': rest(Role, only=['role_id', 'user_id']),
     },
-    name='circles'
+    name='circles',
+    auth=needlogin
 )
+
+# TODO: use unrest instead
+@app.route(
+    '/api/circle/<string:circle_name>',
+    methods=['GET'])
+@needlogin
+def get_a_circle(circle_name):
+    circle = session.query(Circle).filter(
+        Circle.circle_name == circle_name).one()
+    if circle:
+        roles = session.query(Role).filter(
+            Role.circle_id == circle.circle_id).all()
+        response = {
+            'circle_id': circle.circle_id,
+            'parent_circle_id': circle.parent_circle_id,
+            'circle_name': circle.circle_name,
+            'circle_purpose': circle.circle_purpose,
+            'circle_domain': circle.circle_domain,
+            'circle_accountabilities': circle.circle_accountabilities,
+            'roles': [{
+                'role_id': role.role_id,
+                'user_id': role.user_id,
+            } for role in roles]}
+    objects = {
+        'objects': response,
+        'occurences': 1 if response else 0,
+        'primary_keys': ["circle_name"]}
+    return jsonify(objects)
+
 
 rest(
     Role,

@@ -1,7 +1,9 @@
 import './Circles.sass'
 
+import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
 
 import { block, connect } from '../utils'
 import Loading from './Loading'
@@ -41,13 +43,15 @@ function Circles({ error, labels, loading, results }) {
                   .toString()}`,
               }}
             >
-              <span
-                style={{
-                  color: '#000',
+              <Link
+                className={b('link')}
+                to={{
+                  pathname: '/circle',
+                  search: stringify({ name: circle.circle_name }),
                 }}
               >
                 {circle.circle_name}
-              </span>
+              </Link>
             </li>
           ))}
         </ul>

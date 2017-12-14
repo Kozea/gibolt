@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet'
 import { Route, Switch } from 'react-router-dom'
 
 import { block } from '../utils'
+import Circle from './Circle'
 import Circles from './Circles'
 import IssuesDashboard from './IssuesDashboard'
 import NotFound from './NotFound'
@@ -36,6 +37,7 @@ export default class App extends Component {
           <Route path="/repositories" component={Repositories} />
           <Route path="/repository" component={Repository} />
           <Route path="/circles" component={Circles} />
+          <Route path="/circle" component={Circle} />
           <Route component={NotFound} />
         </Switch>
       </main>
