@@ -2,52 +2,91 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 
 import { connect } from '../utils'
-// import Loading from './Loading'
+import Loading from './Loading'
 import { createCircle } from '../actions'
 
-function Organisation({ circle, onSubmit }) {
+function Organisation({ error, circles, loading, onSubmit }) {
   return (
-    <article>
-      <form onSubmit={e => onSubmit(e, circle)}>
-        <label>
-          Nom
-          <input name="circle_name" required />
-        </label>
-        <label>
-          Objectif
-          <input name="circle_purpose" required />
-        </label>
-        <label>
-          Domaine
-          <input name="circle_domain" required />
-        </label>
-        <label>
-          Redevabilités
-          <input name="circle_accountabilities" required />
-        </label>
-        <input type="submit" value="Créer un cercle" />
-      </form>
-    </article>
+    <div>
+      <Helmet>
+        <title>Gibolt - Organisation</title>
+      </Helmet>
+      {loading && <Loading />}
+      {error && (
+        <article>
+          <h2>Error during circles fetch</h2>
+          <code>{error}</code>
+        </article>
+      )}
+      <article>
+        <h2>CREER UN NOUVEAU CERCLE :</h2>
+        <form onSubmit={e => onSubmit(e)}>
+          <label>
+            Nom
+            <input name="circle_name" required />
+          </label>
+          <label>
+            Objectif
+            <input name="circle_purpose" required />
+          </label>
+          <label>
+            Domaine
+            <input name="circle_domain" required />
+          </label>
+          <label>
+            Redevabilités
+            <input name="circle_accountabilities" required />
+          </label>
+          <input type="submit" value="Créer un cercle" />
+        </form>
+      </article>
+      <article>
+        <h2>LISTE DES CERCLES :</h2>
+        <ul>
+          {circles.map(circle => (
+            <li key={circle.circle_id}>{circle.circle_name}</li>
+          ))}
+        </ul>
+      </article>
+      <article>
+        <ul>
+          {/* <h2>MÀJ UN CERCLE :</h2>
+          <label>Cercle: </label>
+          <select>
+            <option>Valeur 1</option>
+            <option>Valeur 2</option>
+            <option>Valeur 3</option>
+          </select>
+          <br />
+          <button type="submit"> Modifier</button> */}
+          {/* GERER ICI AFFICHAGE DE FORM AU CLIQUE  */}
+          {/* {circles.map(circle => (
+            <li key={circle.circle_id}>{circle.circle_name}</li>
+          ))} */}
+        </ul>
+      </article>
+    </div>
   )
 }
-
 export default connect(
   state => ({
-    promotions: state.promotions,
-    communications: state.communications,
+    circles: state.organisation.results,
+    loading: state.organisation.loading,
+    error: state.organisation.error,
   }),
   dispatch => ({
-    onSubmit: (e, circle) => {
+    onSubmit: e => {
       e.preventDefault()
-      const formCampaign = [].slice
+      const formCircle = [].slice
         .call(e.target.elements)
         .reduce(function(map, obj) {
           if (obj.name) {
             map[obj.name] = obj.value
           }
+
           return map
-        })
-      dispatch(createCircle(formCampaign))
+        }, {})
+      dispatch(createCircle(formCircle))
     },
   })
 )(Organisation)
