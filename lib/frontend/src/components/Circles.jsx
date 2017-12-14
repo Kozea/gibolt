@@ -31,30 +31,34 @@ function Circles({ error, labels, loading, results }) {
       {loading && <Loading />}
       <article className={b('circles')}>
         <h2>Circles</h2>
-        <ul>
-          {results.map(circle => (
-            <li
-              key={circle.circle_id}
-              className={b('item')}
-              style={{
-                color: `${labels
-                  .filter(label => getColor(label, circle))
-                  .map(label => label.color)
-                  .toString()}`,
-              }}
-            >
-              <Link
-                className={b('link')}
-                to={{
-                  pathname: '/circle',
-                  search: stringify({ name: circle.circle_name }),
+        {results.length > 0 ? (
+          <ul>
+            {results.map(circle => (
+              <li
+                key={circle.circle_id}
+                className={b('item')}
+                style={{
+                  color: `${labels
+                    .filter(label => getColor(label, circle))
+                    .map(label => label.color)
+                    .toString()}`,
                 }}
               >
-                {circle.circle_name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+                <Link
+                  className={b('link')}
+                  to={{
+                    pathname: '/circle',
+                    search: stringify({ name: circle.circle_name }),
+                  }}
+                >
+                  {circle.circle_name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <span>No circles defined</span>
+        )}
       </article>
     </section>
   )

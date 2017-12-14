@@ -41,6 +41,7 @@ def get_a_circle(circle_name):
             'circle_accountabilities': circle.circle_accountabilities,
             'roles': [{
                 'role_id': role.role_id,
+                'role_name': role.role_name,
                 'user_id': role.user_id,
             } for role in roles],
             'purpose_expanded': False,

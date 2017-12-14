@@ -13,11 +13,18 @@ import Loading from './Loading'
 
 const b = block('Circle')
 
+function getUserInfo(roleUser, user) {
+  if (roleUser === user.user_id) {
+    return user
+  }
+}
+
 function Circle({
   circle,
   circlename,
   error,
   loading,
+  users,
   onClickAccount,
   onClickDomain,
   onClickPurpose,
@@ -74,6 +81,36 @@ function Circle({
       </article>
       <article>
         <h3>Rôles</h3>
+        {circle.roles && circle.roles.length > 0 ? (
+          <ul>
+            {circle.roles.map(role => (
+              <li key={role.role_id} className={b('role')}>
+                <span className={b('bullet')} />
+                {role.role_name} :{' '}
+                <img
+                  key={role.user_id}
+                  className={b('avatar')}
+                  src={users
+                    .filter(user => getUserInfo(role.user_id, user))
+                    .map(user => user.avatar_url)
+                    .toString()}
+                  alt="avatar"
+                  title={users
+                    .filter(user => getUserInfo(role.user_id, user))
+                    .map(user => user.user_name)
+                    .toString()}
+                />
+                {'  '}
+                {users
+                  .filter(user => getUserInfo(role.user_id, user))
+                  .map(user => user.user_name)
+                  .toString()}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <span>No roles defined</span>
+        )}
       </article>
     </section>
   )
@@ -84,6 +121,7 @@ export default connect(
     loading: state.circle.loading,
     error: state.circle.error,
     circlename: circleNameFromState(state).name,
+    users: state.users.results,
   }),
   dispatch => ({
     onClickAccount: circleAccount => {
