@@ -3,14 +3,9 @@ import { Helmet } from 'react-helmet'
 
 import { connect } from '../utils'
 // import Loading from './Loading'
-// import { createCircle } from '../actions'
+import { createCircle } from '../actions'
 
-function Organisation(
-  loading,
-  error,
-  circles
-  // onCreateCircle
-) {
+function Organisation(loading, error, circles, onSubmit) {
   return (
     <div>
       <Helmet>
@@ -27,8 +22,8 @@ function Organisation(
         <li key={circle.circle_id}> */}
       <article>
         <h2>CREER UN NOUVEAU CERCLE :</h2>
-        <form
-        // onSubmit={e => {
+        <form onSubmit={() => onSubmit()}>
+          {/* // onSubmit={e => {
         //   e.preventDefault()
         //   onCreateCircle(
         //     e.target.name.value,
@@ -36,25 +31,25 @@ function Organisation(
         //     e.target.domain.value,
         //     e.target.accountabilities.value
         //   )
-        // }}
-        >
+        // }} */}
+
           <label>Nom du cercle:</label>
-          <input required name="name" />
+          <input type="text" required name="circle_name" />
           <br />
           <br />
           <label>Objectif(s):</label>
-          <input required name="purpose" />
+          <input type="text" required name="circle_purpose" />
           <br />
           <br />
           <label>Domaine:</label>
-          <input required name="domain" />
+          <input type="text" required name="circle_domain" />
           <br />
           <br />
           <label>Redevabilités:</label>
-          <input required name="accountabilities" />
+          <input type="text" required name="circle_accountabilities" />
           <br />
           <br />
-          <button type="submit">Créer un cercle</button>
+          <input type="submit" value="Créer un cercle" />
         </form>
       </article>
       <br />
@@ -77,6 +72,7 @@ function Organisation(
           </select>
           <br />
           <button type="submit"> Modifier</button>
+          {/* GERER ICI AFFICHAGE DE FORM AU CLIQUE  */}
           {/* {circles.map(circle => (
             <li key={circle.circle_id}>{circle.circle_name}</li>
           ))} */}
@@ -84,7 +80,7 @@ function Organisation(
       </article>
       {/* </li>
       ))} */}
-      {(console.log('circles'), console.log(circles))}
+      {/* {(console.log('circles'), console.log(circles))} */}
     </div>
   )
 }
@@ -93,7 +89,26 @@ export default connect(
     circles: state.organisation.results.circles,
     loading: state.organisation.loading,
     error: state.organisation.error,
+  }),
+  dispatch => ({
+    onSubmit: () => {
+      dispatch(createCircle())
+    },
   })
+  // dispatch => ({
+  //   onSubmit: e => {
+  //     e.preventDefault()
+  //     const formCircle = [].slice
+  //       .call(e.target.elements)
+  //       .reduce(function(map, obj) {
+  //         if (obj.name) {
+  //           map[obj.name] = obj.value
+  //         }
+  //         return map
+  //       })
+  //     dispatch(createCircle(formCircle))
+  //   },
+  // })
   // , dispatch => ({
   //   onCreateCircle: (name, purpose, domain, accountabilities) => {
   //     dispatch(createCircle(name, purpose, domain, accountabilities))
