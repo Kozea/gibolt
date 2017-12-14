@@ -1,7 +1,7 @@
 from flask import jsonify
 from unrest import UnRest
 
-from .. import app, Session, session_unrest
+from .. import Session, app, session_unrest
 from ..routes.auth import needlogin
 from .models import Circle, Item, Milestone_circle, Report, Role
 
@@ -21,7 +21,7 @@ rest(
     auth=needlogin
 )
 
-# TODO: use unrest instead
+
 @app.route(
     '/api/circle/<string:circle_name>',
     methods=['GET'])
@@ -42,7 +42,10 @@ def get_a_circle(circle_name):
             'roles': [{
                 'role_id': role.role_id,
                 'user_id': role.user_id,
-            } for role in roles]}
+            } for role in roles],
+            'purpose_expanded': False,
+            'domain_expanded': False,
+            'accountabilities_expanded': False}
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
