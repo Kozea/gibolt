@@ -8,7 +8,13 @@ import Loading from './Loading'
 
 const b = block('Circles')
 
-function Circles({ error, loading, results }) {
+function getColor(label, circle) {
+  if (circle.circle_name.toLowerCase() === label.text.toLowerCase()) {
+    return label
+  }
+}
+
+function Circles({ error, labels, loading, results }) {
   return (
     <section className={b()}>
       <Helmet>
@@ -25,9 +31,23 @@ function Circles({ error, loading, results }) {
         <h2>Circles</h2>
         <ul>
           {results.map(circle => (
-            <li key={circle.circle_id} className={b('item')}>
-              <span className={b('bullet')} />
-              {circle.circle_name}
+            <li
+              key={circle.circle_id}
+              className={b('item')}
+              style={{
+                color: `${labels
+                  .filter(label => getColor(label, circle))
+                  .map(label => label.color)
+                  .toString()}`,
+              }}
+            >
+              <span
+                style={{
+                  color: '#000',
+                }}
+              >
+                {circle.circle_name}
+              </span>
             </li>
           ))}
         </ul>
@@ -39,4 +59,5 @@ export default connect(state => ({
   results: state.circles.results,
   loading: state.circles.loading,
   error: state.circles.errors,
+  labels: state.labels.results.qualifier,
 }))(Circles)
