@@ -14,7 +14,7 @@ export default function Issue(props) {
     <li
       className={b({
         status: props.state,
-        'pull-request': props.pull_request !== void 0,
+        'pull-request': props.pull_request !== null,
       })}
     >
       <input
