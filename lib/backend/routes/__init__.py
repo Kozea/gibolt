@@ -441,6 +441,7 @@ def list_tickets():
         ticket['selected'] = False
         ticket['expanded'] = False
         ticket['comments_expanded'] = False
+        ticket['comments'] = []
     objects = {'objects': response, 'occurences': len(response)}
     return jsonify(objects)
 
@@ -467,6 +468,8 @@ def get_a_ticket(repo_name, ticket_number):
         'milestone_title': (
             ticket_request['milestone']['title']
             if ticket_request['milestone'] else None),
+        'pull_request': ticket_request.get('pull_request'),
+        'nb_comments': ticket_request['comments'],
         'updated_at': ticket_request['updated_at'],
         'closed_at': ticket_request['closed_at'],
         'repo_name': repo_name,
@@ -481,7 +484,11 @@ def get_a_ticket(repo_name, ticket_number):
                 'label_id': label['id'], 'label_color': label['color'],
                 'label_name': label['name']} for label in ticket_request.get(
                 'labels',
-                [])]}
+                [])],
+        'selected': False,
+        'expanded': False,
+        'comments_expanded': False,
+        'comments': []}
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
@@ -517,6 +524,8 @@ def create_a_ticket(repo_name):
         'milestone_title': (
             ticket_request['milestone']['title']
             if ticket_request['milestone'] else None),
+        'pull_request': ticket_request.get('pull_request'),
+        'nb_comments': ticket_request['comments'],
         'updated_at': ticket_request['updated_at'],
         'closed_at': ticket_request['closed_at'],
         'repo_name': repo_name,
@@ -530,7 +539,11 @@ def create_a_ticket(repo_name):
                 'label_color': label['color'],
                 'label_name': label['name']} for label in ticket_request.get(
                 'labels',
-                [])]}
+                [])],
+        'selected': False,
+        'expanded': False,
+        'comments_expanded': False,
+        'comments': []}
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
@@ -576,6 +589,8 @@ def update_a_ticket(repo_name, ticket_number):
         'milestone_title': (
             ticket_request['milestone']['title']
             if ticket_request['milestone'] else None),
+        'pull_request': ticket_request.get('pull_request'),
+        'nb_comments': ticket_request['comments'],
         'updated_at': ticket_request['updated_at'],
         'closed_at': ticket_request['closed_at'],
         'repo_name': repo_name,
@@ -594,7 +609,8 @@ def update_a_ticket(repo_name, ticket_number):
                 [])],
         'selected': False,
         'expanded': False,
-        'comment_expanded': False}
+        'comment_expanded': False,
+        'comments': []}
     objects = [{'objects': [response]}]
     objects = {
         'objects': response,
