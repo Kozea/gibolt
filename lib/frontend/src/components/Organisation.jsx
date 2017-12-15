@@ -5,7 +5,7 @@ import { connect } from '../utils'
 import Loading from './Loading'
 import { createCircle } from '../actions'
 
-function Organisation({ error, circles, loading, onSubmit }) {
+function Organisation({ error, loading, onSubmit }) {
   return (
     <div>
       <Helmet>
@@ -40,31 +40,6 @@ function Organisation({ error, circles, loading, onSubmit }) {
           <input type="submit" value="Créer un cercle" />
         </form>
       </article>
-      <article>
-        <h2>LISTE DES CERCLES :</h2>
-        <ul>
-          {circles.map(circle => (
-            <li key={circle.circle_id}>{circle.circle_name}</li>
-          ))}
-        </ul>
-      </article>
-      <article>
-        <ul>
-          {/* <h2>MÀJ UN CERCLE :</h2>
-          <label>Cercle: </label>
-          <select>
-            <option>Valeur 1</option>
-            <option>Valeur 2</option>
-            <option>Valeur 3</option>
-          </select>
-          <br />
-          <button type="submit"> Modifier</button> */}
-          {/* GERER ICI AFFICHAGE DE FORM AU CLIQUE  */}
-          {/* {circles.map(circle => (
-            <li key={circle.circle_id}>{circle.circle_name}</li>
-          ))} */}
-        </ul>
-      </article>
     </div>
   )
 }
@@ -76,7 +51,7 @@ export default connect(
   }),
   dispatch => ({
     onSubmit: e => {
-      e.preventDefault()
+      // e.preventDefault()
       const formCircle = [].slice
         .call(e.target.elements)
         .reduce(function(map, obj) {
