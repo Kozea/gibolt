@@ -3,9 +3,9 @@ import { Helmet } from 'react-helmet'
 
 import { connect } from '../utils'
 import Loading from './Loading'
-import { createCircle } from '../actions'
+import { createCircle, deleteCircle } from '../actions'
 
-function Organisation({ error, loading, onSubmit }) {
+function Organisation({ error, loading, onSubmit, circles, btnClick }) {
   return (
     <div>
       <Helmet>
@@ -22,23 +22,58 @@ function Organisation({ error, loading, onSubmit }) {
         <h2>CREER UN NOUVEAU CERCLE :</h2>
         <form onSubmit={e => onSubmit(e)}>
           <label>
-            Nom
+            Nom :
             <input name="circle_name" required />
           </label>
+          <br />
           <label>
-            Objectif
+            Objectif :
             <input name="circle_purpose" required />
           </label>
+          <br />
           <label>
-            Domaine
+            Domaine :
             <input name="circle_domain" required />
           </label>
+          <br />
           <label>
-            Redevabilités
+            Redevabilités :
             <input name="circle_accountabilities" required />
           </label>
+          <br />
           <input type="submit" value="Créer un cercle" />
         </form>
+      </article>
+      <article>
+        <h2>LISTE DES CERCLES:</h2>
+        {loading ? (
+          ''
+        ) : (
+          <ul>
+            {circles.map(circle => (
+              <li key={circle.circle_id}>
+                <b>{circle.circle_name}:</b>
+                <br />
+                -objectif: {circle.circle_purpose}
+                <br />
+                -domaine: {circle.circle_domain}
+                <br />
+                -redevabilités: {circle.circle_accountabilities}
+                <br />
+                <br />
+                <button
+                  onClick={e => {
+                    // e.preventDefault()
+                    btnClick(circle.circle_id)
+                  }}
+                >
+                  Supprimer
+                </button>
+                <button>Créer les roles</button>
+              </li>
+            ))}
+          </ul>
+        )}
       </article>
     </div>
   )
@@ -63,5 +98,6 @@ export default connect(
         }, {})
       dispatch(createCircle(formCircle))
     },
+    btnClick: data => dispatch(deleteCircle(data)),
   })
 )(Organisation)
