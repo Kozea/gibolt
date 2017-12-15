@@ -421,6 +421,7 @@ def list_tickets():
                  'milestone_title': (
                      ticket['milestone']['title']
                      if ticket['milestone'] else None),
+                 'pull_request': ticket.get('pull_request'),
                  'nb_comments': ticket['comments'],
                  'updated_at': ticket['updated_at'],
                  'closed_at': ticket['closed_at'],
