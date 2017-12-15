@@ -5,7 +5,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
-import { block, connect } from '../utils'
+import { block, connect, sortGroupCircles } from '../utils'
 import Loading from './Loading'
 
 const b = block('Circles')
@@ -17,6 +17,8 @@ function getColor(label, circle) {
 }
 
 function Circles({ error, labels, loading, results }) {
+  const circles = sortGroupCircles(results)
+
   return (
     <section className={b()}>
       <Helmet>
@@ -31,9 +33,9 @@ function Circles({ error, labels, loading, results }) {
       {loading && <Loading />}
       <article className={b('circles')}>
         <h2>Circles</h2>
-        {results.length > 0 ? (
+        {circles.length > 0 ? (
           <ul>
-            {results.map(circle => (
+            {circles.map(circle => (
               <li
                 key={circle.circle_id}
                 className={b('item')}
@@ -51,7 +53,15 @@ function Circles({ error, labels, loading, results }) {
                     search: stringify({ name: circle.circle_name }),
                   }}
                 >
+                  <span className={b('unlink')}>
+                    {circle.parent_circle_name ? ' > ' : ''}
+                  </span>
                   {circle.circle_name}
+                  <span className={b('unlink')}>
+                    {circle.parent_circle_name
+                      ? ` (sous-cercle de "${circle.parent_circle_name}")`
+                      : ''}
+                  </span>
                 </Link>
               </li>
             ))}
