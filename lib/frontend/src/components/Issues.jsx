@@ -2,14 +2,14 @@ import './Issues.sass'
 
 import React from 'react'
 
+import { setLoading } from '../actions'
 import {
-  updateIssues,
   setIssuesSelectness,
-  setLoading,
+  updateIssues,
   toggleExpanded,
   toggleCommentsExpanded,
   toggleIssue,
-} from '../actions'
+} from '../actions/issues'
 import {
   block,
   connect,
