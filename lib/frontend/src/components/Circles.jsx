@@ -69,6 +69,7 @@ function Circles({ error, labels, loading, results }) {
         ) : (
           <span>No circles defined</span>
         )}
+        <button type="submit">Add a circle</button>
       </article>
     </section>
   )

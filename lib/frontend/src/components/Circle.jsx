@@ -119,6 +119,11 @@ function Circle({
           <span>No roles defined</span>
         )}
       </article>
+      <article className={b('action')}>
+        <button type="submit">Update Circle</button>
+        <button type="submit">Delete Circle</button>
+        <button type="submit">Add a Role</button>
+      </article>
     </section>
   )
 }
