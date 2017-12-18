@@ -35,6 +35,13 @@ function Circle({
         <title>Gibolt - Circle</title>
       </Helmet>
       <h1>{circlename}</h1>
+      {circle.parent_circle_name && (
+        <span>
+          {circle.parent_circle_name
+            ? `(sous-cercle de "${circle.parent_circle_name}")`
+            : ''}
+        </span>
+      )}
       {error && (
         <article className={b('group', { error: true })}>
           <h2>Error during issue fetch</h2>
