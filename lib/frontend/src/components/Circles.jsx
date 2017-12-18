@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
 import { block, connect, sortGroupCircles } from '../utils'
+import { createCircle } from '../actions/circle'
 import Loading from './Loading'
 
 const b = block('Circles')
@@ -16,7 +17,7 @@ function getColor(label, circle) {
   }
 }
 
-function Circles({ error, labels, loading, results }) {
+function Circles({ error, labels, loading, results, onSubmit }) {
   const circles = sortGroupCircles(results)
 
   return (
@@ -69,14 +70,83 @@ function Circles({ error, labels, loading, results }) {
         ) : (
           <span>No circles defined</span>
         )}
+        <article>
+          <h2>CREER UN NOUVEAU CERCLE :</h2>
+          <form onSubmit={e => onSubmit(e)}>
+            <label>
+              Nom :
+              <input name="circle_name" required />
+            </label>
+            <br />
+            <label>
+              Id du parent :
+              <input name="parent_circle_id" />
+            </label>
+            <br />
+            <label>
+              Objectif :
+              <input name="circle_purpose" required />
+            </label>
+            <br />
+            <label>
+              Domaine :
+              <input name="circle_domain" required />
+            </label>
+            <br />
+            <label>
+              Redevabilités :
+              <br />
+              <textarea
+                name="circle_accountabilities"
+                rows="5"
+                cols="40"
+                required
+              />
+            </label>
+            <br />
+            <input type="submit" value="Créer un cercle" />
+          </form>
+        </article>
         <button type="submit">Add a circle</button>
       </article>
     </section>
   )
 }
-export default connect(state => ({
-  results: state.circles.results,
-  loading: state.circles.loading,
-  error: state.circles.errors,
-  labels: state.labels.results.qualifier,
-}))(Circles)
+export default connect(
+  state => ({
+    results: state.circles.results,
+    loading: state.circles.loading,
+    error: state.circles.errors,
+    labels: state.labels.results.qualifier,
+  }),
+  dispatch => ({
+    onSubmit: e => {
+      // e.preventDefault()
+      const formCircle = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
+          if (obj.name) {
+            map[obj.name] = obj.value
+          }
+
+          return map
+        }, {})
+      dispatch(createCircle(formCircle))
+    },
+    // btnClick: data => {
+    //   return dispatch(deleteCircle(data))
+    // },
+    // onEdit: (id, e) => {
+    //   const formCircle = [].slice
+    //     .call(e.target.elements)
+    //     .reduce(function(map, obj) {
+    //       if (obj.name) {
+    //         map[obj.name] = obj.value
+    //       }
+    //
+    //       return map
+    //     }, {})
+    //   dispatch(updateCircle(id, formCircle))
+    // },
+  })
+)(Circles)

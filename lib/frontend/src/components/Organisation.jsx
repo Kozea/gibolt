@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet'
 
 import { connect } from '../utils'
 import Loading from './Loading'
-import { createCircle, deleteCircle, updateCircle } from '../actions'
+import { createCircle, deleteCircle, updateCircle } from '../actions/circle'
 
 function Organisation({ error, loading, onSubmit, circles, btnClick, onEdit }) {
   return (
@@ -24,6 +24,11 @@ function Organisation({ error, loading, onSubmit, circles, btnClick, onEdit }) {
           <label>
             Nom :
             <input name="circle_name" required />
+          </label>
+          <br />
+          <label>
+            Id du parent :
+            <input name="parent_circle_id" />
           </label>
           <br />
           <label>
@@ -76,7 +81,7 @@ function Organisation({ error, loading, onSubmit, circles, btnClick, onEdit }) {
                 </button>
                 <button>Créer les roles</button>
                 <article>
-                  <h2>CREER UN NOUVEAU CERCLE :</h2>
+                  <h2>MODIFIER :</h2>
                   <form
                     onSubmit={e => {
                       onEdit(circle.circle_id, e)
@@ -153,7 +158,6 @@ export default connect(
       return dispatch(deleteCircle(data))
     },
     onEdit: (id, e) => {
-      // e.preventDefault()
       const formCircle = [].slice
         .call(e.target.elements)
         .reduce(function(map, obj) {

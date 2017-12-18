@@ -8,6 +8,8 @@ import {
   toggleAccountExpanded,
   toggleDomainExpanded,
   togglePurposeExpanded,
+  updateCircle,
+  deleteCircle,
 } from '../actions/circle'
 import Loading from './Loading'
 
@@ -28,6 +30,8 @@ function Circle({
   onClickAccount,
   onClickDomain,
   onClickPurpose,
+  onEdit,
+  btnClick,
 }) {
   return (
     <section className={b()}>
@@ -119,9 +123,60 @@ function Circle({
           <span>No roles defined</span>
         )}
       </article>
+      <br />
       <article className={b('action')}>
+        <form
+          onSubmit={e => {
+            onEdit(circle.circle_id, e)
+          }}
+        >
+          <label>
+            Nom :
+            <input
+              name="circle_name"
+              defaultValue={circle.circle_name}
+              required
+            />
+          </label>
+          <br />
+          <label>
+            Objectif :
+            <input
+              name="circle_purpose"
+              defaultValue={circle.circle_purpose}
+              required
+            />
+          </label>
+          <br />
+          <label>
+            Domaine :
+            <input
+              name="circle_domain"
+              defaultValue={circle.circle_domain}
+              required
+            />
+          </label>
+          <br />
+          <label>
+            Redevabilités :
+            <input
+              name="circle_accountabilities"
+              defaultValue={circle.circle_accountabilities}
+              required
+            />
+          </label>
+          <br />
+          <input type="submit" value="Modifier le cercle" />
+        </form>
         <button type="submit">Update Circle</button>
-        <button type="submit">Delete Circle</button>
+        <button
+          type="submit"
+          onClick={() => {
+            btnClick(circle.circle_id)
+          }}
+        >
+          Delete Circle
+        </button>
         <button type="submit">Add a Role</button>
       </article>
     </section>
@@ -144,6 +199,21 @@ export default connect(
     },
     onClickPurpose: circlePurpose => {
       dispatch(togglePurposeExpanded(circlePurpose))
+    },
+    onEdit: (id, e) => {
+      const formCircle = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
+          if (obj.name) {
+            map[obj.name] = obj.value
+          }
+
+          return map
+        }, {})
+      dispatch(updateCircle(id, formCircle))
+    },
+    btnClick: data => {
+      return dispatch(deleteCircle(data))
     },
   })
 )(Circle)
