@@ -1,6 +1,7 @@
 import './Issues.sass'
 
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { setLoading } from '../actions'
 import {
@@ -116,6 +117,17 @@ function Issues({
                 )
               }
             />
+            {grouper !== 'state' &&
+              grouper !== 'nogroup' && (
+                <Link
+                  className={b('link')}
+                  to={{
+                    pathname: '/createIssue',
+                  }}
+                >
+                  <button className={b('newTicket')}>Create ticket</button>
+                </Link>
+              )}
             {issuesState === 'all' &&
               grouper !== 'state' && (
                 <Progress
@@ -163,8 +175,16 @@ function Issues({
           Remove top priority
         </button>
         <button type="submit" onClick={() => onChangeTickets('close')}>
-          Close ticket
+          Close issue
         </button>
+        <Link
+          className={b('link')}
+          to={{
+            pathname: '/createIssue',
+          }}
+        >
+          <button type="submit">Create issue</button>
+        </Link>
       </article>
     </section>
   )
