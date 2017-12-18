@@ -2,14 +2,14 @@ import './Issues.sass'
 
 import React from 'react'
 
+import { setLoading } from '../actions'
 import {
-  updateIssues,
+  getAndToggleCommentsExpanded,
   setIssuesSelectness,
-  setLoading,
+  updateIssues,
   toggleExpanded,
-  toggleCommentsExpanded,
   toggleIssue,
-} from '../actions'
+} from '../actions/issues'
 import {
   block,
   connect,
@@ -145,12 +145,11 @@ function Issues({
                 pull_request={issue.pull_request}
                 expanded={issue.expanded}
                 comments_expanded={issue.comments_expanded}
+                nb_comments={issue.nb_comments}
                 comments={issue.comments}
                 onBoxChange={() => onToggleSelected(issue.ticket_id)}
                 onClick={() => onToggleExpanded(issue.ticket_id)}
-                onClickComments={() =>
-                  onToggleCommentsExpanded(issue.ticket_id)
-                }
+                onClickComments={() => onToggleCommentsExpanded(issue)}
               />
             ))}
           </ul>
@@ -197,8 +196,8 @@ export default connect(
     onToggleExpanded: issueId => {
       dispatch(toggleExpanded(issueId))
     },
-    onToggleCommentsExpanded: issueId => {
-      dispatch(toggleCommentsExpanded(issueId))
+    onToggleCommentsExpanded: issue => {
+      dispatch(getAndToggleCommentsExpanded(issue))
     },
     onToggleGrouper: (issuesId, isSelected) => {
       dispatch(setIssuesSelectness(issuesId, isSelected))

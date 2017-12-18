@@ -14,7 +14,7 @@ export default function Issue(props) {
     <li
       className={b({
         status: props.state,
-        'pull-request': props.pull_request !== void 0,
+        'pull-request': props.pull_request !== null,
       })}
     >
       <input
@@ -60,7 +60,7 @@ export default function Issue(props) {
             )}
           </div>
         )}
-        {props.comments.length > 0 && (
+        {props.nb_comments > 0 && (
           <div onClick={props.onClickComments}>
             {props.comments_expanded ? (
               <div>
