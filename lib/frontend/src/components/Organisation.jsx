@@ -47,9 +47,6 @@ function Organisation({ error, loading, onSubmit, circles, btnClick, onEdit }) {
             />
           </label>
           <br />
-          <label> Roles : </label>
-          <p>A VOIR APRES CRUD ROLE</p>
-          <br />
           <input type="submit" value="Créer un cercle" />
         </form>
       </article>
@@ -71,8 +68,7 @@ function Organisation({ error, loading, onSubmit, circles, btnClick, onEdit }) {
                 <br />
                 <br />
                 <button
-                  onClick={e => {
-                    // e.preventDefault()
+                  onClick={() => {
                     btnClick(circle.circle_id)
                   }}
                 >
@@ -80,7 +76,7 @@ function Organisation({ error, loading, onSubmit, circles, btnClick, onEdit }) {
                 </button>
                 <button>Créer les roles</button>
                 <article>
-                  <h2>MODIFIER CE CERCLE:</h2>
+                  <h2>CREER UN NOUVEAU CERCLE :</h2>
                   <form
                     onSubmit={e => {
                       onEdit(circle.circle_id, e)
