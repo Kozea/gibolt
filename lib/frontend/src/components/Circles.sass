@@ -1,0 +1,44 @@
+@import ../vars
+
+.Circles
+  flex: 1
+  overflow: auto
+  position: relative
+
+  &__item
+    display: flex
+    flex-direction: column
+    background: #fff
+    border: 1px solid darken($body, 5%)
+    margin: 0.25em 0
+    padding: 0.5em
+    position: relative
+    transition: color 0.2s
+
+    &:before
+      border-left: 0.25em solid
+      bottom: -1px
+      content: ''
+      display: block
+      left: -1px
+      position: absolute
+      top: -1px
+
+  &__circles
+    margin-left: 1em
+    margin-right: .5em
+
+  &__unlink
+    color: #808080
+    font-style: italic
+
+[type=submit]
+  border: none
+  background: #bac9d5
+  font-family: $text-font
+  margin: .5em 0 .5em 1em
+  padding: 1em
+  transition: background 0.2s
+
+  &:hover, &:focus
+    background: lighten(#bac9d5, 5%)
