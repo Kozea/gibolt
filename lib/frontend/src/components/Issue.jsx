@@ -60,7 +60,7 @@ export default function Issue(props) {
             )}
           </div>
         )}
-        {props.comments.length > 0 && (
+        {props.nb_comments > 0 && (
           <div onClick={props.onClickComments}>
             {props.comments_expanded ? (
               <div>
