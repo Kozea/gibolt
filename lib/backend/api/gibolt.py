@@ -15,7 +15,7 @@ rest(
     Circle,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
     relationships={
-        'roles': rest(Role, only=['role_id', 'user_id']),
+        'roles': rest(Role, only=['role_id', 'role_name', 'user_id']),
     },
     name='circles',
     auth=needlogin
