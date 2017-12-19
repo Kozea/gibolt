@@ -132,36 +132,24 @@ function Circle({
         >
           <label>
             Name :
-            <input
-              name="circle_name"
-              defaultValue={circle.circle_name}
-              required
-            />
+            <input name="name" value={circle.circle_name} required />
           </label>
           <br />
           <label>
             Purpose :
-            <input
-              name="circle_purpose"
-              defaultValue={circle.circle_purpose}
-              required
-            />
+            <input name="purpose" value={circle.circle_purpose} required />
           </label>
           <br />
           <label>
             Domain :
-            <input
-              name="circle_domain"
-              defaultValue={circle.circle_domain}
-              required
-            />
+            <input name="domain" value={circle.circle_domain} required />
           </label>
           <br />
           <label>
             Accountabilities :
             <input
-              name="circle_accountabilities"
-              defaultValue={circle.circle_accountabilities}
+              name="accountabilities"
+              value={circle.circle_accountabilities}
               required
             />
           </label>
@@ -201,6 +189,11 @@ export default connect(
       dispatch(togglePurposeExpanded(circlePurpose))
     },
     onEdit: (id, e) => {
+      // debugger
+      for (let i in e.target.elements) {
+        console.log(i)
+      }
+      // if (e.target.)
       const formCircle = [].slice
         .call(e.target.elements)
         .reduce(function(map, obj) {

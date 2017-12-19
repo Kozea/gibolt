@@ -72,7 +72,11 @@ function Circles({ error, labels, loading, results, onSubmit }) {
         )}
         <article>
           <h2>Create a new circle :</h2>
-          <form onSubmit={e => onSubmit(e)}>
+          <form
+            onSubmit={e => {
+              onSubmit(e)
+            }}
+          >
             <label>
               Name :
               <input name="circle_name" required />
@@ -80,7 +84,19 @@ function Circles({ error, labels, loading, results, onSubmit }) {
             <br />
             <label>
               Parent&apos;s id :
-              <input name="parent_circle_id" />
+              {/* <input name="parent_circle_id" /> */}
+              <select>
+                {circles.map(circle => (
+                  <option
+                    name="parent_circle_id"
+                    key={circle.circle_id}
+                    value={circle.circle_id}
+                  >
+                    {circle.circle_id}
+                  </option>
+                ))}
+                <option value="Aucun">Aucun</option>
+              </select>
             </label>
             <br />
             <label>
@@ -122,31 +138,22 @@ export default connect(
   dispatch => ({
     onSubmit: e => {
       // e.preventDefault()
+      if (e.target.parent_circle_id.value !== null) {
+        e.target.parent_circle_id.value = e.target.parent_circle_id.value
+      }
       const formCircle = [].slice
+        // ici on renvoie ds tt les cas parent, il faut donc ptetre call tt sauf
         .call(e.target.elements)
         .reduce(function(map, obj) {
           if (obj.name) {
             map[obj.name] = obj.value
+            // console.log(obj.name), console.log(obj.value)
+            // console.log(e.target.elements)
           }
 
           return map
         }, {})
       dispatch(createCircle(formCircle))
     },
-    // btnClick: data => {
-    //   return dispatch(deleteCircle(data))
-    // },
-    // onEdit: (id, e) => {
-    //   const formCircle = [].slice
-    //     .call(e.target.elements)
-    //     .reduce(function(map, obj) {
-    //       if (obj.name) {
-    //         map[obj.name] = obj.value
-    //       }
-    //
-    //       return map
-    //     }, {})
-    //   dispatch(updateCircle(id, formCircle))
-    // },
   })
 )(Circles)
