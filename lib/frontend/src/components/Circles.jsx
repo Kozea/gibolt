@@ -71,30 +71,30 @@ function Circles({ error, labels, loading, results, onSubmit }) {
           <span>No circles defined</span>
         )}
         <article>
-          <h2>CREER UN NOUVEAU CERCLE :</h2>
+          <h2>Create a new circle :</h2>
           <form onSubmit={e => onSubmit(e)}>
             <label>
-              Nom :
+              Name :
               <input name="circle_name" required />
             </label>
             <br />
             <label>
-              Id du parent :
+              Parent&apos;s id :
               <input name="parent_circle_id" />
             </label>
             <br />
             <label>
-              Objectif :
+              Purpose :
               <input name="circle_purpose" required />
             </label>
             <br />
             <label>
-              Domaine :
+              Domain :
               <input name="circle_domain" required />
             </label>
             <br />
             <label>
-              Redevabilités :
+              Accountabilities :
               <br />
               <textarea
                 name="circle_accountabilities"
@@ -104,7 +104,7 @@ function Circles({ error, labels, loading, results, onSubmit }) {
               />
             </label>
             <br />
-            <input type="submit" value="Créer un cercle" />
+            <input type="submit" value="Create circle" />
           </form>
         </article>
         <button type="submit">Add a circle</button>

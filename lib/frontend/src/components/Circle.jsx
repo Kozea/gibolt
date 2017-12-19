@@ -131,7 +131,7 @@ function Circle({
           }}
         >
           <label>
-            Nom :
+            Name :
             <input
               name="circle_name"
               defaultValue={circle.circle_name}
@@ -140,7 +140,7 @@ function Circle({
           </label>
           <br />
           <label>
-            Objectif :
+            Purpose :
             <input
               name="circle_purpose"
               defaultValue={circle.circle_purpose}
@@ -149,7 +149,7 @@ function Circle({
           </label>
           <br />
           <label>
-            Domaine :
+            Domain :
             <input
               name="circle_domain"
               defaultValue={circle.circle_domain}
@@ -158,7 +158,7 @@ function Circle({
           </label>
           <br />
           <label>
-            Redevabilités :
+            Accountabilities :
             <input
               name="circle_accountabilities"
               defaultValue={circle.circle_accountabilities}
@@ -166,7 +166,7 @@ function Circle({
             />
           </label>
           <br />
-          <input type="submit" value="Modifier le cercle" />
+          <input type="submit" value="Edit circle" />
         </form>
         <button type="submit">Update Circle</button>
         <button
