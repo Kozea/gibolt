@@ -351,15 +351,15 @@ def get_a_ticket(repo_name, ticket_number):
 @needlogin
 def create_a_ticket(repo_name):
     data = request.get_json()
-    if data.get('ticket_title'):
-        data['title'] = data.pop('ticket_title')
-    if data.get('milestone_number'):
-        data['milestone'] = data.pop('milestone_number')
     data = json.dumps(data)
-    ticket_request = github.request('POST',
-                                    'repos/{0}/{1}/issues'.format(
-                                        app.config['ORGANISATION'],
-                                        repo_name), data=data)
+    try:
+        ticket_request = github.request('POST',
+                                        'repos/{0}/{1}/issues'.format(
+                                            app.config['ORGANISATION'],
+                                            repo_name), data=data)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'ticket_id': ticket_request['id'],
         'ticket_number': ticket_request['number'],
@@ -369,7 +369,9 @@ def create_a_ticket(repo_name):
         'user': {
             'user_id': ticket_request['user']['id']},
         'state': ticket_request['state'],
-        'milestone_id': ticket_request['milestone']['id'],
+        'milestone_id': (
+            ticket_request['milestone']['id']
+            if ticket_request['milestone'] else None),
         'milestone_title': (
             ticket_request['milestone']['title']
             if ticket_request['milestone'] else None),

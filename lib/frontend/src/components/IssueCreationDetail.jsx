@@ -3,14 +3,19 @@ import './IssueCreationDetail.sass'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
-import { changeMilestoneSelect, changeRolesSelect } from '../actions/issueForm'
+import {
+  changeMilestoneSelect,
+  changeRolesSelect,
+  goBack,
+  submitIssue,
+} from '../actions/issueForm'
 import { block, connect, sortRepos } from '../utils'
 import Loading from './Loading'
 
 const b = block('IssueCreationDetail')
 
-function onGoBack() {
-  history.go(-1)
+function formPreventDefault(event) {
+  event.preventDefault()
 }
 
 function IssueCreationDetail({
@@ -20,7 +25,9 @@ function IssueCreationDetail({
   labels,
   loading,
   onCircleChange,
+  onGoBack,
   onProjectChange,
+  onSubmit,
   repositories,
 }) {
   const sortedRepos = sortRepos(repositories)
@@ -33,17 +40,18 @@ function IssueCreationDetail({
       {loading && <Loading />}
       {error && (
         <article className={b('date', { error: true })}>
-          <h2>Error during report fetch</h2>
+          <h3>Error during issue creation</h3>
           <code>{error}</code>
+          <br />
+          <br />
         </article>
       )}
-      <form>
+      <form onSubmit={event => formPreventDefault(event)}>
         <label>
           <select
             id="project"
             name="project"
             onChange={event => onProjectChange(event.target.value)}
-            // onChange={event => onCircleChange(event.target.value)}
           >
             {sortedRepos.map(repo => (
               <option key={repo.repo_id} value={repo.repo_name}>
@@ -60,7 +68,7 @@ function IssueCreationDetail({
             {issueForm.milestonesSelect.map(milestone => (
               <option
                 key={milestone.milestone_id}
-                value={milestone.milestone_id}
+                value={milestone.milestone_number}
               >
                 {milestone.milestone_title}
               </option>
@@ -107,16 +115,18 @@ function IssueCreationDetail({
         </label>
         <br />
         <label>
-          Title:<br />
+          Title*:<br />
           <input id="title" name="title" />
         </label>
         <br />
         <label>
-          Description: <textarea id="description" name="description" rows="7" />
+          Description: <textarea id="body" name="body" rows="7" />
         </label>
         <br />
         <article className={b('action')}>
-          <button type="submit">Create</button>
+          <button type="submit" onClick={event => onSubmit(event)}>
+            Create
+          </button>
           <button type="submit" onClick={() => onGoBack()}>
             Cancel
           </button>
@@ -128,7 +138,7 @@ function IssueCreationDetail({
 export default connect(
   state => ({
     circles: state.circles.results,
-    error: state.circle.error,
+    error: state.issueForm.results.error,
     issueForm: state.issueForm.results,
     labels: state.labels.results.priority,
     loading: state.circle.loading,
@@ -138,8 +148,15 @@ export default connect(
     onCircleChange: circleId => {
       dispatch(changeRolesSelect(circleId))
     },
+    onGoBack: () => {
+      dispatch(goBack())
+    },
     onProjectChange: repoId => {
       dispatch(changeMilestoneSelect(repoId))
+    },
+    onSubmit: event => {
+      event.preventDefault()
+      dispatch(submitIssue(event))
     },
   })
 )(IssueCreationDetail)

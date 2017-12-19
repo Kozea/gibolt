@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet'
 import { block } from '../utils'
 import IssueCreationDetail from './IssueCreationDetail'
 import Labels from './Labels'
-import Status from './Status'
+// import Status from './Status'
 
 const b = block('IssuesDashboard')
 
@@ -18,7 +18,7 @@ export default function IssueCreation() {
       </Helmet>
       <Labels />
       <div className={b('pane')}>
-        <Status />
+        {/* <Status /> */}
         <IssueCreationDetail />
       </div>
     </div>
