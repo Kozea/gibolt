@@ -83,19 +83,15 @@ function Circles({ error, labels, loading, results, onSubmit }) {
             </label>
             <br />
             <label>
-              Parent&apos;s id :
+              Parent :
               {/* <input name="parent_circle_id" /> */}
-              <select>
+              <select name="parent_circle_id">
                 {circles.map(circle => (
-                  <option
-                    name="parent_circle_id"
-                    key={circle.circle_id}
-                    value={circle.circle_id}
-                  >
-                    {circle.circle_id}
+                  <option key={circle.circle_id} value={circle.circle_id}>
+                    {circle.circle_name}
                   </option>
                 ))}
-                <option value="Aucun">Aucun</option>
+                <option value="">Aucun</option>
               </select>
             </label>
             <br />
@@ -137,18 +133,11 @@ export default connect(
   }),
   dispatch => ({
     onSubmit: e => {
-      // e.preventDefault()
-      if (e.target.parent_circle_id.value !== null) {
-        e.target.parent_circle_id.value = e.target.parent_circle_id.value
-      }
       const formCircle = [].slice
-        // ici on renvoie ds tt les cas parent, il faut donc ptetre call tt sauf
         .call(e.target.elements)
         .reduce(function(map, obj) {
-          if (obj.name) {
+          if (obj.name && obj.value) {
             map[obj.name] = obj.value
-            // console.log(obj.name), console.log(obj.value)
-            // console.log(e.target.elements)
           }
 
           return map
