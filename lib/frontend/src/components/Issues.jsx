@@ -1,5 +1,6 @@
 import './Issues.sass'
 
+import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -117,17 +118,6 @@ function Issues({
                 )
               }
             />
-            {grouper !== 'state' &&
-              grouper !== 'nogroup' && (
-                <Link
-                  className={b('link')}
-                  to={{
-                    pathname: '/createIssue',
-                  }}
-                >
-                  <button className={b('newTicket')}>Create ticket</button>
-                </Link>
-              )}
             {issuesState === 'all' &&
               grouper !== 'state' && (
                 <Progress

@@ -21,6 +21,7 @@ function formPreventDefault(event) {
 function IssueCreationDetail({
   circles,
   error,
+  isDisabled,
   issueForm,
   labels,
   loading,
@@ -29,6 +30,7 @@ function IssueCreationDetail({
   onProjectChange,
   onSubmit,
   repositories,
+  titleInput,
 }) {
   const sortedRepos = sortRepos(repositories)
   return (
@@ -53,6 +55,7 @@ function IssueCreationDetail({
             name="project"
             onChange={event => onProjectChange(event.target.value)}
           >
+            <option value="">{''}</option>
             {sortedRepos.map(repo => (
               <option key={repo.repo_id} value={repo.repo_name}>
                 {repo.repo_name}
@@ -83,6 +86,7 @@ function IssueCreationDetail({
             name="circle"
             onChange={event => onCircleChange(event.target.value)}
           >
+            <option value="">{''}</option>
             {circles.map(circle => (
               <option key={circle.circle_id} value={circle.circle_id}>
                 {circle.circle_name}
@@ -115,7 +119,7 @@ function IssueCreationDetail({
         </label>
         <br />
         <label>
-          Title*:<br />
+          Title:<br />
           <input id="title" name="title" />
         </label>
         <br />
@@ -124,7 +128,11 @@ function IssueCreationDetail({
         </label>
         <br />
         <article className={b('action')}>
-          <button type="submit" onClick={event => onSubmit(event)}>
+          <button
+            type="submit"
+            onClick={event => onSubmit(event)}
+            disabled={isDisabled(titleInput)}
+          >
             Create
           </button>
           <button type="submit" onClick={() => onGoBack()}>
@@ -143,6 +151,7 @@ export default connect(
     labels: state.labels.results.priority,
     loading: state.circle.loading,
     repositories: state.repositories.results.repositories,
+    titleInput: '',
   }),
   dispatch => ({
     onCircleChange: circleId => {
@@ -158,5 +167,6 @@ export default connect(
       event.preventDefault()
       dispatch(submitIssue(event))
     },
+    isDisabled: titleInput => console.log(titleInput),
   })
 )(IssueCreationDetail)
