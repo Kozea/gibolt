@@ -1,6 +1,5 @@
 import './Issues.sass'
 
-import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 

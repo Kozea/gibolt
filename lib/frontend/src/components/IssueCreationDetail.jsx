@@ -8,29 +8,25 @@ import {
   changeRolesSelect,
   goBack,
   submitIssue,
+  updateTitle,
 } from '../actions/issueForm'
 import { block, connect, sortRepos } from '../utils'
 import Loading from './Loading'
 
 const b = block('IssueCreationDetail')
 
-function formPreventDefault(event) {
-  event.preventDefault()
-}
-
 function IssueCreationDetail({
   circles,
   error,
-  isDisabled,
   issueForm,
   labels,
   loading,
   onCircleChange,
   onGoBack,
   onProjectChange,
+  onTitleChange,
   onSubmit,
   repositories,
-  titleInput,
 }) {
   const sortedRepos = sortRepos(repositories)
   return (
@@ -48,8 +44,9 @@ function IssueCreationDetail({
           <br />
         </article>
       )}
-      <form onSubmit={event => formPreventDefault(event)}>
+      <form onSubmit={event => event.preventDefault()}>
         <label>
+          Project (mandatory):
           <select
             id="project"
             name="project"
@@ -119,8 +116,12 @@ function IssueCreationDetail({
         </label>
         <br />
         <label>
-          Title:<br />
-          <input id="title" name="title" />
+          Title (mandatory):<br />
+          <input
+            id="title"
+            name="title"
+            onChange={event => onTitleChange(event)}
+          />
         </label>
         <br />
         <label>
@@ -131,7 +132,7 @@ function IssueCreationDetail({
           <button
             type="submit"
             onClick={event => onSubmit(event)}
-            disabled={isDisabled(titleInput)}
+            disabled={issueForm.project === '' || issueForm.title === ''}
           >
             Create
           </button>
@@ -151,22 +152,23 @@ export default connect(
     labels: state.labels.results.priority,
     loading: state.circle.loading,
     repositories: state.repositories.results.repositories,
-    titleInput: '',
   }),
   dispatch => ({
+    onTitleChange: event => {
+      dispatch(updateTitle(event.target.value))
+    },
     onCircleChange: circleId => {
       dispatch(changeRolesSelect(circleId))
     },
     onGoBack: () => {
       dispatch(goBack())
     },
-    onProjectChange: repoId => {
-      dispatch(changeMilestoneSelect(repoId))
+    onProjectChange: repoName => {
+      dispatch(changeMilestoneSelect(repoName))
     },
     onSubmit: event => {
       event.preventDefault()
       dispatch(submitIssue(event))
     },
-    isDisabled: titleInput => console.log(titleInput),
   })
 )(IssueCreationDetail)
