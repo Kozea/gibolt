@@ -17,7 +17,7 @@ function getColor(label, circle) {
   }
 }
 
-function Circles({ error, labels, loading, results, onSubmit }) {
+function Circles({ error, labels, loading, results }) {
   const circles = sortGroupCircles(results)
 
   return (
@@ -70,55 +70,13 @@ function Circles({ error, labels, loading, results, onSubmit }) {
         ) : (
           <span>No circles defined</span>
         )}
-        <article>
-          <h2>Create a new circle :</h2>
-          <form
-            onSubmit={e => {
-              onSubmit(e)
-            }}
-          >
-            <label>
-              Name :
-              <input name="circle_name" required />
-            </label>
-            <br />
-            <label>
-              Parent :
-              <select name="parent_circle_id">
-                {circles.map(circle => (
-                  <option key={circle.circle_id} value={circle.circle_id}>
-                    {circle.circle_name}
-                  </option>
-                ))}
-                <option value="">Aucun</option>
-              </select>
-            </label>
-            <br />
-            <label>
-              Purpose :
-              <input name="circle_purpose" required />
-            </label>
-            <br />
-            <label>
-              Domain :
-              <input name="circle_domain" required />
-            </label>
-            <br />
-            <label>
-              Accountabilities :
-              <br />
-              <textarea
-                name="circle_accountabilities"
-                rows="5"
-                cols="40"
-                required
-              />
-            </label>
-            <br />
-            <input type="submit" value="Create circle" />
-          </form>
-        </article>
-        <button type="submit">Add a circle</button>
+        <Link
+          to={{
+            pathname: '/createCircle',
+          }}
+        >
+          <button type="submit">Add a circle</button>
+        </Link>
       </article>
     </section>
   )

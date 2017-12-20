@@ -15,6 +15,7 @@ import Repositories from './Repositories'
 import Repository from './Repository'
 import Timeline from './Timeline'
 import Organisation from './Organisation'
+import Createcircle from './Createcircle'
 
 const b = block('App')
 
@@ -40,6 +41,7 @@ export default class App extends Component {
           <Route path="/organisation" component={Organisation} />
           <Route path="/circles" component={Circles} />
           <Route path="/circle" component={Circle} />
+          <Route path="/createcircle" component={Createcircle} />
           <Route component={NotFound} />
         </Switch>
       </main>
