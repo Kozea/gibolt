@@ -84,7 +84,6 @@ function Circles({ error, labels, loading, results, onSubmit }) {
             <br />
             <label>
               Parent :
-              {/* <input name="parent_circle_id" /> */}
               <select name="parent_circle_id">
                 {circles.map(circle => (
                   <option key={circle.circle_id} value={circle.circle_id}>
