@@ -130,6 +130,7 @@ function Circle({
         {circle.is_in_edition ? (
           <form
             onSubmit={e => {
+              e.preventDefault()
               onEdit(circle.circle_id, e)
             }}
           >

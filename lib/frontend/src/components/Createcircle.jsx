@@ -1,12 +1,15 @@
 import React from 'react'
 
-import { block, connect } from '../utils'
+import {
+  // block,
+  connect,
+} from '../utils'
 import { createCircle } from '../actions/circle'
 import Loading from './Loading'
 
-const b = block('Createcircle')
+// const b = block('Createcircle')
 
-function Createcircle({ loading, onSubmit, circles, parents }) {
+function Createcircle({ loading, onSubmit, circles }) {
   return (
     <article>
       {loading && <Loading />}
@@ -64,7 +67,6 @@ function Createcircle({ loading, onSubmit, circles, parents }) {
 }
 export default connect(
   state => ({
-    // parents:circles.filter(circle => circle.parent_circle_id === null),
     circles: state.circles.results,
     loading: state.circles.loading,
     error: state.circles.errors,
