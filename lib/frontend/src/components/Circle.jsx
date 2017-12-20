@@ -10,8 +10,8 @@ import {
   togglePurposeExpanded,
   updateCircle,
   deleteCircle,
-  editCircle,
 } from '../actions/circle'
+import { editCircle } from '../actions'
 import Loading from './Loading'
 
 const b = block('Circle')
