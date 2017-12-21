@@ -356,10 +356,11 @@ def create_a_ticket(repo_name):
     data = request.get_json()
     data = json.dumps(data)
     try:
-        ticket_request = github.request('POST',
-                                        'repos/{0}/{1}/issues'.format(
-                                            app.config['ORGANISATION'],
-                                            repo_name), data=data)
+        ticket_request = github.request(
+            'POST',
+            'repos/{0}/{1}/issues'.format(
+                app.config['ORGANISATION'], repo_name),
+            data=data)
     except GitHubError as e:
         return e.response.content, e.response.status_code
 
