@@ -16,7 +16,48 @@ import Loading from './Loading'
 const b = block('IssueCreationDetail')
 
 class IssueCreationDetail extends React.Component {
-  componentDidMount() {}
+  componentDidMount() {
+    if (this.props.issueForm.params.grouper !== '') {
+      switch (this.props.issueForm.params.grouper) {
+        case 'milestone':
+        case 'project':
+          this.updateProjectSelect()
+          break
+      }
+    }
+  }
+
+  componentDidUpdate() {
+    if (
+      this.props.issueForm.milestonesSelect.length > 0 &&
+      this.props.issueForm.params.grouper === 'milestone'
+    ) {
+      this.updateMilestonesSelect()
+    }
+  }
+
+  updateProjectSelect() {
+    const projectName = this.splitMilestoneGroup(0)
+    this.props.onProjectChange(projectName)
+  }
+
+  updateMilestonesSelect() {
+    document.getElementById('milestone').value = this.splitMilestoneGroup(1)
+  }
+
+  splitMilestoneGroup(pos) {
+    const splitValue = this.props.issueForm.params.group.split(' ⦔ ')[pos]
+    const value =
+      pos === 0
+        ? splitValue
+        : splitValue === 'No milestone'
+          ? ''
+          : this.props.issueForm.milestonesSelect.filter(
+              milestone => milestone.milestone_title === splitValue
+            )[0].milestone_number
+    return value
+  }
+
   render() {
     const {
       circles,
@@ -53,6 +94,7 @@ class IssueCreationDetail extends React.Component {
             <select
               id="project"
               name="project"
+              value={issueForm.project}
               onChange={event => onProjectChange(event.target.value)}
             >
               <option value="">{''}</option>

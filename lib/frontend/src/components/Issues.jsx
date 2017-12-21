@@ -118,18 +118,17 @@ function Issues({
                 )
               }
             />
-            {grouper !== 'state' &&
-              grouper !== 'nogroup' && (
-                <Link
-                  className={b('link')}
-                  to={{
-                    pathname: '/createIssue',
-                    params: stringify({ grouper: grouper, group: group }),
-                  }}
-                >
-                  <button className={b('newTicket')}>Create issue</button>
-                </Link>
-              )}
+            {(grouper === 'project' || grouper === 'milestone') && (
+              <Link
+                className={b('link')}
+                to={{
+                  pathname: '/createIssue',
+                  params: stringify({ grouper, group }),
+                }}
+              >
+                <button className={b('newTicket')}>Create issue</button>
+              </Link>
+            )}
             {issuesState === 'all' &&
               grouper !== 'state' && (
                 <Progress

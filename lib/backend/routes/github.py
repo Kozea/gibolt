@@ -107,9 +107,12 @@ def get_a_repo(repo_name):
 @app.route('/api/repos/<string:repo_name>/milestones', methods=['GET'])
 @needlogin
 def list_milestones(repo_name):
-    milestone_request = github.get(
-        'repos/{0}/{1}/milestones?type=all&per_page=100'.format(
-            app.config['ORGANISATION'], repo_name), all_pages=True)
+    try:
+        milestone_request = github.get(
+            'repos/{0}/{1}/milestones?type=all&per_page=100'.format(
+                app.config['ORGANISATION'], repo_name), all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
     response = [{'milestone_number': milestone['number'],
                  'repo_name': repo_name,
                  'milestone_id': milestone['id'],
