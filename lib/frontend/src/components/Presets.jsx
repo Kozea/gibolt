@@ -82,11 +82,8 @@ function Presets({ location, user }) {
           >
             Repositories
           </Preset>
-          <Preset
-            action="/organisation"
-            active={location.pathname === '/organisation'}
-          >
-            Organisation
+          <Preset action="/roles" active={location.pathname === '/roles'}>
+            Roles
           </Preset>
           <Preset action="/circles" active={location.pathname === '/circles'}>
             Circles

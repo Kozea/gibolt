@@ -14,8 +14,9 @@ import Report from './Report'
 import Repositories from './Repositories'
 import Repository from './Repository'
 import Timeline from './Timeline'
-import Organisation from './Organisation'
 import Createcircle from './Createcircle'
+import Createrole from './Createrole'
+import Roles from './Roles'
 
 const b = block('App')
 
@@ -38,10 +39,11 @@ export default class App extends Component {
           <Route path="/report" component={Report} />
           <Route path="/repositories" component={Repositories} />
           <Route path="/repository" component={Repository} />
-          <Route path="/organisation" component={Organisation} />
           <Route path="/circles" component={Circles} />
           <Route path="/circle" component={Circle} />
           <Route path="/createcircle" component={Createcircle} />
+          <Route path="/roles" component={Roles} />
+          <Route path="/createrole" component={Createrole} />
           <Route component={NotFound} />
         </Switch>
       </main>

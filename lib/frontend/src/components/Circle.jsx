@@ -2,6 +2,7 @@ import './Circle.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
 
 import { block, circleNameFromState, connect } from '../utils'
 import {
@@ -131,7 +132,6 @@ function Circle({
         {circle.is_in_edition ? (
           <form
             onSubmit={e => {
-              e.preventDefault()
               onEdit(circle.circle_id, e)
             }}
           >
@@ -204,7 +204,13 @@ function Circle({
         >
           Delete Circle
         </button>
-        <button type="submit">Add a Role</button>
+        <Link
+          to={{
+            pathname: '/createrole',
+          }}
+        >
+          <button type="submit">Add a Role</button>
+        </Link>
       </article>
     </section>
   )
