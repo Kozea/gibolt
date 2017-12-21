@@ -1,17 +1,16 @@
+import './Createcircle.sass'
+
 import React from 'react'
 
-import {
-  // block,
-  connect,
-} from '../utils'
+import { block, connect } from '../utils'
 import { createCircle } from '../actions/circle'
 import Loading from './Loading'
 
-// const b = block('Createcircle')
+const b = block('Createcircle')
 
 function Createcircle({ loading, onSubmit, circles }) {
   return (
-    <article>
+    <article className={b()}>
       {loading && <Loading />}
       <h2>Create a new circle :</h2>
       <form
@@ -27,7 +26,7 @@ function Createcircle({ loading, onSubmit, circles }) {
         <br />
         <label>
           Parent :
-          <select name="parent_circle_id">
+          <select name="parent_circle_id" defaultValue="">
             {circles
               .filter(circle => circle.parent_circle_id === null)
               .map(circle => (

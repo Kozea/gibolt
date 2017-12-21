@@ -24,6 +24,7 @@ function getUserInfo(roleUser, user) {
 
 function Circle({
   circle,
+  circles,
   circlename,
   error,
   loading,
@@ -143,20 +144,22 @@ function Circle({
               />
             </label>
             <br />
-            {/* <label>
+            <label>
               Parent :
               <select
                 name="parent_circle_id"
                 defaultValue={circle.parent_circle_id}
               >
-                {circles.map(circle => (
-                  <option key={circle.circle_id} value={circle.circle_id}>
-                    {circle.circle_name}
-                  </option>
-                ))}
+                {circles
+                  .filter(cercle => cercle.parent_circle_id === null)
+                  .map(cercle => (
+                    <option key={cercle.circle_id} value={cercle.circle_id}>
+                      {cercle.circle_name}
+                    </option>
+                  ))}
                 <option value="">Aucun</option>
               </select>
-            </label> */}
+            </label>
             <br />
             <label>
               Purpose :
