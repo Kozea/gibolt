@@ -43,10 +43,7 @@ function Circle({ role, error, loading }) {
         </article>
       )}
       {loading && <Loading />}
-      {console.log('role')}
-      {console.log(role)}
-      {console.log('role.role_id')}
-      {console.log(role.role_id)}
+
       <article>
         <h3>Purpose</h3>
         <div>

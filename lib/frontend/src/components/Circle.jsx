@@ -67,10 +67,7 @@ function Circle({
           )}
         </article>
       )}
-      {console.log('circle')}
-      {console.log(circle)}
-      {console.log('circle.circle_id')}
-      {console.log(circle.circle_id)}
+
       {loading && <Loading />}
       <article>
         <h3>Purpose</h3>

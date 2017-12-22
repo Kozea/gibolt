@@ -7,6 +7,7 @@ import { Route, Switch } from 'react-router-dom'
 import { block } from '../utils'
 import Circle from './Circle'
 import Circles from './Circles'
+import IssueCreation from './IssueCreation'
 import IssuesDashboard from './IssuesDashboard'
 import NotFound from './NotFound'
 import Presets from './Presets'
@@ -46,6 +47,7 @@ export default class App extends Component {
           <Route path="/roles" component={Roles} />
           <Route path="/role" component={Role} />
           <Route path="/createrole" component={Createrole} />
+          <Route path="/createIssue" component={IssueCreation} />
           <Route component={NotFound} />
         </Switch>
       </main>
