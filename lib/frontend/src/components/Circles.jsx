@@ -51,7 +51,7 @@ function Circles({ error, labels, loading, results }) {
                   className={b('link')}
                   to={{
                     pathname: '/circle',
-                    search: stringify({ name: circle.circle_name }),
+                    search: stringify({ circle_id: circle.circle_id }),
                   }}
                 >
                   <span className={b('unlink')}>

@@ -9,7 +9,6 @@ import Loading from './Loading'
 // const b = block('role')
 
 function Role({ roles, error, loading }) {
-  console.log(roles)
   const [role] = roles
   return (
     <section>
