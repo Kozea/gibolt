@@ -70,9 +70,18 @@ class IssueCreationDetail extends React.Component {
       onProjectChange,
       onTitleChange,
       onSubmit,
+      repository,
       repositories,
     } = this.props
-    const sortedRepos = sortRepos(repositories)
+    let repos = []
+    if (
+      issueForm.params.grouper === 'milestone' ||
+      issueForm.params.grouper === 'project'
+    ) {
+      repos = [repository]
+    } else {
+      repos = sortRepos(repositories)
+    }
     return (
       <section className={b()}>
         <Helmet>
@@ -96,9 +105,13 @@ class IssueCreationDetail extends React.Component {
               name="project"
               value={issueForm.project}
               onChange={event => onProjectChange(event.target.value)}
+              disabled={
+                issueForm.params.grouper === 'milestone' ||
+                issueForm.params.grouper === 'project'
+              }
             >
-              <option value="">{''}</option>
-              {sortedRepos.map(repo => (
+              <option value="" />
+              {repos.map(repo => (
                 <option key={repo.repo_id} value={repo.repo_name}>
                   {repo.repo_name}
                 </option>
@@ -108,8 +121,12 @@ class IssueCreationDetail extends React.Component {
           <br />
           <label>
             Milestone:{' '}
-            <select id="milestone" name="milestone">
-              <option value="">{''}</option>
+            <select
+              id="milestone"
+              name="milestone"
+              disabled={issueForm.params.grouper === 'milestone'}
+            >
+              <option value="" />
               {issueForm.milestonesSelect.map(milestone => (
                 <option
                   key={milestone.milestone_id}
@@ -128,7 +145,7 @@ class IssueCreationDetail extends React.Component {
               name="circle"
               onChange={event => onCircleChange(event.target.value)}
             >
-              <option value="">{''}</option>
+              <option value="" />
               {circles.map(circle => (
                 <option key={circle.circle_id} value={circle.circle_id}>
                   {circle.circle_name}
@@ -140,7 +157,7 @@ class IssueCreationDetail extends React.Component {
           <label>
             Role assignment:
             <select id="roles" name="roles">
-              <option value="">{''}</option>
+              <option value="" />
               {issueForm.rolesSelect.map(role => (
                 <option key={role.role_id} value={role.user_id}>
                   {role.role_name}
@@ -198,6 +215,7 @@ export default connect(
     issueForm: state.issueForm.results,
     labels: state.labels.results.priority,
     loading: state.circle.loading,
+    repository: state.repository.results.repository,
     repositories: state.repositories.results.repositories,
   }),
   dispatch => ({
