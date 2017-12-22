@@ -270,6 +270,9 @@ def list_tickets():
                  'state': ticket['state'],
                  'milestone_id': (
                  ticket['milestone']['id'] if ticket['milestone'] else None),
+                 'milestone_number': (
+                     ticket['milestone']['number']
+                     if ticket['milestone'] else None),
                  'milestone_title': (
                      ticket['milestone']['title']
                      if ticket['milestone'] else None),
@@ -317,6 +320,9 @@ def get_a_ticket(repo_name, ticket_number):
             'user_id': ticket_request['user']['id']},
         'state': ticket_request['state'],
         'milestone_id': ticket_request['milestone']['id'],
+        'milestone_number': (
+            ticket_request['milestone']['number']
+            if ticket_request['milestone'] else None),
         'milestone_title': (
             ticket_request['milestone']['title']
             if ticket_request['milestone'] else None),
@@ -375,6 +381,9 @@ def create_a_ticket(repo_name):
         'state': ticket_request['state'],
         'milestone_id': (
             ticket_request['milestone']['id']
+            if ticket_request['milestone'] else None),
+        'milestone_number': (
+            ticket_request['milestone']['number']
             if ticket_request['milestone'] else None),
         'milestone_title': (
             ticket_request['milestone']['title']
@@ -440,6 +449,9 @@ def update_a_ticket(repo_name, ticket_number):
         'state': ticket_request['state'],
         'milestone_id': (
             ticket_request['milestone']['id']
+            if ticket_request['milestone'] else None),
+        'milestone_number': (
+            ticket_request['milestone']['number']
             if ticket_request['milestone'] else None),
         'milestone_title': (
             ticket_request['milestone']['title']
