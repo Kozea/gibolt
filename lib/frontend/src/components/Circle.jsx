@@ -2,13 +2,17 @@ import './Circle.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
 
 import { block, connect } from '../utils'
 import {
   toggleAccountExpanded,
   toggleDomainExpanded,
   togglePurposeExpanded,
+  updateCircle,
+  deleteCircle,
 } from '../actions/circle'
+import { editCircle } from '../actions'
 import Loading from './Loading'
 
 const b = block('Circle')
@@ -21,12 +25,16 @@ function getUserInfo(roleUser, user) {
 
 function Circle({
   circle,
+  circles,
   error,
   loading,
   users,
   onClickAccount,
   onClickDomain,
   onClickPurpose,
+  onEdit,
+  btnClick,
+  editClick,
 }) {
   return (
     <section className={b()}>
@@ -125,11 +133,89 @@ function Circle({
           </article>
         </div>
       )}
-
       <article className={b('action')}>
-        <button type="submit">Update Circle</button>
-        <button type="submit">Delete Circle</button>
-        <button type="submit">Add a Role</button>
+        {circle.is_in_edition ? (
+          <form
+            onSubmit={e => {
+              onEdit(circle.circle_id, e)
+            }}
+          >
+            <label>
+              Name :
+              <input
+                name="circle_name"
+                defaultValue={circle.circle_name}
+                required
+              />
+            </label>
+            <br />
+            <label>
+              Parent :
+              <select
+                name="parent_circle_id"
+                defaultValue={circle.parent_circle_id}
+              >
+                {circles
+                  .filter(cercle => cercle.parent_circle_id === null)
+                  .map(cercle => (
+                    <option key={cercle.circle_id} value={cercle.circle_id}>
+                      {cercle.circle_name}
+                    </option>
+                  ))}
+                <option value="">Aucun</option>
+              </select>
+            </label>
+            <br />
+            <label>
+              Purpose :
+              <input
+                name="circle_purpose"
+                defaultValue={circle.circle_purpose}
+                required
+              />
+            </label>
+            <br />
+            <label>
+              Domain :
+              <input
+                name="circle_domain"
+                defaultValue={circle.circle_domain}
+                required
+              />
+            </label>
+            <br />
+            <label>
+              Accountabilities :
+              <input
+                name="circle_accountabilities"
+                defaultValue={circle.circle_accountabilities}
+                required
+              />
+            </label>
+            <br />
+            <input type="submit" value="Edit circle" />
+          </form>
+        ) : (
+          ''
+        )}
+        <button type="submit" onClick={() => editClick()}>
+          {circle.is_in_edition ? 'Cancel' : 'Update'}
+        </button>
+        <button
+          type="submit"
+          onClick={() => {
+            btnClick(circle.circle_id)
+          }}
+        >
+          Delete Circle
+        </button>
+        <Link
+          to={{
+            pathname: '/createrole',
+          }}
+        >
+          <button type="submit">Add a Role</button>
+        </Link>
       </article>
     </section>
   )
@@ -137,6 +223,7 @@ function Circle({
 export default connect(
   state => ({
     circle: state.circle.results,
+    circles: state.circles.results,
     loading: state.circle.loading,
     error: state.circle.error,
     users: state.users.results,
@@ -151,6 +238,23 @@ export default connect(
     onClickPurpose: circlePurpose => {
       dispatch(togglePurposeExpanded(circlePurpose))
     },
+    onEdit: (id, e) => {
+      const formCircle = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
+          if (obj.name) {
+            map[obj.name] = obj.value
+          }
+
+          return map
+        }, {})
+      dispatch(updateCircle(id, formCircle))
+    },
+    btnClick: data => {
+      dispatch(deleteCircle(data))
+    },
+    editClick: () => {
+      dispatch(editCircle())
+    },
   })
 )(Circle)
-

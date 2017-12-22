@@ -101,9 +101,9 @@ function Role({ roles, error, loading }) {
         </button>
         <button
           type="submit"
-          // onClick={() => {
-          //   btnClick(role.role_id)
-          // }}
+          onClick={() => {
+            btnClick(role.role_id)
+          }}
         >
           Delete role
         </button>
