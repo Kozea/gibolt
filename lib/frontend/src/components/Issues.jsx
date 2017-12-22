@@ -123,7 +123,7 @@ function Issues({
                 className={b('link')}
                 to={{
                   pathname: '/createIssue',
-                  params: stringify({ grouper, group }),
+                  search: stringify({ grouper, group }),
                 }}
               >
                 <button className={b('newTicket')}>Create issue</button>
