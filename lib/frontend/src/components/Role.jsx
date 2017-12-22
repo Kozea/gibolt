@@ -5,11 +5,11 @@ import { Helmet } from 'react-helmet'
 
 import { connect } from '../utils'
 import Loading from './Loading'
+import { deleteRole, updateRole } from '../actions/roles'
 
 // const b = block('role')
 
-function Role({ roles, error, loading }) {
-  const [role] = roles
+function Role({ role, error, loading, btnClick, onEdit }) {
   return (
     <section>
       <Helmet>
@@ -50,55 +50,47 @@ function Role({ roles, error, loading }) {
       </article>
       <br />
       <article>
-        {role.is_in_edition ? (
-          <form>
-            {/* onSubmit={e => {
-             onEdit(role.role_id, e)
-           }} */}
-
-            <label>
-              Name :
-              <input name="role_name" defaultValue={role.role_name} required />
-            </label>
-            <br />
-            <label>
-              Purpose :
-              <input
-                name="role_purpose"
-                defaultValue={role.role_purpose}
-                required
-              />
-            </label>
-            <br />
-            <label>
-              Domain :
-              <input
-                name="role_domain"
-                defaultValue={role.role_domain}
-                required
-              />
-            </label>
-            <br />
-            <label>
-              Accountabilities :
-              <input
-                name="role_accountabilities"
-                defaultValue={role.role_accountabilities}
-                required
-              />
-            </label>
-            <br />
-            <input type="submit" value="Edit role" />
-          </form>
-        ) : (
-          ''
-        )}
-        <button
-          type="submit"
-          // onClick={() => editClick()}
+        <form
+          onSubmit={e => {
+            onEdit(role.role_id, e)
+          }}
         >
-          {role.is_in_edition ? 'Cancel' : 'Update'}
-        </button>
+          <label>
+            Name :
+            <input name="role_name" defaultValue={role.role_name} required />
+          </label>
+          <br />
+          <label>
+            Purpose :
+            <input
+              name="role_purpose"
+              defaultValue={role.role_purpose}
+              required
+            />
+          </label>
+          <br />
+          <label>
+            Domain :
+            <input
+              name="role_domain"
+              defaultValue={role.role_domain}
+              required
+            />
+          </label>
+          <br />
+          <label>
+            Accountabilities :
+            <input
+              name="role_accountabilities"
+              defaultValue={role.role_accountabilities}
+              required
+            />
+          </label>
+          <br />
+          <input type="submit" value="Edit role" />
+        </form>
+
+        <button type="submit">Update</button>
         <button
           type="submit"
           onClick={() => {
@@ -107,23 +99,33 @@ function Role({ roles, error, loading }) {
         >
           Delete role
         </button>
-        {/* <Link
-          to={{
-            pathname: '/createrole',
-          }}
-        > */}
-        <button type="submit">Add a Role</button>
-        {/* </Link> */}
       </article>
     </section>
   )
 }
 export default connect(
   state => ({
-    roles: state.role.results,
+    roles: state.roles.results,
+    role: state.role.results,
     loading: state.role.loading,
     error: state.role.error,
     users: state.users.results,
+  }),
+  dispatch => ({
+    btnClick: data => {
+      dispatch(deleteRole(data))
+    },
+    onEdit: (id, e) => {
+      const formRole = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
+          if (obj.name) {
+            map[obj.name] = obj.value
+          }
+
+          return map
+        }, {})
+      dispatch(updateRole(id, formRole))
+    },
   })
-  // dispatch => ({})
 )(Role)
