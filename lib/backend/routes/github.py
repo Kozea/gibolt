@@ -33,9 +33,13 @@ def user():
     methods=['GET'])
 @needlogin
 def list_users():
-    user_request = github.get(
-        'orgs/{0}/members?type=all&per_page=100'.format(
-            app.config['ORGANISATION']), all_pages=True)
+    try:
+        user_request = github.get(
+            'orgs/{0}/members?type=all&per_page=100'.format(
+                app.config['ORGANISATION']), all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = [{'user_id': user['id'],
                  'user_name': user['login'],
                  'avatar_url': user['avatar_url']} for user in user_request]
@@ -48,8 +52,12 @@ def list_users():
     methods=['GET'])
 @needlogin
 def get_a_user(user_name):
-    user_request = github.get(
-        'users/' + user_name + '?type=all&per_page=100', all_pages=True)
+    try:
+        user_request = github.get(
+            'users/' + user_name + '?type=all&per_page=100', all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'user_id': user_request['id'],
         'user_name': user_request['login'],
@@ -64,9 +72,13 @@ def get_a_user(user_name):
 @app.route('/api/repos', methods=['GET'])
 @needlogin
 def list_repos():
-    repo_request = github.get(
-        'orgs/{0}/repos?type=all&per_page=100'.format(
-            app.config['ORGANISATION']), all_pages=True)
+    try:
+        repo_request = github.get(
+            'orgs/{0}/repos?type=all&per_page=100'.format(
+                app.config['ORGANISATION']), all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = [{'repo_id': repository['id'], 'repo_name': repository['name'],
                  'description': repository['description'],
                  'permissions':{
@@ -86,9 +98,13 @@ def list_repos():
 @app.route('/api/repos/<string:repo_name>', methods=['GET'])
 @needlogin
 def get_a_repo(repo_name):
-    repo_request = github.get(
-        'repos/{0}/{1}?type=all&per_page=100'.format(
-            app.config['ORGANISATION'], repo_name), all_pages=True)
+    try:
+        repo_request = github.get(
+            'repos/{0}/{1}?type=all&per_page=100'.format(
+                app.config['ORGANISATION'], repo_name), all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'repo_id': repo_request['id'],
         'repo_name': repo_request['name'],
@@ -113,6 +129,7 @@ def list_milestones(repo_name):
                 app.config['ORGANISATION'], repo_name), all_pages=True)
     except GitHubError as e:
         return e.response.content, e.response.status_code
+
     response = [{'milestone_number': milestone['number'],
                  'repo_name': repo_name,
                  'milestone_id': milestone['id'],
@@ -135,10 +152,14 @@ def list_milestones(repo_name):
     methods=['GET'])
 @needlogin
 def get_a_milestone(repo_name, milestone_number):
-    milestone_request = github.get(
-        'repos/{0}/{1}/milestones/{2}?type=all&per_page=100'.format(
-            app.config['ORGANISATION'], repo_name, milestone_number),
-        all_pages=True)
+    try:
+        milestone_request = github.get(
+            'repos/{0}/{1}/milestones/{2}?type=all&per_page=100'.format(
+                app.config['ORGANISATION'], repo_name, milestone_number),
+            all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'milestone_number': milestone_request['number'],
         'repo_name': repo_name,
@@ -168,10 +189,15 @@ def create_milestone(repo_name):
     if data.get('milestone_title'):
         data['title'] = data.get('milestone_title')
     data = json.dumps(data)
-    milestone_request = github.request(
-        'POST',
-        'repos/{0}/{1}/milestones?type=all&per_page=100'.format(
-            app.config['ORGANISATION'], repo_name), data=data)
+
+    try:
+        milestone_request = github.request(
+            'POST',
+            'repos/{0}/{1}/milestones?type=all&per_page=100'.format(
+                app.config['ORGANISATION'], repo_name), data=data)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'milestone_number': milestone_request['number'],
         'repo_name': repo_name,
@@ -201,11 +227,16 @@ def update_a_milestone(repo_name, milestone_number):
     if data.get('milestone_title'):
         data['title'] = data.get('milestone_title')
     data = json.dumps(data)
-    milestone_request = github.request(
-        'PATCH',
-        'repos/{0}/{1}/milestones/{2}?state=all&per_page=100'.format(
-            app.config['ORGANISATION'], repo_name, milestone_number),
-        data=data)
+
+    try:
+        milestone_request = github.request(
+            'PATCH',
+            'repos/{0}/{1}/milestones/{2}?state=all&per_page=100'.format(
+                app.config['ORGANISATION'], repo_name, milestone_number),
+            data=data)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'milestone_number': milestone_request['number'],
         'repo_name': repo_name,
@@ -306,10 +337,13 @@ def list_tickets():
     methods=['GET'])
 @needlogin
 def get_a_ticket(repo_name, ticket_number):
-    ticket_request = github.get(
-        'repos/{0}/{1}/issues/{2}?state=all'.format
-        (app.config['ORGANISATION'],
-            repo_name, ticket_number), all_pages=True)
+    try:
+        ticket_request = github.get(
+            'repos/{0}/{1}/issues/{2}?state=all'.format
+            (app.config['ORGANISATION'],
+                repo_name, ticket_number), all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
     response = {
         'ticket_id': ticket_request['id'],
         'ticket_number': ticket_request['number'],
@@ -361,6 +395,7 @@ def get_a_ticket(repo_name, ticket_number):
 def create_a_ticket(repo_name):
     data = request.get_json()
     data = json.dumps(data)
+
     try:
         ticket_request = github.request(
             'POST',
@@ -493,10 +528,14 @@ def update_a_ticket(repo_name, ticket_number):
     methods=['GET'])
 @needlogin
 def list_comments(repo_name, ticket_number):
-    comment_request = github.get(
-        'repos/{0}/{1}/issues/{2}/comments?type=all&per_page=100'.format(
-            app.config['ORGANISATION'],
-            repo_name, ticket_number), all_pages=True)
+    try:
+        comment_request = github.get(
+            'repos/{0}/{1}/issues/{2}/comments?type=all&per_page=100'.format(
+                app.config['ORGANISATION'],
+                repo_name, ticket_number), all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = [{'comment_id': comment['id'],
                  'repo_name': repo_name,
                  'ticket_number': ticket_number,
@@ -516,10 +555,14 @@ def list_comments(repo_name, ticket_number):
     methods=['GET'])
 @needlogin
 def get_a_comment(repo_name, comment_id):
-    comment_request = github.get(
-        'repos/{0}/{1}/issues/comments/{2}?type=all&per_page=100'.format(
-            app.config['ORGANISATION'],
-            repo_name, comment_id), all_pages=True)
+    try:
+        comment_request = github.get(
+            'repos/{0}/{1}/issues/comments/{2}?type=all&per_page=100'.format(
+                app.config['ORGANISATION'],
+                repo_name, comment_id), all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'comment_id': comment_request['id'],
         'repo_name': repo_name,
@@ -545,11 +588,16 @@ def get_a_comment(repo_name, comment_id):
 def create_a_comment(repo_name, ticket_number):
     data = request.get_json()
     data = json.dumps(data)
-    comment_request = github.request(
-        'POST',
-        'repos/{0}/{1}/issues/{2}/comments'.format(
-            app.config['ORGANISATION'],
-            repo_name, ticket_number), data=data)
+
+    try:
+        comment_request = github.request(
+            'POST',
+            'repos/{0}/{1}/issues/{2}/comments'.format(
+                app.config['ORGANISATION'],
+                repo_name, ticket_number), data=data)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'comment_id': comment_request['id'],
         'repo_name': repo_name,
@@ -576,11 +624,16 @@ def create_a_comment(repo_name, ticket_number):
 def update_a_comment(repo_name, comment_id):
     data = request.get_json()
     data = json.dumps(data)
-    comment_request = github.request(
-        'PATCH',
-        'repos/{0}/{1]/issues/comments/{2}'.format(
-            app.config['ORGANISATION'],
-            repo_name, comment_id), data=data)
+
+    try:
+        comment_request = github.request(
+            'PATCH',
+            'repos/{0}/{1]/issues/comments/{2}'.format(
+                app.config['ORGANISATION'],
+                repo_name, comment_id), data=data)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'comment_id': comment_request['id'],
         'repo_name': repo_name,
@@ -604,10 +657,13 @@ def update_a_comment(repo_name, comment_id):
     methods=['DELETE'])
 @needlogin
 def delete_a_comment(repo_name, comment_id):
-    comment_request = github.request(
-        'DELETE',
-        'repos/{0}/{1}/issues/comments/{2}'.format(
-            app.config['ORGANISATION'], repo_name, comment_id))
+    try:
+        comment_request = github.request(
+            'DELETE',
+            'repos/{0}/{1}/issues/comments/{2}'.format(
+                app.config['ORGANISATION'], repo_name, comment_id))
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
     response = [{'comment_id': comment['id'],
                  'user':{'user_id': comment['user']['id'],
                          'user_name': comment['user']['login'],
@@ -629,10 +685,13 @@ def delete_a_comment(repo_name, comment_id):
     methods=['GET'])
 @needlogin
 def list_repo_milestone_labels(repo_name, milestone_number):
-    label_request = github.get(
-        'repos/{0}/{1}/milestones/{2}/labels?type=all&per_page=100'.format(
-            app.config['ORGANISATION'], repo_name, milestone_number),
-        all_pages=True)
+    try:
+        label_request = github.get(
+            'repos/{0}/{1}/milestones/{2}/labels?type=all&per_page=100'.format(
+                app.config['ORGANISATION'], repo_name, milestone_number),
+            all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
     response = [{'label_id': label['id'],
                  'repo_name': repo_name,
                  'label_name':label['name'],
@@ -651,10 +710,14 @@ def list_repo_milestone_labels(repo_name, milestone_number):
     methods=['GET'])
 @needlogin
 def list_repo_labels(repo_name):
-    label_request = github.get(
-        'repos/{0}/{1}/labels?type=all&per_page=100'.format(
-            app.config['ORGANISATION'], repo_name),
-        all_pages=True)
+    try:
+        label_request = github.get(
+            'repos/{0}/{1}/labels?type=all&per_page=100'.format(
+                app.config['ORGANISATION'], repo_name),
+            all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = [{'label_id': label['id'],
                  'repo_name': repo_name,
                  'label_name':label['name'],
@@ -673,10 +736,14 @@ def list_repo_labels(repo_name):
     methods=['GET'])
 @needlogin
 def get_a_label(repo_name, label_name):
-    label_request = github.get(
-        'repos/{0}/{1}/labels/{2}?type=all&per_page=100'.format(
-            app.config['ORGANISATION'], repo_name, label_name),
-        all_pages=True)
+    try:
+        label_request = github.get(
+            'repos/{0}/{1}/labels/{2}?type=all&per_page=100'.format(
+                app.config['ORGANISATION'], repo_name, label_name),
+            all_pages=True)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'label_id': label_request['id'],
         'repo_name': repo_name,
@@ -732,10 +799,15 @@ def update_a_label(repo_name, label_name):
     if data.get('label_name'):
         data['name'] = data.get('label_name')
     data = json.dumps(data)
-    label_request = github.request('PATCH',
-                                   'repos/{0}/{1}/labels/{2}'.format(
-                                       app.config['ORGANISATION'],
-                                       repo_name, label_name), data=data)
+
+    try:
+        label_request = github.request('PATCH',
+                                       'repos/{0}/{1}/labels/{2}'.format(
+                                           app.config['ORGANISATION'],
+                                           repo_name, label_name), data=data)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
     response = {
         'label_id': label_request['id'],
         'repo_name': repo_name,
@@ -844,7 +916,10 @@ def refresh_repo_milestones(repo_name, repo, access_token):
     url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
         app.config['ORGANISATION'], repo_name
     )
-    repo['milestones'] = github.get(url, access_token=access_token)
+    try:
+        repo['milestones'] = github.get(url, access_token=access_token)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
     for milestone in repo['milestones']:
         if milestone['due_on'] is not None:
             milestone['due_on'] = date_from_iso(milestone['due_on'])
