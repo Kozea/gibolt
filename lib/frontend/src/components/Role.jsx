@@ -1,24 +1,16 @@
-import './Circle.sass'
+// import './role.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
-// import { Link } from 'react-router-dom'
-//
 import { connect } from '../utils'
-// import {
-//   toggleAccountExpanded,
-//   toggleDomainExpanded,
-//   togglePurposeExpanded,
-//   updateCircle,
-//   deleteCircle,
-// } from '../actions/circle'
-// import { editCircle } from '../actions'
 import Loading from './Loading'
 
-// const b = block('Circle')
+// const b = block('role')
 
-function Circle({ role, error, loading }) {
+function Role({ roles, error, loading }) {
+  console.log(roles)
+  const [role] = roles
   return (
     <section>
       <Helmet>
@@ -43,7 +35,6 @@ function Circle({ role, error, loading }) {
         </article>
       )}
       {loading && <Loading />}
-
       <article>
         <h3>Purpose</h3>
         <div>
@@ -59,44 +50,23 @@ function Circle({ role, error, loading }) {
         </div>
       </article>
       <br />
-      {/* <article className={b('action')}>
-        {circle.is_in_edition ? (
-          <form
-            onSubmit={e => {
-              onEdit(circle.circle_id, e)
-            }}
-          >
+      <article>
+        {role.is_in_edition ? (
+          <form>
+            {/* onSubmit={e => {
+             onEdit(role.role_id, e)
+           }} */}
+
             <label>
               Name :
-              <input
-                name="circle_name"
-                defaultValue={circle.circle_name}
-                required
-              />
-            </label>
-            <br />
-            <label>
-              Parent :
-              <select
-                name="parent_circle_id"
-                defaultValue={circle.parent_circle_id}
-              >
-                {circles
-                  .filter(cercle => cercle.parent_circle_id === null)
-                  .map(cercle => (
-                    <option key={cercle.circle_id} value={cercle.circle_id}>
-                      {cercle.circle_name}
-                    </option>
-                  ))}
-                <option value="">Aucun</option>
-              </select>
+              <input name="role_name" defaultValue={role.role_name} required />
             </label>
             <br />
             <label>
               Purpose :
               <input
-                name="circle_purpose"
-                defaultValue={circle.circle_purpose}
+                name="role_purpose"
+                defaultValue={role.role_purpose}
                 required
               />
             </label>
@@ -104,8 +74,8 @@ function Circle({ role, error, loading }) {
             <label>
               Domain :
               <input
-                name="circle_domain"
-                defaultValue={circle.circle_domain}
+                name="role_domain"
+                defaultValue={role.role_domain}
                 required
               />
             </label>
@@ -113,46 +83,48 @@ function Circle({ role, error, loading }) {
             <label>
               Accountabilities :
               <input
-                name="circle_accountabilities"
-                defaultValue={circle.circle_accountabilities}
+                name="role_accountabilities"
+                defaultValue={role.role_accountabilities}
                 required
               />
             </label>
             <br />
-            <input type="submit" value="Edit circle" />
+            <input type="submit" value="Edit role" />
           </form>
         ) : (
           ''
         )}
-        <button type="submit" onClick={() => editClick()}>
-          {circle.is_in_edition ? 'Cancel' : 'Update'}
+        <button
+          type="submit"
+          // onClick={() => editClick()}
+        >
+          {role.is_in_edition ? 'Cancel' : 'Update'}
         </button>
         <button
           type="submit"
-          onClick={() => {
-            btnClick(circle.circle_id)
-          }}
+          // onClick={() => {
+          //   btnClick(role.role_id)
+          // }}
         >
-          Delete Circle
+          Delete role
         </button>
-        <Link
+        {/* <Link
           to={{
             pathname: '/createrole',
           }}
-        >
-          <button type="submit">Add a Role</button>
-        </Link>
-      </article> */}
+        > */}
+        <button type="submit">Add a Role</button>
+        {/* </Link> */}
+      </article>
     </section>
   )
 }
 export default connect(
   state => ({
-    role: state.role.results,
-    roles: state.roles.results,
-    loading: state.circle.loading,
-    error: state.circle.error,
+    roles: state.role.results,
+    loading: state.role.loading,
+    error: state.role.error,
     users: state.users.results,
   })
   // dispatch => ({})
-)(Circle)
+)(Role)
