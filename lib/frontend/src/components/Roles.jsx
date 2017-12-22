@@ -1,13 +1,14 @@
 // import './Roles.sass'
-
+import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
 
 import { block, connect } from '../utils'
 import { createRole } from '../actions/roles'
 import Loading from './Loading'
 
-// const b = block('Roles')
+const b = block('Roles')
 
 function Roles({ error, loading, roles }) {
   return (
@@ -22,7 +23,25 @@ function Roles({ error, loading, roles }) {
         </article>
       )}
       {loading && <Loading />}
-      {roles.length > 0 ? <ul /> : <span>No roles defined</span>}
+      {roles.length > 0 ? (
+        <ul>
+          {roles.map(role => (
+            <li key={role.role_id}>
+              <Link
+                to={{
+                  pathname: '/role',
+                  search: stringify({ id: role.role_id }),
+                }}
+              >
+                <span className={b('unlink')} />
+                {role.role_name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <span>No roles defined</span>
+      )}
       <article />
     </section>
   )
@@ -30,6 +49,7 @@ function Roles({ error, loading, roles }) {
 export default connect(
   state => ({
     roles: state.roles.results,
+    circles: state.circles.results,
     loading: state.circles.loading,
     error: state.circles.errors,
   }),

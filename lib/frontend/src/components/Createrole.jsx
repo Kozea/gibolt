@@ -8,15 +8,14 @@ import Loading from './Loading'
 
 const b = block('Createrole')
 
-function Createrole({ loading, onSubmit, users }) {
+function Createrole({ loading, onSubmit, users, circle }) {
   return (
     <article className={b()}>
       {loading && <Loading />}
       <h2>Create a new role :</h2>
       <form
         onSubmit={e => {
-          e.preventDefault()
-          onSubmit(e)
+          onSubmit(circle.circle_id, e)
         }}
       >
         <label>
@@ -64,22 +63,24 @@ function Createrole({ loading, onSubmit, users }) {
 }
 export default connect(
   state => ({
-    users: state.users.results,
     roles: state.roles.results,
+    circle: state.circle.results,
+    users: state.users.results,
     loading: state.circles.loading,
     error: state.circles.errors,
   }),
   dispatch => ({
-    onSubmit: e => {
-      const formRole = [].slice
-        .call(e.target.elements)
-        .reduce(function(map, obj) {
+    onSubmit: (circleId, e) => {
+      const formRole = [].slice.call(e.target.elements).reduce(
+        function(map, obj) {
           if (obj.name && obj.value) {
             map[obj.name] = obj.value
           }
 
           return map
-        }, {})
+        },
+        { circle_id: circleId }
+      )
       dispatch(createRole(formRole))
     },
   })

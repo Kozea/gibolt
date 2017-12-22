@@ -72,7 +72,7 @@ function Circles({ error, labels, loading, results }) {
         )}
         <Link
           to={{
-            pathname: '/createCircle',
+            pathname: '/createcircle',
           }}
         >
           <button type="submit">Add a circle</button>

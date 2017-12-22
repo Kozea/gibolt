@@ -67,6 +67,10 @@ function Circle({
           )}
         </article>
       )}
+      {console.log('circle')}
+      {console.log(circle)}
+      {console.log('circle.circle_id')}
+      {console.log(circle.circle_id)}
       {loading && <Loading />}
       <article>
         <h3>Purpose</h3>
@@ -244,14 +248,13 @@ export default connect(
 
           return map
         }, {})
-      // e.preventDefault()
       dispatch(updateCircle(id, formCircle))
     },
     btnClick: data => {
-      return dispatch(deleteCircle(data))
+      dispatch(deleteCircle(data))
     },
     editClick: () => {
-      return dispatch(editCircle())
+      dispatch(editCircle())
     },
   })
 )(Circle)

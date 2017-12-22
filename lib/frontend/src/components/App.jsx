@@ -17,6 +17,7 @@ import Timeline from './Timeline'
 import Createcircle from './Createcircle'
 import Createrole from './Createrole'
 import Roles from './Roles'
+import Role from './Role'
 
 const b = block('App')
 
@@ -43,6 +44,7 @@ export default class App extends Component {
           <Route path="/circle" component={Circle} />
           <Route path="/createcircle" component={Createcircle} />
           <Route path="/roles" component={Roles} />
+          <Route path="/role" component={Role} />
           <Route path="/createrole" component={Createrole} />
           <Route component={NotFound} />
         </Switch>
