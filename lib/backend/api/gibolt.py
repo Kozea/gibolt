@@ -1,4 +1,3 @@
-from flask import jsonify
 from unrest import UnRest
 
 from .. import Session, app, session_unrest
