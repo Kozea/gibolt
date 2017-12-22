@@ -3,7 +3,7 @@ import './Circle.sass'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
-import { block, circleNameFromState, connect } from '../utils'
+import { block, connect } from '../utils'
 import {
   toggleAccountExpanded,
   toggleDomainExpanded,
@@ -21,7 +21,6 @@ function getUserInfo(roleUser, user) {
 
 function Circle({
   circle,
-  circlename,
   error,
   loading,
   users,
@@ -34,17 +33,9 @@ function Circle({
       <Helmet>
         <title>Gibolt - Circle</title>
       </Helmet>
-      <h1>{circlename}</h1>
-      {circle.parent_circle_name && (
-        <span>
-          {circle.parent_circle_name
-            ? `(sous-cercle de "${circle.parent_circle_name}")`
-            : ''}
-        </span>
-      )}
       {error && (
         <article className={b('group', { error: true })}>
-          <h2>Error during issue fetch</h2>
+          <h2>Error during circle fetch</h2>
           {typeof error === 'object' ? (
             <ul>
               {error.map(err => (
@@ -59,66 +50,82 @@ function Circle({
           )}
         </article>
       )}
-      {loading && <Loading />}
-      <article>
-        <h3>Purpose</h3>
-        <div onClick={() => onClickPurpose(circle.purpose_expanded)}>
-          {circle.purpose_expanded ? (
-            <p>{circle.circle_purpose}</p>
-          ) : (
-            <span>show purpose</span>
+      {circle.circle_name && (
+        <div>
+          <h1>{circle.circle_name}</h1>
+          {circle.parent_circle_name && (
+            <span>
+              {circle.parent_circle_name
+                ? `(sous-cercle de "${circle.parent_circle_name}")`
+                : ''}
+            </span>
           )}
+
+          {loading && <Loading />}
+          <article>
+            <h3>Purpose</h3>
+            <div onClick={() => onClickPurpose(circle.purpose_expanded)}>
+              {circle.purpose_expanded ? (
+                <p>{circle.circle_purpose}</p>
+              ) : (
+                <span>show purpose</span>
+              )}
+            </div>
+            <h3>Domains</h3>
+            <div onClick={() => onClickDomain(circle.domain_expanded)}>
+              {circle.domain_expanded ? (
+                <p>{circle.circle_domain}</p>
+              ) : (
+                <span>show domain</span>
+              )}
+            </div>
+            <h3>Accountabilities</h3>
+            <div
+              onClick={() => onClickAccount(circle.accountabilities_expanded)}
+            >
+              {circle.accountabilities_expanded ? (
+                <p>{circle.circle_accountabilities}</p>
+              ) : (
+                <span>show accountabilities</span>
+              )}
+            </div>
+          </article>
+          <article>
+            <h3>Rôles</h3>
+            {circle.roles && circle.roles.length > 0 ? (
+              <ul>
+                {circle.roles.map(role => (
+                  <li key={role.role_id} className={b('role')}>
+                    <span className={b('bullet')} />
+                    {role.role_name} :{' '}
+                    <img
+                      key={role.user_id}
+                      className={b('avatar')}
+                      src={users
+                        .filter(user => getUserInfo(role.user_id, user))
+                        .map(user => user.avatar_url)
+                        .toString()}
+                      alt="avatar"
+                      title={users
+                        .filter(user => getUserInfo(role.user_id, user))
+                        .map(user => user.user_name)
+                        .toString()}
+                    />
+                    {'  '}
+                    {users
+                      .filter(user => getUserInfo(role.user_id, user))
+                      .map(user => user.user_name)
+                      .toString()}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span>No roles defined</span>
+            )}
+          </article>
         </div>
-        <h3>Domains</h3>
-        <div onClick={() => onClickDomain(circle.domain_expanded)}>
-          {circle.domain_expanded ? (
-            <p>{circle.circle_domain}</p>
-          ) : (
-            <span>show domain</span>
-          )}
-        </div>
-        <h3>Accountabilities</h3>
-        <div onClick={() => onClickAccount(circle.accountabilities_expanded)}>
-          {circle.accountabilities_expanded ? (
-            <p>{circle.circle_accountabilities}</p>
-          ) : (
-            <span>show accountabilities</span>
-          )}
-        </div>
-      </article>
-      <article>
-        <h3>Rôles</h3>
-        {circle.roles && circle.roles.length > 0 ? (
-          <ul>
-            {circle.roles.map(role => (
-              <li key={role.role_id} className={b('role')}>
-                <span className={b('bullet')} />
-                {role.role_name} :{' '}
-                <img
-                  key={role.user_id}
-                  className={b('avatar')}
-                  src={users
-                    .filter(user => getUserInfo(role.user_id, user))
-                    .map(user => user.avatar_url)
-                    .toString()}
-                  alt="avatar"
-                  title={users
-                    .filter(user => getUserInfo(role.user_id, user))
-                    .map(user => user.user_name)
-                    .toString()}
-                />
-                {'  '}
-                {users
-                  .filter(user => getUserInfo(role.user_id, user))
-                  .map(user => user.user_name)
-                  .toString()}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <span>No roles defined</span>
-        )}
-      </article>
+      )}
+
       <article className={b('action')}>
         <button type="submit">Update Circle</button>
         <button type="submit">Delete Circle</button>
@@ -132,7 +139,6 @@ export default connect(
     circle: state.circle.results,
     loading: state.circle.loading,
     error: state.circle.error,
-    circlename: circleNameFromState(state).name,
     users: state.users.results,
   }),
   dispatch => ({
