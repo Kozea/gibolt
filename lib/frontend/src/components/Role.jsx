@@ -1,4 +1,4 @@
-// import './role.sass'
+import './Role.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
@@ -6,10 +6,11 @@ import { Helmet } from 'react-helmet'
 import { connect } from '../utils'
 import Loading from './Loading'
 import { deleteRole, updateRole } from '../actions/roles'
+import { editRole } from '../actions'
 
 // const b = block('role')
 
-function Role({ role, error, loading, btnClick, onEdit }) {
+function Role({ role, error, loading, btnClick, onEditRole, editClick }) {
   return (
     <section>
       <Helmet>
@@ -50,11 +51,29 @@ function Role({ role, error, loading, btnClick, onEdit }) {
       </article>
       <br />
       <article>
+        {role.is_in_edition ? (
         <form
           onSubmit={e => {
-            onEdit(role.role_id, e)
+            e.preventDefault()
+            onEditRole(role.role_id, e)
           }}
         >
+          <label>
+            Circle :
+            <input
+              name="circle_id"
+              value={role.circle_id}
+              disabled
+            />
+          </label>
+          <label>
+            User :
+            <input
+              name="user_id"
+              value={role.user_id}
+              disabled
+            />
+          </label>
           <label>
             Name :
             <input name="role_name" defaultValue={role.role_name} required />
@@ -89,8 +108,12 @@ function Role({ role, error, loading, btnClick, onEdit }) {
           <br />
           <input type="submit" value="Edit role" />
         </form>
-
-        <button type="submit">Update</button>
+      ) : (
+        ''
+      )}
+        <button type="submit" onClick={() => editClick()}>
+          {role.is_in_edition ? 'Cancel' : 'Update'}
+        </button>
         <button
           type="submit"
           onClick={() => {
@@ -115,7 +138,7 @@ export default connect(
     btnClick: data => {
       dispatch(deleteRole(data))
     },
-    onEdit: (id, e) => {
+    onEditRole: (id, e) => {
       const formRole = [].slice
         .call(e.target.elements)
         .reduce(function(map, obj) {
@@ -126,6 +149,9 @@ export default connect(
           return map
         }, {})
       dispatch(updateRole(id, formRole))
+    },
+    editClick: () => {
+      dispatch(editRole())
     },
   })
 )(Role)

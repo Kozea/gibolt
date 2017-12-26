@@ -24,7 +24,7 @@ function Createrole({ loading, onSubmit, users, circle }) {
         </label>
         <br />
         <label>
-          Parent :
+          User :
           <select name="user_id" defaultValue="">
             {users.map(user => (
               <option key={user.user_id} value={user.user_id}>

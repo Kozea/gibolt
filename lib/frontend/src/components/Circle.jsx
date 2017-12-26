@@ -137,6 +137,7 @@ function Circle({
         {circle.is_in_edition ? (
           <form
             onSubmit={e => {
+              e.preventDefault()
               onEdit(circle.circle_id, e)
             }}
           >
@@ -151,10 +152,8 @@ function Circle({
             <br />
             <label>
               Parent :
-              <select
-                name="parent_circle_id"
-                defaultValue={circle.parent_circle_id}
-              >
+              <select name="parent_circle_id" required>
+                <option>{''}</option>
                 {circles
                   .filter(cercle => cercle.parent_circle_id === null)
                   .map(cercle => (
@@ -239,15 +238,32 @@ export default connect(
       dispatch(togglePurposeExpanded(circlePurpose))
     },
     onEdit: (id, e) => {
-      const formCircle = [].slice
-        .call(e.target.elements)
-        .reduce(function(map, obj) {
+      let formCircle = []
+      if (e.target.elements[1].value === '') {
+        formCircle = [
+          e.target.elements[0],
+          e.target.elements[2],
+          e.target.elements[3],
+          e.target.elements[4],
+          e.target.elements[5],
+        ].reduce(function(map, obj) {
           if (obj.name) {
             map[obj.name] = obj.value
           }
 
           return map
         }, {})
+      } else {
+        formCircle = [].slice
+          .call(e.target.elements)
+          .reduce(function(map, obj) {
+            if (obj.name) {
+              map[obj.name] = obj.value
+            }
+
+            return map
+          }, {})
+      }
       dispatch(updateCircle(id, formCircle))
     },
     btnClick: data => {
