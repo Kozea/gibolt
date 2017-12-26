@@ -52,65 +52,57 @@ function Role({ role, error, loading, btnClick, onEditRole, editClick }) {
       <br />
       <article>
         {role.is_in_edition ? (
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            onEditRole(role.role_id, e)
-          }}
-        >
-          <label>
-            Circle :
-            <input
-              name="circle_id"
-              value={role.circle_id}
-              disabled
-            />
-          </label>
-          <label>
-            User :
-            <input
-              name="user_id"
-              value={role.user_id}
-              disabled
-            />
-          </label>
-          <label>
-            Name :
-            <input name="role_name" defaultValue={role.role_name} required />
-          </label>
-          <br />
-          <label>
-            Purpose :
-            <input
-              name="role_purpose"
-              defaultValue={role.role_purpose}
-              required
-            />
-          </label>
-          <br />
-          <label>
-            Domain :
-            <input
-              name="role_domain"
-              defaultValue={role.role_domain}
-              required
-            />
-          </label>
-          <br />
-          <label>
-            Accountabilities :
-            <input
-              name="role_accountabilities"
-              defaultValue={role.role_accountabilities}
-              required
-            />
-          </label>
-          <br />
-          <input type="submit" value="Edit role" />
-        </form>
-      ) : (
-        ''
-      )}
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              onEditRole(role.role_id, e)
+            }}
+          >
+            <label>
+              Circle :
+              <input name="circle_id" value={role.circle_id} disabled />
+            </label>
+            <label>
+              User :
+              <input name="user_id" value={role.user_id} disabled />
+            </label>
+            <label>
+              Name :
+              <input name="role_name" defaultValue={role.role_name} required />
+            </label>
+            <br />
+            <label>
+              Purpose :
+              <input
+                name="role_purpose"
+                defaultValue={role.role_purpose}
+                required
+              />
+            </label>
+            <br />
+            <label>
+              Domain :
+              <input
+                name="role_domain"
+                defaultValue={role.role_domain}
+                required
+              />
+            </label>
+            <br />
+            <label>
+              Accountabilities :
+              <input
+                name="role_accountabilities"
+                defaultValue={role.role_accountabilities}
+                required
+              />
+            </label>
+            <br />
+            <input type="submit" value="Edit role" />
+          </form>
+        ) : (
+          ''
+        )}
         <button type="submit" onClick={() => editClick()}>
           {role.is_in_edition ? 'Cancel' : 'Update'}
         </button>
