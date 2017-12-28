@@ -34,6 +34,22 @@ export default class MarkdownEditor extends React.Component {
           editorClassName={b('editor')}
           toolbarClassName={b('toolbar')}
           onEditorStateChange={state => this.handleEditorStateChange(state)}
+          toolbar={{
+            options: [
+              'inline',
+              'blockType',
+              'list',
+              'link',
+              'emoji',
+              'history',
+            ],
+            inline: {
+              options: ['bold', 'italic', 'underline', 'monospace'],
+            },
+            list: {
+              options: ['unordered', 'ordered'],
+            },
+          }}
         />
         <textarea
           id="body"
