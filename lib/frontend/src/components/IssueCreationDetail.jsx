@@ -12,6 +12,7 @@ import {
 } from '../actions/issueForm'
 import { block, connect, sortRepos } from '../utils'
 import Loading from './Loading'
+import MarkdownEditor from './MarkdownEditor'
 
 const b = block('IssueCreationDetail')
 
@@ -187,7 +188,8 @@ class IssueCreationDetail extends React.Component {
           </label>
           <br />
           <label>
-            Description: <textarea id="body" name="body" rows="7" />
+            Description:
+            <MarkdownEditor />
           </label>
           <br />
           <article className={b('action')}>
