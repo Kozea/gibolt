@@ -9,6 +9,7 @@ import Circle from './Circle'
 import Circles from './Circles'
 import IssueCreation from './IssueCreation'
 import IssuesDashboard from './IssuesDashboard'
+import Meetings from './Meetings'
 import NotFound from './NotFound'
 import Presets from './Presets'
 import Report from './Report'
@@ -40,6 +41,7 @@ export default class App extends Component {
           <Route path="/circles" component={Circles} />
           <Route path="/circle" component={Circle} />
           <Route path="/createIssue" component={IssueCreation} />
+          <Route path="/meetings" component={Meetings} />
           <Route component={NotFound} />
         </Switch>
       </main>

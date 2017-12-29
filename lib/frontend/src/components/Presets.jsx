@@ -85,6 +85,9 @@ function Presets({ location, user }) {
           <Preset action="/circles" active={location.pathname === '/circles'}>
             Circles
           </Preset>
+          <Preset action="/meetings" active={location.pathname === '/meetings'}>
+            Meetings
+          </Preset>
         </ul>
       </nav>
     </header>
