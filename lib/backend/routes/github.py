@@ -22,6 +22,50 @@ def date_from_iso(iso_date):
     return date(*[int(value) for value in iso_date[:10].split('-')])
 
 
+def format_ticket_response(ticket_request, repo_name):
+    response = {
+        'ticket_id': ticket_request['id'],
+        'ticket_number': ticket_request['number'],
+        'ticket_title': ticket_request['title'],
+        'body': ticket_request['body'],
+        'html_url': ticket_request['html_url'],
+        'user': {
+            'user_id': ticket_request['user']['id']},
+        'state': ticket_request['state'],
+        'milestone_id': (
+            ticket_request['milestone']['id']
+            if ticket_request['milestone'] else None),
+        'milestone_number': (
+            ticket_request['milestone']['number']
+            if ticket_request['milestone'] else None),
+        'milestone_title': (
+            ticket_request['milestone']['title']
+            if ticket_request['milestone'] else None),
+        'pull_request': ticket_request.get('pull_request'),
+        'nb_comments': ticket_request['comments'],
+        'updated_at': ticket_request['updated_at'],
+        'closed_at': ticket_request['closed_at'],
+        'repo_name': repo_name,
+        'assignees': [
+            {
+                'user_id': assignee['id'],
+                'user_name': assignee['login'],
+                'avatar_url': assignee['avatar_url']
+            } for assignee in ticket_request.get('assignees', [])],
+        'labels': [
+            {
+                'label_id': label['id'],
+                'label_color': label['color'],
+                'label_name': label['name']} for label in ticket_request.get(
+                'labels',
+                [])],
+        'selected': False,
+        'expanded': False,
+        'comments_expanded': False,
+        'comments': []}
+    return response
+
+
 @app.route('/api/user', methods=['GET', 'POST'])
 @needlogin
 def user():
@@ -344,43 +388,8 @@ def get_a_ticket(repo_name, ticket_number):
                 repo_name, ticket_number), all_pages=True)
     except GitHubError as e:
         return e.response.content, e.response.status_code
-    response = {
-        'ticket_id': ticket_request['id'],
-        'ticket_number': ticket_request['number'],
-        'ticket_title': ticket_request['title'],
-        'body': ticket_request['body'],
-        'html_url': ticket_request['html_url'],
-        'user': {
-            'user_id': ticket_request['user']['id']},
-        'state': ticket_request['state'],
-        'milestone_id': ticket_request['milestone']['id'],
-        'milestone_number': (
-            ticket_request['milestone']['number']
-            if ticket_request['milestone'] else None),
-        'milestone_title': (
-            ticket_request['milestone']['title']
-            if ticket_request['milestone'] else None),
-        'pull_request': ticket_request.get('pull_request'),
-        'nb_comments': ticket_request['comments'],
-        'updated_at': ticket_request['updated_at'],
-        'closed_at': ticket_request['closed_at'],
-        'repo_name': repo_name,
-        'assignees': [
-            {
-                'user_id': assignee['id'],
-                'user_name': assignee['login'],
-                'avatar_url': assignee['avatar_url']
-            } for assignee in ticket_request.get('assignees', [])],
-        'labels': [
-            {
-                'label_id': label['id'], 'label_color': label['color'],
-                'label_name': label['name']} for label in ticket_request.get(
-                'labels',
-                [])],
-        'selected': False,
-        'expanded': False,
-        'comments_expanded': False,
-        'comments': []}
+
+    response = format_ticket_response(ticket_request, repo_name)
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
@@ -405,44 +414,7 @@ def create_a_ticket(repo_name):
     except GitHubError as e:
         return e.response.content, e.response.status_code
 
-    response = {
-        'ticket_id': ticket_request['id'],
-        'ticket_number': ticket_request['number'],
-        'ticket_title': ticket_request['title'],
-        'body': ticket_request['body'],
-        'html_url': ticket_request['html_url'],
-        'user': {
-            'user_id': ticket_request['user']['id']},
-        'state': ticket_request['state'],
-        'milestone_id': (
-            ticket_request['milestone']['id']
-            if ticket_request['milestone'] else None),
-        'milestone_number': (
-            ticket_request['milestone']['number']
-            if ticket_request['milestone'] else None),
-        'milestone_title': (
-            ticket_request['milestone']['title']
-            if ticket_request['milestone'] else None),
-        'pull_request': ticket_request.get('pull_request'),
-        'nb_comments': ticket_request['comments'],
-        'updated_at': ticket_request['updated_at'],
-        'closed_at': ticket_request['closed_at'],
-        'repo_name': repo_name,
-        'assignees': [
-            {
-                'user_name': assignee['login'],
-                'avatar_url': assignee['avatar_url']
-            }for assignee in ticket_request.get('assignees', [])],
-        'labels': [
-            {
-                'label_color': label['color'],
-                'label_name': label['name']} for label in ticket_request.get(
-                'labels',
-                [])],
-        'selected': False,
-        'expanded': False,
-        'comments_expanded': False,
-        'comments': []}
+    response = format_ticket_response(ticket_request, repo_name)
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
@@ -473,46 +445,7 @@ def update_a_ticket(repo_name, ticket_number):
     except GitHubError as e:
         return e.response.content, e.response.status_code
 
-    response = {
-        'ticket_id': ticket_request['id'],
-        'ticket_number': ticket_request['number'],
-        'ticket_title': ticket_request['title'],
-        'body': ticket_request['body'],
-        'html_url': ticket_request['html_url'],
-        'user': {
-            'user_id': ticket_request['user']['id']},
-        'state': ticket_request['state'],
-        'milestone_id': (
-            ticket_request['milestone']['id']
-            if ticket_request['milestone'] else None),
-        'milestone_number': (
-            ticket_request['milestone']['number']
-            if ticket_request['milestone'] else None),
-        'milestone_title': (
-            ticket_request['milestone']['title']
-            if ticket_request['milestone'] else None),
-        'pull_request': ticket_request.get('pull_request'),
-        'nb_comments': ticket_request['comments'],
-        'updated_at': ticket_request['updated_at'],
-        'closed_at': ticket_request['closed_at'],
-        'repo_name': repo_name,
-        'assignees': [
-            {
-                'user_id': assignee['id'],
-                'user_name': assignee['login'],
-                'avatar_url': assignee['avatar_url']
-            } for assignee in ticket_request.get('assignees', [])],
-        'labels': [
-            {
-                'label_id': label['id'],
-                'label_color': label['color'],
-                'label_name': label['name']} for label in ticket_request.get(
-                'labels',
-                [])],
-        'selected': False,
-        'expanded': False,
-        'comment_expanded': False,
-        'comments': []}
+    response = format_ticket_response(ticket_request, repo_name)
     objects = [{'objects': [response]}]
     objects = {
         'objects': response,
@@ -801,10 +734,11 @@ def update_a_label(repo_name, label_name):
     data = json.dumps(data)
 
     try:
-        label_request = github.request('PATCH',
-                                       'repos/{0}/{1}/labels/{2}'.format(
-                                           app.config['ORGANISATION'],
-                                           repo_name, label_name), data=data)
+        label_request = github.request(
+            'PATCH',
+            'repos/{0}/{1}/labels/{2}'.format(
+                app.config['ORGANISATION'],
+                repo_name, label_name), data=data)
     except GitHubError as e:
         return e.response.content, e.response.status_code
 
@@ -829,10 +763,11 @@ def update_a_label(repo_name, label_name):
 def delete_a_label(repo_name, label_name):
     try:
         # Github API returns 204 (No content), if no error
-        response_github = github.request('DELETE',
-                                         'repos/{0}/{1}/labels/{2}'
-                                         .format(app.config['ORGANISATION'],
-                                                 repo_name, label_name))
+        response_github = github.request(
+            'DELETE',
+            'repos/{0}/{1}/labels/{2}'.format(
+                app.config['ORGANISATION'],
+                repo_name, label_name))
         response = {'status': 'success',
                     'message': 'Label {0} deleted for repo {1}.'
                     .format(label_name, repo_name)}
