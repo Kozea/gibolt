@@ -1,11 +1,12 @@
-import './MarkdownEditor.sass'
 import 'draft-js/dist/Draft.css'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
-import React from 'react'
+import './MarkdownEditor.sass'
+
 import { convertToRaw } from 'draft-js'
-import { Editor } from 'react-draft-wysiwyg'
 import draftToMarkdown from 'draftjs-to-markdown'
+import React from 'react'
+import { Editor } from 'react-draft-wysiwyg'
 
 import { block } from '../utils'
 
