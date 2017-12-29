@@ -5,16 +5,10 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
-import { block, connect, sortGroupCircles } from '../utils'
+import { block, connect, getColor, sortGroupCircles } from '../utils'
 import Loading from './Loading'
 
 const b = block('Circles')
-
-function getColor(label, circle) {
-  if (circle.circle_name.toLowerCase() === label.text.toLowerCase()) {
-    return label
-  }
-}
 
 function Circles({ error, labels, loading, results }) {
   const circles = sortGroupCircles(results)
@@ -41,7 +35,7 @@ function Circles({ error, labels, loading, results }) {
                 className={b('item')}
                 style={{
                   color: `${labels
-                    .filter(label => getColor(label, circle))
+                    .filter(label => getColor(label, circle.circle_name))
                     .map(label => label.color)
                     .toString()}`,
                 }}

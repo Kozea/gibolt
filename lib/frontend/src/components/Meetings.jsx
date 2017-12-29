@@ -1,14 +1,19 @@
 import './Meetings.sass'
 
+import { format } from 'date-fns'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
-import { block, connect } from '../utils'
+import { block, connect, getColor } from '../utils'
 import Loading from './Loading'
 
 const b = block('Meetings')
 
-function Meetings({ circles, meetingsTypes }) {
+function getCircleName(circleId, circles) {
+  return circles.filter(circle => circle.circle_id === circleId)[0].circle_name
+}
+
+function Meetings({ circles, labels, meetings, meetingsTypes }) {
   return (
     <section className={b()}>
       <Helmet>
@@ -40,7 +45,7 @@ function Meetings({ circles, meetingsTypes }) {
             </select>
           </label>
           <label>
-            Meetings type:
+            Meetings:
             <select id="meeting-type" name="meeting-type">
               <option value="">All</option>
               {meetingsTypes.results.map(type => (
@@ -51,11 +56,41 @@ function Meetings({ circles, meetingsTypes }) {
             </select>
           </label>
         </form>
+        {meetings.results.length > 0 ? (
+          <ul>
+            {meetings.results.map(meeting => (
+              <li
+                key={meeting.report_id}
+                className={b('item')}
+                style={{
+                  color: `${labels
+                    .filter(label =>
+                      getColor(
+                        label,
+                        getCircleName(meeting.circle_id, circles.results)
+                      )
+                    )
+                    .map(label => label.color)
+                    .toString()}`,
+                }}
+              >
+                {format(new Date(meeting.created_at), 'DD/MM/YYYY')} -{' '}
+                {getCircleName(meeting.circle_id, circles.results)} -{' '}
+                {meeting.report_type}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <span>No meetings reports</span>
+        )}
+        <button type="submit">Add a report</button>
       </article>
     </section>
   )
 }
 export default connect(state => ({
   circles: state.circles,
+  labels: state.labels.results.qualifier,
+  meetings: state.meetings,
   meetingsTypes: state.meetingsTypes,
 }))(Meetings)

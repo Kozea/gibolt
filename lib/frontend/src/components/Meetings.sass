@@ -5,6 +5,25 @@
   overflow: auto
   position: relative
 
+  &__item
+    display: flex
+    flex-direction: column
+    background: #fff
+    border: 1px solid darken($body, 5%)
+    margin: 0.25em 0
+    padding: 0.5em
+    position: relative
+    transition: color 0.2s
+
+    &:before
+      border-left: 0.25em solid
+      bottom: -1px
+      content: ''
+      display: block
+      left: -1px
+      position: absolute
+      top: -1px
+
   &__meetings
     margin-left: 1em
     margin-right: .5em
