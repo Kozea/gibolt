@@ -1,0 +1,53 @@
+@import ../vars
+
+
+.MarkdownEditor
+  padding: 0
+
+  img
+    max-width: 100%
+
+  &__toolbar
+    border: 0
+    border-bottom: solid 1px $primary-hue-1
+    margin: 0
+    padding: .5em
+    width: 51em
+
+    .rdw-option-wrapper, .rdw-dropdown-wrapper
+      border-color: $primary-hue-2
+      transition: background-color $time, border $time
+
+      &:hover
+        background-color: $primary-hue-3
+        border-color: $primary-hue-1
+        box-shadow: none
+
+    .rdw-option-active
+      background-color: $primary-hue-3
+      border-color: $primary
+
+  &__editor
+    background: #e0e9f0
+    cursor: text
+    min-height: 10em
+    padding: .5em
+
+    .rdw-image-alignment
+      position: relative
+
+      &-options-popup
+        bottom: 0
+        position: absolute
+        top: auto
+
+    a
+      color: $secondary
+      text-decoration: underline
+
+      &:hover
+        color: darken($secondary, 8%)
+
+    .rdw-link-decorator-wrapper
+      img
+        display: none
