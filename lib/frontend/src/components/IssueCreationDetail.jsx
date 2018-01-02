@@ -2,6 +2,7 @@ import './IssueCreationDetail.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { withRouter } from 'react-router-dom'
 
 import {
   changeMilestoneSelect,
@@ -65,6 +66,7 @@ class IssueCreationDetail extends React.Component {
     const {
       circles,
       error,
+      history,
       issueForm,
       labels,
       loading,
@@ -202,7 +204,7 @@ class IssueCreationDetail extends React.Component {
             >
               Create
             </button>
-            <button type="submit" onClick={() => onGoBack()}>
+            <button type="submit" onClick={() => onGoBack(history)}>
               Cancel
             </button>
           </article>
@@ -212,32 +214,34 @@ class IssueCreationDetail extends React.Component {
   }
 }
 
-export default connect(
-  state => ({
-    circles: state.circles.results,
-    error: state.issueForm.results.error,
-    issueForm: state.issueForm.results,
-    labels: state.labels.results.priority,
-    loading: state.circle.loading,
-    repository: state.repository.results.repository,
-    repositories: state.repositories.results.repositories,
-  }),
-  dispatch => ({
-    onTitleChange: event => {
-      dispatch(updateTitle(event.target.value))
-    },
-    onCircleChange: circleId => {
-      dispatch(changeRolesSelect(circleId))
-    },
-    onGoBack: () => {
-      dispatch(goBack())
-    },
-    onProjectChange: repoName => {
-      dispatch(changeMilestoneSelect(repoName))
-    },
-    onSubmit: event => {
-      event.preventDefault()
-      dispatch(submitIssue(event))
-    },
-  })
-)(IssueCreationDetail)
+export default withRouter(
+  connect(
+    state => ({
+      circles: state.circles.results,
+      error: state.issueForm.results.error,
+      issueForm: state.issueForm.results,
+      labels: state.labels.results.priority,
+      loading: state.circle.loading,
+      repository: state.repository.results.repository,
+      repositories: state.repositories.results.repositories,
+    }),
+    dispatch => ({
+      onTitleChange: event => {
+        dispatch(updateTitle(event.target.value))
+      },
+      onCircleChange: circleId => {
+        dispatch(changeRolesSelect(circleId))
+      },
+      onGoBack: history => {
+        dispatch(goBack(history))
+      },
+      onProjectChange: repoName => {
+        dispatch(changeMilestoneSelect(repoName))
+      },
+      onSubmit: event => {
+        event.preventDefault()
+        dispatch(submitIssue(event, history))
+      },
+    })
+  )(IssueCreationDetail)
+)
