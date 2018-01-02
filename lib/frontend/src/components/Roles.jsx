@@ -25,27 +25,27 @@ function Roles({ error, loading, roles }) {
       {loading && <Loading />}
       <article className={b('roles')}>
         <h2>Roles</h2>
-      {roles.length > 0 ? (
-        <ul>
-          {roles.map(role => (
-            <li key={role.role_id} className={b('item')}>
-              <Link
-                className={b('link')}
-                to={{
-                  pathname: '/role',
-                  search: stringify({ id: role.role_id }),
-                }}
-              >
-                <span className={b('unlink')} />
-                {role.role_name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <span>No roles defined</span>
-      )}
-    </article>
+        {roles.length > 0 ? (
+          <ul>
+            {roles.map(role => (
+              <li key={role.role_id} className={b('item')}>
+                <Link
+                  className={b('link')}
+                  to={{
+                    pathname: '/role',
+                    search: stringify({ id: role.role_id }),
+                  }}
+                >
+                  <span className={b('unlink')} />
+                  {role.role_name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <span>No roles defined</span>
+        )}
+      </article>
     </section>
   )
 }

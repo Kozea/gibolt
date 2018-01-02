@@ -24,6 +24,7 @@ function getUserInfo(roleUser, user) {
   }
 }
 
+
 function Circle({
   btnClick,
   circle,
@@ -36,7 +37,7 @@ function Circle({
   onClickDomain,
   onClickPurpose,
   onEdit,
-  onGoBack
+  onGoBack,
 }) {
   return (
     <section className={b()}>
@@ -114,7 +115,8 @@ function Circle({
                       }}
                     >
                       {role.role_name}
-                    </Link> :{' '}
+                    </Link>{' '}
+                    :{' '}
                     <img
                       key={role.user_id}
                       className={b('avatar')}
@@ -133,7 +135,6 @@ function Circle({
                       .filter(user => getUserInfo(role.user_id, user))
                       .map(user => user.user_name)
                       .toString()}
-
                   </li>
                 ))}
               </ul>
@@ -209,26 +210,35 @@ function Circle({
         ) : (
           ''
         )}
-        {circle.is_in_edition
-          ? <button type="submit" onClick={() => onGoBack()}>
-        Cancel</button>
-        : <button type="submit" onClick={() => editClick()}>Update</button>}
+        {circle.is_in_edition ? (
+          <button type="submit" onClick={() => onGoBack()}>
+            Cancel
+          </button>
+        ) : (
+          <button type="submit" onClick={() => editClick()}>
+            Update
+          </button>
+        )}
         {circle.roles && circle.roles.length > 0 ? (
           <span>
             <button type="submit" disabled>
               Delete Circle
-            </button><code>You cannot delete this circle, please first delete
-            the roles.</code></span>) : (
-              <button
-                type="submit"
-                onClick={e => {
-                  e.preventDefault()
-                  btnClick(circle.circle_id)
-                }}
-              >
-                Delete Circle
-              </button>
-            )}
+            </button>
+            <code>
+              You cannot delete this circle, please first delete the roles.
+            </code>
+          </span>
+        ) : (
+          <button
+            type="submit"
+            onClick={e => {
+              e.preventDefault()
+              btnClick(circle.circle_id)
+            }}
+          >
+            Delete Circle
+          </button>
+        )}
         <Link
           to={{
             pathname: '/createrole',
@@ -295,7 +305,7 @@ export default connect(
       dispatch(updateCircle(id, formCircle))
     },
     onGoBack: () => {
-     history.go(-1)
-   },
+      history.go(-1)
+    },
   })
 )(Circle)

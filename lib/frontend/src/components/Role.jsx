@@ -8,8 +8,16 @@ import Loading from './Loading'
 import { deleteRole, updateRole } from '../actions/roles'
 import { editRole } from '../actions'
 
-function Role({ btnClick, circles, editClick, error,
-   loading, onEditRole, role, users }) {
+function Role({
+  btnClick,
+  circles,
+  editClick,
+  error,
+  loading,
+  onEditRole,
+  role,
+  users,
+}) {
   return (
     <section>
       <Helmet>
@@ -37,8 +45,11 @@ function Role({ btnClick, circles, editClick, error,
       <article>
         <h3>Circle</h3>
         <div>
-          <p>{circles.find(circle => circle.circle_id === role.circle_id)
-            .circle_name}</p>
+          <p>
+            {circles.find(circle => circle.circle_id === role.circle_id) &&
+              circles.find(circle => circle.circle_id === role.circle_id)
+            .circle_name}
+          </p>
         </div>
         <h3>Purpose</h3>
         <div>
@@ -68,7 +79,7 @@ function Role({ btnClick, circles, editClick, error,
             <h1>Edit {role.role_name} circle :</h1>
             <label>
               Circle :
-              <select name="circle_id" defaultValue="">
+              <select name="circle_id" defaultValue={role.circle_id}>
                 {circles.map(circle => (
                   <option key={circle.circle_id} value={circle.circle_id}>
                     {circle.circle_name}
@@ -78,7 +89,7 @@ function Role({ btnClick, circles, editClick, error,
             </label>
             <label>
               User :
-              <select name="user_id" defaultValue="">
+              <select name="user_id" defaultValue={role.user_id}>
                 {users.map(user => (
                   <option key={user.user_id} value={user.user_id}>
                     {user.user_name}
@@ -151,7 +162,7 @@ export default connect(
     loading: state.role.loading,
     role: state.role.results,
     roles: state.roles.results,
-    users: state.users.results
+    users: state.users.results,
   }),
   dispatch => ({
     btnClick: data => {
@@ -161,14 +172,15 @@ export default connect(
       dispatch(editRole())
     },
     onEditRole: (role, e) => {
-      const formRole = [].slice
-        .call(e.target.elements)
-        .reduce(function(map, obj) {
+      const formRole = [].slice.call(e.target.elements).reduce(
+        function(map, obj) {
           if (obj.name) {
             map[obj.name] = obj.value
           }
           return map
-        }, { circle_id: role.circle_id })
+        },
+        { circle_id: role.circle_id }
+      )
       dispatch(updateRole(role.role_id, formRole))
     },
   })
