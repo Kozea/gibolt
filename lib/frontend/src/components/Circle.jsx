@@ -1,7 +1,9 @@
 import './Circle.sass'
 
+import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
 
 import { block, connect } from '../utils'
 import {
@@ -23,6 +25,7 @@ function Circle({
   circle,
   error,
   loading,
+  meetingsTypes,
   users,
   onClickAccount,
   onClickDomain,
@@ -63,7 +66,7 @@ function Circle({
 
           {loading && <Loading />}
           <article>
-            <h3>Purpose</h3>
+            <h4>Purpose</h4>
             <div onClick={() => onClickPurpose(circle.purpose_expanded)}>
               {circle.purpose_expanded ? (
                 <p>{circle.circle_purpose}</p>
@@ -71,7 +74,7 @@ function Circle({
                 <span>show purpose</span>
               )}
             </div>
-            <h3>Domains</h3>
+            <h4>Domains</h4>
             <div onClick={() => onClickDomain(circle.domain_expanded)}>
               {circle.domain_expanded ? (
                 <p>{circle.circle_domain}</p>
@@ -79,7 +82,7 @@ function Circle({
                 <span>show domain</span>
               )}
             </div>
-            <h3>Accountabilities</h3>
+            <h4>Accountabilities</h4>
             <div
               onClick={() => onClickAccount(circle.accountabilities_expanded)}
             >
@@ -90,8 +93,34 @@ function Circle({
               )}
             </div>
           </article>
+          <article className={b('action')}>
+            <button type="submit">Update Circle</button>
+            <button type="submit">Delete Circle</button>
+          </article>
+
           <article>
-            <h3>Rôles</h3>
+            <h3>Meetings</h3>
+            {meetingsTypes.map(type => (
+              <Link
+                className={b('link')}
+                key={type.type_id}
+                to={{
+                  pathname: '/meetings',
+                  search: stringify({
+                    circle_id: circle.circle_id,
+                    meeting_name: type.type_name,
+                  }),
+                }}
+              >
+                <button key={type.type_id} type="submit">
+                  {type.type_name}
+                </button>
+              </Link>
+            ))}
+          </article>
+
+          <article>
+            <h3>Roles</h3>
             {circle.roles && circle.roles.length > 0 ? (
               <ul>
                 {circle.roles.map(role => (
@@ -125,10 +154,7 @@ function Circle({
           </article>
         </div>
       )}
-
       <article className={b('action')}>
-        <button type="submit">Update Circle</button>
-        <button type="submit">Delete Circle</button>
         <button type="submit">Add a Role</button>
       </article>
     </section>
@@ -137,8 +163,9 @@ function Circle({
 export default connect(
   state => ({
     circle: state.circle.results,
-    loading: state.circle.loading,
     error: state.circle.error,
+    loading: state.circle.loading,
+    meetingsTypes: state.meetingsTypes.results,
     users: state.users.results,
   }),
   dispatch => ({
