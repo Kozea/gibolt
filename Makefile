@@ -110,4 +110,8 @@ serve: env-check clean
 	$(MAKE) P="serve-node-client serve-node-server serve-python" make-p
 
 initdb:
-	$(FLASK) initdb
+	$(FLASK) dropdb
+	$(VENV)/bin/alembic upgrade head
+
+upgradedb:
+	$(VENV)/bin/alembic upgrade head
