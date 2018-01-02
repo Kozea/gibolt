@@ -15,6 +15,7 @@ function Createrole({ loading, onSubmit, users, circle }) {
       <h2>Create a new role :</h2>
       <form
         onSubmit={e => {
+          e.preventDefault()
           onSubmit(circle.circle_id, e)
         }}
       >

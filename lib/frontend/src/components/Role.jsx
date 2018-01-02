@@ -8,9 +8,8 @@ import Loading from './Loading'
 import { deleteRole, updateRole } from '../actions/roles'
 import { editRole } from '../actions'
 
-// const b = block('role')
-
-function Role({ role, error, loading, btnClick, onEditRole, editClick }) {
+function Role({ btnClick, circles, editClick, error,
+   loading, onEditRole, role, users }) {
   return (
     <section>
       <Helmet>
@@ -36,6 +35,11 @@ function Role({ role, error, loading, btnClick, onEditRole, editClick }) {
       )}
       {loading && <Loading />}
       <article>
+        <h3>Circle</h3>
+        <div>
+          <p>{circles.find(circle => circle.circle_id === role.circle_id)
+            .circle_name}</p>
+        </div>
         <h3>Purpose</h3>
         <div>
           <p>{role.role_purpose}</p>
@@ -48,29 +52,44 @@ function Role({ role, error, loading, btnClick, onEditRole, editClick }) {
         <div>
           <p>{role.role_accountabilities}</p>
         </div>
+        <h3>Checklist</h3>
+        <div>
+          <p>{role.role_checklist}</p>
+        </div>
       </article>
-      <br />
       <article>
         {role.is_in_edition ? (
           <form
             onSubmit={e => {
               e.preventDefault()
-              onEditRole(role.role_id, e)
+              onEditRole(role, e)
             }}
           >
+            <h1>Edit {role.role_name} circle :</h1>
             <label>
               Circle :
-              <input name="circle_id" value={role.circle_id} disabled />
+              <select name="circle_id" defaultValue="">
+                {circles.map(circle => (
+                  <option key={circle.circle_id} value={circle.circle_id}>
+                    {circle.circle_name}
+                  </option>
+                ))}
+              </select>
             </label>
             <label>
               User :
-              <input name="user_id" value={role.user_id} disabled />
+              <select name="user_id" defaultValue="">
+                {users.map(user => (
+                  <option key={user.user_id} value={user.user_id}>
+                    {user.user_name}
+                  </option>
+                ))}
+              </select>
             </label>
             <label>
               Name :
               <input name="role_name" defaultValue={role.role_name} required />
             </label>
-            <br />
             <label>
               Purpose :
               <input
@@ -79,7 +98,6 @@ function Role({ role, error, loading, btnClick, onEditRole, editClick }) {
                 required
               />
             </label>
-            <br />
             <label>
               Domain :
               <input
@@ -88,7 +106,6 @@ function Role({ role, error, loading, btnClick, onEditRole, editClick }) {
                 required
               />
             </label>
-            <br />
             <label>
               Accountabilities :
               <input
@@ -97,7 +114,15 @@ function Role({ role, error, loading, btnClick, onEditRole, editClick }) {
                 required
               />
             </label>
-            <br />
+            <label>
+              Checklist :
+              <br />
+              <input
+                name="role_checklist"
+                defaultValue={role.role_checklist}
+                required
+              />
+            </label>
             <input type="submit" value="Edit role" />
           </form>
         ) : (
@@ -118,32 +143,33 @@ function Role({ role, error, loading, btnClick, onEditRole, editClick }) {
     </section>
   )
 }
+
 export default connect(
   state => ({
-    roles: state.roles.results,
-    role: state.role.results,
-    loading: state.role.loading,
+    circles: state.circles.results,
     error: state.role.error,
-    users: state.users.results,
+    loading: state.role.loading,
+    role: state.role.results,
+    roles: state.roles.results,
+    users: state.users.results
   }),
   dispatch => ({
     btnClick: data => {
       dispatch(deleteRole(data))
     },
-    onEditRole: (id, e) => {
+    editClick: () => {
+      dispatch(editRole())
+    },
+    onEditRole: (role, e) => {
       const formRole = [].slice
         .call(e.target.elements)
         .reduce(function(map, obj) {
           if (obj.name) {
             map[obj.name] = obj.value
           }
-
           return map
-        }, {})
-      dispatch(updateRole(id, formRole))
-    },
-    editClick: () => {
-      dispatch(editRole())
+        }, { circle_id: role.circle_id })
+      dispatch(updateRole(role.role_id, formRole))
     },
   })
 )(Role)

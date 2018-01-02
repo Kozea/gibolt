@@ -1,16 +1,17 @@
 import './Circle.sass'
 
+import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
 import { block, connect } from '../utils'
 import {
+  deleteCircle,
   toggleAccountExpanded,
   toggleDomainExpanded,
   togglePurposeExpanded,
   updateCircle,
-  deleteCircle,
 } from '../actions/circle'
 import { editCircle } from '../actions'
 import Loading from './Loading'
@@ -24,8 +25,10 @@ function getUserInfo(roleUser, user) {
 }
 
 function Circle({
+  btnClick,
   circle,
   circles,
+  editClick,
   error,
   loading,
   users,
@@ -33,8 +36,7 @@ function Circle({
   onClickDomain,
   onClickPurpose,
   onEdit,
-  btnClick,
-  editClick,
+  onGoBack
 }) {
   return (
     <section className={b()}>
@@ -105,7 +107,14 @@ function Circle({
                 {circle.roles.map(role => (
                   <li key={role.role_id} className={b('role')}>
                     <span className={b('bullet')} />
-                    {role.role_name} :{' '}
+                    <Link
+                      to={{
+                        pathname: '/role',
+                        search: stringify({ id: role.role_id }),
+                      }}
+                    >
+                      {role.role_name}
+                    </Link> :{' '}
                     <img
                       key={role.user_id}
                       className={b('avatar')}
@@ -124,6 +133,7 @@ function Circle({
                       .filter(user => getUserInfo(role.user_id, user))
                       .map(user => user.user_name)
                       .toString()}
+
                   </li>
                 ))}
               </ul>
@@ -141,6 +151,8 @@ function Circle({
               onEdit(circle.circle_id, e)
             }}
           >
+            <br />
+            <h1>Edit {circle.circle_name} circle :</h1>
             <label>
               Name :
               <input
@@ -197,20 +209,30 @@ function Circle({
         ) : (
           ''
         )}
-        <button type="submit" onClick={() => editClick()}>
-          {circle.is_in_edition ? 'Cancel' : 'Update'}
-        </button>
-        <button
-          type="submit"
-          onClick={() => {
-            btnClick(circle.circle_id)
-          }}
-        >
-          Delete Circle
-        </button>
+        {circle.is_in_edition
+          ? <button type="submit" onClick={() => onGoBack()}>
+        Cancel</button>
+        : <button type="submit" onClick={() => editClick()}>Update</button>}
+        {circle.roles && circle.roles.length > 0 ? (
+          <span>
+            <button type="submit" disabled>
+              Delete Circle
+            </button><code>You cannot delete this circle, please first delete
+            the roles.</code></span>) : (
+              <button
+                type="submit"
+                onClick={e => {
+                  e.preventDefault()
+                  btnClick(circle.circle_id)
+                }}
+              >
+                Delete Circle
+              </button>
+            )}
         <Link
           to={{
             pathname: '/createrole',
+            search: stringify({ circle_id: circle.circle_id }),
           }}
         >
           <button type="submit">Add a Role</button>
@@ -223,11 +245,17 @@ export default connect(
   state => ({
     circle: state.circle.results,
     circles: state.circles.results,
-    loading: state.circle.loading,
     error: state.circle.error,
+    loading: state.circle.loading,
     users: state.users.results,
   }),
   dispatch => ({
+    btnClick: data => {
+      dispatch(deleteCircle(data))
+    },
+    editClick: () => {
+      dispatch(editCircle())
+    },
     onClickAccount: circleAccount => {
       dispatch(toggleAccountExpanded(circleAccount))
     },
@@ -266,11 +294,8 @@ export default connect(
       }
       dispatch(updateCircle(id, formCircle))
     },
-    btnClick: data => {
-      dispatch(deleteCircle(data))
-    },
-    editClick: () => {
-      dispatch(editCircle())
-    },
+    onGoBack: () => {
+     history.go(-1)
+   },
   })
 )(Circle)

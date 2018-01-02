@@ -83,10 +83,10 @@ function Circles({ error, labels, loading, results }) {
 }
 export default connect(
   state => ({
-    results: state.circles.results,
-    loading: state.circles.loading,
     error: state.circles.errors,
     labels: state.labels.results.qualifier,
+    loading: state.circles.loading,
+    results: state.circles.results,
   }),
   dispatch => ({
     onSubmit: e => {
