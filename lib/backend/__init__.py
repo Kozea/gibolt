@@ -1,8 +1,8 @@
 import pkg_resources
 from flask import Flask
 from flask_github import GitHub
-import requests
 import os
+import requests
 from urllib.parse import urlparse
 
 from cachecontrol import CacheControl
