@@ -75,6 +75,7 @@ class Report(Base):
     created_at = Column(DateTime)
     author_id = Column(Integer)
     content = Column(Text)
+    circle = relationship(Circle, backref='reports')
 
 
 class Milestone_circle(Base):

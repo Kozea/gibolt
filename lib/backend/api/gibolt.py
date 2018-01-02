@@ -30,6 +30,9 @@ rest(
 rest(
     Report,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
+    relationships={
+        'circle': rest(Circle, only=['circle_name']),
+    },
     name='reports',
     auth=needlogin)
 

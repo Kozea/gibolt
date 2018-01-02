@@ -9,10 +9,6 @@ import Loading from './Loading'
 
 const b = block('Meetings')
 
-function getCircleName(circleId, circles) {
-  return circles.filter(circle => circle.circle_id === circleId)[0].circle_name
-}
-
 function Meetings({ circles, labels, meetings, meetingsTypes }) {
   return (
     <section className={b()}>
@@ -65,18 +61,14 @@ function Meetings({ circles, labels, meetings, meetingsTypes }) {
                 style={{
                   color: `${labels
                     .filter(label =>
-                      getColor(
-                        label,
-                        getCircleName(meeting.circle_id, circles.results)
-                      )
+                      getColor(label, meeting.circle[0].circle_name)
                     )
                     .map(label => label.color)
                     .toString()}`,
                 }}
               >
                 {format(new Date(meeting.created_at), 'DD/MM/YYYY')} -{' '}
-                {getCircleName(meeting.circle_id, circles.results)} -{' '}
-                {meeting.report_type}
+                {meeting.circle[0].circle_name} - {meeting.report_type}
               </li>
             ))}
           </ul>
