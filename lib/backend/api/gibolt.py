@@ -1,4 +1,3 @@
-from flask import jsonify
 from unrest import UnRest
 
 from .. import Session, app, session_unrest
@@ -47,15 +46,3 @@ rest(
     methods=['GET', 'PUT', 'POST', 'DELETE'],
     name='milestones_circles',
     auth=needlogin)
-
-
-@app.route('/api/meetingsTypes', methods=['GET', 'POST'])
-@needlogin
-def get_meetings_types():
-    return jsonify({
-        'objects': [{
-            'type_id': type_id,
-            'type_name': type_name
-        } for type_id, type_name in app.config['MEETINGS_TYPES']]
-
-    })
