@@ -31,7 +31,12 @@ function Meetings({ circles, labels, meetings, meetingsTypes }) {
         <form onSubmit={event => event.preventDefault()}>
           <label>
             Circle:
-            <select id="circles" name="circles">
+            <select
+              id="circles"
+              name="circles"
+              value={meetingsTypes.params.circle_id}
+              disabled={meetingsTypes.params.circle_id !== ''}
+            >
               <option value="">All</option>
               {circles.results.map(circle => (
                 <option key={circle.circle_id} value={circle.circle_id}>
@@ -42,7 +47,12 @@ function Meetings({ circles, labels, meetings, meetingsTypes }) {
           </label>
           <label>
             Meetings:
-            <select id="meeting-type" name="meeting-type">
+            <select
+              id="meeting-type"
+              name="meeting-type"
+              value={meetingsTypes.params.meeting_name}
+              disabled={meetingsTypes.params.meeting_name !== ''}
+            >
               <option value="">All</option>
               {meetingsTypes.results.map(type => (
                 <option key={type.type_id} value={type.type_name}>
