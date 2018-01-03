@@ -46,14 +46,16 @@ function Role({
         </article>
       )}
       {loading && <Loading />}
-      {role.is_in_edition ? ('') : (
+      {role.is_in_edition ? (
+        ''
+      ) : (
         <article>
           <h3>Circle</h3>
           <div>
             <p>
               {circles.find(circle => circle.circle_id === role.circle_id) &&
                 circles.find(circle => circle.circle_id === role.circle_id)
-              .circle_name}
+                  .circle_name}
             </p>
           </div>
           <h3>Purpose</h3>
@@ -155,7 +157,7 @@ export default connect(
   }),
   dispatch => ({
     addClick: () => {
-     dispatch(editRole())
+      dispatch(editRole())
     },
     btnClick: data => {
       dispatch(deleteRole(data))

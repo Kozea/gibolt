@@ -37,7 +37,7 @@ function Circle({
   onClickAccount,
   onClickDomain,
   onClickPurpose,
-  onEdit
+  onEdit,
 }) {
   return (
     <section className={b()}>
@@ -73,7 +73,9 @@ function Circle({
           )}
 
           {loading && <Loading />}
-          {circle.is_in_edition ? ('') : (
+          {circle.is_in_edition ? (
+            ''
+          ) : (
             <div>
               <article>
                 <h3>Purpose</h3>
@@ -95,7 +97,8 @@ function Circle({
                 <h3>Accountabilities</h3>
                 <div
                   onClick={() =>
-                    onClickAccount(circle.accountabilities_expanded)}
+                    onClickAccount(circle.accountabilities_expanded)
+                  }
                 >
                   {circle.accountabilities_expanded ? (
                     <ReactMarkdown source={circle.circle_accountabilities} />
@@ -149,7 +152,7 @@ function Circle({
           )}
         </div>
       )}
-      <article >
+      <article>
         {circle.is_in_edition ? (
           <form
             onSubmit={e => {
@@ -170,13 +173,15 @@ function Circle({
             <label>
               Parent :
               <select name="parent_circle_id" required>
-                {circle.parent_circle_id === null
-                  ? (<option value=""> Aucun </option>)
-                  : (<option defaultValue={circle.parent_circle_id}>
-                    {circle.parent_circle_name}</option>)}
+                {circle.parent_circle_id === null ? (
+                  <option value=""> Aucun </option>
+                ) : (
+                  <option defaultValue={circle.parent_circle_id}>
+                    {circle.parent_circle_name}
+                  </option>
+                )}
                 {circles
-                  .filter(cercle =>
-                  cercle.circle_id !== circle.circle_id)
+                  .filter(cercle => cercle.circle_id !== circle.circle_id)
                   .map(cercle => (
                     <option key={cercle.circle_id} value={cercle.circle_id}>
                       {cercle.circle_name}
@@ -282,10 +287,9 @@ export default connect(
           e.target.elements[4],
           e.target.elements[5],
         ].reduce(function(map, obj) {
-
-            if (obj.name === 'body') {
-              map.circle_accountabilities = obj.value
-            } else if (obj.name) {
+          if (obj.name === 'body') {
+            map.circle_accountabilities = obj.value
+          } else if (obj.name) {
             map[obj.name] = obj.value
           }
 
