@@ -15,8 +15,10 @@ import {
 } from '../actions/circle'
 import { editCircle } from '../actions'
 import Loading from './Loading'
+import MarkdownEditor from './MarkdownEditor'
 
 const b = block('Circle')
+var ReactMarkdown = require('react-markdown')
 
 function getUserInfo(roleUser, user) {
   if (roleUser === user.user_id) {
@@ -35,8 +37,7 @@ function Circle({
   onClickAccount,
   onClickDomain,
   onClickPurpose,
-  onEdit,
-  onGoBack,
+  onEdit
 }) {
   return (
     <section className={b()}>
@@ -72,78 +73,83 @@ function Circle({
           )}
 
           {loading && <Loading />}
-          <article>
-            <h3>Purpose</h3>
-            <div onClick={() => onClickPurpose(circle.purpose_expanded)}>
-              {circle.purpose_expanded ? (
-                <p>{circle.circle_purpose}</p>
-              ) : (
-                <span>show purpose</span>
-              )}
+          {circle.is_in_edition ? ('') : (
+            <div>
+              <article>
+                <h3>Purpose</h3>
+                <div onClick={() => onClickPurpose(circle.purpose_expanded)}>
+                  {circle.purpose_expanded ? (
+                    <p>{circle.circle_purpose}</p>
+                  ) : (
+                    <span>show purpose</span>
+                  )}
+                </div>
+                <h3>Domains</h3>
+                <div onClick={() => onClickDomain(circle.domain_expanded)}>
+                  {circle.domain_expanded ? (
+                    <p>{circle.circle_domain}</p>
+                  ) : (
+                    <span>show domain</span>
+                  )}
+                </div>
+                <h3>Accountabilities</h3>
+                <div
+                  onClick={() =>
+                    onClickAccount(circle.accountabilities_expanded)}
+                >
+                  {circle.accountabilities_expanded ? (
+                    <ReactMarkdown source={circle.circle_accountabilities} />
+                  ) : (
+                    <span>show accountabilities</span>
+                  )}
+                </div>
+              </article>
+              <article>
+                <h3>Rôles</h3>
+                {circle.roles && circle.roles.length > 0 ? (
+                  <ul>
+                    {circle.roles.map(role => (
+                      <li key={role.role_id} className={b('role')}>
+                        <span className={b('bullet')} />
+                        <Link
+                          to={{
+                            pathname: '/role',
+                            search: stringify({ id: role.role_id }),
+                          }}
+                        >
+                          {role.role_name}
+                        </Link>{' '}
+                        :{' '}
+                        <img
+                          key={role.user_id}
+                          className={b('avatar')}
+                          src={users
+                            .filter(user => getUserInfo(role.user_id, user))
+                            .map(user => user.avatar_url)
+                            .toString()}
+                          alt="avatar"
+                          title={users
+                            .filter(user => getUserInfo(role.user_id, user))
+                            .map(user => user.user_name)
+                            .toString()}
+                        />
+                        {'  '}
+                        {users
+                          .filter(user => getUserInfo(role.user_id, user))
+                          .map(user => user.user_name)
+                          .toString()}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span>No roles defined</span>
+                )}
+              </article>
             </div>
-            <h3>Domains</h3>
-            <div onClick={() => onClickDomain(circle.domain_expanded)}>
-              {circle.domain_expanded ? (
-                <p>{circle.circle_domain}</p>
-              ) : (
-                <span>show domain</span>
-              )}
-            </div>
-            <h3>Accountabilities</h3>
-            <div
-              onClick={() => onClickAccount(circle.accountabilities_expanded)}
-            >
-              {circle.accountabilities_expanded ? (
-                <p>{circle.circle_accountabilities}</p>
-              ) : (
-                <span>show accountabilities</span>
-              )}
-            </div>
-          </article>
-          <article>
-            <h3>Rôles</h3>
-            {circle.roles && circle.roles.length > 0 ? (
-              <ul>
-                {circle.roles.map(role => (
-                  <li key={role.role_id} className={b('role')}>
-                    <span className={b('bullet')} />
-                    <Link
-                      to={{
-                        pathname: '/role',
-                        search: stringify({ id: role.role_id }),
-                      }}
-                    >
-                      {role.role_name}
-                    </Link>{' '}
-                    :{' '}
-                    <img
-                      key={role.user_id}
-                      className={b('avatar')}
-                      src={users
-                        .filter(user => getUserInfo(role.user_id, user))
-                        .map(user => user.avatar_url)
-                        .toString()}
-                      alt="avatar"
-                      title={users
-                        .filter(user => getUserInfo(role.user_id, user))
-                        .map(user => user.user_name)
-                        .toString()}
-                    />
-                    {'  '}
-                    {users
-                      .filter(user => getUserInfo(role.user_id, user))
-                      .map(user => user.user_name)
-                      .toString()}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <span>No roles defined</span>
-            )}
-          </article>
+          )}
         </div>
       )}
-      <article className={b('action')}>
+      <article >
         {circle.is_in_edition ? (
           <form
             onSubmit={e => {
@@ -151,7 +157,6 @@ function Circle({
               onEdit(circle.circle_id, e)
             }}
           >
-            <br />
             <h1>Edit {circle.circle_name} circle :</h1>
             <label>
               Name :
@@ -165,15 +170,18 @@ function Circle({
             <label>
               Parent :
               <select name="parent_circle_id" required>
-                <option>{''}</option>
+                {circle.parent_circle_id === null
+                  ? (<option value=""> Aucun </option>)
+                  : (<option defaultValue={circle.parent_circle_id}>
+                    {circle.parent_circle_name}</option>)}
                 {circles
-                  .filter(cercle => cercle.parent_circle_id === null)
+                  .filter(cercle =>
+                  cercle.circle_id !== circle.circle_id)
                   .map(cercle => (
                     <option key={cercle.circle_id} value={cercle.circle_id}>
                       {cercle.circle_name}
                     </option>
                   ))}
-                <option value="">Aucun</option>
               </select>
             </label>
             <br />
@@ -197,11 +205,7 @@ function Circle({
             <br />
             <label>
               Accountabilities :
-              <input
-                name="circle_accountabilities"
-                defaultValue={circle.circle_accountabilities}
-                required
-              />
+              <MarkdownEditor />
             </label>
             <br />
             <input type="submit" value="Edit circle" />
@@ -209,15 +213,9 @@ function Circle({
         ) : (
           ''
         )}
-        {circle.is_in_edition ? (
-          <button type="submit" onClick={() => onGoBack()}>
-            Cancel
-          </button>
-        ) : (
-          <button type="submit" onClick={() => editClick()}>
-            Update
-          </button>
-        )}
+        <button type="submit" onClick={() => editClick()}>
+          {circle.is_in_edition ? 'Cancel' : 'Update'}
+        </button>
         {circle.roles && circle.roles.length > 0 ? (
           <span>
             <button type="submit" disabled>
@@ -284,7 +282,10 @@ export default connect(
           e.target.elements[4],
           e.target.elements[5],
         ].reduce(function(map, obj) {
-          if (obj.name) {
+
+            if (obj.name === 'body') {
+              map.circle_accountabilities = obj.value
+            } else if (obj.name) {
             map[obj.name] = obj.value
           }
 

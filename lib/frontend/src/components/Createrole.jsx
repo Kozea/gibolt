@@ -5,6 +5,7 @@ import React from 'react'
 import { block, connect } from '../utils'
 import { createRole } from '../actions/roles'
 import Loading from './Loading'
+import MarkdownEditor from './MarkdownEditor'
 
 const b = block('Createrole')
 
@@ -48,13 +49,7 @@ function Createrole({ loading, onSubmit, users, circle }) {
         <label>
           Accountabilities :
           <br />
-          <textarea name="role_accountabilities" rows="5" cols="40" required />
-        </label>
-        <br />
-        <label>
-          Checklist :
-          <br />
-          <textarea name="role_checklist" rows="5" cols="40" required />
+          <MarkdownEditor />
         </label>
         <br />
         <input type="submit" value="Create role" />
@@ -74,7 +69,9 @@ export default connect(
     onSubmit: (circleId, e) => {
       const formRole = [].slice.call(e.target.elements).reduce(
         function(map, obj) {
-          if (obj.name && obj.value) {
+          if (obj.name === 'body') {
+            map.role_accountabilities = obj.value
+          } else if (obj.name && obj.value) {
             map[obj.name] = obj.value
           }
 

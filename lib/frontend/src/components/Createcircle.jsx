@@ -5,6 +5,7 @@ import React from 'react'
 import { block, connect } from '../utils'
 import { createCircle } from '../actions/circle'
 import Loading from './Loading'
+import MarkdownEditor from './MarkdownEditor'
 
 const b = block('Createcircle')
 
@@ -50,13 +51,7 @@ function Createcircle({ loading, onSubmit, circles }) {
         <br />
         <label>
           Accountabilities :
-          <br />
-          <textarea
-            name="circle_accountabilities"
-            rows="5"
-            cols="40"
-            required
-          />
+          <MarkdownEditor />
         </label>
         <br />
         <input type="submit" value="Create circle" />
@@ -75,7 +70,9 @@ export default connect(
       const formCircle = [].slice
         .call(e.target.elements)
         .reduce(function(map, obj) {
-          if (obj.name && obj.value) {
+          if (obj.name === 'body') {
+            map.circle_accountabilities = obj.value
+          } else if (obj.name && obj.value) {
             map[obj.name] = obj.value
           }
 
