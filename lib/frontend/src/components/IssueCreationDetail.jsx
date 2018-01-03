@@ -2,6 +2,7 @@ import './IssueCreationDetail.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { withRouter } from 'react-router-dom'
 
 import {
   changeMilestoneSelect,
@@ -12,6 +13,7 @@ import {
 } from '../actions/issueForm'
 import { block, connect, sortRepos } from '../utils'
 import Loading from './Loading'
+import MarkdownEditor from './MarkdownEditor'
 
 const b = block('IssueCreationDetail')
 
@@ -52,9 +54,11 @@ class IssueCreationDetail extends React.Component {
         ? splitValue
         : splitValue === 'No milestone'
           ? ''
-          : this.props.issueForm.milestonesSelect.filter(
-              milestone => milestone.milestone_title === splitValue
-            )[0].milestone_number
+          : this.props.issueForm.milestonesSelect.length > 0
+            ? this.props.issueForm.milestonesSelect.filter(
+                milestone => milestone.milestone_number === +splitValue
+              )[0].milestone_number
+            : ''
     return value
   }
 
@@ -62,6 +66,7 @@ class IssueCreationDetail extends React.Component {
     const {
       circles,
       error,
+      history,
       issueForm,
       labels,
       loading,
@@ -70,9 +75,18 @@ class IssueCreationDetail extends React.Component {
       onProjectChange,
       onTitleChange,
       onSubmit,
+      repository,
       repositories,
     } = this.props
-    const sortedRepos = sortRepos(repositories)
+    let repos = []
+    if (
+      issueForm.params.grouper === 'milestone' ||
+      issueForm.params.grouper === 'project'
+    ) {
+      repos = [repository]
+    } else {
+      repos = sortRepos(repositories)
+    }
     return (
       <section className={b()}>
         <Helmet>
@@ -96,9 +110,13 @@ class IssueCreationDetail extends React.Component {
               name="project"
               value={issueForm.project}
               onChange={event => onProjectChange(event.target.value)}
+              disabled={
+                issueForm.params.grouper === 'milestone' ||
+                issueForm.params.grouper === 'project'
+              }
             >
-              <option value="">{''}</option>
-              {sortedRepos.map(repo => (
+              <option value="" />
+              {repos.map(repo => (
                 <option key={repo.repo_id} value={repo.repo_name}>
                   {repo.repo_name}
                 </option>
@@ -108,8 +126,12 @@ class IssueCreationDetail extends React.Component {
           <br />
           <label>
             Milestone:{' '}
-            <select id="milestone" name="milestone">
-              <option value="">{''}</option>
+            <select
+              id="milestone"
+              name="milestone"
+              disabled={issueForm.params.grouper === 'milestone'}
+            >
+              <option value="" />
               {issueForm.milestonesSelect.map(milestone => (
                 <option
                   key={milestone.milestone_id}
@@ -128,7 +150,7 @@ class IssueCreationDetail extends React.Component {
               name="circle"
               onChange={event => onCircleChange(event.target.value)}
             >
-              <option value="">{''}</option>
+              <option value="" />
               {circles.map(circle => (
                 <option key={circle.circle_id} value={circle.circle_id}>
                   {circle.circle_name}
@@ -140,7 +162,7 @@ class IssueCreationDetail extends React.Component {
           <label>
             Role assignment:
             <select id="roles" name="roles">
-              <option value="">{''}</option>
+              <option value="" />
               {issueForm.rolesSelect.map(role => (
                 <option key={role.role_id} value={role.user_id}>
                   {role.role_name}
@@ -170,7 +192,8 @@ class IssueCreationDetail extends React.Component {
           </label>
           <br />
           <label>
-            Description: <textarea id="body" name="body" rows="7" />
+            Description:
+            <MarkdownEditor />
           </label>
           <br />
           <article className={b('action')}>
@@ -181,7 +204,7 @@ class IssueCreationDetail extends React.Component {
             >
               Create
             </button>
-            <button type="submit" onClick={() => onGoBack()}>
+            <button type="submit" onClick={() => onGoBack(history)}>
               Cancel
             </button>
           </article>
@@ -191,31 +214,34 @@ class IssueCreationDetail extends React.Component {
   }
 }
 
-export default connect(
-  state => ({
-    circles: state.circles.results,
-    error: state.issueForm.results.error,
-    issueForm: state.issueForm.results,
-    labels: state.labels.results.priority,
-    loading: state.circle.loading,
-    repositories: state.repositories.results.repositories,
-  }),
-  dispatch => ({
-    onTitleChange: event => {
-      dispatch(updateTitle(event.target.value))
-    },
-    onCircleChange: circleId => {
-      dispatch(changeRolesSelect(circleId))
-    },
-    onGoBack: () => {
-      dispatch(goBack())
-    },
-    onProjectChange: repoName => {
-      dispatch(changeMilestoneSelect(repoName))
-    },
-    onSubmit: event => {
-      event.preventDefault()
-      dispatch(submitIssue(event))
-    },
-  })
-)(IssueCreationDetail)
+export default withRouter(
+  connect(
+    state => ({
+      circles: state.circles.results,
+      error: state.issueForm.results.error,
+      issueForm: state.issueForm.results,
+      labels: state.labels.results.priority,
+      loading: state.circle.loading,
+      repository: state.repository.results.repository,
+      repositories: state.repositories.results.repositories,
+    }),
+    dispatch => ({
+      onTitleChange: event => {
+        dispatch(updateTitle(event.target.value))
+      },
+      onCircleChange: circleId => {
+        dispatch(changeRolesSelect(circleId))
+      },
+      onGoBack: history => {
+        dispatch(goBack(history))
+      },
+      onProjectChange: repoName => {
+        dispatch(changeMilestoneSelect(repoName))
+      },
+      onSubmit: event => {
+        event.preventDefault()
+        dispatch(submitIssue(event, history))
+      },
+    })
+  )(IssueCreationDetail)
+)
