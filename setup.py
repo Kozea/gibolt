@@ -25,9 +25,15 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        "Flask == 0.12.2", "GitHub-Flask == 3.2.0", "CacheControl == 0.12.3",
-        "lockfile == 0.12.2", "python-dateutil == 2.6.1", "pytz == 2017.3",
-        "SQLAlchemy == 1.1.15", "unrest == 0.6.7"
+        "alembic == 0.9.6",
+        "CacheControl == 0.12.3",
+        "Flask == 0.12.2",
+        "GitHub-Flask == 3.2.0",
+        "lockfile == 0.12.2",
+        "python-dateutil == 2.6.1",
+        "pytz == 2017.3",
+        "SQLAlchemy == 1.1.15",
+        "unrest == 0.6.7"
     ],
     provides=["gibolt"],
     setup_requires=['pytest-runner'],

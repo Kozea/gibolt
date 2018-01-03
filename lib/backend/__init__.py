@@ -1,14 +1,15 @@
 import pkg_resources
 from flask import Flask
 from flask_github import GitHub
+import os
 import requests
+from urllib.parse import urlparse
 
 from cachecontrol import CacheControl
 from cachecontrol.caches.file_cache import FileCache
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from .api.models import Base
 from .routes.models import GitHubController
 
 try:
@@ -38,11 +39,8 @@ from .routes.auth import *  # noqa isort:skip
 from .routes.github import *  # noqa isort:skip
 
 
-def init_db():
-    Base.metadata.create_all(engine)
-
-
-@app.cli.command('initdb')
-def initdb_command():
-    init_db()
-    print('Initialized the database.')
+@app.cli.command()
+def dropdb():
+    filename = urlparse(app.config['SQLALCHEMY_DATABASE_URI']).path[1:]
+    if os.path.isfile(filename):
+        os.remove(filename)
