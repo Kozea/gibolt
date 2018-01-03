@@ -48,7 +48,7 @@ function Role({
           <p>
             {circles.find(circle => circle.circle_id === role.circle_id) &&
               circles.find(circle => circle.circle_id === role.circle_id)
-            .circle_name}
+                .circle_name}
           </p>
         </div>
         <h3>Purpose</h3>

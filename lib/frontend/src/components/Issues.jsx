@@ -127,10 +127,10 @@ function Issues({
                     grouper === 'milestone'
                       ? stringify({
                           grouper,
-                        group: id.split('|')[1]
-                          ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}`
-                          : `${group.split(' ⦔ ')[0]} ⦔ No milestone`,
-                      })
+                          group: id.split('|')[1]
+                            ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}`
+                            : `${group.split(' ⦔ ')[0]} ⦔ No milestone`,
+                        })
                       : stringify({ grouper, group }),
                 }}
               >

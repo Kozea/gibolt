@@ -24,7 +24,6 @@ function getUserInfo(roleUser, user) {
   }
 }
 
-
 function Circle({
   btnClick,
   circle,
