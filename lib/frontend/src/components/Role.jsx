@@ -63,10 +63,6 @@ function Role({
         <div>
           <p>{role.role_accountabilities}</p>
         </div>
-        <h3>Checklist</h3>
-        <div>
-          <p>{role.role_checklist}</p>
-        </div>
       </article>
       <article>
         {role.is_in_edition ? (
@@ -122,15 +118,6 @@ function Role({
               <input
                 name="role_accountabilities"
                 defaultValue={role.role_accountabilities}
-                required
-              />
-            </label>
-            <label>
-              Checklist :
-              <br />
-              <input
-                name="role_checklist"
-                defaultValue={role.role_checklist}
                 required
               />
             </label>

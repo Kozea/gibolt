@@ -41,7 +41,6 @@ class Role(Base):
     role_purpose = Column(String)
     role_domain = Column(String)
     role_accountabilities = Column(String)
-    role_checklist = Column(String)
     circle = relationship(Circle, backref='roles')
 
 
