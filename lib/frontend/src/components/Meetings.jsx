@@ -3,13 +3,24 @@ import './Meetings.sass'
 import { format } from 'date-fns'
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { withRouter } from 'react-router-dom'
 
+import { goBack } from '../actions/issueForm'
+import { updateReportsList } from '../actions/meetings'
 import { block, connect, getColor } from '../utils'
 import Loading from './Loading'
 
 const b = block('Meetings')
 
-function Meetings({ circles, labels, meetings, meetingsTypes }) {
+function Meetings({
+  circles,
+  history,
+  labels,
+  meetings,
+  meetingsTypes,
+  onGoBack,
+  onSelectChange,
+}) {
   return (
     <section className={b()}>
       <Helmet>
@@ -35,7 +46,7 @@ function Meetings({ circles, labels, meetings, meetingsTypes }) {
               id="circles"
               name="circles"
               value={meetingsTypes.params.circle_id}
-              disabled={meetingsTypes.params.circle_id !== ''}
+              onChange={event => onSelectChange(event, history)}
             >
               <option value="">All</option>
               {circles.results.map(circle => (
@@ -48,10 +59,10 @@ function Meetings({ circles, labels, meetings, meetingsTypes }) {
           <label>
             Meetings:
             <select
-              id="meeting-type"
-              name="meeting-type"
+              id="meetingType"
+              name="meetingType"
               value={meetingsTypes.params.meeting_name}
-              disabled={meetingsTypes.params.meeting_name !== ''}
+              onChange={event => onSelectChange(event, history)}
             >
               <option value="">All</option>
               {meetingsTypes.results.map(type => (
@@ -86,13 +97,28 @@ function Meetings({ circles, labels, meetings, meetingsTypes }) {
           <span>No meetings reports</span>
         )}
         <button type="submit">Add a report</button>
+        <button type="submit" onClick={() => onGoBack(history)}>
+          Back
+        </button>
       </article>
     </section>
   )
 }
-export default connect(state => ({
-  circles: state.circles,
-  labels: state.labels.results.qualifier,
-  meetings: state.meetings,
-  meetingsTypes: state.meetingsTypes,
-}))(Meetings)
+export default withRouter(
+  connect(
+    state => ({
+      circles: state.circles,
+      labels: state.labels.results.qualifier,
+      meetings: state.meetings,
+      meetingsTypes: state.meetingsTypes,
+    }),
+    dispatch => ({
+      onGoBack: history => {
+        dispatch(goBack(history))
+      },
+      onSelectChange: (event, history) => {
+        dispatch(updateReportsList(event, history))
+      },
+    })
+  )(Meetings)
+)
