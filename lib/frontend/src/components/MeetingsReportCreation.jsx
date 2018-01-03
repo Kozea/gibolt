@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { goBack } from '../actions/issueForm'
-import { updateReportsList } from '../actions/meetings'
+import { submitReport, updateReportsList } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
@@ -15,9 +15,11 @@ const b = block('MeetingsReportCreation')
 function MeetingsReportCreation({
   circles,
   history,
+  meetings,
   meetingsTypes,
   onGoBack,
   onSelectChange,
+  onSubmit,
   search,
 }) {
   return (
@@ -25,13 +27,15 @@ function MeetingsReportCreation({
       <Helmet>
         <title>Gibolt - Create a report</title>
       </Helmet>
-      {(circles.error || meetingsTypes.error) && (
+      {(circles.error || meetingsTypes.error || meetings.error) && (
         <article className={b('group', { error: true })}>
-          <h2>Error during fetch</h2>
+          <h2>Error during fetch or creation</h2>
           <code>
             {circles.error
               ? `circles : ${circles.error}`
-              : `Meetings types ${meetingsTypes.error}`}
+              : meetingsTypes.error
+                ? `Meetings types: ${meetingsTypes.error}`
+                : `Reports: ${meetings.error}`}
           </code>
         </article>
       )}
@@ -80,7 +84,9 @@ function MeetingsReportCreation({
             </label>
           </div>
           <article className={b('action')}>
-            <button type="submit">Submit</button>
+            <button type="submit" onClick={event => onSubmit(event, history)}>
+              Submit
+            </button>
             <button type="submit" onClick={() => onGoBack(history)}>
               Cancel
             </button>
@@ -105,6 +111,10 @@ export default withRouter(
       },
       onSelectChange: event => {
         dispatch(updateReportsList(event))
+      },
+      onSubmit: (event, history) => {
+        event.preventDefault()
+        dispatch(submitReport(event, history))
       },
     })
   )(MeetingsReportCreation)
