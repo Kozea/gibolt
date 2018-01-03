@@ -1,11 +1,11 @@
 import './Meetings.sass'
 
 import { format } from 'date-fns'
+import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
-import { goBack } from '../actions/issueForm'
 import { updateReportsList } from '../actions/meetings'
 import { block, connect, getColor } from '../utils'
 import Loading from './Loading'
@@ -18,7 +18,6 @@ function Meetings({
   labels,
   meetings,
   meetingsTypes,
-  onGoBack,
   onSelectChange,
 }) {
   return (
@@ -38,7 +37,7 @@ function Meetings({
       )}
       {(circles.loading || meetingsTypes.loading) && <Loading />}
       <article className={b('meetings')}>
-        <h2>Meetings</h2>
+        <h2>Meetings reports</h2>
         <form onSubmit={event => event.preventDefault()}>
           <label>
             Circle:
@@ -98,18 +97,26 @@ function Meetings({
         )}
       </article>
       <article className={b('action')}>
-        <button
-          type="submit"
-          disabled={
-            meetingsTypes.params.circle_id === '' ||
-            meetingsTypes.params.meeting_name === ''
-          }
+        <Link
+          className={b('link')}
+          to={{
+            pathname: '/createReport',
+            search: stringify({
+              circle_id: meetingsTypes.params.circle_id,
+              meeting_name: meetingsTypes.params.meeting_name,
+            }),
+          }}
         >
-          Add a report
-        </button>
-        <button type="submit" onClick={() => onGoBack(history)}>
-          Back
-        </button>
+          <button
+            type="submit"
+            disabled={
+              meetingsTypes.params.circle_id === '' ||
+              meetingsTypes.params.meeting_name === ''
+            }
+          >
+            Add a report
+          </button>
+        </Link>
       </article>
     </section>
   )
@@ -123,9 +130,6 @@ export default withRouter(
       meetingsTypes: state.meetingsTypes,
     }),
     dispatch => ({
-      onGoBack: history => {
-        dispatch(goBack(history))
-      },
       onSelectChange: (event, history) => {
         dispatch(updateReportsList(event, history))
       },
