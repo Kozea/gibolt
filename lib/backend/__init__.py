@@ -20,8 +20,12 @@ except pkg_resources.DistributionNotFound:
 app = Flask(__name__)
 app.config.from_envvar('FLASK_CONFIG')
 
-engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
-                       connect_args={'check_same_thread': False})
+engine = create_engine(
+    app.config['SQLALCHEMY_DATABASE_URI'],
+    connect_args={
+        'check_same_thread': False
+    }
+)
 
 github = GitHub(app)
 github.session = CacheControl(

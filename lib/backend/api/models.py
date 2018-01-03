@@ -1,8 +1,10 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
+from sqlalchemy.types import Enum
 
 Base = declarative_base()
+item_types = ['checklist', 'indicator']
 
 
 class Circle(Base):
@@ -55,7 +57,7 @@ class Item(Base):
         Integer,
         ForeignKey('role.role_id'),
         nullable=False)
-    item_type = Column(String)
+    item_type = Column(Enum(*item_types))
     content = Column(Text)
     role = relationship(Role, backref='items')
 

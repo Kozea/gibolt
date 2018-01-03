@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
 import { block, connect, sortGroupCircles } from '../utils'
+import { createCircle } from '../actions/circle'
 import Loading from './Loading'
 
 const b = block('Circles')
@@ -69,14 +70,36 @@ function Circles({ error, labels, loading, results }) {
         ) : (
           <span>No circles defined</span>
         )}
-        <button type="submit">Add a circle</button>
+        <Link
+          to={{
+            pathname: '/createcircle',
+          }}
+        >
+          <button type="submit">Add a circle</button>
+        </Link>
       </article>
     </section>
   )
 }
-export default connect(state => ({
-  results: state.circles.results,
-  loading: state.circles.loading,
-  error: state.circles.errors,
-  labels: state.labels.results.qualifier,
-}))(Circles)
+export default connect(
+  state => ({
+    error: state.circles.errors,
+    labels: state.labels.results.qualifier,
+    loading: state.circles.loading,
+    results: state.circles.results,
+  }),
+  dispatch => ({
+    onSubmit: e => {
+      const formCircle = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
+          if (obj.name && obj.value) {
+            map[obj.name] = obj.value
+          }
+
+          return map
+        }, {})
+      dispatch(createCircle(formCircle))
+    },
+  })
+)(Circles)
