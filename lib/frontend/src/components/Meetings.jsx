@@ -96,7 +96,17 @@ function Meetings({
         ) : (
           <span>No meetings reports</span>
         )}
-        <button type="submit">Add a report</button>
+      </article>
+      <article className={b('action')}>
+        <button
+          type="submit"
+          disabled={
+            meetingsTypes.params.circle_id === '' ||
+            meetingsTypes.params.meeting_name === ''
+          }
+        >
+          Add a report
+        </button>
         <button type="submit" onClick={() => onGoBack(history)}>
           Back
         </button>
