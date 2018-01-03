@@ -1,8 +1,13 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
+from sqlalchemy.types import Enum
+
+from .. import app
 
 Base = declarative_base()
+meeting_types = [
+    type_name for type_id, type_name in app.config['MEETINGS_TYPES']]
 
 
 class Circle(Base):
@@ -71,7 +76,7 @@ class Report(Base):
         Integer,
         ForeignKey('circle.circle_id'),
         nullable=False)
-    report_type = Column(String)
+    report_type = Column(Enum(*meeting_types))
     created_at = Column(DateTime)
     author_id = Column(Integer)
     content = Column(Text)
