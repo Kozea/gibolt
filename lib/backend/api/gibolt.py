@@ -1,3 +1,4 @@
+from flask import request
 from unrest import UnRest
 
 from .. import Session, app, session_unrest
@@ -33,6 +34,14 @@ rest(
         'circle': rest(Circle, only=['circle_name']),
     },
     name='reports',
+    query=lambda query: query.filter(
+        Report.circle_id == int(request.values.get('circle_id'))
+        if request.values.get('circle_id')
+        else True,
+        Report.report_type == request.values.get('meeting_name')
+        if request.values.get('meeting_name')
+        else True,
+    ).order_by(Report.created_at.desc()),
     auth=needlogin)
 
 rest(
