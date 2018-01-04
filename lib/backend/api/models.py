@@ -8,6 +8,7 @@ from sqlalchemy.types import Enum
 from .. import app
 
 Base = declarative_base()
+item_types = ['checklist', 'indicator']
 meeting_types = [
     type_name for type_id, type_name in app.config['MEETINGS_TYPES']]
 
@@ -62,7 +63,7 @@ class Item(Base):
         Integer,
         ForeignKey('role.role_id'),
         nullable=False)
-    item_type = Column(String)
+    item_type = Column(Enum(*item_types))
     content = Column(Text)
     role = relationship(Role, backref='items')
 

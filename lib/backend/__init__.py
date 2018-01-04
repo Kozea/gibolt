@@ -1,6 +1,7 @@
 import pkg_resources
 from flask import Flask
 from flask_github import GitHub
+import os
 import requests
 import os
 from urllib.parse import urlparse
@@ -20,8 +21,12 @@ except pkg_resources.DistributionNotFound:
 app = Flask(__name__)
 app.config.from_envvar('FLASK_CONFIG')
 
-engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],
-                       connect_args={'check_same_thread': False})
+engine = create_engine(
+    app.config['SQLALCHEMY_DATABASE_URI'],
+    connect_args={
+        'check_same_thread': False
+    }
+)
 
 github = GitHub(app)
 github.session = CacheControl(
