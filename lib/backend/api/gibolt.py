@@ -18,6 +18,11 @@ rest(
         'roles': rest(Role, only=['role_id', 'role_name', 'user_id']),
     },
     name='circles',
+    query=lambda query: query.filter(
+        Circle.parent_circle_id == (request.values.get('parent_circle_id'))
+        if request.values.get('parent_circle_id')
+        else True,
+    ),
     auth=needlogin
 )
 

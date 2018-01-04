@@ -236,7 +236,7 @@ function Circle({
                   </Link>
                 </article>
                 <article>
-                  <h3>Rôles</h3>
+                  <h3>Roles</h3>
                   {circle.roles && circle.roles.length > 0 ? (
                     <ul>
                       {circle.roles.map(role => (
@@ -284,6 +284,28 @@ function Circle({
                     <button type="submit">Add a Role</button>
                   </Link>
                 </article>
+                {circle.children_circles.length > 0 ? (
+                  <article>
+                    <h3>Sub-circles</h3>
+                    <ul>
+                      {circle.children_circles.map(child => (
+                        <li key={child.circle_id}>
+                          <span className={b('bullet')} />
+                          <Link
+                            to={{
+                              pathname: '/circle',
+                              search: stringify({ circle_id: child.circle_id }),
+                            }}
+                          >
+                            {child.circle_name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                ) : (
+                  ''
+                )}
                 <br />
                 <button type="submit" onClick={() => onGoBack(history)}>
                   Back
