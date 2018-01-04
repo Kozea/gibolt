@@ -86,26 +86,32 @@ function Role({
               >
                 <label>New item:</label>
                 <input name="content" required />
-              </form>) : ('')}
-          <button type="submit" onClick={() => addClick()}>
-            {items.form_checklist ? 'Cancel' : 'Add item'}
-          </button>
+              </form>
+            ) : (
+              ''
+            )}
+            <button type="submit" onClick={() => addClick()}>
+              {items.form_checklist ? 'Cancel' : 'Add item'}
+            </button>
           </div>
           <h3>Indicators</h3>
           <div>
-          {items.form_indicator ? (
-            <form
-              onSubmit={e => {
-                e.preventDefault()
-                addIndicator(role, e)
-              }}
-            >
-              <label>New item:</label>
-              <input name="content" required />
-            </form>) : ('')}
-        <button type="submit" onClick={() => onAddClick()}>
-          {items.form_indicator ? 'Cancel' : 'Add item'}
-        </button>
+            {items.form_indicator ? (
+              <form
+                onSubmit={e => {
+                  e.preventDefault()
+                  addIndicator(role, e)
+                }}
+              >
+                <label>New item:</label>
+                <input name="content" required />
+              </form>
+            ) : (
+              ''
+            )}
+            <button type="submit" onClick={() => onAddClick()}>
+              {items.form_indicator ? 'Cancel' : 'Add item'}
+            </button>
           </div>
         </article>
       )}
@@ -140,9 +146,7 @@ function Role({
             </label>
             <label>
               Name :
-              <input
-                name="role_name" defaultValue={role.role_name} required
-              />
+              <input name="role_name" defaultValue={role.role_name} required />
             </label>
             <label>
               Purpose :
@@ -223,8 +227,9 @@ export default connect(
       dispatch(updateRole(role.role_id, formRole))
     },
     addChecklist: (role, e) => {
-      const formChecklist = [].slice.call(e.target.elements).reduce(
-        function(map, obj) {
+      const formChecklist = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
           map.role_id = role.role_id
           map.item_type = 'checklist'
           if (obj.name === '0') {
@@ -234,14 +239,13 @@ export default connect(
           }
 
           return map
-        },
-        {}
-      )
+        }, {})
       dispatch(addItem(formChecklist))
     },
     addIndicator: (role, e) => {
-      const formChecklist = [].slice.call(e.target.elements).reduce(
-        function(map, obj) {
+      const formChecklist = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
           map.role_id = role.role_id
           map.item_type = 'indicator'
           if (obj.name === '0') {
@@ -251,10 +255,8 @@ export default connect(
           }
 
           return map
-        },
-        {}
-      )
+        }, {})
       dispatch(addItem(formChecklist))
-    }
+    },
   })
 )(Role)
