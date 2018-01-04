@@ -1,4 +1,4 @@
-// import './Createrole.sass'
+import './Createrole.sass'
 
 import React from 'react'
 
@@ -52,7 +52,7 @@ function Createrole({ loading, onSubmit, users, circle }) {
           <MarkdownEditor />
         </label>
         <br />
-        <input type="submit" value="Create role" />
+        <button type="submit">Create role</button>
       </form>
     </article>
   )

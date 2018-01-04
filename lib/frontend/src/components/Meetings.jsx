@@ -71,7 +71,6 @@ function Meetings({
               ))}
             </select>
           </label>
-
           <Link
             className={b('link')}
             to={{

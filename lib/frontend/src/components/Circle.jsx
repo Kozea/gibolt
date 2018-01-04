@@ -75,7 +75,67 @@ function Circle({
 
           {loading && <Loading />}
           {circle.is_in_edition ? (
-            ''
+            <form
+              onSubmit={e => {
+                e.preventDefault()
+                onEdit(circle.circle_id, e)
+              }}
+            >
+              <h1>Edit {circle.circle_name} circle :</h1>
+              <label>
+                Name :
+                <input
+                  name="circle_name"
+                  defaultValue={circle.circle_name}
+                  required
+                />
+              </label>
+              <br />
+              <label>
+                Parent :
+                <select name="parent_circle_id" required>
+                  {circle.parent_circle_id === null ? (
+                    <option value=""> Aucun </option>
+                  ) : (
+                    <option defaultValue={circle.parent_circle_id}>
+                      {circle.parent_circle_name}
+                    </option>
+                  )}
+                  {circles
+                    .filter(cercle => cercle.circle_id !== circle.circle_id)
+                    .map(cercle => (
+                      <option key={cercle.circle_id} value={cercle.circle_id}>
+                        {cercle.circle_name}
+                      </option>
+                    ))}
+                </select>
+              </label>
+              <br />
+              <label>
+                Purpose :
+                <input
+                  name="circle_purpose"
+                  defaultValue={circle.circle_purpose}
+                  required
+                />
+              </label>
+              <br />
+              <label>
+                Domain :
+                <input
+                  name="circle_domain"
+                  defaultValue={circle.circle_domain}
+                  required
+                />
+              </label>
+              <br />
+              <label>
+                Accountabilities :
+                <MarkdownEditor />
+              </label>
+              <br />
+              <button type="submit">Edit</button>
+            </form>
           ) : (
             <div>
               <article>
@@ -107,6 +167,53 @@ function Circle({
                     <span>show accountabilities</span>
                   )}
                 </div>
+              </article>
+              <article>
+                <button type="submit" onClick={() => editClick()}>
+                  {circle.is_in_edition ? 'Cancel' : 'Update'}
+                </button>
+                {circle.roles && circle.roles.length > 0 ? (
+                  <span>
+                    <button type="submit" disabled>
+                      Delete
+                    </button>
+                    <br />
+                    <code>
+                      You cannot delete this circle, please first delete the
+                      roles.
+                    </code>
+                  </span>
+                ) : (
+                  <button
+                    type="submit"
+                    onClick={e => {
+                      e.preventDefault()
+                      btnClick(circle.circle_id)
+                    }}
+                  >
+                    Delete
+                  </button>
+                )}
+              </article>
+              <article>
+                <h3>Meetings</h3>
+                {meetingsTypes.map(type => (
+                  <Link
+                    className={b('link')}
+                    key={type.type_id}
+                    to={{
+                      pathname: '/meetings',
+                      search: stringify({
+                        circle_id: circle.circle_id,
+                        meeting_name: type.type_name,
+                      }),
+                    }}
+                  >
+                    <button key={type.type_id} type="submit">
+                      {type.type_name}
+                    </button>
+                  </Link>
+                ))}
               </article>
               <article>
                 <h3>Rôles</h3>
@@ -148,109 +255,19 @@ function Circle({
                 ) : (
                   <span>No roles defined</span>
                 )}
+                <Link
+                  to={{
+                    pathname: '/createrole',
+                    search: stringify({ circle_id: circle.circle_id }),
+                  }}
+                >
+                  <button type="submit">Add a Role</button>
+                </Link>
               </article>
             </div>
           )}
         </div>
       )}
-      <article>
-        {circle.is_in_edition ? (
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              onEdit(circle.circle_id, e)
-            }}
-          >
-            <h1>Edit {circle.circle_name} circle :</h1>
-            <label>
-              Name :
-              <input
-                name="circle_name"
-                defaultValue={circle.circle_name}
-                required
-              />
-            </label>
-            <br />
-            <label>
-              Parent :
-              <select name="parent_circle_id" required>
-                {circle.parent_circle_id === null ? (
-                  <option value=""> Aucun </option>
-                ) : (
-                  <option defaultValue={circle.parent_circle_id}>
-                    {circle.parent_circle_name}
-                  </option>
-                )}
-                {circles
-                  .filter(cercle => cercle.circle_id !== circle.circle_id)
-                  .map(cercle => (
-                    <option key={cercle.circle_id} value={cercle.circle_id}>
-                      {cercle.circle_name}
-                    </option>
-                  ))}
-              </select>
-            </label>
-            <br />
-            <label>
-              Purpose :
-              <input
-                name="circle_purpose"
-                defaultValue={circle.circle_purpose}
-                required
-              />
-            </label>
-            <br />
-            <label>
-              Domain :
-              <input
-                name="circle_domain"
-                defaultValue={circle.circle_domain}
-                required
-              />
-            </label>
-            <br />
-            <label>
-              Accountabilities :
-              <MarkdownEditor />
-            </label>
-            <br />
-            <input type="submit" value="Edit circle" />
-          </form>
-        ) : (
-          ''
-        )}
-        <button type="submit" onClick={() => editClick()}>
-          {circle.is_in_edition ? 'Cancel' : 'Update'}
-        </button>
-        {circle.roles && circle.roles.length > 0 ? (
-          <span>
-            <button type="submit" disabled>
-              Delete Circle
-            </button>
-            <code>
-              You cannot delete this circle, please first delete the roles.
-            </code>
-          </span>
-        ) : (
-          <button
-            type="submit"
-            onClick={e => {
-              e.preventDefault()
-              btnClick(circle.circle_id)
-            }}
-          >
-            Delete Circle
-          </button>
-        )}
-        <Link
-          to={{
-            pathname: '/createrole',
-            search: stringify({ circle_id: circle.circle_id }),
-          }}
-        >
-          <button type="submit">Add a Role</button>
-        </Link>
-      </article>
     </section>
   )
 }
@@ -260,6 +277,7 @@ export default connect(
     circles: state.circles.results,
     error: state.circle.error,
     loading: state.circle.loading,
+    meetingsTypes: state.meetingsTypes.results,
     users: state.users.results,
   }),
   dispatch => ({

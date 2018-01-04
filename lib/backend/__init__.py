@@ -3,7 +3,6 @@ from flask import Flask
 from flask_github import GitHub
 import os
 import requests
-import os
 from urllib.parse import urlparse
 
 from cachecontrol import CacheControl

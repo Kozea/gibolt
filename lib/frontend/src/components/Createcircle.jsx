@@ -54,7 +54,7 @@ function Createcircle({ loading, onSubmit, circles }) {
           <MarkdownEditor />
         </label>
         <br />
-        <input type="submit" value="Create circle" />
+        <button type="submit"> Create circle</button>
       </form>
     </article>
   )
