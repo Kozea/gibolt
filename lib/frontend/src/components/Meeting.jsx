@@ -5,6 +5,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
+import { goBack } from '../actions'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 
@@ -12,7 +13,7 @@ var ReactMarkdown = require('react-markdown')
 
 const b = block('Meeting')
 
-function Meeting({ error, loading, meeting, users }) {
+function Meeting({ error, history, loading, meeting, onGoBack, users }) {
   return (
     <section className={b()}>
       <Helmet>
@@ -44,15 +45,26 @@ function Meeting({ error, loading, meeting, users }) {
             />
           </div>
         )}
+        <br />
+        <button type="submit" onClick={() => onGoBack(history)}>
+          Back
+        </button>
       </article>
     </section>
   )
 }
 export default withRouter(
-  connect(state => ({
-    error: state.meeting.error,
-    loading: state.meeting.loading,
-    meeting: state.meeting.results,
-    users: state.users.results,
-  }))(Meeting)
+  connect(
+    state => ({
+      error: state.meeting.error,
+      loading: state.meeting.loading,
+      meeting: state.meeting.results,
+      users: state.users.results,
+    }),
+    dispatch => ({
+      onGoBack: history => {
+        dispatch(goBack(history))
+      },
+    })
+  )(Meeting)
 )

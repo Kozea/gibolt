@@ -178,26 +178,31 @@ function Circle({
                   <button type="submit" onClick={() => editClick()}>
                     {circle.is_in_edition ? 'Cancel' : 'Update'}
                   </button>
-                  {circle.roles && circle.roles.length > 0 ? (
-                    <span>
-                      <button type="submit" disabled>
+                  {(circle.roles && circle.roles.length > 0) ||
+                    circle.nb_reports > 0 ? (
+                      <span>
+                        <button type="submit" disabled>
+                          Delete
+                        </button>
+                        <br />
+                        <code>
+                          {'You cannot delete this circle, '}
+                          {circle.nb_reports > 0 ? (
+                            <code>{'meetings reports exist.'}</code>
+                          ) : (
+                            <code>{'please first delete the roles.'}</code>
+                          )}
+                        </code>
+                      </span>
+                    ) : (
+                      <button
+                        type="submit"
+                        onClick={e => {
+                          e.preventDefault()
+                          btnClick(circle.circle_id)
+                        }}
+                      >
                         Delete
-                      </button>
-                      <br />
-                      <code>
-                        You cannot delete this circle, please first delete the
-                        roles.
-                      </code>
-                    </span>
-                  ) : (
-                    <button
-                      type="submit"
-                      onClick={e => {
-                        e.preventDefault()
-                        btnClick(circle.circle_id)
-                      }}
-                    >
-                      Delete
                     </button>
                   )}
                 </article>
