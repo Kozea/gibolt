@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
@@ -77,7 +79,7 @@ class Report(Base):
         ForeignKey('circle.circle_id'),
         nullable=False)
     report_type = Column(Enum(*meeting_types))
-    created_at = Column(DateTime)
+    created_at = Column(DateTime, default=datetime.datetime.now())
     author_id = Column(Integer)
     content = Column(Text)
     circle = relationship(Circle, backref='reports')

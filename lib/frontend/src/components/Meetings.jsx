@@ -71,6 +71,27 @@ function Meetings({
               ))}
             </select>
           </label>
+
+          <Link
+            className={b('link')}
+            to={{
+              pathname: '/createReport',
+              search: stringify({
+                circle_id: meetingsTypes.params.circle_id,
+                meeting_name: meetingsTypes.params.meeting_name,
+              }),
+            }}
+          >
+            <button
+              type="submit"
+              disabled={
+                meetingsTypes.params.circle_id === '' ||
+                meetingsTypes.params.meeting_name === ''
+              }
+            >
+              Add a report
+            </button>
+          </Link>
         </form>
         {meetings.results.length > 0 ? (
           <ul>
@@ -95,28 +116,6 @@ function Meetings({
         ) : (
           <span>No meetings reports</span>
         )}
-      </article>
-      <article className={b('action')}>
-        <Link
-          className={b('link')}
-          to={{
-            pathname: '/createReport',
-            search: stringify({
-              circle_id: meetingsTypes.params.circle_id,
-              meeting_name: meetingsTypes.params.meeting_name,
-            }),
-          }}
-        >
-          <button
-            type="submit"
-            disabled={
-              meetingsTypes.params.circle_id === '' ||
-              meetingsTypes.params.meeting_name === ''
-            }
-          >
-            Add a report
-          </button>
-        </Link>
       </article>
     </section>
   )
