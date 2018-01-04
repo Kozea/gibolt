@@ -138,11 +138,14 @@ function Circle({
                 </label>
                 <br />
                 <button type="submit">Edit</button>
+                <button type="submit" onClick={() => onGoBack(history)}>
+                  Cancel
+                </button>
               </form>
             ) : (
               <div>
                 <article>
-                  <h3>Purpose</h3>
+                  <h4>Purpose</h4>
                   <div onClick={() => onClickPurpose(circle.purpose_expanded)}>
                     {circle.purpose_expanded ? (
                       <p>{circle.circle_purpose}</p>
@@ -150,7 +153,7 @@ function Circle({
                       <span>show purpose</span>
                     )}
                   </div>
-                  <h3>Domains</h3>
+                  <h4>Domains</h4>
                   <div onClick={() => onClickDomain(circle.domain_expanded)}>
                     {circle.domain_expanded ? (
                       <p>{circle.circle_domain}</p>
@@ -158,7 +161,7 @@ function Circle({
                       <span>show domain</span>
                     )}
                   </div>
-                  <h3>Accountabilities</h3>
+                  <h4>Accountabilities</h4>
                   <div
                     onClick={() =>
                       onClickAccount(circle.accountabilities_expanded)
@@ -267,14 +270,14 @@ function Circle({
                     <button type="submit">Add a Role</button>
                   </Link>
                 </article>
+                <br />
+                <button type="submit" onClick={() => onGoBack(history)}>
+                  Back
+                </button>
               </div>
             )}
           </div>
         )}
-        <br />
-        <button type="submit" onClick={() => onGoBack(history)}>
-          Back
-        </button>
       </article>
     </section>
   )
