@@ -4,7 +4,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { goBack } from '../actions/issueForm'
+import { goBack } from '../actions'
 import { submitReport, updateReportsList } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'

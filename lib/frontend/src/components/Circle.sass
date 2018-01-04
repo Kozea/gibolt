@@ -1,7 +1,7 @@
 @import ../vars
 
 .Circle
-  
+
   input, select
     height: 2.5em
 
@@ -21,6 +21,12 @@
     max-width: 100%
     width: 50em
 
+  &__avatar
+    max-height: 40px
+    order: 0
+    vertical-align: middle
+    width: 40px
+
   &__bullet
     background-color: #000
     border-radius: 0.25em
@@ -32,12 +38,10 @@
     vertical-align: middle
     width: 0.5em
 
-  &__avatar
-    max-height: 40px
-    order: 0
-    vertical-align: middle
-    width: 40px
-    
+  &__circle
+    margin-left: 1em
+    margin-right: .5em
+
 [type=submit]
   border: none
   background: #bac9d5
