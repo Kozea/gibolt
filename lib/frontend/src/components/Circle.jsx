@@ -208,7 +208,7 @@ function Circle({
                       className={b('link')}
                       key={type.type_id}
                       to={{
-                        pathname: '/meetings',
+                        pathname: '/createReport',
                         search: stringify({
                           circle_id: circle.circle_id,
                           meeting_name: type.type_name,
@@ -220,6 +220,20 @@ function Circle({
                       </button>
                     </Link>
                   ))}
+                </article>
+                <article>
+                  <h3>Reports</h3>
+                  <Link
+                    className={b('link')}
+                    to={{
+                      pathname: '/meetings',
+                      search: stringify({
+                        circle_id: circle.circle_id,
+                      }),
+                    }}
+                  >
+                    View all reports
+                  </Link>
                 </article>
                 <article>
                   <h3>Rôles</h3>

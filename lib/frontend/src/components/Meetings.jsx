@@ -6,6 +6,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link, withRouter } from 'react-router-dom'
 
+import { goBack } from '../actions'
 import { updateReportsList } from '../actions/meetings'
 import { block, connect, getColor } from '../utils'
 import Loading from './Loading'
@@ -18,6 +19,7 @@ function Meetings({
   labels,
   meetings,
   meetingsTypes,
+  onGoBack,
   onSelectChange,
 }) {
   return (
@@ -126,6 +128,9 @@ function Meetings({
         ) : (
           <span>No meetings reports</span>
         )}
+        <button type="submit" onClick={() => onGoBack(history)}>
+          Back
+        </button>
       </article>
     </section>
   )
@@ -139,6 +144,9 @@ export default withRouter(
       meetingsTypes: state.meetingsTypes,
     }),
     dispatch => ({
+      onGoBack: history => {
+        dispatch(goBack(history))
+      },
       onSelectChange: (event, history) => {
         dispatch(updateReportsList(event, history))
       },
