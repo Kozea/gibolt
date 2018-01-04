@@ -108,8 +108,19 @@ function Meetings({
                     .toString()}`,
                 }}
               >
-                {format(new Date(meeting.created_at), 'DD/MM/YYYY')} -{' '}
-                {meeting.circle[0].circle_name} - {meeting.report_type}
+                <Link
+                  className={b('link')}
+                  to={{
+                    pathname: '/meeting',
+                    search: stringify({ report_id: meeting.report_id }),
+                  }}
+                >
+                  <span className={b('unlink')}>
+                    {format(new Date(meeting.created_at), 'DD/MM/YYYY')} -{' '}
+                    {meeting.circle[0].circle_name} -{' '}
+                  </span>
+                  {meeting.report_type}
+                </Link>
               </li>
             ))}
           </ul>
