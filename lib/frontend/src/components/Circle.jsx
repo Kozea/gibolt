@@ -13,7 +13,7 @@ import {
   togglePurposeExpanded,
   updateCircle,
 } from '../actions/circle'
-import { editCircle } from '../actions'
+import { editCircle, checkAcc } from '../actions'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
 
@@ -172,11 +172,14 @@ function Circle({
             <br />
             <label>
               Parent :
-              <select name="parent_circle_id" required>
+              <select name="parent_circle_id">
                 {circle.parent_circle_id === null ? (
                   <option value=""> Aucun </option>
                 ) : (
-                  <option defaultValue={circle.parent_circle_id}>
+                  <option
+                    value={circle.parent_circle_id}
+                    defaultValue={circle.parent_circle_id}
+                  >
                     {circle.parent_circle_name}
                   </option>
                 )}
@@ -218,7 +221,10 @@ function Circle({
         ) : (
           ''
         )}
-        <button type="submit" onClick={() => editClick()}>
+        <button
+          type="submit"
+          onClick={() => editClick(circle.circle_accountabilities)}
+        >
           {circle.is_in_edition ? 'Cancel' : 'Update'}
         </button>
         {circle.roles && circle.roles.length > 0 ? (
@@ -255,6 +261,7 @@ function Circle({
 }
 export default connect(
   state => ({
+    markvalue: state.markvalue,
     circle: state.circle.results,
     circles: state.circles.results,
     error: state.circle.error,
@@ -265,8 +272,9 @@ export default connect(
     btnClick: data => {
       dispatch(deleteCircle(data))
     },
-    editClick: () => {
+    editClick: content => {
       dispatch(editCircle())
+      dispatch(checkAcc(content))
     },
     onClickAccount: circleAccount => {
       dispatch(toggleAccountExpanded(circleAccount))
@@ -287,7 +295,7 @@ export default connect(
           e.target.elements[4],
           e.target.elements[5],
         ].reduce(function(map, obj) {
-          if (obj.name === 'body') {
+          if (obj.name === 'markdown') {
             map.circle_accountabilities = obj.value
           } else if (obj.name) {
             map[obj.name] = obj.value
@@ -299,7 +307,9 @@ export default connect(
         formCircle = [].slice
           .call(e.target.elements)
           .reduce(function(map, obj) {
-            if (obj.name) {
+            if (obj.name === 'markdown') {
+              map.circle_accountabilities = obj.value
+            } else if (obj.name) {
               map[obj.name] = obj.value
             }
 
@@ -307,6 +317,7 @@ export default connect(
           }, {})
       }
       dispatch(updateCircle(id, formCircle))
+      dispatch(checkAcc(''))
     },
     onGoBack: () => {
       history.go(-1)

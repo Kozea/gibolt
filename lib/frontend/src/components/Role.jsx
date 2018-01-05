@@ -6,8 +6,8 @@ import { Helmet } from 'react-helmet'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
-import { deleteRole, updateRole, addItem } from '../actions/roles'
-import { checkForm, editRole, indicatorForm } from '../actions'
+import { deleteRole, updateRole, addItem, fetchRole } from '../actions/roles'
+import { checkForm, checkAcc, editRole, indicatorForm } from '../actions'
 
 const b = block('Role')
 var ReactMarkdown = require('react-markdown')
@@ -173,7 +173,10 @@ function Role({
         ) : (
           ''
         )}
-        <button type="submit" onClick={() => editClick()}>
+        <button
+          type="submit"
+          onClick={() => editClick(role.role_accountabilities)}
+        >
           {role.is_in_edition ? 'Cancel' : 'Update'}
         </button>
         <button
@@ -209,8 +212,9 @@ export default connect(
     btnClick: data => {
       dispatch(deleteRole(data))
     },
-    editClick: () => {
+    editClick: content => {
       dispatch(editRole())
+      dispatch(checkAcc(content))
     },
     onEditRole: (role, e) => {
       const formRole = [].slice.call(e.target.elements).reduce(
@@ -225,6 +229,8 @@ export default connect(
         { circle_id: role.circle_id }
       )
       dispatch(updateRole(role.role_id, formRole))
+      dispatch(checkAcc(''))
+      dispatch(fetchRole())
     },
     addChecklist: (role, e) => {
       const formChecklist = [].slice
