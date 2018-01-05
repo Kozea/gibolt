@@ -14,6 +14,7 @@ import {
   updateCircle,
 } from '../../actions/circle'
 import { block, connect } from '../../utils'
+import CircleSubCircle from './CircleSubCircles'
 import Loading from './../Loading'
 import MarkdownEditor from './../MarkdownEditor'
 
@@ -289,28 +290,7 @@ function Circle({
                     <button type="submit">Add a Role</button>
                   </Link>
                 </article>
-                {circle.children_circles.length > 0 ? (
-                  <article>
-                    <h3>Sub-circles</h3>
-                    <ul>
-                      {circle.children_circles.map(child => (
-                        <li key={child.circle_id}>
-                          <span className={b('bullet')} />
-                          <Link
-                            to={{
-                              pathname: '/circle',
-                              search: stringify({ circle_id: child.circle_id }),
-                            }}
-                          >
-                            {child.circle_name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                ) : (
-                  ''
-                )}
+                {circle.children_circles.length > 0 ? <CircleSubCircle /> : ''}
                 <br />
                 <button type="submit" onClick={() => onGoBack(history)}>
                   Back
