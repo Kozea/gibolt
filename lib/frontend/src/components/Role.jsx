@@ -77,6 +77,7 @@ function Role({
           </div>
           <h3>Checklist</h3>
           <div>
+            {items.map(item => <li key={item.item_id}>{item.content}</li>)}
             {items.form_checklist ? (
               <form
                 onSubmit={e => {
