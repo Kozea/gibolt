@@ -38,7 +38,7 @@ class Role extends React.Component {
       addClick,
       btnClick,
       circles,
-      deleteItem,
+      // deleteItem,
       editClick,
       error,
       items,
