@@ -66,6 +66,28 @@ def format_ticket_response(ticket_request, repo_name):
     return response
 
 
+def refresh_repo_milestones(repo_name, repo, access_token):
+    url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
+        app.config['ORGANISATION'], repo_name
+    )
+    try:
+        repo['milestones'] = github.get(url, access_token=access_token)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+    for milestone in repo['milestones']:
+        if milestone['due_on'] is not None:
+            milestone['due_on'] = date_from_iso(milestone['due_on'])
+            milestone['repo'] = repo_name
+            total = milestone['closed_issues'] + milestone['open_issues']
+            milestone['progress'] = (
+                milestone['closed_issues'] / (total or float('inf'))
+            )
+
+
+def return_github_message(github_response):
+    return (github_response.json()['message'], github_response.status_code)
+
+
 @app.route('/api/user', methods=['GET', 'POST'])
 @needlogin
 def user():
@@ -863,28 +885,6 @@ def report():
             'issues': ok_issues
         }
     })
-
-
-def refresh_repo_milestones(repo_name, repo, access_token):
-    url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
-        app.config['ORGANISATION'], repo_name
-    )
-    try:
-        repo['milestones'] = github.get(url, access_token=access_token)
-    except GitHubError as e:
-        return e.response.content, e.response.status_code
-    for milestone in repo['milestones']:
-        if milestone['due_on'] is not None:
-            milestone['due_on'] = date_from_iso(milestone['due_on'])
-            milestone['repo'] = repo_name
-            total = milestone['closed_issues'] + milestone['open_issues']
-            milestone['progress'] = (
-                milestone['closed_issues'] / (total or float('inf'))
-            )
-
-
-def return_github_message(github_response):
-    return (github_response.json()['message'], github_response.status_code)
 
 
 @app.route('/api/labels', methods=['GET', 'POST'])
