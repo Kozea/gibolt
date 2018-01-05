@@ -14,18 +14,13 @@ import {
   updateCircle,
 } from '../../actions/circle'
 import { block, connect } from '../../utils'
-import CircleSubCircle from './CircleSubCircles'
+import CircleRoles from './CircleRoles'
+import CircleSubCircles from './CircleSubCircles'
 import Loading from './../Loading'
 import MarkdownEditor from './../MarkdownEditor'
 
 const b = block('Circle')
 var ReactMarkdown = require('react-markdown')
-
-function getUserInfo(roleUser, user) {
-  if (roleUser === user.user_id) {
-    return user
-  }
-}
 
 function Circle({
   btnClick,
@@ -36,7 +31,6 @@ function Circle({
   history,
   loading,
   meetingsTypes,
-  users,
   onClickAccount,
   onClickDomain,
   onClickPurpose,
@@ -241,56 +235,8 @@ function Circle({
                     View all reports
                   </Link>
                 </article>
-                <article>
-                  <h3>Roles</h3>
-                  {circle.roles && circle.roles.length > 0 ? (
-                    <ul>
-                      {circle.roles.map(role => (
-                        <li key={role.role_id} className={b('role')}>
-                          <span className={b('bullet')} />
-                          <Link
-                            to={{
-                              pathname: '/role',
-                              search: stringify({ id: role.role_id }),
-                            }}
-                          >
-                            {role.role_name}
-                          </Link>{' '}
-                          :{' '}
-                          <img
-                            key={role.user_id}
-                            className={b('avatar')}
-                            src={users
-                              .filter(user => getUserInfo(role.user_id, user))
-                              .map(user => user.avatar_url)
-                              .toString()}
-                            alt="avatar"
-                            title={users
-                              .filter(user => getUserInfo(role.user_id, user))
-                              .map(user => user.user_name)
-                              .toString()}
-                          />
-                          {'  '}
-                          {users
-                            .filter(user => getUserInfo(role.user_id, user))
-                            .map(user => user.user_name)
-                            .toString()}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span>No roles defined</span>
-                  )}
-                  <Link
-                    to={{
-                      pathname: '/createrole',
-                      search: stringify({ circle_id: circle.circle_id }),
-                    }}
-                  >
-                    <button type="submit">Add a Role</button>
-                  </Link>
-                </article>
-                {circle.children_circles.length > 0 ? <CircleSubCircle /> : ''}
+                <CircleRoles />
+                {circle.children_circles.length > 0 ? <CircleSubCircles /> : ''}
                 <br />
                 <button type="submit" onClick={() => onGoBack(history)}>
                   Back
@@ -312,7 +258,6 @@ export default withRouter(
       error: state.circle.error,
       loading: state.circle.loading,
       meetingsTypes: state.meetingsTypes.results,
-      users: state.users.results,
     }),
     dispatch => ({
       btnClick: data => {
