@@ -70,9 +70,5 @@ function Circle({ circle, users }) {
 
 export default connect(state => ({
   circle: state.circle.results,
-  circles: state.circles.results,
-  error: state.circle.error,
-  loading: state.circle.loading,
-  meetingsTypes: state.meetingsTypes.results,
   users: state.users.results,
 }))(Circle)
