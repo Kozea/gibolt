@@ -295,7 +295,7 @@ export default connect(
           e.target.elements[4],
           e.target.elements[5],
         ].reduce(function(map, obj) {
-          if (obj.name === 'markdown') {
+          if (obj.name === 'body') {
             map.circle_accountabilities = obj.value
           } else if (obj.name) {
             map[obj.name] = obj.value
