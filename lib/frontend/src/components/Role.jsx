@@ -99,18 +99,19 @@ class Role extends React.Component {
             </div>
             <h3>Checklist</h3>
             <div>
-              { items.find(item => item.item_type === 'checklist') &&
+              {items.find(item => item.item_type === 'checklist') &&
                 items.find(item => item.role_id === role.role_id) &&
-                items.map(item =>
-                (<li key={item.item_id}>
-                  {item.content}
-                  <button
-                    type="submit"
-                    onClick={() => deleteItem(item.item_id)}
-                  >
-                    delete
-                  </button>
-                </li>))}
+                items.map(item => (
+                  <li key={item.item_id}>
+                    {item.content}
+                    <button
+                      type="submit"
+                      onClick={() => deleteItem(item.item_id)}
+                    >
+                      delete
+                    </button>
+                  </li>
+                ))}
               {items.form_checklist ? (
                 <form
                   onSubmit={e => {
@@ -131,18 +132,19 @@ class Role extends React.Component {
             </div>
             <h3>Indicators</h3>
             <div>
-              { items.find(item => item.item_type === 'indicator') &&
+              {items.find(item => item.item_type === 'indicator') &&
                 items.find(item => item.role_id === role.role_id) &&
-                items.map(item =>
-                (<li key={item.item_id}>
-                  {item.content}
-                  <button
-                    type="submit"
-                    onClick={() => deleteItem(item.item_id)}
-                  >
-                    delete
-                  </button>
-                </li>))}
+                items.map(item => (
+                  <li key={item.item_id}>
+                    {item.content}
+                    <button
+                      type="submit"
+                      onClick={() => deleteItem(item.item_id)}
+                    >
+                      delete
+                    </button>
+                  </li>
+                ))}
               {items.form_indicator ? (
                 <form
                   onSubmit={e => {
