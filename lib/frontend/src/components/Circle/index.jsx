@@ -5,17 +5,17 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link, withRouter } from 'react-router-dom'
 
-import { editCircle, goBack } from '../actions'
+import { editCircle, goBack } from '../../actions'
 import {
   deleteCircle,
   toggleAccountExpanded,
   toggleDomainExpanded,
   togglePurposeExpanded,
   updateCircle,
-} from '../actions/circle'
-import { block, connect } from '../utils'
-import Loading from './Loading'
-import MarkdownEditor from './MarkdownEditor'
+} from '../../actions/circle'
+import { block, connect } from '../../utils'
+import Loading from './../Loading'
+import MarkdownEditor from './../MarkdownEditor'
 
 const b = block('Circle')
 var ReactMarkdown = require('react-markdown')
@@ -179,30 +179,30 @@ function Circle({
                     {circle.is_in_edition ? 'Cancel' : 'Update'}
                   </button>
                   {(circle.roles && circle.roles.length > 0) ||
-                    circle.nb_reports > 0 ? (
-                      <span>
-                        <button type="submit" disabled>
-                          Delete
-                        </button>
-                        <br />
-                        <code>
-                          {'You cannot delete this circle, '}
-                          {circle.nb_reports > 0 ? (
-                            <code>{'meetings reports exist.'}</code>
-                          ) : (
-                            <code>{'please first delete the roles.'}</code>
-                          )}
-                        </code>
-                      </span>
-                    ) : (
-                      <button
-                        type="submit"
-                        onClick={e => {
-                          e.preventDefault()
-                          btnClick(circle.circle_id)
-                        }}
-                      >
+                  circle.nb_reports > 0 ? (
+                    <span>
+                      <button type="submit" disabled>
                         Delete
+                      </button>
+                      <br />
+                      <code>
+                        {'You cannot delete this circle, '}
+                        {circle.nb_reports > 0 ? (
+                          <code>{'meetings reports exist.'}</code>
+                        ) : (
+                          <code>{'please first delete the roles.'}</code>
+                        )}
+                      </code>
+                    </span>
+                  ) : (
+                    <button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault()
+                        btnClick(circle.circle_id)
+                      }}
+                    >
+                      Delete
                     </button>
                   )}
                 </article>
