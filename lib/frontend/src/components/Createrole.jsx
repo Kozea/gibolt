@@ -1,17 +1,23 @@
-// import './Createrole.sass'
+import './Createrole.sass'
 
 import React from 'react'
+import { Helmet } from 'react-helmet'
+import { withRouter } from 'react-router-dom'
 
-import { block, connect } from '../utils'
+import { goBack } from '../actions'
 import { createRole } from '../actions/roles'
+import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
 
 const b = block('Createrole')
 
-function Createrole({ loading, onSubmit, users, circle }) {
+function Createrole({ circle, history, loading, onGoBack, onSubmit, users }) {
   return (
     <article className={b()}>
+      <Helmet>
+        <title>Gibolt - Create a role</title>
+      </Helmet>
       {loading && <Loading />}
       <h2>Create a new role :</h2>
       <form
@@ -52,34 +58,43 @@ function Createrole({ loading, onSubmit, users, circle }) {
           <MarkdownEditor />
         </label>
         <br />
-        <input type="submit" value="Create role" />
+        <button type="submit">Create role</button>
+        <button type="submit" onClick={() => onGoBack(history)}>
+          Cancel
+        </button>
       </form>
     </article>
   )
 }
-export default connect(
-  state => ({
-    roles: state.roles.results,
-    circle: state.circle.results,
-    users: state.users.results,
-    loading: state.circles.loading,
-    error: state.circles.errors,
-  }),
-  dispatch => ({
-    onSubmit: (circleId, e) => {
-      const formRole = [].slice.call(e.target.elements).reduce(
-        function(map, obj) {
-          if (obj.name === 'body') {
-            map.role_accountabilities = obj.value
-          } else if (obj.name && obj.value) {
-            map[obj.name] = obj.value
-          }
 
-          return map
-        },
-        { circle_id: circleId }
-      )
-      dispatch(createRole(formRole))
-    },
-  })
-)(Createrole)
+export default withRouter(
+  connect(
+    state => ({
+      roles: state.roles.results,
+      circle: state.circle.results,
+      users: state.users.results,
+      loading: state.circles.loading,
+      error: state.circles.errors,
+    }),
+    dispatch => ({
+      onGoBack: history => {
+        dispatch(goBack(history))
+      },
+      onSubmit: (circleId, e) => {
+        const formRole = [].slice.call(e.target.elements).reduce(
+          function(map, obj) {
+            if (obj.name === 'body') {
+              map.role_accountabilities = obj.value
+            } else if (obj.name && obj.value) {
+              map[obj.name] = obj.value
+            }
+
+            return map
+          },
+          { circle_id: circleId }
+        )
+        dispatch(createRole(formRole))
+      },
+    })
+  )(Createrole)
+)

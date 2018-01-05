@@ -1,3 +1,4 @@
+from flask import jsonify, request
 from unrest import UnRest
 
 from .. import Session, app, session_unrest
@@ -17,6 +18,11 @@ rest(
         'roles': rest(Role, only=['role_id', 'role_name', 'user_id']),
     },
     name='circles',
+    query=lambda query: query.filter(
+        Circle.parent_circle_id == (request.values.get('parent_circle_id'))
+        if request.values.get('parent_circle_id')
+        else True,
+    ),
     auth=needlogin
 )
 
@@ -29,7 +35,18 @@ rest(
 rest(
     Report,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
+    relationships={
+        'circle': rest(Circle, only=['circle_name']),
+    },
     name='reports',
+    query=lambda query: query.filter(
+        Report.circle_id == int(request.values.get('circle_id'))
+        if request.values.get('circle_id')
+        else True,
+        Report.report_type == request.values.get('meeting_name')
+        if request.values.get('meeting_name')
+        else True,
+    ).order_by(Report.created_at.desc()),
     auth=needlogin)
 
 rest(
@@ -43,3 +60,14 @@ rest(
     methods=['GET', 'PUT', 'POST', 'DELETE'],
     name='milestones_circles',
     auth=needlogin)
+
+
+@app.route('/api/meetingsTypes', methods=['GET'])
+@needlogin
+def get_meetings_types():
+    return jsonify({
+        'objects': [{
+            'type_id': type_id,
+            'type_name': type_name
+        } for type_id, type_name in app.config['MEETINGS_TYPES']]
+    })
