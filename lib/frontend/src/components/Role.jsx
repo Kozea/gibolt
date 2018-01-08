@@ -9,6 +9,7 @@ import MarkdownEditor from './MarkdownEditor'
 import {
   deleteRole,
   updateRole,
+  updateItem,
   addItem,
   fetchRole,
   fetchItems,
@@ -33,6 +34,7 @@ function Role({
   circles,
   deleteItem,
   editClick,
+  editItem,
   error,
   items,
   loading,
@@ -97,6 +99,20 @@ function Role({
               .map(item => (
                 <li key={item.item_id}>
                   {item.content}
+                  <form
+                    onSubmit={e => {
+                      e.preventDefault()
+                      editItem(item, e)
+                    }}
+                  >
+                    <label>edit item:</label>
+                    <input
+                      name="content"
+                      defaultValue={item.content}
+                      required
+                    />
+                    <button type="submit">Send</button>
+                  </form>
                   <button
                     type="submit"
                     onClick={() => deleteItem(item.item_id)}
@@ -131,6 +147,20 @@ function Role({
               .map(item => (
                 <li key={item.item_id}>
                   {item.content}
+                  <form
+                    onSubmit={e => {
+                      e.preventDefault()
+                      editItem(item, e)
+                    }}
+                  >
+                    <label>edit item:</label>
+                    <input
+                      name="content"
+                      defaultValue={item.content}
+                      required
+                    />
+                    <button type="submit">Send</button>
+                  </form>
                   <button
                     type="submit"
                     onClick={() => deleteItem(item.item_id)}
@@ -260,6 +290,20 @@ export default connect(
     editClick: content => {
       dispatch(editRole())
       dispatch(checkAcc(content))
+    },
+    editItem: (item, e) => {
+      const formItem = [].slice.call(e.target.elements).reduce(
+        function(map, obj) {
+          map.role_id = item.role_id
+          map.item_type = item.item_type
+          if (obj.name) {
+            map[obj.name] = obj.value
+        }
+          return map
+        },
+        {}
+      )
+      dispatch(updateItem(item.item_id, formItem))
     },
     onEditRole: (role, e) => {
       const formRole = [].slice.call(e.target.elements).reduce(
