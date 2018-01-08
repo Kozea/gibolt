@@ -410,5 +410,5 @@ export default withRouter(
         dispatch(checkAcc(''))
       },
     })
-  )
 )(Circle)
+)
