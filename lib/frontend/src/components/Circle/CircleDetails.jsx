@@ -36,7 +36,7 @@ function Circle({
             onEdit(circle.circle_id, e)
           }}
         >
-          <h1>Edit {circle.circle_name} circle :</h1>
+          <br />
           <label>
             Name :
             <input
@@ -48,16 +48,20 @@ function Circle({
           <br />
           <label>
             Parent :
-            <select name="parent_circle_id" required>
-              {circle.parent_circle_id === null ? (
-                <option value=""> Aucun </option>
-              ) : (
-                <option defaultValue={circle.parent_circle_id}>
+            <select name="parent_circle_id">
+              {circle.parent_circle_id !== null && (
+                <option value={circle.parent_circle_id}>
                   {circle.parent_circle_name}
                 </option>
               )}
+              <option value=""> Aucun </option>
               {circles
-                .filter(cercle => cercle.circle_id !== circle.circle_id)
+                .filter(
+                  cercle =>
+                    cercle.circle_id !== circle.circle_id &&
+                    cercle.parent_circle_id !== circle.circle_id &&
+                    cercle.circle_id !== circle.parent_circle_id
+                )
                 .map(cercle => (
                   <option key={cercle.circle_id} value={cercle.circle_id}>
                     {cercle.circle_name}
