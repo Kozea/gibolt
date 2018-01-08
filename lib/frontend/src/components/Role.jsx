@@ -6,10 +6,21 @@ import { Helmet } from 'react-helmet'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
-import { deleteRole, updateRole, addItem,
-  fetchRole, fetchItems, delItem } from '../actions/roles'
-import { checkForm, checkAcc, editRole,
-  indicatorForm, setLoading } from '../actions'
+import {
+  deleteRole,
+  updateRole,
+  addItem,
+  fetchRole,
+  fetchItems,
+  delItem,
+} from '../actions/roles'
+import {
+  checkForm,
+  checkAcc,
+  editRole,
+  indicatorForm,
+  setLoading,
+} from '../actions'
 
 const b = block('Role')
 var ReactMarkdown = require('react-markdown')
@@ -80,9 +91,10 @@ function Role({
           </div>
           <h3>Checklist</h3>
           <div>
-            { items.results.filter(item => item.item_type === 'checklist')
-            .filter(item => item.role_id === role.role_id)
-            .map(item => (
+            {items.results
+              .filter(item => item.item_type === 'checklist')
+              .filter(item => item.role_id === role.role_id)
+              .map(item => (
                 <li key={item.item_id}>
                   {item.content}
                   <button
@@ -113,9 +125,10 @@ function Role({
           </div>
           <h3>Indicators</h3>
           <div>
-            { items.results.filter(item => item.item_type === 'indicator')
-            .filter(item => item.role_id === role.role_id)
-            .map(item => (
+            {items.results
+              .filter(item => item.item_type === 'indicator')
+              .filter(item => item.role_id === role.role_id)
+              .map(item => (
                 <li key={item.item_id}>
                   {item.content}
                   <button
@@ -169,7 +182,8 @@ function Role({
               User :
               <select name="user_id" defaultValue={role.user_id}>
                 {users.map(user => (
-                  <option key={user.user_id} value={user.user_id}>.results
+                  <option key={user.user_id} value={user.user_id}>
+                    .results
                     {user.user_name}
                   </option>
                 ))}
@@ -177,11 +191,7 @@ function Role({
             </label>
             <label>
               Name :
-              <input
-                name="role_name"
-                defaultValue={role.role_name}
-                required
-              />
+              <input name="role_name" defaultValue={role.role_name} required />
             </label>
             <label>
               Purpose :
