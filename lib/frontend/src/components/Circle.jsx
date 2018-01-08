@@ -248,7 +248,7 @@ function Circle({
                       {circle.parent_circle_name}
                     </option>
                   )}
-                  {circles
+                  {circles.results
                     .filter(cercle => cercle.circle_id !== circle.circle_id)
                     .map(cercle => (
                       <option key={cercle.circle_id} value={cercle.circle_id}>
@@ -320,11 +320,13 @@ function Circle({
           >
             <button type="submit">Add a Role</button>
           </Link>
-          {circle.children_circles.length > 0 ? (
+          {circle.children_circles &&
+            circle.children_circles.length > 0 ? (
             <article>
               <h3>Sub-circles</h3>
               <ul>
-                {circle.children_circles.map(child => (
+                {circle.children_circles &&
+                  circle.children_circles.map(child => (
                   <li key={child.circle_id}>
                     <span className={b('bullet')} />
                     <Link
@@ -351,7 +353,7 @@ export default withRouter(
   connect(
     state => ({
       circle: state.circle.results,
-      circles: state.circles.results,
+      circles: state.circles,
       error: state.circle.error,
       loading: state.circle.loading,
       markvalue: state.markvalue,
@@ -410,5 +412,5 @@ export default withRouter(
         dispatch(checkAcc(''))
       },
     })
-)(Circle)
+  )(Circle)
 )
