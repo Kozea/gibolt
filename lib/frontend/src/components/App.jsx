@@ -9,6 +9,9 @@ import Circle from './Circle'
 import Circles from './Circles'
 import IssueCreation from './IssueCreation'
 import IssuesDashboard from './IssuesDashboard'
+import Meeting from './Meeting'
+import Meetings from './Meetings'
+import MeetingsReportCreation from './MeetingsReportCreation'
 import NotFound from './NotFound'
 import Presets from './Presets'
 import Report from './Report'
@@ -48,6 +51,9 @@ export default class App extends Component {
           <Route path="/role" component={Role} />
           <Route path="/createrole" component={Createrole} />
           <Route path="/createIssue" component={IssueCreation} />
+          <Route path="/meeting" component={Meeting} />
+          <Route path="/meetings" component={Meetings} />
+          <Route path="/createReport" component={MeetingsReportCreation} />
           <Route component={NotFound} />
         </Switch>
       </main>

@@ -4,10 +4,10 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
+import { goBack } from '../actions'
 import {
   changeMilestoneSelect,
   changeRolesSelect,
-  goBack,
   submitIssue,
   updateTitle,
 } from '../actions/issueForm'

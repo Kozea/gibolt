@@ -286,7 +286,6 @@ function Circle({
           ) : (
             ''
           )}
-          {/* ici § */}
           <button
             type="submit"
             onClick={() => editClick(circle.circle_accountabilities)}

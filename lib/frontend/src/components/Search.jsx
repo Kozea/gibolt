@@ -2,18 +2,19 @@ import './Search.sass'
 
 import React from 'react'
 
-import { fetchResults, search } from '../actions'
+import { search } from '../actions'
+import { fetchIssues } from '../actions/issues'
 import { block, connect } from '../utils'
 
 const b = block('Search')
 
-function Search({ search, onSearchChange }) {
+function Search({ keywords, onSearchChange }) {
   return (
     <div className={b()}>
       <input
         type="text"
         className={b('input')}
-        value={search}
+        value={keywords}
         onChange={e => onSearchChange(e.target.value)}
       />
     </div>
@@ -21,11 +22,11 @@ function Search({ search, onSearchChange }) {
 }
 
 export default connect(
-  state => ({ search: state.search }),
+  state => ({ keywords: state.search }),
   dispatch => ({
     onSearchChange: value => {
       dispatch(search(value))
-      dispatch(fetchResults('issues'))
+      dispatch(fetchIssues())
     },
   })
 )(Search)

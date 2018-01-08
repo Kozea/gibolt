@@ -33,7 +33,7 @@ setup(
         "python-dateutil == 2.6.1",
         "pytz == 2017.3",
         "SQLAlchemy == 1.1.15",
-        "unrest == 0.6.7"
+        "unrest == 0.7.3"
     ],
     provides=["gibolt"],
     setup_requires=['pytest-runner'],

@@ -314,17 +314,18 @@ def list_tickets():
         }
         return jsonify(response), 400
 
-    url = 'search/issues'
-    end_url = '?per_page=100&q=user:{0}'.format(app.config['ORGANISATION'])
+    url = 'search/issues?per_page=100&q='
+    end_url = '+user:{0}'.format(app.config['ORGANISATION'])
     query = ''
+    search = params.pop('search')
+    if search:
+        query += '{0}'.format(search)
     for value in params.poplist('labels'):
         if value[0] == '-':
             query += '+-label:"{0}"'.format(value[1:])
         else:
             query += '+label:"{0}"'.format(value)
-    search = params.pop('search')
-    if search:
-        query += '+{0}'.format(search)
+
     for key, value in params.items():
         if value:
             query += '+{0}:{1}'.format(key, value)
@@ -332,7 +333,8 @@ def list_tickets():
     headers = {'Accept': 'application/vnd.github.cerberus-preview'}
     try:
         ticket_request = github.get(
-            url + end_url + query, all_pages=True, headers=headers)
+            url + query + end_url, all_pages=True, headers=headers
+        )
     except GitHubError as e:
         return e.response.content, e.response.status_code
     response = [{'ticket_id': ticket['id'],
