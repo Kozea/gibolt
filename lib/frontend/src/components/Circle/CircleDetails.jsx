@@ -128,30 +128,30 @@ function Circle({
               {isCircleInEdition ? 'Cancel' : 'Update'}
             </button>
             {(circle.roles && circle.roles.length > 0) ||
-              circle.nb_reports > 0 ? (
-                <span>
-                  <button type="submit" disabled>
-                    Delete
-                  </button>
-                  <br />
-                  <code>
-                    {'You cannot delete this circle, '}
-                    {circle.nb_reports > 0 ? (
-                      <code>{'meetings reports exist.'}</code>
-                    ) : (
-                      <code>{'please first delete the roles.'}</code>
-                    )}
-                  </code>
-                </span>
-              ) : (
-                <button
-                  type="submit"
-                  onClick={e => {
-                    e.preventDefault()
-                    btnClick(circle.circle_id)
-                  }}
-                >
+            circle.nb_reports > 0 ? (
+              <span>
+                <button type="submit" disabled>
                   Delete
+                </button>
+                <br />
+                <code>
+                  {'You cannot delete this circle, '}
+                  {circle.nb_reports > 0 ? (
+                    <code>{'meetings reports exist.'}</code>
+                  ) : (
+                    <code>{'please first delete the roles.'}</code>
+                  )}
+                </code>
+              </span>
+            ) : (
+              <button
+                type="submit"
+                onClick={e => {
+                  e.preventDefault()
+                  btnClick(circle.circle_id)
+                }}
+              >
+                Delete
               </button>
             )}
           </article>
@@ -195,20 +195,22 @@ export default connect(
         ].reduce(function(map, obj) {
           if (obj.name === 'body') {
             map.circle_accountabilities = obj.value
+          } else if (obj.name === 'parent_circle_id') {
+            map[obj.name] = +obj.value
           } else if (obj.name) {
             map[obj.name] = obj.value
           }
-
           return map
         }, {})
       } else {
         formCircle = [].slice
           .call(e.target.elements)
           .reduce(function(map, obj) {
-            if (obj.name) {
+            if (obj.name === 'parent_circle_id') {
+              map[obj.name] = +obj.value
+            } else if (obj.name) {
               map[obj.name] = obj.value
             }
-
             return map
           }, {})
       }

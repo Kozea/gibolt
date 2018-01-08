@@ -1,6 +1,8 @@
 import datetime
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.types import Enum
@@ -28,6 +30,7 @@ class Circle(Base):
     circle_purpose = Column(String)
     circle_domain = Column(String)
     circle_accountabilities = Column(String)
+    is_active = Column(Boolean, default=True, nullable=False)
     circle_children = relationship('Circle',
                                    backref=backref('parent',
                                                    remote_side=[circle_id]))
