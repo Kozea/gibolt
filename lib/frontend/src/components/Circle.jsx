@@ -320,25 +320,24 @@ function Circle({
           >
             <button type="submit">Add a Role</button>
           </Link>
-          {circle.children_circles &&
-            circle.children_circles.length > 0 ? (
+          {circle.children_circles && circle.children_circles.length > 0 ? (
             <article>
               <h3>Sub-circles</h3>
               <ul>
                 {circle.children_circles &&
                   circle.children_circles.map(child => (
-                  <li key={child.circle_id}>
-                    <span className={b('bullet')} />
-                    <Link
-                      to={{
-                        pathname: '/circle',
-                        search: stringify({ circle_id: child.circle_id }),
-                      }}
-                    >
-                      {child.circle_name}
-                    </Link>
-                  </li>
-                ))}
+                    <li key={child.circle_id}>
+                      <span className={b('bullet')} />
+                      <Link
+                        to={{
+                          pathname: '/circle',
+                          search: stringify({ circle_id: child.circle_id }),
+                        }}
+                      >
+                        {child.circle_name}
+                      </Link>
+                    </li>
+                  ))}
               </ul>
             </article>
           ) : (
