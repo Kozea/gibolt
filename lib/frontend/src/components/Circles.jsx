@@ -56,6 +56,7 @@ function Circles({ error, labels, loading, results }) {
                     {circle.parent_circle_name
                       ? ` (sous-cercle de "${circle.parent_circle_name}")`
                       : ''}
+                    {circle.is_active ? '' : ' [disabled]'}
                   </span>
                 </Link>
               </li>

@@ -47,7 +47,9 @@ function Circle({
       <article className={b('circle')}>
         {circle.circle_name && (
           <div>
-            <h1>{circle.circle_name}</h1>
+            <h1>
+              {circle.circle_name} {circle.is_active ? '' : ' (disabled)'}
+            </h1>
             {circle.parent_circle_name && (
               <span>
                 {circle.parent_circle_name

@@ -25,7 +25,11 @@ function Circle({ circle, meetingsTypes }) {
               }),
             }}
           >
-            <button key={type.type_id} type="submit">
+            <button
+              key={type.type_id}
+              type="submit"
+              disabled={!circle.is_active}
+            >
               {type.type_name}
             </button>
           </Link>
@@ -42,7 +46,7 @@ function Circle({ circle, meetingsTypes }) {
             }),
           }}
         >
-          View all reports
+          View all reports ({circle.nb_reports})
         </Link>
       </article>
     </div>

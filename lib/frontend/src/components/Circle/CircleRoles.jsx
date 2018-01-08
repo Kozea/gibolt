@@ -62,7 +62,9 @@ function Circle({ circle, users }) {
           search: stringify({ circle_id: circle.circle_id }),
         }}
       >
-        <button type="submit">Add a Role</button>
+        <button type="submit" disabled={!circle.is_active}>
+          Add a Role
+        </button>
       </Link>
     </article>
   )
