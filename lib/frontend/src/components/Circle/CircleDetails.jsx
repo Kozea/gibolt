@@ -1,7 +1,6 @@
 import './Circle.sass'
 
 import React from 'react'
-import { withRouter } from 'react-router-dom'
 
 import { editCircle } from '../../actions'
 import {
@@ -21,7 +20,6 @@ function Circle({
   circle,
   circles,
   editClick,
-  history,
   isCircleInEdition,
   onClickAccount,
   onClickDomain,
@@ -35,7 +33,7 @@ function Circle({
         <form
           onSubmit={e => {
             e.preventDefault()
-            onEdit(circle.circle_id, e, history)
+            onEdit(circle.circle_id, e)
           }}
         >
           <h1>Edit {circle.circle_name} circle :</h1>
@@ -139,7 +137,7 @@ function Circle({
                 type="submit"
                 onClick={e => {
                   e.preventDefault()
-                  onDisableCircle(circle, history)
+                  onDisableCircle(circle)
                 }}
               >
                 {circle.is_active ? 'Disable' : 'Enable'}
@@ -172,73 +170,71 @@ function Circle({
   )
 }
 
-export default withRouter(
-  connect(
-    state => ({
-      circle: state.circle.results,
-      circles: state.circles.results,
-      isCircleInEdition: state.circle.is_in_edition,
-    }),
-    dispatch => ({
-      btnClick: data => {
-        dispatch(deleteCircle(data))
-      },
-      editClick: () => {
-        dispatch(editCircle())
-      },
-      onClickAccount: circleAccount => {
-        dispatch(toggleAccountExpanded(circleAccount))
-      },
-      onClickDomain: circleDomain => {
-        dispatch(toggleDomainExpanded(circleDomain))
-      },
-      onClickPurpose: circlePurpose => {
-        dispatch(togglePurposeExpanded(circlePurpose))
-      },
-      onEdit: (id, e, history) => {
-        let formCircle = []
-        if (e.target.elements[1].value === '') {
-          formCircle = [
-            e.target.elements[0],
-            e.target.elements[2],
-            e.target.elements[3],
-            e.target.elements[4],
-            e.target.elements[5],
-          ].reduce(function(map, obj) {
-            if (obj.name === 'body') {
-              map.circle_accountabilities = obj.value
-            } else if (obj.name === 'parent_circle_id') {
+export default connect(
+  state => ({
+    circle: state.circle.results,
+    circles: state.circles.results,
+    isCircleInEdition: state.circle.is_in_edition,
+  }),
+  dispatch => ({
+    btnClick: data => {
+      dispatch(deleteCircle(data))
+    },
+    editClick: () => {
+      dispatch(editCircle())
+    },
+    onClickAccount: circleAccount => {
+      dispatch(toggleAccountExpanded(circleAccount))
+    },
+    onClickDomain: circleDomain => {
+      dispatch(toggleDomainExpanded(circleDomain))
+    },
+    onClickPurpose: circlePurpose => {
+      dispatch(togglePurposeExpanded(circlePurpose))
+    },
+    onEdit: (id, e) => {
+      let formCircle = []
+      if (e.target.elements[1].value === '') {
+        formCircle = [
+          e.target.elements[0],
+          e.target.elements[2],
+          e.target.elements[3],
+          e.target.elements[4],
+          e.target.elements[5],
+        ].reduce(function(map, obj) {
+          if (obj.name === 'body') {
+            map.circle_accountabilities = obj.value
+          } else if (obj.name === 'parent_circle_id') {
+            map[obj.name] = +obj.value
+          } else if (obj.name) {
+            map[obj.name] = obj.value
+          }
+          return map
+        }, {})
+      } else {
+        formCircle = [].slice
+          .call(e.target.elements)
+          .reduce(function(map, obj) {
+            if (obj.name === 'parent_circle_id') {
               map[obj.name] = +obj.value
             } else if (obj.name) {
               map[obj.name] = obj.value
             }
             return map
           }, {})
-        } else {
-          formCircle = [].slice
-            .call(e.target.elements)
-            .reduce(function(map, obj) {
-              if (obj.name === 'parent_circle_id') {
-                map[obj.name] = +obj.value
-              } else if (obj.name) {
-                map[obj.name] = obj.value
-              }
-              return map
-            }, {})
-        }
-        formCircle.is_active = true
-        dispatch(updateCircle(id, formCircle, history))
-      },
-      onDisableCircle: (circle, history) => {
-        const circleData = {}
-        circleData.parent_circle_id = circle.parent_circle_id
-        circleData.circle_name = circle.circle_name
-        circleData.circle_purpose = circle.circle_purpose
-        circleData.circle_domain = circle.circle_domain
-        circleData.circle_accountabilities = circle.circle_accountabilities
-        circleData.is_active = !circle.is_active
-        dispatch(updateCircle(circle.circle_id, circleData, history))
-      },
-    })
-  )(Circle)
-)
+      }
+      formCircle.is_active = true
+      dispatch(updateCircle(id, formCircle))
+    },
+    onDisableCircle: circle => {
+      const circleData = {}
+      circleData.parent_circle_id = circle.parent_circle_id
+      circleData.circle_name = circle.circle_name
+      circleData.circle_purpose = circle.circle_purpose
+      circleData.circle_domain = circle.circle_domain
+      circleData.circle_accountabilities = circle.circle_accountabilities
+      circleData.is_active = !circle.is_active
+      dispatch(updateCircle(circle.circle_id, circleData))
+    },
+  })
+)(Circle)

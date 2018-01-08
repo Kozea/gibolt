@@ -35,20 +35,22 @@ function Circle({ circle, meetingsTypes }) {
           </Link>
         ))}
       </article>
-      <article>
-        <h3>Reports</h3>
-        <Link
-          className={b('link')}
-          to={{
-            pathname: '/meetings',
-            search: stringify({
-              circle_id: circle.circle_id,
-            }),
-          }}
-        >
-          View all reports ({circle.nb_reports})
-        </Link>
-      </article>
+      {circle.nb_reports > 0 && (
+        <article>
+          <h3>Reports</h3>
+          <Link
+            className={b('link')}
+            to={{
+              pathname: '/meetings',
+              search: stringify({
+                circle_id: circle.circle_id,
+              }),
+            }}
+          >
+            View all reports ({circle.nb_reports})
+          </Link>
+        </article>
+      )}
     </div>
   )
 }
