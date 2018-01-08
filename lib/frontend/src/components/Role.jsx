@@ -292,17 +292,16 @@ export default connect(
       dispatch(checkAcc(content))
     },
     editItem: (item, e) => {
-      const formItem = [].slice.call(e.target.elements).reduce(
-        function(map, obj) {
+      const formItem = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
           map.role_id = item.role_id
           map.item_type = item.item_type
           if (obj.name) {
             map[obj.name] = obj.value
-        }
+          }
           return map
-        },
-        {}
-      )
+        }, {})
       dispatch(updateItem(item.item_id, formItem))
     },
     onEditRole: (role, e) => {
