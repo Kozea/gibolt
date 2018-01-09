@@ -19,6 +19,8 @@ import {
   checkForm,
   checkAcc,
   editRole,
+  editClickItem,
+  cancelClickItem,
   indicatorForm,
   setLoading,
 } from '../actions'
@@ -31,6 +33,7 @@ function Role({
   addIndicator,
   addClick,
   btnClick,
+  cancelEditItem,
   circles,
   deleteItem,
   editClick,
@@ -39,6 +42,7 @@ function Role({
   items,
   loading,
   onAddClick,
+  onEditItem,
   onEditRole,
   role,
   users,
@@ -99,20 +103,47 @@ function Role({
               .map(item => (
                 <li key={item.item_id}>
                   {item.content}
-                  <form
-                    onSubmit={e => {
-                      e.preventDefault()
-                      editItem(item, e)
-                    }}
-                  >
-                    <label>edit item:</label>
-                    <input
-                      name="content"
-                      defaultValue={item.content}
-                      required
-                    />
-                    <button type="submit">Send</button>
-                  </form>
+                  {item.editItem ? (
+                    <div>
+                      <form
+                        onSubmit={e => {
+                          e.preventDefault()
+                          editItem(item, e)
+                        }}
+                      >
+                        <label>edit item:</label>
+                        <input
+                          name="content"
+                          defaultValue={item.content}
+                          required
+                        />
+                        <button type="submit">Send</button>
+                      </form>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  {item.editItem ? (
+                    <button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault()
+                        cancelEditItem(item.item_id)
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault()
+                        onEditItem(item.item_id)
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
                   <button
                     type="submit"
                     onClick={() => deleteItem(item.item_id)}
@@ -147,20 +178,47 @@ function Role({
               .map(item => (
                 <li key={item.item_id}>
                   {item.content}
-                  <form
-                    onSubmit={e => {
-                      e.preventDefault()
-                      editItem(item, e)
-                    }}
-                  >
-                    <label>edit item:</label>
-                    <input
-                      name="content"
-                      defaultValue={item.content}
-                      required
-                    />
-                    <button type="submit">Send</button>
-                  </form>
+                  {item.editItem ? (
+                    <div>
+                      <form
+                        onSubmit={e => {
+                          e.preventDefault()
+                          editItem(item, e)
+                        }}
+                      >
+                        <label>edit item:</label>
+                        <input
+                          name="content"
+                          defaultValue={item.content}
+                          required
+                        />
+                        <button type="submit">Send</button>
+                      </form>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  {item.editItem ? (
+                    <button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault()
+                        cancelEditItem(item.item_id)
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault()
+                        onEditItem(item.item_id)
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
                   <button
                     type="submit"
                     onClick={() => deleteItem(item.item_id)}
@@ -359,5 +417,7 @@ export default connect(
     deleteItem: itemId => {
       dispatch(delItem(itemId))
     },
+    onEditItem: itemId => dispatch(editClickItem(itemId)),
+    cancelEditItem: itemId => dispatch(cancelClickItem(itemId)),
   })
 )(Role)
