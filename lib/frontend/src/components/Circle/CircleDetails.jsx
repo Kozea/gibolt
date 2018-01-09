@@ -143,6 +143,11 @@ function Circle({
                   e.preventDefault()
                   onDisableCircle(circle)
                 }}
+                disabled={
+                  circle.parent_circle_id === null
+                    ? false
+                    : !circle.parent_circle_is_active
+                }
               >
                 {circle.is_active ? 'Disable' : 'Enable'}
               </button>

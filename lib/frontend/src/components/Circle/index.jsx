@@ -1,8 +1,9 @@
 import './Circle.sass'
 
+import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
 import { goBack } from '../../actions'
 import { block, connect } from '../../utils'
@@ -52,9 +53,18 @@ function Circle({
             </h1>
             {circle.parent_circle_name && (
               <span>
-                {circle.parent_circle_name
-                  ? `(sous-cercle de "${circle.parent_circle_name}")`
-                  : ''}
+                {circle.parent_circle_name ? (
+                  <Link
+                    to={{
+                      pathname: '/circle',
+                      search: stringify({ circle_id: circle.parent_circle_id }),
+                    }}
+                  >
+                    {`(sous-cercle de "${circle.parent_circle_name}")`}
+                  </Link>
+                ) : (
+                  ''
+                )}
               </span>
             )}
             {loading && <Loading />}
