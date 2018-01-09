@@ -7,20 +7,20 @@ import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
 import {
-  deleteRole,
-  updateRole,
-  updateItem,
   addItem,
-  fetchRole,
-  fetchItems,
+  deleteRole,
   delItem,
+  fetchItems,
+  fetchRole,
+  updateItem,
+  updateRole,
 } from '../actions/roles'
 import {
-  checkForm,
-  checkAcc,
-  editRole,
-  editClickItem,
   cancelClickItem,
+  checkAcc,
+  checkForm,
+  editClickItem,
+  editRole,
   indicatorForm,
   setLoading,
 } from '../actions'
@@ -30,8 +30,8 @@ var ReactMarkdown = require('react-markdown')
 
 function Role({
   addChecklist,
-  addIndicator,
   addClick,
+  addIndicator,
   btnClick,
   cancelEditItem,
   circles,
@@ -39,6 +39,7 @@ function Role({
   editClick,
   editItem,
   error,
+  isRoleInEdition,
   items,
   loading,
   onAddClick,
@@ -71,7 +72,7 @@ function Role({
         </article>
       )}
       {loading && <Loading />}
-      {role.is_in_edition ? (
+      {isRoleInEdition ? (
         ''
       ) : (
         <article>
@@ -248,7 +249,7 @@ function Role({
         </article>
       )}
       <article>
-        {role.is_in_edition ? (
+        {isRoleInEdition ? (
           <form
             onSubmit={e => {
               e.preventDefault()
@@ -310,7 +311,7 @@ function Role({
           type="submit"
           onClick={() => editClick(role.role_accountabilities)}
         >
-          {role.is_in_edition ? 'Cancel' : 'Update'}
+          {isRoleInEdition ? 'Cancel' : 'Update'}
         </button>
         <button
           type="submit"
@@ -334,6 +335,7 @@ export default connect(
     role: state.role.results,
     roles: state.roles.results,
     users: state.users.results,
+    isRoleInEdition: state.role.results.is_in_edition,
   }),
   dispatch => ({
     addClick: () => {
