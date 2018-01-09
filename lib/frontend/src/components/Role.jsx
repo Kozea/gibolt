@@ -393,6 +393,7 @@ export default connect(
           return map
         }, {})
       dispatch(addItem(formChecklist))
+      dispatch(checkForm())
     },
     addIndicator: (role, e) => {
       const formChecklist = [].slice
@@ -409,6 +410,7 @@ export default connect(
           return map
         }, {})
       dispatch(addItem(formChecklist))
+      dispatch(indicatorForm())
     },
     loadItems: () => {
       dispatch(setLoading('items'))
