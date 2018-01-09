@@ -17,3 +17,4 @@ Makefile.custom.config
 node_modules/
 .ropeproject/
 database.db
+*.old
