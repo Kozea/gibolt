@@ -66,6 +66,28 @@ def format_ticket_response(ticket_request, repo_name):
     return response
 
 
+def refresh_repo_milestones(repo_name, repo, access_token):
+    url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
+        app.config['ORGANISATION'], repo_name
+    )
+    try:
+        repo['milestones'] = github.get(url, access_token=access_token)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+    for milestone in repo['milestones']:
+        if milestone['due_on'] is not None:
+            milestone['due_on'] = date_from_iso(milestone['due_on'])
+            milestone['repo'] = repo_name
+            total = milestone['closed_issues'] + milestone['open_issues']
+            milestone['progress'] = (
+                milestone['closed_issues'] / (total or float('inf'))
+            )
+
+
+def return_github_message(github_response):
+    return (github_response.json()['message'], github_response.status_code)
+
+
 @app.route('/api/user', methods=['GET', 'POST'])
 @needlogin
 def user():
@@ -87,7 +109,10 @@ def list_users():
     response = [{'user_id': user['id'],
                  'user_name': user['login'],
                  'avatar_url': user['avatar_url']} for user in user_request]
-    objects = {'objects': response, 'occurences': len(response)}
+    objects = {
+        'objects': response,
+        'occurences': len(response),
+        'primary_keys': ['user_name']}
     return jsonify(objects)
 
 
@@ -109,7 +134,7 @@ def get_a_user(user_name):
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
-        'primary_keys': [user_name]}
+        'primary_keys': ['user_name']}
     return jsonify(objects)
 
 
@@ -131,10 +156,10 @@ def list_repos():
                      'pull': repository['permissions']['pull']}
                  }
                 for repository in repo_request]
-    # objects = {'objects': response, 'occurences': len(response)}
     objects = {'objects': {
         'repositories': response},
-        'occurences': len(response)
+        'occurences': len(response),
+        'primary_keys': ['repo_name']
     }
     return jsonify(objects)
 
@@ -160,7 +185,7 @@ def get_a_repo(repo_name):
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
-        'primary_keys': [repo_name]}
+        'primary_keys': ['repo_name']}
     return jsonify(objects)
 
 
@@ -187,7 +212,10 @@ def list_milestones(repo_name):
                  'due_on': milestone['due_on'],
                  'closed_at': milestone['closed_at']}
                 for milestone in milestone_request]
-    objects = {'objects': response, 'occurences': len(response)}
+    objects = {
+        'objects': response,
+        'occurences': len(response),
+        'primary_keys': ['milestone_number', 'repo_name']}
     return jsonify(objects)
 
 
@@ -258,7 +286,7 @@ def create_milestone(repo_name):
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
-        'primary_keys': ['repo_name']}
+        'primary_keys': ['milestone_number', 'repo_name']}
     return jsonify(objects)
 
 
@@ -374,7 +402,12 @@ def list_tickets():
         ticket['expanded'] = False
         ticket['comments_expanded'] = False
         ticket['comments'] = []
-    objects = {'objects': response, 'occurences': len(response)}
+    objects = {
+        'objects': response,
+        'occurences': len(response),
+        'primary_keys': [
+            'repo_name',
+            'ticket_number']}
     return jsonify(objects)
 
 
@@ -420,7 +453,7 @@ def create_a_ticket(repo_name):
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
-        'primary_keys': ['repo_name']}
+        'primary_keys': ['repo_name', 'ticket_number']}
     return jsonify(objects)
 
 
@@ -481,7 +514,10 @@ def list_comments(repo_name, ticket_number):
                  'updated_at': comment['updated_at'],
                  'body': comment['body']} for comment in comment_request]
     objects = [{'objects': [response]}]
-    objects = {'objects': response, 'occurences': len(response)}
+    objects = {
+        'objects': response,
+        'occurences': len(response),
+        'primary_keys': ['comment_id', 'repo_name']}
     return jsonify(objects)
 
 
@@ -548,7 +584,7 @@ def create_a_comment(repo_name, ticket_number):
         'occurences': 1 if response else 0,
         'primary_keys': [
             'repo_name',
-            'ticket_number']}
+            'comment_id']}
     return jsonify(objects)
 
 
@@ -592,6 +628,8 @@ def update_a_comment(repo_name, comment_id):
     methods=['DELETE'])
 @needlogin
 def delete_a_comment(repo_name, comment_id):
+    # TODO: verify this route, especially the response
+    # it should not return the comment back but just "Status: 204 No Content"
     try:
         comment_request = github.request(
             'DELETE',
@@ -847,28 +885,6 @@ def report():
             'issues': ok_issues
         }
     })
-
-
-def refresh_repo_milestones(repo_name, repo, access_token):
-    url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
-        app.config['ORGANISATION'], repo_name
-    )
-    try:
-        repo['milestones'] = github.get(url, access_token=access_token)
-    except GitHubError as e:
-        return e.response.content, e.response.status_code
-    for milestone in repo['milestones']:
-        if milestone['due_on'] is not None:
-            milestone['due_on'] = date_from_iso(milestone['due_on'])
-            milestone['repo'] = repo_name
-            total = milestone['closed_issues'] + milestone['open_issues']
-            milestone['progress'] = (
-                milestone['closed_issues'] / (total or float('inf'))
-            )
-
-
-def return_github_message(github_response):
-    return (github_response.json()['message'], github_response.status_code)
 
 
 @app.route('/api/labels', methods=['GET', 'POST'])
