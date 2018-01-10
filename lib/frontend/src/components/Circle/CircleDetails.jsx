@@ -2,7 +2,7 @@ import './Circle.sass'
 
 import React from 'react'
 
-import { editCircle } from '../../actions'
+import { checkAcc, editCircle } from '../../actions'
 import {
   deleteCircle,
   toggleAccountExpanded,
@@ -94,7 +94,10 @@ function Circle({
           </label>
           <br />
           <button type="submit">Edit</button>
-          <button type="submit" onClick={() => editClick()}>
+          <button
+            type="submit"
+            onClick={() => editClick(circle.circle_accountabilities)}
+          >
             Cancel
           </button>
         </form>
@@ -131,7 +134,7 @@ function Circle({
           <article>
             <button
               type="submit"
-              onClick={() => editClick()}
+              onClick={() => editClick(circle.circle_accountabilities)}
               disabled={!circle.is_active}
             >
               Update
@@ -189,8 +192,9 @@ export default connect(
     btnClick: data => {
       dispatch(deleteCircle(data))
     },
-    editClick: () => {
+    editClick: content => {
       dispatch(editCircle())
+      dispatch(checkAcc(content))
     },
     onClickAccount: circleAccount => {
       dispatch(toggleAccountExpanded(circleAccount))

@@ -46,6 +46,7 @@ function Role({
   onEditItem,
   onEditRole,
   role,
+  roles,
   users,
 }) {
   return (
@@ -118,6 +119,18 @@ function Role({
                           defaultValue={item.content}
                           required
                         />
+                        <label>
+                          user :
+                          <select name="role_id" defaultValue={item.role_id}>
+                          {roles.filter(rol => rol.circle_id === role.circle_id)
+                            .map(rolee =>
+                              (<option
+                                key={rolee.role_id}
+                                value={rolee.role_id}
+                               >
+                                {rolee.role_name}</option>))}
+                              </select>
+                        </label>
                         <button type="submit">Send</button>
                       </form>
                     </div>
@@ -193,6 +206,18 @@ function Role({
                           defaultValue={item.content}
                           required
                         />
+                        <label>
+                          user :
+                          <select name="role_id" defaultValue={item.role_id}>
+                          {roles.filter(rol => rol.circle_id === role.circle_id)
+                            .map(rolee =>
+                              (<option
+                                key={rolee.role_id}
+                                value={rolee.role_id}
+                               >
+                                {rolee.role_name}</option>))}
+                              </select>
+                        </label>
                         <button type="submit">Send</button>
                       </form>
                     </div>
@@ -318,9 +343,18 @@ function Role({
           onClick={() => {
             btnClick(role.role_id)
           }}
+          disabled={items.results
+            .filter(item => item.role_id === role.role_id).length > 0}
         >
           Delete role
         </button>
+        {items.results
+          .filter(item => item.role_id === role.role_id).length > 0 ? (<div>
+            <code>
+              {'You cannot delete this role, '}
+              {'please first delete the items.'}
+            </code>
+          </div>) : ('')}
       </article>
     </section>
   )
@@ -344,8 +378,8 @@ export default connect(
     onAddClick: () => {
       dispatch(indicatorForm())
     },
-    btnClick: data => {
-      dispatch(deleteRole(data))
+    btnClick: roleId => {
+      dispatch(deleteRole(roleId))
     },
     editClick: content => {
       dispatch(editRole())
@@ -355,7 +389,6 @@ export default connect(
       const formItem = [].slice
         .call(e.target.elements)
         .reduce(function(map, obj) {
-          map.role_id = item.role_id
           map.item_type = item.item_type
           if (obj.name) {
             map[obj.name] = obj.value
