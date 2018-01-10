@@ -2,7 +2,7 @@ import './Circle.sass'
 
 import React from 'react'
 
-import { checkAcc, editCircle } from '../../actions'
+import { checkAcc, delAcc, editCircle } from '../../actions'
 import {
   deleteCircle,
   toggleAccountExpanded,
@@ -17,6 +17,7 @@ var ReactMarkdown = require('react-markdown')
 
 function Circle({
   btnClick,
+  cancelClick,
   circle,
   circles,
   editClick,
@@ -96,7 +97,7 @@ function Circle({
           <button type="submit">Edit</button>
           <button
             type="submit"
-            onClick={() => editClick(circle.circle_accountabilities)}
+            onClick={() => cancelClick()}
           >
             Cancel
           </button>
@@ -238,6 +239,7 @@ export default connect(
       }
       formCircle.is_active = true
       dispatch(updateCircle(id, formCircle))
+      dispatch(delAcc())
     },
     onDisableCircle: circle => {
       const circleData = {}
@@ -249,5 +251,8 @@ export default connect(
       circleData.is_active = !circle.is_active
       dispatch(updateCircle(circle.circle_id, circleData))
     },
+    cancelClick: () => {
+      dispatch(delAcc())
+    }
   })
 )(Circle)

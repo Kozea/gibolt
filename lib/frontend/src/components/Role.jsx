@@ -122,14 +122,17 @@ function Role({
                         <label>
                           user :
                           <select name="role_id" defaultValue={item.role_id}>
-                          {roles.filter(rol => rol.circle_id === role.circle_id)
-                            .map(rolee =>
-                              (<option
-                                key={rolee.role_id}
-                                value={rolee.role_id}
-                               >
-                                {rolee.role_name}</option>))}
-                              </select>
+                            {roles
+                              .filter(rol => rol.circle_id === role.circle_id)
+                              .map(rolee => (
+                                <option
+                                  key={rolee.role_id}
+                                  value={rolee.role_id}
+                                >
+                                  {rolee.role_name}
+                                </option>
+                              ))}
+                          </select>
                         </label>
                         <button type="submit">Send</button>
                       </form>
@@ -209,14 +212,17 @@ function Role({
                         <label>
                           user :
                           <select name="role_id" defaultValue={item.role_id}>
-                          {roles.filter(rol => rol.circle_id === role.circle_id)
-                            .map(rolee =>
-                              (<option
-                                key={rolee.role_id}
-                                value={rolee.role_id}
-                               >
-                                {rolee.role_name}</option>))}
-                              </select>
+                            {roles
+                              .filter(rol => rol.circle_id === role.circle_id)
+                              .map(rolee => (
+                                <option
+                                  key={rolee.role_id}
+                                  value={rolee.role_id}
+                                >
+                                  {rolee.role_name}
+                                </option>
+                              ))}
+                          </select>
                         </label>
                         <button type="submit">Send</button>
                       </form>
@@ -343,18 +349,24 @@ function Role({
           onClick={() => {
             btnClick(role.role_id)
           }}
-          disabled={items.results
-            .filter(item => item.role_id === role.role_id).length > 0}
+          disabled={
+            items.results.filter(item => item.role_id === role.role_id).length >
+            0
+          }
         >
           Delete role
         </button>
-        {items.results
-          .filter(item => item.role_id === role.role_id).length > 0 ? (<div>
+        {items.results.filter(item => item.role_id === role.role_id).length >
+        0 ? (
+          <div>
             <code>
               {'You cannot delete this role, '}
               {'please first delete the items.'}
             </code>
-          </div>) : ('')}
+          </div>
+        ) : (
+          ''
+        )}
       </article>
     </section>
   )
