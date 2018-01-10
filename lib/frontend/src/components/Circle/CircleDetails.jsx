@@ -5,8 +5,8 @@ import React from 'react'
 import {
   checkAccountabilities,
   delAccountabilities,
-  editCircle }
-  from '../../actions'
+  editCircle,
+} from '../../actions'
 import {
   deleteCircle,
   toggleAccountExpanded,
@@ -99,10 +99,7 @@ function Circle({
           </label>
           <br />
           <button type="submit">Edit</button>
-          <button
-            type="submit"
-            onClick={() => cancelClick()}
-          >
+          <button type="submit" onClick={() => cancelClick()}>
             Cancel
           </button>
         </form>
@@ -257,6 +254,6 @@ export default connect(
     },
     cancelClick: () => {
       dispatch(delAccountabilities())
-    }
+    },
   })
 )(Circle)
