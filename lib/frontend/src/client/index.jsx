@@ -10,7 +10,7 @@ import { setModifier, setUser } from '../actions'
 import App from '../components/App'
 import Root from '../components/Root'
 import reducer from '../reducer'
-import autoLoadMiddleware from './autoLoadMiddleware'
+// import autoLoadMiddleware from './autoLoadMiddleware'
 
 export const rootNode = document.getElementById('root')
 
@@ -20,7 +20,7 @@ export const store = createStore(
   reducer,
   window.__STATE__, // Server state
   (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose)(
-    applyMiddleware(routerMiddleware(history), thunk, autoLoadMiddleware)
+    applyMiddleware(routerMiddleware(history), thunk)
   )
 )
 ;['keydown', 'keyup'].map(event =>

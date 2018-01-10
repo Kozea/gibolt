@@ -5,6 +5,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { push } from 'react-router-redux'
 
+import { fetchResults, setLoading } from '../actions'
 import { block, connect, reportRangeFromState, values } from '../utils'
 import Loading from './Loading'
 
@@ -56,90 +57,98 @@ const groupByRepository = issues =>
   ).sort((a, b) => a.user - b.user)
 
 const b = block('Report')
-function Report({ range, query, loading, error, issues, onDateChange }) {
-  const issuesByMonth = groupByMonth(issues)
-  const issuesByUser = groupByUser(issues)
 
-  return (
-    <section className={b()}>
-      <Helmet>
-        <title>Gibolt - Report</title>
-      </Helmet>
-      <h1 className={b('head')}>
-        Report from
-        <input
-          type="date"
-          value={range.start}
-          onChange={e => onDateChange(e.target.value, 'start', query)}
-        />
-        to
-        <input
-          type="date"
-          value={range.stop}
-          onChange={e => onDateChange(e.target.value, 'stop', query)}
-        />.
-      </h1>
-      {loading && <Loading />}
-      {error && (
-        <article className={b('date', { error: true })}>
-          <h2>Error during report fetch</h2>
-          <code>{error}</code>
+class Report extends React.Component {
+  componentWillMount() {
+    this.props.sync()
+  }
+
+  render() {
+    const { range, query, loading, error, issues, onDateChange } = this.props
+    const issuesByMonth = groupByMonth(issues)
+    const issuesByUser = groupByUser(issues)
+
+    return (
+      <section className={b()}>
+        <Helmet>
+          <title>Gibolt - Report</title>
+        </Helmet>
+        <h1 className={b('head')}>
+          Report from
+          <input
+            type="date"
+            value={range.start}
+            onChange={e => onDateChange(e.target.value, 'start', query)}
+          />
+          to
+          <input
+            type="date"
+            value={range.stop}
+            onChange={e => onDateChange(e.target.value, 'stop', query)}
+          />.
+        </h1>
+        {loading && <Loading />}
+        {error && (
+          <article className={b('date', { error: true })}>
+            <h2>Error during report fetch</h2>
+            <code>{error}</code>
+          </article>
+        )}
+        <article className={b('user')}>
+          <h2>Overall</h2>
+          {issuesByMonth.map(({ id, month, issues: monthIssues }) => (
+            <article key={id} className={b('month')}>
+              <h3>{month.format('LL')}</h3>
+              <ul>
+                {groupByRepository(monthIssues)
+                  .sort((a, b) => b.issues.length - a.issues.length)
+                  .map(({ id, repository, issues }) => (
+                    <li key={id} className={b('item')}>
+                      <span className={b('repo')}>
+                        {repository.name} ({Math.round(
+                          100 * (issues.length / monthIssues.length)
+                        ).toFixed()}%)
+                      </span>
+                    </li>
+                  ))}
+              </ul>
+            </article>
+          ))}
         </article>
-      )}
-      <article className={b('user')}>
-        <h2>Overall</h2>
-        {issuesByMonth.map(({ id, month, issues: monthIssues }) => (
-          <article key={id} className={b('month')}>
-            <h3>{month.format('LL')}</h3>
-            <ul>
-              {groupByRepository(monthIssues)
-                .sort((a, b) => b.issues.length - a.issues.length)
-                .map(({ id, repository, issues }) => (
-                  <li key={id} className={b('item')}>
-                    <span className={b('repo')}>
-                      {repository.name} ({Math.round(
-                        100 * (issues.length / monthIssues.length)
-                      ).toFixed()}%)
-                    </span>
-                  </li>
-                ))}
-            </ul>
+
+        {issuesByUser.map(({ id, user, issues: userIssues }) => (
+          <article key={id} className={b('user')}>
+            <h2>{user.login}</h2>
+            {groupByMonth(userIssues).map(
+              ({ id, month, issues: monthIssues }) => (
+                <article key={id} className={b('month')}>
+                  <h3>{month.format('LL')}</h3>
+                  <ul>
+                    {groupByRepository(monthIssues)
+                      .sort((a, b) => b.issues.length - a.issues.length)
+                      .map(({ id, repository, issues }) => (
+                        <li key={id} className={b('item')}>
+                          <span className={b('repo')}>
+                            {repository.name} ({Math.round(
+                              100 * (issues.length / monthIssues.length)
+                            ).toFixed()}%)
+                          </span>
+                          <ul className={b('issues')}>
+                            {issues.map(issue => (
+                              <li key={issue.id}>{issue.title}</li>
+                            ))}
+                          </ul>
+                        </li>
+                      ))}
+                  </ul>
+                </article>
+              )
+            )}
           </article>
         ))}
-      </article>
-
-      {issuesByUser.map(({ id, user, issues: userIssues }) => (
-        <article key={id} className={b('user')}>
-          <h2>{user.login}</h2>
-          {groupByMonth(userIssues).map(
-            ({ id, month, issues: monthIssues }) => (
-              <article key={id} className={b('month')}>
-                <h3>{month.format('LL')}</h3>
-                <ul>
-                  {groupByRepository(monthIssues)
-                    .sort((a, b) => b.issues.length - a.issues.length)
-                    .map(({ id, repository, issues }) => (
-                      <li key={id} className={b('item')}>
-                        <span className={b('repo')}>
-                          {repository.name} ({Math.round(
-                            100 * (issues.length / monthIssues.length)
-                          ).toFixed()}%)
-                        </span>
-                        <ul className={b('issues')}>
-                          {issues.map(issue => (
-                            <li key={issue.id}>{issue.title}</li>
-                          ))}
-                        </ul>
-                      </li>
-                    ))}
-                </ul>
-              </article>
-            )
-          )}
-        </article>
-      ))}
-    </section>
-  )
+      </section>
+    )
+  }
 }
 export default connect(
   state => ({
@@ -160,6 +169,10 @@ export default connect(
           },
         })
       )
+    },
+    sync: () => {
+      dispatch(setLoading('report'))
+      dispatch(fetchResults('report'))
     },
   })
 )(Report)

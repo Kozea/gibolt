@@ -1,13 +1,15 @@
 import './IssueCreationDetail.sass'
 
+import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { goBack } from '../actions'
+import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import {
   changeMilestoneSelect,
   changeRolesSelect,
+  fetchRepositoryWithoutLabels,
   submitIssue,
   updateTitle,
 } from '../actions/issueForm'
@@ -18,21 +20,15 @@ import MarkdownEditor from './MarkdownEditor'
 const b = block('IssueCreationDetail')
 
 class IssueCreationDetail extends React.Component {
-  componentDidMount() {
-    if (this.props.issueForm.params.grouper !== '') {
-      switch (this.props.issueForm.params.grouper) {
-        case 'milestone':
-        case 'project':
-          this.updateProjectSelect()
-          break
-      }
-    }
+  componentWillMount() {
+    const search = parse(this.props.location.search)
+    this.props.sync(search)
   }
 
   componentDidUpdate() {
     if (
       this.props.issueForm.milestonesSelect.length > 0 &&
-      this.props.issueForm.params.grouper === 'milestone'
+      this.props.params.grouper === 'milestone'
     ) {
       this.updateMilestonesSelect()
     }
@@ -48,7 +44,7 @@ class IssueCreationDetail extends React.Component {
   }
 
   splitMilestoneGroup(pos) {
-    const splitValue = this.props.issueForm.params.group.split(' ⦔ ')[pos]
+    const splitValue = this.props.params.group.split(' ⦔ ')[pos]
     const value =
       pos === 0
         ? splitValue
@@ -75,14 +71,12 @@ class IssueCreationDetail extends React.Component {
       onProjectChange,
       onTitleChange,
       onSubmit,
+      params,
       repository,
       repositories,
     } = this.props
     let repos = []
-    if (
-      issueForm.params.grouper === 'milestone' ||
-      issueForm.params.grouper === 'project'
-    ) {
+    if (params.grouper === 'milestone' || params.grouper === 'project') {
       repos = [repository]
     } else {
       repos = sortRepos(repositories)
@@ -111,8 +105,7 @@ class IssueCreationDetail extends React.Component {
               value={issueForm.project}
               onChange={event => onProjectChange(event.target.value)}
               disabled={
-                issueForm.params.grouper === 'milestone' ||
-                issueForm.params.grouper === 'project'
+                params.grouper === 'milestone' || params.grouper === 'project'
               }
             >
               <option value="" />
@@ -129,7 +122,7 @@ class IssueCreationDetail extends React.Component {
             <select
               id="milestone"
               name="milestone"
-              disabled={issueForm.params.grouper === 'milestone'}
+              disabled={params.grouper === 'milestone'}
             >
               <option value="" />
               {issueForm.milestonesSelect.map(milestone => (
@@ -222,6 +215,7 @@ export default withRouter(
       issueForm: state.issueForm.results,
       labels: state.labels.results.priority,
       loading: state.circle.loading,
+      params: state.params,
       repository: state.repository.results.repository,
       repositories: state.repositories.results.repositories,
     }),
@@ -241,6 +235,24 @@ export default withRouter(
       onSubmit: event => {
         event.preventDefault()
         dispatch(submitIssue(event, history))
+      },
+      sync: locationSearch => {
+        dispatch(setParams(locationSearch))
+        dispatch(setLoading('circles'))
+        dispatch(fetchResults('circles'))
+        if (
+          locationSearch.grouper === 'milestone' ||
+          locationSearch.grouper === 'project'
+        ) {
+          dispatch(changeMilestoneSelect(locationSearch.group.split(' ⦔ ')[0]))
+          dispatch(setLoading('repository'))
+          dispatch(
+            fetchRepositoryWithoutLabels(locationSearch.group.split(' ⦔ ')[0])
+          )
+        } else {
+          dispatch(setLoading('repositories'))
+          dispatch(fetchResults('repositories'))
+        }
       },
     })
   )(IssueCreationDetail)

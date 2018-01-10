@@ -1,10 +1,11 @@
 import './MeetingsReportCreation.sass'
 
+import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { fetchResults, goBack, setLoading } from '../actions'
+import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import { submitReport, updateReportsList } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
@@ -14,7 +15,11 @@ const b = block('MeetingsReportCreation')
 
 class MeetingsReportCreation extends React.Component {
   componentWillMount() {
-    this.props.sync()
+    const search = parse(this.props.location.search)
+    this.props.sync({
+      circle_id: search.circle_id ? +search.circle_id : '',
+      meeting_name: search.meeting_name ? search.meeting_name : '',
+    })
   }
 
   render() {
@@ -26,6 +31,7 @@ class MeetingsReportCreation extends React.Component {
       onGoBack,
       onSelectChange,
       onSubmit,
+      params,
       search,
     } = this.props
     return (
@@ -54,7 +60,7 @@ class MeetingsReportCreation extends React.Component {
               <select
                 id="circles"
                 name="circles"
-                value={meetingsTypes.params.circle_id}
+                value={params.circle_id}
                 disabled={search !== ''}
                 onChange={event => onSelectChange(event)}
               >
@@ -71,7 +77,7 @@ class MeetingsReportCreation extends React.Component {
               <select
                 id="meetingType"
                 name="meetingType"
-                value={meetingsTypes.params.meeting_name}
+                value={params.meeting_name}
                 disabled={search !== ''}
                 onChange={event => onSelectChange(event)}
               >
@@ -111,6 +117,7 @@ export default withRouter(
       meetings: state.meetings,
       meetingsTypes: state.meetingsTypes,
       search: state.router.location.search,
+      params: state.params,
     }),
     dispatch => ({
       onGoBack: history => {
@@ -123,7 +130,8 @@ export default withRouter(
         event.preventDefault()
         dispatch(submitReport(event, history))
       },
-      sync: () => {
+      sync: locationSearch => {
+        dispatch(setParams(locationSearch))
         dispatch(setLoading('circles'))
         dispatch(fetchResults('circles'))
         dispatch(setLoading('meetingsTypes'))
