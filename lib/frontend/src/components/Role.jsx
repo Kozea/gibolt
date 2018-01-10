@@ -150,7 +150,7 @@ class Role extends React.Component {
               <button
                 type="submit"
                 onClick={() => {
-                  btnClick(role.role_id)
+                  btnClick(role.role_id, role.circle_id, history)
                 }}
               >
                 Delete role
@@ -173,8 +173,8 @@ export default withRouter(
       users: state.users.results,
     }),
     dispatch => ({
-      btnClick: data => {
-        dispatch(deleteRole(data))
+      btnClick: (roleId, circleId, history) => {
+        dispatch(deleteRole(roleId, circleId, history))
       },
       editClick: () => {
         dispatch(editRole())
