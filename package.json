@@ -48,6 +48,7 @@
     "date-fns": "^1.29.0",
     "deep-equal": "1.0.1",
     "draft-js": "^0.10.4",
+    "draft-js-import-markdown": "^1.2.1",
     "draftjs-to-markdown": "^0.5.0",
     "history": "4.7.2",
     "isomorphic-fetch": "2.2.1",

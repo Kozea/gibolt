@@ -6,20 +6,47 @@ import { Helmet } from 'react-helmet'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
-import { deleteRole, updateRole } from '../actions/roles'
-import { editRole } from '../actions'
+import {
+  addItem,
+  deleteRole,
+  delItem,
+  fetchItems,
+  fetchRole,
+  updateItem,
+  updateRole,
+} from '../actions/roles'
+import {
+  cancelClickItem,
+  checkAccountabilities,
+  checkForm,
+  editClickItem,
+  editRole,
+  indicatorForm,
+  setLoading,
+} from '../actions'
 
 const b = block('Role')
 var ReactMarkdown = require('react-markdown')
 
 function Role({
+  addChecklist,
+  addClick,
+  addIndicator,
   btnClick,
+  cancelEditItem,
   circles,
+  deleteItem,
   editClick,
+  editItem,
   error,
+  isRoleInEdition,
+  items,
   loading,
+  onAddClick,
+  onEditItem,
   onEditRole,
   role,
+  roles,
   users,
 }) {
   return (
@@ -46,7 +73,7 @@ function Role({
         </article>
       )}
       {loading && <Loading />}
-      {role.is_in_edition ? (
+      {isRoleInEdition ? (
         ''
       ) : (
         <article>
@@ -70,10 +97,190 @@ function Role({
           <div>
             <ReactMarkdown source={role.role_accountabilities} />
           </div>
+          <h3>Checklist</h3>
+          <div>
+            {items.results
+              .filter(item => item.item_type === 'checklist')
+              .filter(item => item.role_id === role.role_id)
+              .map(item => (
+                <li key={item.item_id}>
+                  {item.content}
+                  {item.editItem ? (
+                    <div>
+                      <form
+                        onSubmit={e => {
+                          e.preventDefault()
+                          editItem(item, e)
+                        }}
+                      >
+                        <label>edit item:</label>
+                        <input
+                          name="content"
+                          defaultValue={item.content}
+                          required
+                        />
+                        <label>
+                          role :
+                          <select name="role_id" defaultValue={item.role_id}>
+                            {roles
+                              .filter(rol => rol.circle_id === role.circle_id)
+                              .map(rolee => (
+                                <option
+                                  key={rolee.role_id}
+                                  value={rolee.role_id}
+                                >
+                                  {rolee.role_name}
+                                </option>
+                              ))}
+                          </select>
+                        </label>
+                        <button type="submit">Send</button>
+                      </form>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  {item.editItem ? (
+                    <button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault()
+                        cancelEditItem(item.item_id)
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault()
+                        onEditItem(item.item_id)
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
+                  <button
+                    type="submit"
+                    onClick={() => deleteItem(item.item_id)}
+                  >
+                    delete
+                  </button>
+                </li>
+              ))}
+            {items && items.form_checklist ? (
+              <form
+                onSubmit={e => {
+                  e.preventDefault()
+                  addChecklist(role, e)
+                }}
+              >
+                <label>New item:</label>
+                <input name="content" required />
+                <button type="submit">Send</button>
+              </form>
+            ) : (
+              ''
+            )}
+            <button type="submit" onClick={() => addClick()}>
+              {items.form_checklist ? 'Cancel' : 'Add item'}
+            </button>
+          </div>
+          <h3>Indicators</h3>
+          <div>
+            {items.results
+              .filter(item => item.item_type === 'indicator')
+              .filter(item => item.role_id === role.role_id)
+              .map(item => (
+                <li key={item.item_id}>
+                  {item.content}
+                  {item.editItem ? (
+                    <div>
+                      <form
+                        onSubmit={e => {
+                          e.preventDefault()
+                          editItem(item, e)
+                        }}
+                      >
+                        <label>edit item:</label>
+                        <input
+                          name="content"
+                          defaultValue={item.content}
+                          required
+                        />
+                        <label>
+                          role :
+                          <select name="role_id" defaultValue={item.role_id}>
+                            {roles
+                              .filter(rol => rol.circle_id === role.circle_id)
+                              .map(rolee => (
+                                <option
+                                  key={rolee.role_id}
+                                  value={rolee.role_id}
+                                >
+                                  {rolee.role_name}
+                                </option>
+                              ))}
+                          </select>
+                        </label>
+                        <button type="submit">Send</button>
+                      </form>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  {item.editItem ? (
+                    <button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault()
+                        cancelEditItem(item.item_id)
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault()
+                        onEditItem(item.item_id)
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
+                  <button
+                    type="submit"
+                    onClick={() => deleteItem(item.item_id)}
+                  >
+                    delete
+                  </button>
+                </li>
+              ))}
+            {items.form_indicator ? (
+              <form
+                onSubmit={e => {
+                  e.preventDefault()
+                  addIndicator(role, e)
+                }}
+              >
+                <label>New item:</label>
+                <input name="content" required />
+                <button type="submit">Send</button>
+              </form>
+            ) : (
+              ''
+            )}
+            <button type="submit" onClick={() => onAddClick()}>
+              {items.form_indicator ? 'Cancel' : 'Add item'}
+            </button>
+          </div>
         </article>
       )}
       <article>
-        {role.is_in_edition ? (
+        {isRoleInEdition ? (
           <form
             onSubmit={e => {
               e.preventDefault()
@@ -130,17 +337,35 @@ function Role({
         ) : (
           ''
         )}
-        <button type="submit" onClick={() => editClick()}>
-          {role.is_in_edition ? 'Cancel' : 'Update'}
+        <button
+          type="submit"
+          onClick={() => editClick(role.role_accountabilities)}
+        >
+          {isRoleInEdition ? 'Cancel' : 'Update'}
         </button>
         <button
           type="submit"
           onClick={() => {
             btnClick(role.role_id)
           }}
+          disabled={
+            items.results.filter(item => item.role_id === role.role_id).length >
+            0
+          }
         >
           Delete role
         </button>
+        {items.results.filter(item => item.role_id === role.role_id).length >
+        0 ? (
+          <div>
+            <code>
+              {'You cannot delete this role, '}
+              {'please first delete the items.'}
+            </code>
+          </div>
+        ) : (
+          ''
+        )}
       </article>
     </section>
   )
@@ -150,20 +375,38 @@ export default connect(
   state => ({
     circles: state.circles.results,
     error: state.role.error,
+    items: state.items,
     loading: state.role.loading,
     role: state.role.results,
     roles: state.roles.results,
     users: state.users.results,
+    isRoleInEdition: state.role.results.is_in_edition,
   }),
   dispatch => ({
     addClick: () => {
-      dispatch(editRole())
+      dispatch(checkForm())
     },
-    btnClick: data => {
-      dispatch(deleteRole(data))
+    onAddClick: () => {
+      dispatch(indicatorForm())
     },
-    editClick: () => {
+    btnClick: roleId => {
+      dispatch(deleteRole(roleId))
+    },
+    editClick: content => {
       dispatch(editRole())
+      dispatch(checkAccountabilities(content))
+    },
+    editItem: (item, e) => {
+      const formItem = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
+          map.item_type = item.item_type
+          if (obj.name) {
+            map[obj.name] = obj.value
+          }
+          return map
+        }, {})
+      dispatch(updateItem(item.item_id, formItem))
     },
     onEditRole: (role, e) => {
       const formRole = [].slice.call(e.target.elements).reduce(
@@ -178,6 +421,51 @@ export default connect(
         { circle_id: role.circle_id }
       )
       dispatch(updateRole(role.role_id, formRole))
+      dispatch(checkAccountabilities(''))
+      dispatch(fetchRole())
     },
+    addChecklist: (role, e) => {
+      const formChecklist = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
+          map.role_id = role.role_id
+          map.item_type = 'checklist'
+          if (obj.name === '0') {
+            map.role_accountabilities = obj.value
+          } else if (obj.name && obj.value) {
+            map[obj.name] = obj.value
+          }
+
+          return map
+        }, {})
+      dispatch(addItem(formChecklist))
+      dispatch(checkForm())
+    },
+    addIndicator: (role, e) => {
+      const formChecklist = [].slice
+        .call(e.target.elements)
+        .reduce(function(map, obj) {
+          map.role_id = role.role_id
+          map.item_type = 'indicator'
+          if (obj.name === '0') {
+            map.role_accountabilities = obj.value
+          } else if (obj.name && obj.value) {
+            map[obj.name] = obj.value
+          }
+
+          return map
+        }, {})
+      dispatch(addItem(formChecklist))
+      dispatch(indicatorForm())
+    },
+    loadItems: () => {
+      dispatch(setLoading('items'))
+      dispatch(fetchItems())
+    },
+    deleteItem: itemId => {
+      dispatch(delItem(itemId))
+    },
+    onEditItem: itemId => dispatch(editClickItem(itemId)),
+    cancelEditItem: itemId => dispatch(cancelClickItem(itemId)),
   })
 )(Role)

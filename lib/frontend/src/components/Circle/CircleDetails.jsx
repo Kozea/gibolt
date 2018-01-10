@@ -2,7 +2,11 @@ import './Circle.sass'
 
 import React from 'react'
 
-import { editCircle } from '../../actions'
+import {
+  checkAccountabilities,
+  delAccountabilities,
+  editCircle,
+} from '../../actions'
 import {
   deleteCircle,
   toggleAccountExpanded,
@@ -17,6 +21,7 @@ var ReactMarkdown = require('react-markdown')
 
 function Circle({
   btnClick,
+  cancelClick,
   circle,
   circles,
   editClick,
@@ -94,7 +99,7 @@ function Circle({
           </label>
           <br />
           <button type="submit">Edit</button>
-          <button type="submit" onClick={() => editClick()}>
+          <button type="submit" onClick={() => cancelClick()}>
             Cancel
           </button>
         </form>
@@ -131,7 +136,7 @@ function Circle({
           <article>
             <button
               type="submit"
-              onClick={() => editClick()}
+              onClick={() => editClick(circle.circle_accountabilities)}
               disabled={!circle.is_active}
             >
               Update
@@ -189,8 +194,9 @@ export default connect(
     btnClick: data => {
       dispatch(deleteCircle(data))
     },
-    editClick: () => {
+    editClick: content => {
       dispatch(editCircle())
+      dispatch(checkAccountabilities(content))
     },
     onClickAccount: circleAccount => {
       dispatch(toggleAccountExpanded(circleAccount))
@@ -234,6 +240,7 @@ export default connect(
       }
       formCircle.is_active = true
       dispatch(updateCircle(id, formCircle))
+      dispatch(delAccountabilities())
     },
     onDisableCircle: circle => {
       const circleData = {}
@@ -244,6 +251,9 @@ export default connect(
       circleData.circle_accountabilities = circle.circle_accountabilities
       circleData.is_active = !circle.is_active
       dispatch(updateCircle(circle.circle_id, circleData))
+    },
+    cancelClick: () => {
+      dispatch(delAccountabilities())
     },
   })
 )(Circle)
