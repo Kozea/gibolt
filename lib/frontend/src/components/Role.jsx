@@ -17,7 +17,7 @@ import {
 } from '../actions/roles'
 import {
   cancelClickItem,
-  checkAcc,
+  checkAccountabilities,
   checkForm,
   editClickItem,
   editRole,
@@ -120,7 +120,7 @@ function Role({
                           required
                         />
                         <label>
-                          user :
+                          role :
                           <select name="role_id" defaultValue={item.role_id}>
                             {roles
                               .filter(rol => rol.circle_id === role.circle_id)
@@ -210,7 +210,7 @@ function Role({
                           required
                         />
                         <label>
-                          user :
+                          role :
                           <select name="role_id" defaultValue={item.role_id}>
                             {roles
                               .filter(rol => rol.circle_id === role.circle_id)
@@ -303,7 +303,6 @@ function Role({
               <select name="user_id" defaultValue={role.user_id}>
                 {users.map(user => (
                   <option key={user.user_id} value={user.user_id}>
-                    .results
                     {user.user_name}
                   </option>
                 ))}
@@ -395,7 +394,7 @@ export default connect(
     },
     editClick: content => {
       dispatch(editRole())
-      dispatch(checkAcc(content))
+      dispatch(checkAccountabilities(content))
     },
     editItem: (item, e) => {
       const formItem = [].slice
@@ -422,7 +421,7 @@ export default connect(
         { circle_id: role.circle_id }
       )
       dispatch(updateRole(role.role_id, formRole))
-      dispatch(checkAcc(''))
+      dispatch(checkAccountabilities(''))
       dispatch(fetchRole())
     },
     addChecklist: (role, e) => {
