@@ -5,7 +5,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
-import { fetchCircle } from '../../actions/circle'
 import { block, connect } from '../../utils'
 
 const b = block('Circle')
@@ -81,15 +80,12 @@ class CircleRoles extends React.Component {
 
 export default connect(
   state => ({
-    circle: state.circle.results,
     users: state.users.results,
   }),
   dispatch => ({
     sync: () => {
       dispatch(setLoading('users'))
       dispatch(fetchResults('users'))
-      dispatch(setLoading('circle'))
-      dispatch(fetchCircle())
     },
   })
 )(CircleRoles)

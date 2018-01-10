@@ -2,11 +2,9 @@ import './Circle.sass'
 
 import React from 'react'
 
-import { setLoading } from '../../actions'
 import {
   deleteCircle,
   editCircle,
-  fetchCircle,
   toggleAccountExpanded,
   toggleDomainExpanded,
   togglePurposeExpanded,
@@ -18,9 +16,7 @@ import MarkdownEditor from './../MarkdownEditor'
 var ReactMarkdown = require('react-markdown')
 
 class CircleDetails extends React.Component {
-  componentWillMount() {
-    this.props.sync()
-  }
+  componentWillMount() {}
 
   render() {
     const {
@@ -254,10 +250,6 @@ export default connect(
       circleData.circle_accountabilities = circle.circle_accountabilities
       circleData.is_active = !circle.is_active
       dispatch(updateCircle(circle.circle_id, circleData))
-    },
-    sync: () => {
-      dispatch(setLoading('circle'))
-      dispatch(fetchCircle())
     },
   })
 )(CircleDetails)

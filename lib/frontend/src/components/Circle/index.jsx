@@ -22,7 +22,10 @@ class Circle extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.location.search !== this.props.location.search) {
+    if (
+      nextProps.location.pathname === this.props.location.pathname &&
+      nextProps.location.search !== this.props.location.search
+    ) {
       this.props.sync()
     }
   }
@@ -86,10 +89,10 @@ class Circle extends React.Component {
               <CircleDetails />
               {!isCircleInEdition && (
                 <div>
-                  <CircleMeetings />
-                  <CircleRoles />
+                  <CircleMeetings circle={circle} />
+                  <CircleRoles circle={circle} />
                   {circle.children_circles.length > 0 ? (
-                    <CircleSubCircles />
+                    <CircleSubCircles circle={circle} />
                   ) : (
                     ''
                   )}
