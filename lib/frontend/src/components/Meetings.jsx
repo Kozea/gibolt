@@ -109,7 +109,13 @@ class Meetings extends React.Component {
             >
               <button
                 type="submit"
-                disabled={params.circle_id === '' || params.meeting_name === ''}
+                disabled={
+                  params.circle_id === '' ||
+                  params.meeting_name === '' ||
+                  !circles.results
+                    .filter(circle => circle.circle_id === params.circle_id)
+                    .map(circle => circle.is_active)[0]
+                }
               >
                 Add a report
               </button>
