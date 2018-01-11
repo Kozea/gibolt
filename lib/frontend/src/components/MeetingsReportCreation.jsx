@@ -15,6 +15,7 @@ const b = block('MeetingsReportCreation')
 function MeetingsReportCreation({
   circles,
   history,
+  items,
   meetings,
   meetingsTypes,
   onGoBack,
@@ -77,6 +78,20 @@ function MeetingsReportCreation({
               ))}
             </select>
           </label>
+          <label>
+            Checklist:
+            {items.results
+              .filter(item => item.item_type === 'checklist')
+              .map(item => <li key={item.item_id}>{item.content}</li>)}
+            <br />
+          </label>
+          <label>
+            Indicators:
+            {items.results
+              .filter(item => item.item_type === 'indicator')
+              .map(item => <li key={item.item_id}>{item.content}</li>)}
+            <br />
+          </label>
           <div className={b('content')}>
             <label>
               Report content:
@@ -100,6 +115,7 @@ export default withRouter(
   connect(
     state => ({
       circles: state.circles,
+      items: state.items,
       labels: state.labels.results.qualifier,
       meetings: state.meetings,
       meetingsTypes: state.meetingsTypes,
