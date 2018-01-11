@@ -4,28 +4,24 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { block, connect } from '../utils'
-import Loading from './Loading'
-import MarkdownEditor from './MarkdownEditor'
+import { checkAccountabilities, fetchResults, setLoading } from '../actions'
 import {
   addItem,
+  cancelClickItem,
+  checkForm,
   deleteRole,
   delItem,
+  editClickItem,
+  editRole,
   fetchItems,
   fetchRole,
+  indicatorForm,
   updateItem,
   updateRole,
 } from '../actions/roles'
-import {
-  cancelClickItem,
-  checkAccountabilities,
-  checkForm,
-  editClickItem,
-  editRole,
-  fetchResults,
-  indicatorForm,
-  setLoading,
-} from '../actions'
+import { block, connect } from '../utils'
+import Loading from './Loading'
+import MarkdownEditor from './MarkdownEditor'
 
 const b = block('Role')
 var ReactMarkdown = require('react-markdown')
@@ -151,7 +147,7 @@ class Role extends React.Component {
               <p>
                 {circles.find(circle => circle.circle_id === role.circle_id) &&
                   circles.find(circle => circle.circle_id === role.circle_id)
-                    .circle_name}
+                .circle_name}
               </p>
             </div>
             <h3>Purpose</h3>
@@ -346,7 +342,10 @@ class Role extends React.Component {
                 {items.form_indicator ? 'Cancel' : 'Add item'}
               </button>
             </div>
-            <button type="submit" onClick={() => editClick()}>
+            <button
+              type="submit"
+              onClick={() => editClick(role.role_accountabilities)}
+            >
               Update
             </button>
             <button
@@ -354,9 +353,24 @@ class Role extends React.Component {
               onClick={() => {
                 btnClick(role.role_id, role.circle_id, history)
               }}
+              disabled={
+                items.results.filter(item => item.role_id === role.role_id)
+                  .length > 0
+              }
             >
               Delete role
             </button>
+            {items.results.filter(item => item.role_id === role.role_id)
+              .length > 0 ? (
+                <div>
+                  <code>
+                    {'You cannot delete this role, '}
+                    {'please first delete the items.'}
+                  </code>
+                </div>
+              ) : (
+                ''
+              )}
           </article>
         )}
       </section>
