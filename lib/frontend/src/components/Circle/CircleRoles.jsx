@@ -24,7 +24,25 @@ class CircleRoles extends React.Component {
     const { circle, users } = this.props
     return (
       <article>
-        <h3>Roles</h3>
+        <h3>
+          Roles{' '}
+          {circle.is_active && (
+            <Link
+              to={{
+                pathname: '/createrole',
+                search: stringify({ circle_id: circle.circle_id }),
+              }}
+            >
+              <span
+                className={b('unlink')}
+                disabled={!circle.is_active}
+                title="Add role"
+              >
+                <i className="fa fa-plus-circle" aria-hidden="true" />
+              </span>
+            </Link>
+          )}
+        </h3>
         {circle.roles && circle.roles.length > 0 ? (
           <ul>
             {circle.roles.map(role => (
@@ -63,16 +81,6 @@ class CircleRoles extends React.Component {
         ) : (
           <span>No roles defined</span>
         )}
-        <Link
-          to={{
-            pathname: '/createrole',
-            search: stringify({ circle_id: circle.circle_id }),
-          }}
-        >
-          <button type="submit" disabled={!circle.is_active}>
-            Add a Role
-          </button>
-        </Link>
       </article>
     )
   }

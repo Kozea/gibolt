@@ -44,7 +44,7 @@ class CircleMeetings extends React.Component {
         </article>
         {circle.nb_reports > 0 && (
           <article>
-            <h3>Reports</h3>
+            <br />
             <Link
               className={b('link')}
               to={{

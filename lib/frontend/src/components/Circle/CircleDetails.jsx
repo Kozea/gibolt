@@ -1,6 +1,8 @@
 import './Circle.sass'
 
+import { stringify } from 'query-string'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import { checkAccountabilities, delAccountabilities } from '../../actions'
 import {
@@ -42,6 +44,11 @@ class CircleDetails extends React.Component {
               onEdit(circle.circle_id, e)
             }}
           >
+            {' '}
+            <h1>
+              {circle.circle_name}
+              {circle.is_active ? '' : ' (disabled)'}
+            </h1>
             <br />
             <label>
               Name :
@@ -106,7 +113,81 @@ class CircleDetails extends React.Component {
           </form>
         ) : (
           <div>
+            <h1>
+              {circle.circle_name}
+              {circle.is_active ? '' : ' (disabled)'}{' '}
+              <span
+                onClick={() => editClick()}
+                disabled={!circle.is_active}
+                title="Edit circle"
+              >
+                <i className="fa fa-pencil-square-o" aria-hidden="true" />
+              </span>{' '}
+              {circle.nb_reports > 0 ? (
+                <span
+                  onClick={e => {
+                    e.preventDefault()
+                    onDisableCircle(circle)
+                  }}
+                  disabled={
+                    circle.parent_circle_id === null
+                      ? false
+                      : !circle.parent_circle_is_active
+                  }
+                  title={circle.is_active ? 'Disable circle' : 'Enable circle'}
+                >
+                  {circle.is_active ? (
+                    <i className="fa fa-ban" aria-hidden="true" />
+                  ) : (
+                    <i className="fa fa-unlock" aria-hidden="true" />
+                  )}
+                </span>
+              ) : (
+                <span>
+                  {circle.roles.length === 0 && (
+                    <span
+                      onClick={e => {
+                        e.preventDefault()
+                        btnClick(circle.circle_id)
+                      }}
+                      disabled={circle.roles.length > 0}
+                      title="Delete circle"
+                    >
+                      <i className="fa fa-trash" aria-hidden="true" />
+                    </span>
+                  )}
+                </span>
+              )}
+            </h1>
+            {circle.parent_circle_name && (
+              <span>
+                {circle.parent_circle_name ? (
+                  <Link
+                    to={{
+                      pathname: '/circle',
+                      search: stringify({
+                        circle_id: circle.parent_circle_id,
+                      }),
+                    }}
+                  >
+                    {`(sous-cercle de "${circle.parent_circle_name}")`}
+                  </Link>
+                ) : (
+                  ''
+                )}
+              </span>
+            )}{' '}
+            {circle.nb_reports === 0 &&
+              circle.roles.length > 0 && (
+                <div>
+                  <code>
+                    {'You cannot delete this circle, '}
+                    {'please first delete the roles.'}
+                  </code>
+                </div>
+              )}
             <article>
+              <h3>Details</h3>
               <h4>Purpose</h4>
               <div onClick={() => onClickPurpose(circle.purpose_expanded)}>
                 {circle.purpose_expanded ? (
@@ -133,51 +214,6 @@ class CircleDetails extends React.Component {
                   <span>show accountabilities</span>
                 )}
               </div>
-            </article>
-            <article>
-              <button
-                type="submit"
-                onClick={() => editClick()}
-                disabled={!circle.is_active}
-              >
-                Update
-              </button>
-              {circle.nb_reports > 0 ? (
-                <button
-                  type="submit"
-                  onClick={e => {
-                    e.preventDefault()
-                    onDisableCircle(circle)
-                  }}
-                  disabled={
-                    circle.parent_circle_id === null
-                      ? false
-                      : !circle.parent_circle_is_active
-                  }
-                >
-                  {circle.is_active ? 'Disable' : 'Enable'}
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  onClick={e => {
-                    e.preventDefault()
-                    btnClick(circle.circle_id)
-                  }}
-                  disabled={circle.roles.length > 0}
-                >
-                  Delete
-                </button>
-              )}
-              {circle.nb_reports === 0 &&
-                circle.roles.length > 0 && (
-                  <div>
-                    <code>
-                      {'You cannot delete this circle, '}
-                      {'please first delete the roles.'}
-                    </code>
-                  </div>
-                )}
             </article>
           </div>
         )}

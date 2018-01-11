@@ -1,9 +1,8 @@
 import './Circle.sass'
 
-import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { Link, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import { goBack, setLoading } from '../../actions'
 import { fetchCircle } from '../../actions/circle'
@@ -42,7 +41,9 @@ class Circle extends React.Component {
     return (
       <section className={b()}>
         <Helmet>
-          <title>Gibolt - Circle</title>
+          <title>
+            Gibolt - {circle.circle_name ? circle.circle_name : 'Circle'}
+          </title>
         </Helmet>
         {error && (
           <article className={b('group', { error: true })}>
@@ -64,27 +65,6 @@ class Circle extends React.Component {
         <article className={b('circle')}>
           {circle.circle_name && (
             <div>
-              <h1>
-                {circle.circle_name} {circle.is_active ? '' : ' (disabled)'}
-              </h1>
-              {circle.parent_circle_name && (
-                <span>
-                  {circle.parent_circle_name ? (
-                    <Link
-                      to={{
-                        pathname: '/circle',
-                        search: stringify({
-                          circle_id: circle.parent_circle_id,
-                        }),
-                      }}
-                    >
-                      {`(sous-cercle de "${circle.parent_circle_name}")`}
-                    </Link>
-                  ) : (
-                    ''
-                  )}
-                </span>
-              )}
               {loading && <Loading />}
               <CircleDetails />
               {!isCircleInEdition && (
