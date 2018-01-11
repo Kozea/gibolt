@@ -17,13 +17,17 @@ const b = block('Circle')
 
 class Circle extends React.Component {
   componentWillMount() {
-    this.props.sync()
+    if (this.props.location.pathname === '/circle') {
+      this.props.sync()
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     if (
-      nextProps.location.pathname === this.props.location.pathname &&
-      nextProps.location.search !== this.props.location.search
+      (nextProps.location.pathname !== this.props.location.pathname &&
+        nextProps.location.pathname === '/circle') ||
+      (nextProps.location.pathname === this.props.location.pathname &&
+        nextProps.location.search !== this.props.location.search)
     ) {
       this.props.sync()
     }
@@ -96,6 +100,7 @@ export default withRouter(
       circle: state.circle.results,
       error: state.circle.error,
       loading: state.circle.loading,
+      location: state.router.location,
       isCircleInEdition: state.circle.is_in_edition,
     }),
     dispatch => ({
