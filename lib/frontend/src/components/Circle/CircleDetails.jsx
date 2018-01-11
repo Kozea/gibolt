@@ -24,6 +24,7 @@ class CircleDetails extends React.Component {
   render() {
     const {
       btnClick,
+      cancelClick,
       circle,
       circles,
       editClick,
@@ -107,7 +108,7 @@ class CircleDetails extends React.Component {
             </label>
             <br />
             <button type="submit">Edit</button>
-            <button type="submit" onClick={() => editClick()}>
+            <button type="submit" onClick={() => cancelClick()}>
               Cancel
             </button>
           </form>
@@ -117,7 +118,7 @@ class CircleDetails extends React.Component {
               {circle.circle_name}
               {circle.is_active ? '' : ' (disabled)'}{' '}
               <span
-                onClick={() => editClick()}
+                onClick={() => editClick(circle.circle_accountabilities)}
                 disabled={!circle.is_active}
                 title="Edit circle"
               >
