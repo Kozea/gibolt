@@ -6,7 +6,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link, withRouter } from 'react-router-dom'
 
-import { fetchResults, setLoading, setParams } from '../actions'
+import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import { updateReportsList } from '../actions/meetings'
 import { block, connect, getColor } from '../utils'
 import Loading from './Loading'
@@ -15,8 +15,21 @@ const b = block('Meetings')
 
 class Meetings extends React.Component {
   componentWillMount() {
-    const search = parse(this.props.location.search)
-    this.props.sync({
+    this.updateData(this.props.location.search, this.props.sync)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.location.pathname === this.props.location.pathname &&
+      nextProps.location.search !== this.props.location.search
+    ) {
+      this.updateData(nextProps.location.search, this.props.sync)
+    }
+  }
+
+  updateData(locationSearch, sync) {
+    const search = parse(locationSearch)
+    sync({
       circle_id: search.circle_id ? +search.circle_id : '',
       meeting_name: search.meeting_name ? search.meeting_name : '',
     })
@@ -29,6 +42,7 @@ class Meetings extends React.Component {
       labels,
       meetings,
       meetingsTypes,
+      onGoBack,
       onSelectChange,
       params,
     } = this.props
@@ -136,6 +150,9 @@ class Meetings extends React.Component {
           ) : (
             <span>No meetings reports</span>
           )}
+          <button type="submit" onClick={() => onGoBack(history)}>
+            Back
+          </button>
         </article>
       </section>
     )
@@ -151,6 +168,9 @@ export default withRouter(
       params: state.params,
     }),
     dispatch => ({
+      onGoBack: history => {
+        dispatch(goBack(history))
+      },
       onSelectChange: (event, history) => {
         dispatch(updateReportsList(event, history))
       },
