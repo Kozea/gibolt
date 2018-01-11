@@ -3,20 +3,24 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 import './MarkdownEditor.sass'
 
-import { convertToRaw } from 'draft-js'
+import { convertToRaw, EditorState } from 'draft-js'
+import { stateFromMarkdown } from 'draft-js-import-markdown'
 import draftToMarkdown from 'draftjs-to-markdown'
 import React from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 
-import { block } from '../utils'
+import { block, connect } from '../utils'
 
 const b = block('MarkdownEditor')
 
-export default class MarkdownEditor extends React.Component {
+class MarkdownEditor extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
-      editorState: '',
+      editorState: EditorState.createWithContent(
+        stateFromMarkdown(this.props.markvalue)
+      ),
+      markvalue: this.props.markvalue,
     }
   }
 
@@ -31,6 +35,7 @@ export default class MarkdownEditor extends React.Component {
     return (
       <div className={b()}>
         <Editor
+          editorState={editorState}
           wrapperClassName={b('wrapper')}
           editorClassName={b('editor')}
           toolbarClassName={b('toolbar')}
@@ -66,3 +71,7 @@ export default class MarkdownEditor extends React.Component {
     )
   }
 }
+
+export default connect(state => ({
+  markvalue: state.markvalue,
+}))(MarkdownEditor)

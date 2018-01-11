@@ -2,6 +2,7 @@ import './Circle.sass'
 
 import React from 'react'
 
+import { checkAccountabilities, delAccountabilities } from '../../actions'
 import {
   deleteCircle,
   editCircle,
@@ -195,8 +196,9 @@ export default connect(
     btnClick: data => {
       dispatch(deleteCircle(data))
     },
-    editClick: () => {
+    editClick: content => {
       dispatch(editCircle())
+      dispatch(checkAccountabilities(content))
     },
     onClickAccount: circleAccount => {
       dispatch(toggleAccountExpanded(circleAccount))
@@ -240,6 +242,7 @@ export default connect(
       }
       formCircle.is_active = true
       dispatch(updateCircle(id, formCircle))
+      dispatch(delAccountabilities())
     },
     onDisableCircle: circle => {
       const circleData = {}
@@ -250,6 +253,9 @@ export default connect(
       circleData.circle_accountabilities = circle.circle_accountabilities
       circleData.is_active = !circle.is_active
       dispatch(updateCircle(circle.circle_id, circleData))
+    },
+    cancelClick: () => {
+      dispatch(delAccountabilities())
     },
   })
 )(CircleDetails)
