@@ -23,7 +23,7 @@ function Createcircle({ circles, history, loading, onGoBack, onSubmit }) {
       <form
         onSubmit={e => {
           e.preventDefault()
-          onSubmit(e)
+          onSubmit(e, history)
         }}
       >
         <label>
@@ -80,7 +80,7 @@ export default withRouter(
       onGoBack: history => {
         dispatch(goBack(history))
       },
-      onSubmit: e => {
+      onSubmit: (e, history) => {
         const formCircle = [].slice
           .call(e.target.elements)
           .reduce(function(map, obj) {
@@ -92,7 +92,7 @@ export default withRouter(
 
             return map
           }, {})
-        dispatch(createCircle(formCircle))
+        dispatch(createCircle(formCircle, history))
       },
     })
   )(Createcircle)

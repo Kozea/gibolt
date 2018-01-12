@@ -30,6 +30,11 @@ rest(
     Role,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
     name='roles',
+    query=lambda query: query.filter(
+        Role.circle_id == (request.values.get('circle_id'))
+        if request.values.get('circle_id')
+        else True,
+    ),
     auth=needlogin)
 
 rest(
@@ -53,6 +58,11 @@ rest(
     Item,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
     name='items',
+    query=lambda query: query.filter(
+        Item.role_id == (request.values.get('role_id'))
+        if request.values.get('role_id')
+        else True,
+    ),
     auth=needlogin)
 
 rest(

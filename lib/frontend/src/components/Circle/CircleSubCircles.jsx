@@ -2,16 +2,16 @@ import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { block, connect } from '../../utils'
+import { block } from '../../utils'
 
 const b = block('Circle')
 
-function Circle({ circle }) {
+export default function CircleSubCircles(props) {
   return (
     <article>
       <h3>Sub-circles</h3>
       <ul>
-        {circle.children_circles.map(child => (
+        {props.circle.children_circles.map(child => (
           <li key={child.circle_id}>
             <span className={b('bullet')} />
             <Link
@@ -28,6 +28,3 @@ function Circle({ circle }) {
     </article>
   )
 }
-export default connect(state => ({
-  circle: state.circle.results,
-}))(Circle)
