@@ -34,7 +34,7 @@ class Timeline extends React.Component {
           return months
         }
         const month = startOfMonth(milestone.due_on)
-        const monthStr = format(month, 'LL')
+        const monthStr = format(month, 'YYYY-MM')
         if (months[monthStr] === void 0) {
           months[monthStr] = {
             month: month,
