@@ -22,6 +22,9 @@ export default function Milestone(props) {
         val={props.closed_issues}
         total={props.open_issues + props.closed_issues}
       />
+      <span className={b('unlink')} title="Add to a circle">
+        <i className="fa fa-plus-circle addCircle" aria-hidden="true" />
+      </span>
     </li>
   )
 }

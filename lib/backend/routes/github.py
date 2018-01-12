@@ -840,6 +840,7 @@ def timeline():
     def milestoneDateToIso(milestone):
         if milestone.get('due_on'):
             milestone['due_on'] = milestone['due_on'].isoformat()
+        milestone['is_in_edition'] = False
         return milestone
 
     return jsonify({

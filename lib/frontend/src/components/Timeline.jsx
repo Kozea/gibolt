@@ -20,6 +20,8 @@ class Timeline extends React.Component {
 
   render() {
     const {
+      circles,
+      labels,
       range,
       query,
       loading,
@@ -63,7 +65,11 @@ class Timeline extends React.Component {
             type="date"
             value={range.stop}
             onChange={e => onDateChange(e.target.value, 'stop', query)}
-          />.
+          />
+          <input id="checkbox" type="checkbox" value={'display'} />
+          <label className={b('check')} htmlFor="checkbox">
+            display milestones without due date
+          </label>
         </h1>
         {loading && <Loading />}
         {error && (
@@ -88,6 +94,8 @@ class Timeline extends React.Component {
                   title={milestone.title}
                   open_issues={milestone.open_issues}
                   closed_issues={milestone.closed_issues}
+                  circles={circles}
+                  labels={labels}
                 />
               ))}
             </ul>
@@ -104,6 +112,8 @@ export default connect(
     loading: state.timeline.loading,
     error: state.timeline.error,
     range: timelineRangeFromState(state),
+    circles: state.circles.results,
+    labels: state.labels.results.qualifier,
   }),
   dispatch => ({
     onDateChange: (date, type, query) => {
@@ -120,6 +130,10 @@ export default connect(
     sync: () => {
       dispatch(setLoading('timeline'))
       dispatch(fetchResults('timeline'))
+      dispatch(setLoading('circles'))
+      dispatch(fetchResults('circles'))
+      dispatch(setLoading('labels'))
+      dispatch(fetchResults('labels'))
     },
   })
 )(Timeline)
