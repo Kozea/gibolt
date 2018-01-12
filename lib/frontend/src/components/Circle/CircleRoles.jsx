@@ -51,7 +51,7 @@ class CircleRoles extends React.Component {
                 <Link
                   to={{
                     pathname: '/role',
-                    search: stringify({ id: role.role_id }),
+                    search: stringify({ role_id: role.role_id }),
                   }}
                 >
                   {role.role_name}

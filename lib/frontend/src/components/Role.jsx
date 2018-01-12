@@ -50,7 +50,6 @@ class Role extends React.Component {
       onEditItem,
       onEditRole,
       role,
-      roles,
       users,
     } = this.props
     return (
@@ -147,7 +146,7 @@ class Role extends React.Component {
               <p>
                 {circles.find(circle => circle.circle_id === role.circle_id) &&
                   circles.find(circle => circle.circle_id === role.circle_id)
-                .circle_name}
+                    .circle_name}
               </p>
             </div>
             <h3>Purpose</h3>
@@ -166,16 +165,14 @@ class Role extends React.Component {
             <div>
               {items.results
                 .filter(item => item.item_type === 'checklist')
-                .filter(item => item.role_id === role.role_id)
                 .map(item => (
                   <li key={item.item_id}>
-                    {item.content}
                     {item.editItem ? (
                       <div>
                         <form
                           onSubmit={e => {
                             e.preventDefault()
-                            editItem(item, e)
+                            editItem(item, e, role.role_id)
                           }}
                         >
                           <label>edit item:</label>
@@ -184,70 +181,53 @@ class Role extends React.Component {
                             defaultValue={item.content}
                             required
                           />
-                          <label>
-                            role :
-                            <select name="role_id" defaultValue={item.role_id}>
-                              {roles
-                                .filter(rol => rol.circle_id === role.circle_id)
-                                .map(rolee => (
-                                  <option
-                                    key={rolee.role_id}
-                                    value={rolee.role_id}
-                                  >
-                                    {rolee.role_name}
-                                  </option>
-                                ))}
-                            </select>
-                          </label>
                           <button type="submit">Send</button>
                         </form>
+                        <button
+                          type="submit"
+                          onClick={e => {
+                            e.preventDefault()
+                            cancelEditItem(item.item_id)
+                          }}
+                        >
+                          Cancel
+                        </button>
                       </div>
                     ) : (
-                      ''
+                      <span>
+                        {item.content}
+                        <button
+                          type="submit"
+                          onClick={e => {
+                            e.preventDefault()
+                            onEditItem(item.item_id)
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="submit"
+                          onClick={() => deleteItem(item.item_id)}
+                        >
+                          Delete
+                        </button>
+                      </span>
                     )}
-                    {item.editItem ? (
-                      <button
-                        type="submit"
-                        onClick={e => {
-                          e.preventDefault()
-                          cancelEditItem(item.item_id)
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    ) : (
-                      <button
-                        type="submit"
-                        onClick={e => {
-                          e.preventDefault()
-                          onEditItem(item.item_id)
-                        }}
-                      >
-                        Edit
-                      </button>
-                    )}
-                    <button
-                      type="submit"
-                      onClick={() => deleteItem(item.item_id)}
-                    >
-                      delete
-                    </button>
                   </li>
                 ))}
-              {items && items.form_checklist ? (
-                <form
-                  onSubmit={e => {
-                    e.preventDefault()
-                    addChecklist(role, e)
-                  }}
-                >
-                  <label>New item:</label>
-                  <input name="content" required />
-                  <button type="submit">Send</button>
-                </form>
-              ) : (
-                ''
-              )}
+              {items &&
+                items.form_checklist && (
+                  <form
+                    onSubmit={e => {
+                      e.preventDefault()
+                      addChecklist(role, e)
+                    }}
+                  >
+                    <label>New item:</label>
+                    <input name="content" required />
+                    <button type="submit">Send</button>
+                  </form>
+                )}
               <button type="submit" onClick={() => addClick()}>
                 {items.form_checklist ? 'Cancel' : 'Add item'}
               </button>
@@ -256,16 +236,14 @@ class Role extends React.Component {
             <div>
               {items.results
                 .filter(item => item.item_type === 'indicator')
-                .filter(item => item.role_id === role.role_id)
                 .map(item => (
                   <li key={item.item_id}>
-                    {item.content}
                     {item.editItem ? (
                       <div>
                         <form
                           onSubmit={e => {
                             e.preventDefault()
-                            editItem(item, e)
+                            editItem(item, e, role.role_id)
                           }}
                         >
                           <label>edit item:</label>
@@ -274,57 +252,41 @@ class Role extends React.Component {
                             defaultValue={item.content}
                             required
                           />
-                          <label>
-                            role :
-                            <select name="role_id" defaultValue={item.role_id}>
-                              {roles
-                                .filter(rol => rol.circle_id === role.circle_id)
-                                .map(rolee => (
-                                  <option
-                                    key={rolee.role_id}
-                                    value={rolee.role_id}
-                                  >
-                                    {rolee.role_name}
-                                  </option>
-                                ))}
-                            </select>
-                          </label>
                           <button type="submit">Send</button>
                         </form>
+                        <button
+                          type="submit"
+                          onClick={e => {
+                            e.preventDefault()
+                            cancelEditItem(item.item_id)
+                          }}
+                        >
+                          Cancel
+                        </button>
                       </div>
                     ) : (
-                      ''
+                      <span>
+                        {item.content}
+                        <button
+                          type="submit"
+                          onClick={e => {
+                            e.preventDefault()
+                            onEditItem(item.item_id)
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="submit"
+                          onClick={() => deleteItem(item.item_id)}
+                        >
+                          Delete
+                        </button>
+                      </span>
                     )}
-                    {item.editItem ? (
-                      <button
-                        type="submit"
-                        onClick={e => {
-                          e.preventDefault()
-                          cancelEditItem(item.item_id)
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    ) : (
-                      <button
-                        type="submit"
-                        onClick={e => {
-                          e.preventDefault()
-                          onEditItem(item.item_id)
-                        }}
-                      >
-                        Edit
-                      </button>
-                    )}
-                    <button
-                      type="submit"
-                      onClick={() => deleteItem(item.item_id)}
-                    >
-                      delete
-                    </button>
                   </li>
                 ))}
-              {items.form_indicator ? (
+              {items.form_indicator && (
                 <form
                   onSubmit={e => {
                     e.preventDefault()
@@ -335,8 +297,6 @@ class Role extends React.Component {
                   <input name="content" required />
                   <button type="submit">Send</button>
                 </form>
-              ) : (
-                ''
               )}
               <button type="submit" onClick={() => onAddClick()}>
                 {items.form_indicator ? 'Cancel' : 'Add item'}
@@ -361,16 +321,14 @@ class Role extends React.Component {
               Delete role
             </button>
             {items.results.filter(item => item.role_id === role.role_id)
-              .length > 0 ? (
-                <div>
-                  <code>
-                    {'You cannot delete this role, '}
-                    {'please first delete the items.'}
-                  </code>
-                </div>
-              ) : (
-                ''
-              )}
+              .length > 0 && (
+              <div>
+                <code>
+                  {'You cannot delete this role, '}
+                  {'please first delete the items.'}
+                </code>
+              </div>
+            )}
           </article>
         )}
       </section>
@@ -402,7 +360,7 @@ export default withRouter(
         dispatch(editRole())
         dispatch(checkAccountabilities(content))
       },
-      editItem: (item, e) => {
+      editItem: (item, e, roleId) => {
         const formItem = [].slice
           .call(e.target.elements)
           .reduce(function(map, obj) {
@@ -412,6 +370,7 @@ export default withRouter(
             }
             return map
           }, {})
+        formItem.role_id = roleId
         dispatch(updateItem(item.item_id, formItem))
       },
       onEditRole: (role, e, history) => {
@@ -480,8 +439,6 @@ export default withRouter(
         dispatch(fetchResults('users'))
         dispatch(setLoading('role'))
         dispatch(fetchRole())
-        dispatch(setLoading('items'))
-        dispatch(fetchResults('items'))
       },
     })
   )(Role)
