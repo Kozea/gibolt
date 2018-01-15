@@ -94,30 +94,46 @@ class MeetingsReportCreation extends React.Component {
               </select>
             </label>
             <br />
-            {circle && circle.results && circle.results.roles.length > 0 && (
-              <span>
-                <label>
-                Checklist:
-                {items && roles &&
-                  items
-                .filter(item => item.item_type === 'checklist')
-                .filter(item => item.role_id === roles
-                  .find(role => role.circle_id === params.circle_id)
-                  .role_id)
-                .map(item => <li key={item.item_id}>{item.content}</li>)}
-                </label>
-                <label>
-                Indicators:
-                {items && roles &&
-                  items
-                .filter(item => item.item_type === 'indicator')
-                .filter(item => item.role_id === roles
-                  .find(role => role.circle_id === params.circle_id)
-                  .role_id)
-                .map(item => <li key={item.item_id}>{item.content}</li>)}
-                </label>
-              </span>
-            )}
+            {circle &&
+              circle.results &&
+              circle.results.roles.length > 0 && (
+                <span>
+                  <label>
+                    Checklist:
+                    {items &&
+                      roles &&
+                      items
+                        .filter(item => item.item_type === 'checklist')
+                        .filter(
+                          item =>
+                            item.role_id ===
+                            roles.find(
+                              role => role.circle_id === params.circle_id
+                            ).role_id
+                        )
+                        .map(item => (
+                          <li key={item.item_id}>{item.content}</li>
+                        ))}
+                  </label>
+                  <label>
+                    Indicators:
+                    {items &&
+                      roles &&
+                      items
+                        .filter(item => item.item_type === 'indicator')
+                        .filter(
+                          item =>
+                            item.role_id ===
+                            roles.find(
+                              role => role.circle_id === params.circle_id
+                            ).role_id
+                        )
+                        .map(item => (
+                          <li key={item.item_id}>{item.content}</li>
+                        ))}
+                  </label>
+                </span>
+              )}
             <br />
             <div className={b('content')}>
               <label>
