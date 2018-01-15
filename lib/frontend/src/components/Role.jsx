@@ -15,6 +15,7 @@ import {
   editRole,
   fetchItems,
   fetchRole,
+  fetchRoles,
   indicatorForm,
   updateItem,
   updateRole,
@@ -50,6 +51,7 @@ class Role extends React.Component {
       onEditItem,
       onEditRole,
       role,
+      roles,
       users,
     } = this.props
     return (
@@ -181,6 +183,24 @@ class Role extends React.Component {
                             defaultValue={item.content}
                             required
                           />
+                          <label>
+                            role :
+                            <select name="role_id" defaultValue={item.role_id}>
+                              {roles &&
+                                roles
+                                  .filter(
+                                    rol => rol.circle_id === role.circle_id
+                                  )
+                                  .map(rolee => (
+                                    <option
+                                      key={rolee.role_id}
+                                      value={rolee.role_id}
+                                    >
+                                      {rolee.role_name}
+                                    </option>
+                                  ))}
+                            </select>
+                          </label>
                           <button type="submit">Send</button>
                         </form>
                         <button
@@ -252,6 +272,24 @@ class Role extends React.Component {
                             defaultValue={item.content}
                             required
                           />
+                          <label>
+                            role :
+                            <select name="role_id" defaultValue={item.role_id}>
+                              {roles &&
+                                roles
+                                  .filter(
+                                    rol => rol.circle_id === role.circle_id
+                                  )
+                                  .map(rolee => (
+                                    <option
+                                      key={rolee.role_id}
+                                      value={rolee.role_id}
+                                    >
+                                      {rolee.role_name}
+                                    </option>
+                                  ))}
+                            </select>
+                          </label>
                           <button type="submit">Send</button>
                         </form>
                         <button
@@ -344,6 +382,7 @@ export default withRouter(
       items: state.items,
       loading: state.role.loading,
       role: state.role.results,
+      roles: state.roles.results,
       users: state.users.results,
     }),
     dispatch => ({
@@ -439,6 +478,8 @@ export default withRouter(
         dispatch(fetchResults('users'))
         dispatch(setLoading('role'))
         dispatch(fetchRole())
+        dispatch(setLoading('roles'))
+        dispatch(fetchRoles())
       },
     })
   )(Role)
