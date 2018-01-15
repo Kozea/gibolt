@@ -130,7 +130,9 @@ class MeetingsReportCreation extends React.Component {
                             ).role_id
                         )
                         .map(item => (
-                          <li key={item.item_id}>{item.content} : <input type="text" /></li>
+                          <li key={item.item_id}>
+                            {item.content} : <input type="text" />
+                          </li>
                         ))}
                   </label>
                 </span>
