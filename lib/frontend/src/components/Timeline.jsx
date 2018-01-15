@@ -18,6 +18,12 @@ class Timeline extends React.Component {
     this.props.sync()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.search !== this.props.location.search) {
+      this.props.sync()
+    }
+  }
+
   render() {
     const {
       circles,
@@ -27,16 +33,20 @@ class Timeline extends React.Component {
       loading,
       error,
       milestones,
+      onCheckboxChange,
       onDateChange,
     } = this.props
 
     let milestonesByMonth = values(
       milestones.reduce((months, milestone) => {
-        if (!milestone.due_on) {
+        let month, monthStr
+        if (!milestone.due_on && !range.withoutDueDate) {
           return months
         }
-        const month = startOfMonth(milestone.due_on)
-        const monthStr = format(month, 'YYYY-MM')
+        if (milestone.due_on) {
+          month = startOfMonth(milestone.due_on)
+          monthStr = format(month, 'YYYY-MM')
+        }
         if (months[monthStr] === void 0) {
           months[monthStr] = {
             month: month,
@@ -66,7 +76,11 @@ class Timeline extends React.Component {
             value={range.stop}
             onChange={e => onDateChange(e.target.value, 'stop', query)}
           />
-          <input id="checkbox" type="checkbox" value={'display'} />
+          <input
+            id="checkbox"
+            type="checkbox"
+            onChange={event => onCheckboxChange(event, query)}
+          />
           <label className={b('check')} htmlFor="checkbox">
             display milestones without due date
           </label>
@@ -117,8 +131,20 @@ export default connect(
     range: timelineRangeFromState(state),
     circles: state.circles.results,
     labels: state.labels.results.qualifier,
+    location: state.router.location,
   }),
   dispatch => ({
+    onCheckboxChange: (e, query) => {
+      dispatch(
+        push({
+          pathname: '/timeline',
+          search: stringify({
+            ...query,
+            ['withoutDueDate']: e.target.checked,
+          }),
+        })
+      )
+    },
     onDateChange: (date, type, query) => {
       dispatch(
         push({

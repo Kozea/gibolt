@@ -829,6 +829,7 @@ def timeline():
     user = session.get('user')
     start = params.get('start')
     stop = params.get('stop')
+    without_due_date = params.get('withoutDueDate') == 'true'
     with ThreadPoolExecutor(max_workers=50) as executor:
         for name in repos_name:
             repo = {}
@@ -852,14 +853,16 @@ def timeline():
         milestone['circles'] = getCirclesId(milestone)
         return milestone
 
+    results = [milestoneDateToIso(milestone) for milestone in milestones
+               if (milestone.get('due_on') and date_from_iso(start) <=
+               milestone['due_on'] < date_from_iso(stop)) or
+               (without_due_date and not milestone.get('due_on') and
+               not milestone.get('closed_at'))]
+
     return jsonify({
         'params': request.get_json(),
         'results': {
-            'milestones': [
-                milestoneDateToIso(milestone) for milestone in milestones
-                if milestone.get('due_on') and date_from_iso(start) <=
-                milestone['due_on'] < date_from_iso(stop)
-            ]
+            'milestones': results
         }
     })
 
