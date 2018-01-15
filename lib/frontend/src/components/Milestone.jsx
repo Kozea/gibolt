@@ -23,11 +23,14 @@ function getSelectedCircles(circleSelect) {
   return selectedCircles
 }
 
-function isAssociatedCircles(circleId, assocCircles) {
-  return (
-    assocCircles.filter(assocCircle => assocCircle.circle_id === circleId)
-      .length !== 0
-  )
+function isAssociatedCircles(circles, assocCircles) {
+  return circles
+    .filter(circle =>
+      assocCircles.find(
+        assocCircle => assocCircle.circle_id === circle.circle_id
+      )
+    )
+    .map(circle => circle.circle_id)
 }
 
 function Milestone(props) {
@@ -56,16 +59,13 @@ function Milestone(props) {
             multiple
             name="circles[]"
             size={props.circles.length}
+            defaultValue={isAssociatedCircles(
+              props.circles,
+              props.assoc_circles
+            )}
           >
             {props.circles.map(circle => (
-              <option
-                key={circle.circle_id}
-                value={circle.circle_id}
-                selected={isAssociatedCircles(
-                  circle.circle_id,
-                  props.assoc_circles
-                )}
-              >
+              <option key={circle.circle_id} value={circle.circle_id}>
                 {circle.circle_name}
               </option>
             ))}
