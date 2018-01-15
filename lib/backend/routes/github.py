@@ -6,8 +6,11 @@ import pytz
 from flask import jsonify, request, session
 from flask_github import GitHubError
 
-from .. import app, github
+from .. import Session, app, github
+from ..api.models import Milestone_circle
 from .auth import cache, needlogin
+
+db_session = Session()
 
 
 def date_from_iso(iso_date):
@@ -837,10 +840,16 @@ def timeline():
     for repo in repos:
         milestones.extend(repo.get('milestones', []))
 
+    def getCirclesId(milestone):
+        milestones_circles = db_session.query(Milestone_circle) \
+            .filter(Milestone_circle.milestone_id == milestone['id']).all()
+        return [{'circle_id': assoc.circle_id} for assoc in milestones_circles]
+
     def milestoneDateToIso(milestone):
         if milestone.get('due_on'):
             milestone['due_on'] = milestone['due_on'].isoformat()
         milestone['is_in_edition'] = False
+        milestone['circles'] = getCirclesId(milestone)
         return milestone
 
     return jsonify({

@@ -96,6 +96,7 @@ class Timeline extends React.Component {
                   open_issues={milestone.open_issues}
                   closed_issues={milestone.closed_issues}
                   is_in_edition={milestone.is_in_edition}
+                  assoc_circles={milestone.circles}
                   circles={circles}
                   labels={labels}
                 />

@@ -7,7 +7,7 @@ import {
   milestoneOnEdition,
   updateMilestoneCircles,
 } from '../actions/milestones'
-import { block, connect } from '../utils'
+import { block, connect, getColor } from '../utils'
 import Progress from './Progress'
 
 const b = block('Milestone')
@@ -21,6 +21,13 @@ function getSelectedCircles(circleSelect) {
     }
   }
   return selectedCircles
+}
+
+function isAssociatedCircles(circleId, assocCircles) {
+  return (
+    assocCircles.filter(assocCircle => assocCircle.circle_id === circleId)
+      .length !== 0
+  )
 }
 
 function Milestone(props) {
@@ -51,7 +58,14 @@ function Milestone(props) {
             size={props.circles.length}
           >
             {props.circles.map(circle => (
-              <option key={circle.circle_id} value={circle.circle_id}>
+              <option
+                key={circle.circle_id}
+                value={circle.circle_id}
+                selected={isAssociatedCircles(
+                  circle.circle_id,
+                  props.assoc_circles
+                )}
+              >
                 {circle.circle_name}
               </option>
             ))}
@@ -72,12 +86,32 @@ function Milestone(props) {
           </button>
         </form>
       ) : (
-        <span className={b('unlink')} title="Add to a circle">
-          <i
-            className="fa fa-plus-circle addCircle"
-            aria-hidden="true"
-            onClick={() => props.onChangeMilestoneEdition(props.milestone_id)}
-          />
+        <span>
+          {props.assoc_circles.map(assocCircle =>
+            props.circles
+              .filter(circle => circle.circle_id === assocCircle.circle_id)
+              .map(circle => (
+                <span
+                  className={b('tag')}
+                  key={circle.circle_name}
+                  style={{
+                    borderColor: `${props.labels
+                      .filter(label => getColor(label, circle.circle_name))
+                      .map(label => label.color)
+                      .toString()}`,
+                  }}
+                >
+                  {circle.circle_name}
+                </span>
+              ))
+          )}
+          <span className={b('unlink')} title="Add to a circle">
+            <i
+              className="fa fa-edit addCircle"
+              aria-hidden="true"
+              onClick={() => props.onChangeMilestoneEdition(props.milestone_id)}
+            />
+          </span>
         </span>
       )}
     </li>

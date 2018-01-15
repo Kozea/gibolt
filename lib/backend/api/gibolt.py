@@ -81,6 +81,15 @@ def update_milestones_circles(milestone_id):
         .filter(Milestone_circle.milestone_id == milestone_id).all()
 
     try:
+        # deletion
+        for existing_assoc in existing_milestones_circles:
+            if existing_assoc.circle_id not in circles_list:
+                session.query(Milestone_circle) \
+                    .filter(
+                        Milestone_circle.milestone_id == milestone_id and
+                        Milestone_circle.circle_id == existing_assoc.circle_id
+                ).delete()
+
         # creation
         for circle in circles_list:
             circle_id = circle.get("circle_id")
@@ -90,21 +99,11 @@ def update_milestones_circles(milestone_id):
                     Milestone_circle.circle_id == circle_id
             ).first()
             if not milestone_circle:
-                print('tata')
                 new_milestone_circle = Milestone_circle(
                     circle_id=circle_id,
                     milestone_id=milestone_id
                 )
                 session.add(new_milestone_circle)
-
-        # deletion
-        for existing_assoc in existing_milestones_circles:
-            if existing_assoc.circle_id not in circles_list:
-                session.query(Milestone_circle) \
-                    .filter(
-                        Milestone_circle.milestone_id == milestone_id and
-                        Milestone_circle.circle_id == circle_id
-                ).delete()
 
         session.commit()
         response_object = {
