@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
+import { fetchCircle } from '../actions/circle'
 import { submitReport, updateReportsList } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
@@ -24,14 +25,17 @@ class MeetingsReportCreation extends React.Component {
 
   render() {
     const {
+      circle,
       circles,
       history,
+      items,
       meetings,
       meetingsTypes,
       onGoBack,
       onSelectChange,
       onSubmit,
       params,
+      roles,
       search,
     } = this.props
     return (
@@ -89,6 +93,32 @@ class MeetingsReportCreation extends React.Component {
                 ))}
               </select>
             </label>
+            <br />
+            {circle && circle.results && circle.results.roles.length > 0 && (
+              <span>
+                <label>
+                Checklist:
+                {items && roles &&
+                  items
+                .filter(item => item.item_type === 'checklist')
+                .filter(item => item.role_id === roles
+                  .find(role => role.circle_id === params.circle_id)
+                  .role_id)
+                .map(item => <li key={item.item_id}>{item.content}</li>)}
+                </label>
+                <label>
+                Indicators:
+                {items && roles &&
+                  items
+                .filter(item => item.item_type === 'indicator')
+                .filter(item => item.role_id === roles
+                  .find(role => role.circle_id === params.circle_id)
+                  .role_id)
+                .map(item => <li key={item.item_id}>{item.content}</li>)}
+                </label>
+              </span>
+            )}
+            <br />
             <div className={b('content')}>
               <label>
                 Report content:
@@ -112,11 +142,13 @@ class MeetingsReportCreation extends React.Component {
 export default withRouter(
   connect(
     state => ({
+      circle: state.circle,
       circles: state.circles,
-      items: state.items,
+      items: state.items.results,
       labels: state.labels.results.qualifier,
       meetings: state.meetings,
       meetingsTypes: state.meetingsTypes,
+      roles: state.roles.results,
       search: state.router.location.search,
       params: state.params,
     }),
@@ -133,6 +165,8 @@ export default withRouter(
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
+        dispatch(setLoading('circle'))
+        dispatch(fetchCircle())
         dispatch(setLoading('circles'))
         dispatch(fetchResults('circles'))
         dispatch(setLoading('meetingsTypes'))
@@ -141,6 +175,10 @@ export default withRouter(
         dispatch(fetchResults('labels'))
         dispatch(setLoading('meetings'))
         dispatch(fetchResults('meetings'))
+        dispatch(setLoading('items'))
+        dispatch(fetchResults('items'))
+        dispatch(setLoading('roles'))
+        dispatch(fetchResults('roles'))
       },
     })
   )(MeetingsReportCreation)
