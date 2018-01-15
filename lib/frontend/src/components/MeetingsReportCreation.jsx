@@ -96,12 +96,13 @@ class MeetingsReportCreation extends React.Component {
             <br />
             {circle &&
               circle.results &&
+              circle.results.roles &&
               circle.results.roles.length > 0 && (
                 <span>
                   <label>
                     Checklist:
                     {items &&
-                      roles &&
+                      items.filter(item => item.item_type === 'checklist') &&
                       items
                         .filter(item => item.item_type === 'checklist')
                         .filter(
@@ -118,7 +119,7 @@ class MeetingsReportCreation extends React.Component {
                   <label>
                     Indicators:
                     {items &&
-                      roles &&
+                      items.filter(item => item.item_type === 'indicator') &&
                       items
                         .filter(item => item.item_type === 'indicator')
                         .filter(
