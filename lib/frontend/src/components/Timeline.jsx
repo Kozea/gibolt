@@ -87,6 +87,7 @@ class Timeline extends React.Component {
               {milestones.map(milestone => (
                 <Milestone
                   key={milestone.id}
+                  milestone_id={milestone.id}
                   state={milestone.state}
                   due_on={milestone.due_on}
                   repo={milestone.repo}
@@ -94,6 +95,7 @@ class Timeline extends React.Component {
                   title={milestone.title}
                   open_issues={milestone.open_issues}
                   closed_issues={milestone.closed_issues}
+                  is_in_edition={milestone.is_in_edition}
                   circles={circles}
                   labels={labels}
                 />

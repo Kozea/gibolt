@@ -1,7 +1,7 @@
 @import ../vars
 
 .addCircle
-    margin-left: .5em
+  margin-left: .5em
 
 .Milestone
   display: flex
@@ -28,6 +28,18 @@
 
     &-closed:before
       border-color: $close-issue
+
+  &__btn
+    background: #bac9d5
+    border: none
+    font-family: $text-font
+    font-size: .8em
+    margin: .5em 0 .5em 1em
+    padding: .5em
+    transition: background 0.2s
+
+  &__circles
+    margin-left: 0.5em
 
   &__link
     color: $text
