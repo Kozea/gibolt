@@ -100,7 +100,7 @@ class MeetingsReportCreation extends React.Component {
               circle.results.roles.length > 0 && (
                 <span>
                   <label>
-                    Checklist:
+                    Recurrent actions:
                     {items &&
                       items.filter(item => item.item_type === 'checklist') &&
                       items
@@ -130,7 +130,7 @@ class MeetingsReportCreation extends React.Component {
                             ).role_id
                         )
                         .map(item => (
-                          <li key={item.item_id}>{item.content}</li>
+                          <li key={item.item_id}>{item.content} : <input type="text" /></li>
                         ))}
                   </label>
                 </span>

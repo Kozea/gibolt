@@ -163,7 +163,7 @@ class Role extends React.Component {
             <div>
               <ReactMarkdown source={role.role_accountabilities} />
             </div>
-            <h3>Checklist</h3>
+            <h3>Recurrent actions</h3>
             <div>
               {items.results
                 .filter(item => item.item_type === 'checklist')
