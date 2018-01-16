@@ -12,12 +12,15 @@ import Progress from './Progress'
 
 const b = block('Milestone')
 
-function getSelectedCircles(circleSelect) {
+function getSelectedCircles(circleSelect, repoName) {
   const selectedCircles = []
   for (let i = 0; i < circleSelect.options.length; i++) {
     const selectedCircle = circleSelect.options[i]
     if (selectedCircle.selected) {
-      selectedCircles.push({ circle_id: +selectedCircle.value })
+      selectedCircles.push({
+        circle_id: +selectedCircle.value,
+        repo_name: repoName,
+      })
     }
   }
   return selectedCircles
@@ -41,9 +44,7 @@ function Milestone(props) {
           ? format(new Date(props.due_on), 'DD/MM/YYYY')
           : 'no due date'}
       </span>
-      <span className={b('repo')}>
-        {props.repo ? props.repo : props.html_url.split('/')[4]}
-      </span>
+      <span className={b('repo')}>{props.repo}</span>
       <a className={b('link')} href={props.html_url}>
         {props.title}
       </a>
@@ -77,7 +78,9 @@ function Milestone(props) {
           <button
             type="submit"
             className={b('btn')}
-            onClick={event => props.onSave(props.milestone_id, event)}
+            onClick={event =>
+              props.onSave(props.milestone_number, props.repo, event)
+            }
           >
             Save
           </button>
@@ -127,9 +130,12 @@ export default connect(
     onChangeMilestoneEdition: milestoneId => {
       dispatch(milestoneOnEdition(milestoneId))
     },
-    onSave: (milestoneId, e) => {
-      const selectedCircles = getSelectedCircles(e.target.form.circles)
-      dispatch(updateMilestoneCircles(milestoneId, selectedCircles))
+    onSave: (milestoneNumber, repoName, e) => {
+      const selectedCircles = getSelectedCircles(
+        e.target.form.circles,
+        repoName
+      )
+      dispatch(updateMilestoneCircles(milestoneNumber, selectedCircles))
     },
   })
 )(Milestone)
