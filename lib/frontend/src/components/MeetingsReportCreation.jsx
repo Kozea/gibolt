@@ -26,7 +26,6 @@ class MeetingsReportCreation extends React.Component {
     const {
       circles,
       history,
-      meetings,
       meetingsTypes,
       onGoBack,
       onSelectChange,
@@ -39,7 +38,7 @@ class MeetingsReportCreation extends React.Component {
         <Helmet>
           <title>Gibolt - Create a report</title>
         </Helmet>
-        {(circles.error || meetingsTypes.error || meetings.error) && (
+        {(circles.error || meetingsTypes.error) && (
           <article className={b('group', { error: true })}>
             <h2>Error during fetch or creation</h2>
             <code>
@@ -47,7 +46,7 @@ class MeetingsReportCreation extends React.Component {
                 ? `circles : ${circles.error}`
                 : meetingsTypes.error
                   ? `Meetings types: ${meetingsTypes.error}`
-                  : `Reports: ${meetings.error}`}
+                  : ''}
             </code>
           </article>
         )}
@@ -90,13 +89,11 @@ class MeetingsReportCreation extends React.Component {
               </select>
             </label>
             <div className={b('content')}>
-              <label>Projects:</label>
+              <label className={b('lab')}>Projects:</label>
             </div>
             <div className={b('content')}>
-              <label>
-                Report content:
-                <MarkdownEditor />
-              </label>
+              <label className={b('lab')}>Report content:</label>
+              <MarkdownEditor />
             </div>
             <article className={b('action')}>
               <button type="submit" onClick={event => onSubmit(event, history)}>
@@ -117,7 +114,6 @@ export default withRouter(
     state => ({
       circles: state.circles,
       labels: state.labels.results.qualifier,
-      meetings: state.meetings,
       meetingsTypes: state.meetingsTypes,
       search: state.router.location.search,
       params: state.params,
@@ -141,8 +137,6 @@ export default withRouter(
         dispatch(fetchResults('meetingsTypes'))
         dispatch(setLoading('labels'))
         dispatch(fetchResults('labels'))
-        dispatch(setLoading('meetings'))
-        dispatch(fetchResults('meetings'))
       },
     })
   )(MeetingsReportCreation)
