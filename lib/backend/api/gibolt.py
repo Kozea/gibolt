@@ -74,33 +74,35 @@ rest(
     auth=needlogin)
 
 
-@app.route('/api/milestone_circles/<int:milestone_id>', methods=['POST'])
+@app.route('/api/milestone_circles/<int:milestone_number>', methods=['POST'])
 @needlogin
-def update_milestones_circles(milestone_id):
+def update_milestones_circles(milestone_number):
     circles_list = request.get_json()
     existing_milestones_circles = session.query(Milestone_circle).filter(
-        Milestone_circle.milestone_id == milestone_id).all()
+        Milestone_circle.milestone_number == milestone_number).all()
 
     try:
         # deletion
         for existing_assoc in existing_milestones_circles:
             if existing_assoc.circle_id not in circles_list:
                 session.query(Milestone_circle).filter(
-                    Milestone_circle.milestone_id == milestone_id
+                    Milestone_circle.milestone_number == milestone_number
                     and Milestone_circle.circle_id == existing_assoc.circle_id  # noqa
                 ).delete()
 
         # creation
         for circle in circles_list:
             circle_id = circle.get("circle_id")
+            repo_name = circle.get("repo_name")
             milestone_circle = session.query(Milestone_circle).filter(
-                Milestone_circle.milestone_id == milestone_id
+                Milestone_circle.milestone_number == milestone_number
                 and Milestone_circle.circle_id == circle_id  # noqa
             ).first()
             if not milestone_circle:
                 new_milestone_circle = Milestone_circle(
                     circle_id=circle_id,
-                    milestone_id=milestone_id
+                    milestone_number=milestone_number,
+                    repo_name=repo_name
                 )
                 session.add(new_milestone_circle)
 

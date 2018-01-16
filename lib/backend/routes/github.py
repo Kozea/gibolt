@@ -843,7 +843,7 @@ def timeline():
 
     def getCirclesId(milestone):
         milestones_circles = db_session.query(Milestone_circle).filter(
-            Milestone_circle.milestone_id == milestone['id']).all()
+            Milestone_circle.milestone_number == milestone['number']).all()
         return [{'circle_id': assoc.circle_id} for assoc in milestones_circles]
 
     def milestoneDateToIso(milestone):

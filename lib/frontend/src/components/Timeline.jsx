@@ -114,6 +114,7 @@ class Timeline extends React.Component {
                   <Milestone
                     key={milestone.id}
                     milestone_id={milestone.id}
+                    milestone_number={milestone.number}
                     state={milestone.state}
                     due_on={milestone.due_on}
                     repo={milestone.repo}
@@ -144,9 +145,10 @@ class Timeline extends React.Component {
                     <Milestone
                       key={milestone.id}
                       milestone_id={milestone.id}
+                      milestone_number={milestone.number}
                       state={milestone.state}
                       due_on={milestone.due_on}
-                      repo={milestone.repo}
+                      repo={milestone.html_url.split('/')[4]}
                       html_url={milestone.html_url}
                       title={milestone.title}
                       open_issues={milestone.open_issues}

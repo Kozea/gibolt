@@ -105,6 +105,9 @@ class Milestone_circle(Base):
         Integer,
         ForeignKey('circle.circle_id'),
         primary_key=True)
-    milestone_id = Column(
+    milestone_number = Column(
         Integer,
+        primary_key=True)
+    repo_name = Column(
+        String,
         primary_key=True)
