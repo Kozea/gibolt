@@ -116,7 +116,7 @@ def update_milestones_circles(milestone_id):
         session.rollback()
         response_object = {
             'status': 'error',
-            'message': 'Error during update Milestone_circle table.'
+            'message': 'Error during Milestone_circle table update.'
         }
         code = 400
 
