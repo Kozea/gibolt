@@ -853,11 +853,16 @@ def timeline():
         milestone['circles'] = getCirclesId(milestone)
         return milestone
 
+    def super_if(milestone):
+        return (
+            (milestone.get('due_on')
+             and date_from_iso(start) <= milestone['due_on'] < date_from_iso(stop))  # noqa
+            or (without_due_date
+                and not milestone.get('due_on')  # noqa
+                and not milestone.get('closed_at')))  # noqa
+
     results = [milestoneDateToIso(milestone) for milestone in milestones
-               if (milestone.get('due_on') and date_from_iso(start) <=
-               milestone['due_on'] < date_from_iso(stop)) or
-               (without_due_date and not milestone.get('due_on') and
-               not milestone.get('closed_at'))]
+               if super_if(milestone)]
 
     return jsonify({
         'params': request.get_json(),
