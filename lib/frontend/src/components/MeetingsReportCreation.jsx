@@ -1,5 +1,6 @@
 import './MeetingsReportCreation.sass'
 
+import { format } from 'date-fns'
 import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
@@ -11,6 +12,7 @@ import { fetchCircleMilestones } from '../actions/milestones'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
+import Progress from './Progress'
 
 const b = block('MeetingsReportCreation')
 
@@ -104,10 +106,26 @@ class MeetingsReportCreation extends React.Component {
                 {circleMilestones.map(milestone => (
                   <li key={milestone.milestone_number}>
                     <span className={b('bullet')} />
+                    {milestone.repo_name}
+                    {' - '}
                     <span className={b('lab')}>
-                      {milestone.repo_name}
-                    </span> - {milestone.milestone_title}
-                    {milestone.due_on}
+                      {milestone.milestone_title}
+                    </span>
+                    {' -'}
+                    <Progress
+                      val={milestone.closed_issues}
+                      total={milestone.open_issues + milestone.closed_issues}
+                    />
+                    <span className={b('due-date')}>
+                      {' ('}
+                      {milestone.due_on
+                        ? `due on: ${format(
+                            new Date(milestone.due_on),
+                            'DD/MM/YYYY'
+                          )}`
+                        : 'no due date'}
+                      {')'}
+                    </span>
                     <br />
                     <input
                       id={`comment-${milestone.milestone_number}`}
