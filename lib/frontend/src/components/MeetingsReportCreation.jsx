@@ -101,7 +101,8 @@ class MeetingsReportCreation extends React.Component {
                 <span>
                   <label>
                     <h3>Recurrent actions:</h3>
-                    {items && roles &&
+                    {items &&
+                      roles &&
                       items.filter(item => item.item_type === 'checklist') &&
                       items
                         .filter(item => item.item_type === 'checklist')
@@ -131,7 +132,8 @@ class MeetingsReportCreation extends React.Component {
                         )
                         .map(item => (
                           <li key={item.item_id}>
-                            <span>{item.content}</span> : <input type="text" id="indicData" />
+                            <span>{item.content}</span> :{' '}
+                            <input type="text" id="indicData" />
                           </li>
                         ))}
                   </label>
