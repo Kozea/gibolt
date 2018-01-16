@@ -90,6 +90,18 @@ class MeetingsReportCreation extends React.Component {
             </label>
             <div className={b('content')}>
               <label className={b('lab')}>Projects:</label>
+              <ul>
+                {params.circle_id !== '' &&
+                  circles.results
+                    .filter(circle => circle.circle_id === params.circle_id)
+                    .map(circle =>
+                      circle.circle_milestones.map(milestone => (
+                        <li key={milestone.milestone_number}>
+                          {milestone.repo_name} - {milestone.milestone_number}
+                        </li>
+                      ))
+                    )}
+              </ul>
             </div>
             <div className={b('content')}>
               <label className={b('lab')}>Report content:</label>
