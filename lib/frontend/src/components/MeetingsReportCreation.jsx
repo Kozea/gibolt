@@ -101,7 +101,7 @@ class MeetingsReportCreation extends React.Component {
                 <span>
                   <label>
                     <h3>Recurrent actions:</h3>
-                    {items &&
+                    {items && roles &&
                       items.filter(item => item.item_type === 'checklist') &&
                       items
                         .filter(item => item.item_type === 'checklist')
@@ -131,7 +131,7 @@ class MeetingsReportCreation extends React.Component {
                         )
                         .map(item => (
                           <li key={item.item_id}>
-                            {item.content} : <input type="text" />
+                            <span>{item.content}</span> : <input type="text" id="indicData" />
                           </li>
                         ))}
                   </label>
@@ -140,7 +140,7 @@ class MeetingsReportCreation extends React.Component {
             <br />
             <div className={b('content')}>
               <label>
-                Report content:
+                <h3>Report content:</h3>
                 <MarkdownEditor />
               </label>
             </div>
