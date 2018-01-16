@@ -100,7 +100,7 @@ class MeetingsReportCreation extends React.Component {
               circle.results.roles.length > 0 && (
                 <span>
                   <label>
-                    Recurrent actions:
+                    <h3>Recurrent actions:</h3>
                     {items &&
                       items.filter(item => item.item_type === 'checklist') &&
                       items
@@ -117,7 +117,7 @@ class MeetingsReportCreation extends React.Component {
                         ))}
                   </label>
                   <label>
-                    Indicators:
+                    <h3>Indicators:</h3>
                     {items &&
                       items.filter(item => item.item_type === 'indicator') &&
                       items
