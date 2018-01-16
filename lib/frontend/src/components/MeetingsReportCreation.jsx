@@ -103,8 +103,16 @@ class MeetingsReportCreation extends React.Component {
               <ul>
                 {circleMilestones.map(milestone => (
                   <li key={milestone.milestone_number}>
-                    {milestone.repo_name} -
-                    {milestone.milestone_title}
+                    <span className={b('bullet')} />
+                    <span className={b('lab')}>
+                      {milestone.repo_name}
+                    </span> - {milestone.milestone_title}
+                    {milestone.due_on}
+                    <br />
+                    <input
+                      id={`comment-${milestone.milestone_number}`}
+                      name={`comment-${milestone.milestone_number}`}
+                    />
                   </li>
                 ))}
               </ul>
@@ -132,7 +140,6 @@ export default withRouter(
     state => ({
       circleMilestones: state.circleMilestones.results,
       circles: state.circles,
-      labels: state.labels.results.qualifier,
       meetingsTypes: state.meetingsTypes,
       search: state.router.location.search,
       params: state.params,
