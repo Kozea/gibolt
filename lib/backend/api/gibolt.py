@@ -114,7 +114,6 @@ def update_milestones_circles(milestone_number):
 
     except (exc.IntegrityError, exc.OperationalError, ValueError) as e:
         session.rollback()
-        print(e)
         response_object = {
             'status': 'error',
             'message': 'Error during Milestone_circle table update.'
