@@ -17,6 +17,7 @@ rest(
     methods=['GET', 'PUT', 'POST', 'DELETE'],
     relationships={
         'roles': rest(Role, only=['role_id', 'role_name', 'user_id']),
+        'circle_milestones': rest(Milestone_circle),
     },
     name='circles',
     query=lambda query: query.filter(

@@ -90,6 +90,9 @@ class MeetingsReportCreation extends React.Component {
               </select>
             </label>
             <div className={b('content')}>
+              <label>Projects:</label>
+            </div>
+            <div className={b('content')}>
               <label>
                 Report content:
                 <MarkdownEditor />
