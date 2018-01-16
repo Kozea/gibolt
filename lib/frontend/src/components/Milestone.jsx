@@ -41,7 +41,9 @@ function Milestone(props) {
           ? format(new Date(props.due_on), 'DD/MM/YYYY')
           : 'no due date'}
       </span>
-      <span className={b('repo')}>{props.repo}</span>
+      <span className={b('repo')}>
+        {props.repo ? props.repo : props.html_url.split('/')[4]}
+      </span>
       <a className={b('link')} href={props.html_url}>
         {props.title}
       </a>

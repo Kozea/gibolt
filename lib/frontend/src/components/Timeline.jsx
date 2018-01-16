@@ -132,34 +132,34 @@ class Timeline extends React.Component {
           ))}
         {range.withoutDueDate === 'true' &&
           milestonesByMonth
-          .filter(mil => mil.month === 'No Due Date')
-          .map(({ id, milestones }) => (
-            <article key={id} className={b('date')}>
-              <h2>
-                {'Open milestones without due date'}{' '}
-                <sup>({milestones.length})</sup>
-              </h2>
-              <ul>
-                {milestones.map(milestone => (
-                  <Milestone
-                    key={milestone.id}
-                    milestone_id={milestone.id}
-                    state={milestone.state}
-                    due_on={milestone.due_on}
-                    repo={milestone.repo}
-                    html_url={milestone.html_url}
-                    title={milestone.title}
-                    open_issues={milestone.open_issues}
-                    closed_issues={milestone.closed_issues}
-                    is_in_edition={milestone.is_in_edition}
-                    assoc_circles={milestone.circles}
-                    circles={circles}
-                    labels={labels}
-                  />
-                ))}
-              </ul>
-            </article>
-          ))}
+            .filter(mil => mil.month === 'No Due Date')
+            .map(({ id, milestones }) => (
+              <article key={id} className={b('date')}>
+                <h2>
+                  {'Open milestones without due date'}{' '}
+                  <sup>({milestones.length})</sup>
+                </h2>
+                <ul>
+                  {milestones.map(milestone => (
+                    <Milestone
+                      key={milestone.id}
+                      milestone_id={milestone.id}
+                      state={milestone.state}
+                      due_on={milestone.due_on}
+                      repo={milestone.repo}
+                      html_url={milestone.html_url}
+                      title={milestone.title}
+                      open_issues={milestone.open_issues}
+                      closed_issues={milestone.closed_issues}
+                      is_in_edition={milestone.is_in_edition}
+                      assoc_circles={milestone.circles}
+                      circles={circles}
+                      labels={labels}
+                    />
+                  ))}
+                </ul>
+              </article>
+            ))}
       </section>
     )
   }
