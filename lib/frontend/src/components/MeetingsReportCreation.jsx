@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import { submitReport, updateReportsList } from '../actions/meetings'
+import { fetchCircleMilestones } from '../actions/milestones'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
@@ -21,9 +22,18 @@ class MeetingsReportCreation extends React.Component {
       meeting_name: search.meeting_name ? search.meeting_name : '',
     })
   }
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.circles !== this.props.circles ||
+      nextProps.params.circle_id !== this.props.params.circle_id
+    ) {
+      this.props.getMilestones()
+    }
+  }
 
   render() {
     const {
+      circleMilestones,
       circles,
       history,
       meetingsTypes,
@@ -91,16 +101,12 @@ class MeetingsReportCreation extends React.Component {
             <div className={b('content')}>
               <label className={b('lab')}>Projects:</label>
               <ul>
-                {params.circle_id !== '' &&
-                  circles.results
-                    .filter(circle => circle.circle_id === params.circle_id)
-                    .map(circle =>
-                      circle.circle_milestones.map(milestone => (
-                        <li key={milestone.milestone_number}>
-                          {milestone.repo_name} - {milestone.milestone_number}
-                        </li>
-                      ))
-                    )}
+                {circleMilestones.map(milestone => (
+                  <li key={milestone.milestone_number}>
+                    {milestone.repo_name} -
+                    {milestone.milestone_title}
+                  </li>
+                ))}
               </ul>
             </div>
             <div className={b('content')}>
@@ -124,6 +130,7 @@ class MeetingsReportCreation extends React.Component {
 export default withRouter(
   connect(
     state => ({
+      circleMilestones: state.circleMilestones.results,
       circles: state.circles,
       labels: state.labels.results.qualifier,
       meetingsTypes: state.meetingsTypes,
@@ -131,6 +138,9 @@ export default withRouter(
       params: state.params,
     }),
     dispatch => ({
+      getMilestones: () => {
+        dispatch(fetchCircleMilestones())
+      },
       onGoBack: history => {
         dispatch(goBack(history))
       },
