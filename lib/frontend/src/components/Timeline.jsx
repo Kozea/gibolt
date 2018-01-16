@@ -36,7 +36,6 @@ class Timeline extends React.Component {
       onCheckboxChange,
       onDateChange,
     } = this.props
-
     let milestonesByMonth = values(
       milestones.reduce((months, milestone) => {
         let month, monthStr
@@ -46,14 +45,24 @@ class Timeline extends React.Component {
         if (milestone.due_on) {
           month = startOfMonth(milestone.due_on)
           monthStr = format(month, 'YYYY-MM')
-        }
-        if (months[monthStr] === void 0) {
-          months[monthStr] = {
-            month: month,
-            milestones: [],
+          if (months[monthStr] === void 0) {
+            months[monthStr] = {
+              month: month,
+              milestones: [],
+            }
           }
+          months[monthStr].milestones.push(milestone)
+        } else {
+          month = 'No Due Date'
+          monthStr = month
+          if (months[monthStr] === void 0) {
+            months[monthStr] = {
+              month: month,
+              milestones: [],
+            }
+          }
+          months[monthStr].milestones.push(milestone)
         }
-        months[monthStr].milestones.push(milestone)
         return months
       }, {})
     )
@@ -80,6 +89,7 @@ class Timeline extends React.Component {
             id="checkbox"
             type="checkbox"
             onChange={event => onCheckboxChange(event, query)}
+            checked={range.withoutDueDate === 'true'}
           />
           <label className={b('check')} htmlFor="checkbox">
             display milestones without due date
@@ -92,32 +102,64 @@ class Timeline extends React.Component {
             <code>{error}</code>
           </article>
         )}
-        {milestonesByMonth.map(({ id, month, milestones }) => (
-          <article key={id} className={b('date')}>
-            <h2>
-              {format(month, 'MMMM YYYY')} <sup>({milestones.length})</sup>
-            </h2>
-            <ul>
-              {milestones.map(milestone => (
-                <Milestone
-                  key={milestone.id}
-                  milestone_id={milestone.id}
-                  state={milestone.state}
-                  due_on={milestone.due_on}
-                  repo={milestone.repo}
-                  html_url={milestone.html_url}
-                  title={milestone.title}
-                  open_issues={milestone.open_issues}
-                  closed_issues={milestone.closed_issues}
-                  is_in_edition={milestone.is_in_edition}
-                  assoc_circles={milestone.circles}
-                  circles={circles}
-                  labels={labels}
-                />
-              ))}
-            </ul>
-          </article>
-        ))}
+        {milestonesByMonth
+          .filter(mil => mil.month !== 'No Due Date')
+          .map(({ id, month, milestones }) => (
+            <article key={id} className={b('date')}>
+              <h2>
+                {format(month, 'MMMM YYYY')} <sup>({milestones.length})</sup>
+              </h2>
+              <ul>
+                {milestones.map(milestone => (
+                  <Milestone
+                    key={milestone.id}
+                    milestone_id={milestone.id}
+                    state={milestone.state}
+                    due_on={milestone.due_on}
+                    repo={milestone.repo}
+                    html_url={milestone.html_url}
+                    title={milestone.title}
+                    open_issues={milestone.open_issues}
+                    closed_issues={milestone.closed_issues}
+                    is_in_edition={milestone.is_in_edition}
+                    assoc_circles={milestone.circles}
+                    circles={circles}
+                    labels={labels}
+                  />
+                ))}
+              </ul>
+            </article>
+          ))}
+        {range.withoutDueDate === 'true' &&
+          milestonesByMonth
+          .filter(mil => mil.month === 'No Due Date')
+          .map(({ id, milestones }) => (
+            <article key={id} className={b('date')}>
+              <h2>
+                {'Open milestones without due date'}{' '}
+                <sup>({milestones.length})</sup>
+              </h2>
+              <ul>
+                {milestones.map(milestone => (
+                  <Milestone
+                    key={milestone.id}
+                    milestone_id={milestone.id}
+                    state={milestone.state}
+                    due_on={milestone.due_on}
+                    repo={milestone.repo}
+                    html_url={milestone.html_url}
+                    title={milestone.title}
+                    open_issues={milestone.open_issues}
+                    closed_issues={milestone.closed_issues}
+                    is_in_edition={milestone.is_in_edition}
+                    assoc_circles={milestone.circles}
+                    circles={circles}
+                    labels={labels}
+                  />
+                ))}
+              </ul>
+            </article>
+          ))}
       </section>
     )
   }
