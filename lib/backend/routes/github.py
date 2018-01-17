@@ -842,8 +842,10 @@ def timeline():
         milestones.extend(repo.get('milestones', []))
 
     def getCirclesId(milestone):
+        repo_name = milestone['html_url'].split('/')[4]
         milestones_circles = db_session.query(Milestone_circle).filter(
-            Milestone_circle.milestone_number == milestone['number']).all()
+            Milestone_circle.milestone_number == milestone['number'],
+            Milestone_circle.repo_name == repo_name).all()
         return [{'circle_id': assoc.circle_id} for assoc in milestones_circles]
 
     def milestoneDateToIso(milestone):
