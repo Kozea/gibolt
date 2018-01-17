@@ -6,7 +6,13 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link, withRouter } from 'react-router-dom'
 
-import { fetchResults, goBack, setLoading, setParams } from '../actions'
+import {
+  checkMarkdown,
+  fetchResults,
+  goBack,
+  setLoading,
+  setParams,
+} from '../actions'
 import { submitReport, updateReportsList } from '../actions/meetings'
 import { fetchCircleMilestonesAndItems } from '../actions/milestones'
 import { block, connect } from '../utils'
@@ -115,34 +121,44 @@ class MeetingsReportCreation extends React.Component {
                   <span>
                     <h3>Recurrent actions:</h3>
                     <ul>
-                      {items
-                        .filter(item => item.item_type === 'checklist')
-                        .map(item => (
-                          <li key={item.item_id}>
-                            <input
-                              type="checkbox"
-                              name={item.content}
-                              id="actions"
-                            />
-                            {item.content}
-                          </li>
-                        ))}
+                      {items.map(roleItems =>
+                        roleItems.items
+                          .filter(item => item.item_type === 'checklist')
+                          .map(item => (
+                            <li key={item.item_id}>
+                              <input
+                                type="checkbox"
+                                name={`${roleItems.role_name} - ${
+                                  item.content
+                                }`}
+                                id="actions"
+                              />
+                              {roleItems.role_name} - {item.content}
+                            </li>
+                          ))
+                      )}
                     </ul>
                     <h3>Indicators:</h3>
                     <ul>
-                      {items
-                        .filter(item => item.item_type === 'indicator')
-                        .map(item => (
-                          <li key={item.item_id}>
-                            {item.content} :{' '}
-                            <input
-                              type="text"
-                              name={item.content}
-                              id="indicateurs"
-                              className="smallInput"
-                            />
-                          </li>
-                        ))}
+                      {items.map(roleItems =>
+                        roleItems.items
+                          .filter(item => item.item_type === 'indicator')
+                          .map(item => (
+                            <li key={item.item_id}>
+                              <span className={b('bullet')} />
+                              {roleItems.role_name} - {item.content} :{' '}
+                              <input
+                                type="text"
+                                name={`${roleItems.role_name} - ${
+                                  item.content
+                                }`}
+                                id="indicateurs"
+                                className="smallInput"
+                                defaultValue="0"
+                              />
+                            </li>
+                          ))
+                      )}
                     </ul>
                   </span>
                 )}
@@ -236,6 +252,8 @@ export default withRouter(
     }),
     dispatch => ({
       getMilestonesAndItems: () => {
+        dispatch(setLoading('circleMilestones'))
+        dispatch(setLoading('items'))
         dispatch(fetchCircleMilestonesAndItems())
       },
       onGoBack: history => {
@@ -301,6 +319,7 @@ ${event.target.form.body.value}
         dispatch(fetchResults('labels'))
         dispatch(setLoading('meetings'))
         dispatch(fetchResults('meetings'))
+        dispatch(checkMarkdown('#### Ordre du jour'))
       },
     })
   )(MeetingsReportCreation)
