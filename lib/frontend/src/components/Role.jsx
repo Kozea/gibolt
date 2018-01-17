@@ -418,7 +418,7 @@ export default withRouter(
         dispatch(editRole())
         dispatch(checkAccountabilities(content))
       },
-      editItem: (item, e, roleId) => {
+      editItem: (item, e) => {
         const formItem = [].slice
           .call(e.target.elements)
           .reduce(function(map, obj) {
@@ -428,7 +428,6 @@ export default withRouter(
             }
             return map
           }, {})
-        formItem.role_id = roleId
         dispatch(updateItem(item.item_id, formItem))
       },
       onEditRole: (role, e, history) => {
