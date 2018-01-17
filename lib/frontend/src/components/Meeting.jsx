@@ -6,9 +6,10 @@ import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading } from '../actions'
-import { fetchReport } from '../actions/meetings'
+import { fetchReport, toggleEdition } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
+import MarkdownEditor from './MarkdownEditor'
 
 var ReactMarkdown = require('react-markdown')
 
@@ -20,7 +21,16 @@ class Meeting extends React.Component {
   }
 
   render() {
-    const { error, history, loading, meeting, onGoBack, users } = this.props
+    const {
+      error,
+      history,
+      loading,
+      meeting,
+      meeetingOnEdition,
+      onGoBack,
+      onEditClick,
+      users,
+    } = this.props
     return (
       <section className={b()}>
         <Helmet>
@@ -36,26 +46,54 @@ class Meeting extends React.Component {
             </article>
           )}
           {loading && <Loading />}
+          <h2>Meeting</h2>
           {meeting.report_id && (
             <div>
-              <h2>Meeting</h2>
               {format(new Date(meeting.created_at), 'DD/MM/YYYY')} -{' '}
-              {meeting.circle[0].circle_name} - {meeting.report_type}
+              {meeting.circle[0].circle_name} - {meeting.report_type}{' '}
+              {!meeetingOnEdition && (
+                <span className={b('unlink')} title="Edit report">
+                  <i
+                    className="fa fa-edit editMeeting"
+                    aria-hidden="true"
+                    onClick={() => onEditClick()}
+                  />
+                </span>
+              )}
               <br />
               author:{' '}
               {users
                 .filter(user => user.user_id === meeting.author_id)
                 .map(user => user.user_name)}
-              <ReactMarkdown
-                className={b('content').toString()}
-                source={meeting.content}
-              />
+              {meeetingOnEdition ? (
+                <form onSubmit={event => event.preventDefault()}>
+                  <div className={b('editor')}>
+                    <label>
+                      Report content:
+                      <MarkdownEditor />
+                    </label>
+                  </div>
+                  <article className={b('action')}>
+                    <button type="submit">Submit</button>
+                    <button type="submit" onClick={() => onEditClick()}>
+                      Cancel
+                    </button>
+                  </article>
+                </form>
+              ) : (
+                <span>
+                  <ReactMarkdown
+                    className={b('content').toString()}
+                    source={meeting.content}
+                  />
+                  <br />
+                  <button type="submit" onClick={() => onGoBack(history)}>
+                    Back
+                  </button>
+                </span>
+              )}
             </div>
           )}
-          <br />
-          <button type="submit" onClick={() => onGoBack(history)}>
-            Back
-          </button>
         </article>
       </section>
     )
@@ -67,9 +105,13 @@ export default withRouter(
       error: state.meeting.error,
       loading: state.meeting.loading,
       meeting: state.meeting.results,
+      meeetingOnEdition: state.meeting.is_in_edition,
       users: state.users.results,
     }),
     dispatch => ({
+      onEditClick: () => {
+        dispatch(toggleEdition())
+      },
       onGoBack: history => {
         dispatch(goBack(history))
       },
