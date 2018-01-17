@@ -108,12 +108,18 @@ class MeetingsReportCreation extends React.Component {
                     key={milestone.milestone_number}
                     title={milestone.description}
                   >
-                    <span className={b('bullet')} />
-                    {milestone.repo_name}
-                    {' - '}
-                    <span className={b('lab')}>
-                      {milestone.milestone_title}
-                    </span>
+                    <a
+                      className={b('unlink')}
+                      href={milestone.html_url}
+                      target="_blank"
+                    >
+                      <span className={b('bullet')} />
+                      {milestone.repo_name}
+                      {' - '}
+                      <span className={b('lab')}>
+                        {milestone.milestone_title}
+                      </span>
+                    </a>
                     {' -'}
                     <Progress
                       val={milestone.closed_issues}
