@@ -104,7 +104,8 @@ class MeetingsReportCreation extends React.Component {
             </label>
             <br />
             <div className={b('content')}>
-              {circles && circles.results &&
+              {circles &&
+                circles.results &&
                 circles.results.filter(
                   circle => circle.circle_id === params.circle_id
                 )[0] &&
@@ -129,7 +130,13 @@ class MeetingsReportCreation extends React.Component {
                                 .roles.find(role => role.role_id).role_id
                           )
                           .map(item => (
-                            <li key={item.item_id}>{item.content}</li>
+                            <li key={item.item_id}>
+                              <input
+                                type="checkbox"
+                                name={item.content}
+                                id="actions"
+                              />
+                              {item.content}</li>
                           ))}
                     </ul>
                     <h3>Indicators:</h3>
@@ -151,7 +158,11 @@ class MeetingsReportCreation extends React.Component {
                           .map(item => (
                             <li key={item.item_id}>
                               {item.content} :{' '}
-                              <input type="text" id="indicData" />
+                              <input
+                                type="text"
+                                name={item.content}
+                                id="indicateurs"
+                              />
                             </li>
                           ))}
                     </ul>
@@ -212,8 +223,8 @@ class MeetingsReportCreation extends React.Component {
                     <br />
                     <input
                       className="largeInput"
-                      id={`comment-${milestone.milestone_number}`}
-                      name={`comment-${milestone.milestone_number}`}
+                      id="milestones"
+                      name={milestone.milestone_title}
                     />
                   </li>
                 ))}
@@ -257,7 +268,34 @@ export default withRouter(
       },
       onSubmit: (event, history) => {
         event.preventDefault()
-        dispatch(submitReport(event, history))
+        let indicators = '### Indicators:'
+        let actions = '### Recurrent Actions:'
+        let milestones = '### Milestones:'
+        for (let i = 0; i < event.target.form.length; i++) {
+          switch (event.target.form[i].id) {
+            case 'indicateurs':
+              indicators +=
+              `
+                * ${event.target.form[i].name} :${event.target.form[i].value}
+               `
+              break
+            case 'actions':
+              actions +=
+              `
+                * ${event.target.form[i].name} : ${event.target.form[i].value}
+              `
+              break
+            case 'milestones':
+              milestones +=
+              `
+                * ${event.target.form[i].name} : ${event.target.form[i].value}
+              `
+              break
+          }
+        }
+        const fullcontent = [actions + indicators + milestones +
+          '### Comments:  ' + event.target.form.body.value]
+        dispatch(submitReport(event, fullcontent, history))
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
