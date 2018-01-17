@@ -59,7 +59,31 @@ class Role extends React.Component {
         <Helmet>
           <title>Gibolt - Role</title>
         </Helmet>
-        <h1>{role.role_name}</h1>
+        <h1>
+          {role.role_name}{' '}
+          <span
+            onClick={() => editClick(role.role_accountabilities)}
+            title="Edit role"
+          >
+            <i className="fa fa-pencil-square-o" aria-hidden="true" />
+          </span>
+          {' '}
+        {items.results.filter(item => item.role_id === role.role_id)
+          .length > 0 ? ('') : (
+          <span
+            onClick={() => btnClick(role.role_id, role.circle_id, history)}
+            title="Delete role"
+          >
+            <i className="fa fa-trash" aria-hidden="true" />
+          </span>
+        )}
+        </h1>
+        {items.results.filter(item => item.role_id === role.role_id)
+          .length > 0 ? (
+        <code>
+          {'You cannot delete this role, '}
+          {'please first delete the items.'}
+        </code>) : ' '}
         {error && (
           <article className={b('date', { error: true })}>
             <h2>Error during issue fetch</h2>
@@ -163,7 +187,17 @@ class Role extends React.Component {
             <div>
               <ReactMarkdown source={role.role_accountabilities} />
             </div>
-            <h3>Recurrent actions</h3>
+            <h3>
+              Recurrent actions
+              {' '}
+              <span
+                onClick={() => addClick()}
+                className={b('unlink')}
+                title="Add item"
+              >
+                <i className="fa fa-plus-circle" aria-hidden="true" />
+              </span>
+            </h3>
             <div>
               {items.results
                 .filter(item => item.item_type === 'checklist')
@@ -216,21 +250,26 @@ class Role extends React.Component {
                     ) : (
                       <span>
                         {item.content}
-                        <button
-                          type="submit"
+                        {' '}
+                        <span
                           onClick={e => {
                             e.preventDefault()
                             onEditItem(item.item_id)
                           }}
+                          title="Edit item"
                         >
-                          Edit
-                        </button>
-                        <button
-                          type="submit"
+                          <i
+                            className="fa fa-pencil-square-o"
+                            aria-hidden="true"
+                          />
+                        </span>
+                        {' '}
+                        <span
                           onClick={() => deleteItem(item.item_id)}
+                          title="Delete item"
                         >
-                          Delete
-                        </button>
+                          <i className="fa fa-trash" aria-hidden="true" />
+                        </span>
                       </span>
                     )}
                   </li>
@@ -248,11 +287,18 @@ class Role extends React.Component {
                     <button type="submit">Send</button>
                   </form>
                 )}
-              <button type="submit" onClick={() => addClick()}>
-                {items.form_checklist ? 'Cancel' : 'Add item'}
-              </button>
             </div>
-            <h3>Indicators</h3>
+            <h3>
+              Indicators
+              {' '}
+              <span
+                onClick={() => onAddClick()}
+                className={b('unlink')}
+                title="Add item"
+              >
+                <i className="fa fa-plus-circle" aria-hidden="true" />
+              </span>
+            </h3>
             <div>
               {items.results
                 .filter(item => item.item_type === 'indicator')
@@ -305,21 +351,26 @@ class Role extends React.Component {
                     ) : (
                       <span>
                         {item.content}
-                        <button
-                          type="submit"
+                        {' '}
+                        <span
                           onClick={e => {
                             e.preventDefault()
                             onEditItem(item.item_id)
                           }}
+                          title="Edit item"
                         >
-                          Edit
-                        </button>
-                        <button
-                          type="submit"
+                          <i
+                            className="fa fa-pencil-square-o"
+                            aria-hidden="true"
+                          />
+                        </span>
+                        {' '}
+                        <span
                           onClick={() => deleteItem(item.item_id)}
+                          title="Delete item"
                         >
-                          Delete
-                        </button>
+                          <i className="fa fa-trash" aria-hidden="true" />
+                        </span>
                       </span>
                     )}
                   </li>
@@ -336,37 +387,7 @@ class Role extends React.Component {
                   <button type="submit">Send</button>
                 </form>
               )}
-              <button type="submit" onClick={() => onAddClick()}>
-                {items.form_indicator ? 'Cancel' : 'Add item'}
-              </button>
             </div>
-            <button
-              type="submit"
-              onClick={() => editClick(role.role_accountabilities)}
-            >
-              Update
-            </button>
-            <button
-              type="submit"
-              onClick={() => {
-                btnClick(role.role_id, role.circle_id, history)
-              }}
-              disabled={
-                items.results.filter(item => item.role_id === role.role_id)
-                  .length > 0
-              }
-            >
-              Delete role
-            </button>
-            {items.results.filter(item => item.role_id === role.role_id)
-              .length > 0 && (
-              <div>
-                <code>
-                  {'You cannot delete this role, '}
-                  {'please first delete the items.'}
-                </code>
-              </div>
-            )}
           </article>
         )}
       </section>
