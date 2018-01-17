@@ -1,10 +1,10 @@
 import './MeetingsReportCreation.sass'
 
 import { format } from 'date-fns'
-import { parse } from 'query-string'
+import { parse, stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import { submitReport, updateReportsList } from '../actions/meetings'
@@ -135,6 +135,24 @@ class MeetingsReportCreation extends React.Component {
                         : 'no due date'}
                       {')'}
                     </span>
+                    <Link
+                      className={b('unlink')}
+                      target="_blank"
+                      to={{
+                        pathname: '/createIssue',
+                        search: stringify({
+                          grouper: 'milestone',
+                          group: `${milestone.repo_name} ⦔ ${
+                            milestone.milestone_number
+                          }`,
+                        }),
+                      }}
+                    >
+                      <i
+                        className="fa fa-plus-circle addCircle"
+                        aria-hidden="true"
+                      />
+                    </Link>
                     <br />
                     <input
                       id={`comment-${milestone.milestone_number}`}
