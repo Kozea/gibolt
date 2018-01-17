@@ -66,24 +66,28 @@ class Role extends React.Component {
             title="Edit role"
           >
             <i className="fa fa-pencil-square-o" aria-hidden="true" />
-          </span>
-          {' '}
-        {items.results.filter(item => item.role_id === role.role_id)
-          .length > 0 ? ('') : (
-          <span
-            onClick={() => btnClick(role.role_id, role.circle_id, history)}
-            title="Delete role"
-          >
-            <i className="fa fa-trash" aria-hidden="true" />
-          </span>
-        )}
+          </span>{' '}
+          {items.results.filter(item => item.role_id === role.role_id).length >
+          0 ? (
+            ''
+          ) : (
+            <span
+              onClick={() => btnClick(role.role_id, role.circle_id, history)}
+              title="Delete role"
+            >
+              <i className="fa fa-trash" aria-hidden="true" />
+            </span>
+          )}
         </h1>
-        {items.results.filter(item => item.role_id === role.role_id)
-          .length > 0 ? (
-        <code>
-          {'You cannot delete this role, '}
-          {'please first delete the items.'}
-        </code>) : ' '}
+        {items.results.filter(item => item.role_id === role.role_id).length >
+        0 ? (
+          <code>
+            {'You cannot delete this role, '}
+            {'please first delete the items.'}
+          </code>
+        ) : (
+          ' '
+        )}
         {error && (
           <article className={b('date', { error: true })}>
             <h2>Error during issue fetch</h2>
@@ -188,8 +192,7 @@ class Role extends React.Component {
               <ReactMarkdown source={role.role_accountabilities} />
             </div>
             <h3>
-              Recurrent actions
-              {' '}
+              Recurrent actions{' '}
               <span
                 onClick={() => addClick()}
                 className={b('unlink')}
@@ -249,8 +252,7 @@ class Role extends React.Component {
                       </div>
                     ) : (
                       <span>
-                        {item.content}
-                        {' '}
+                        {item.content}{' '}
                         <span
                           onClick={e => {
                             e.preventDefault()
@@ -262,8 +264,7 @@ class Role extends React.Component {
                             className="fa fa-pencil-square-o"
                             aria-hidden="true"
                           />
-                        </span>
-                        {' '}
+                        </span>{' '}
                         <span
                           onClick={() => deleteItem(item.item_id)}
                           title="Delete item"
@@ -289,8 +290,7 @@ class Role extends React.Component {
                 )}
             </div>
             <h3>
-              Indicators
-              {' '}
+              Indicators{' '}
               <span
                 onClick={() => onAddClick()}
                 className={b('unlink')}
@@ -350,8 +350,7 @@ class Role extends React.Component {
                       </div>
                     ) : (
                       <span>
-                        {item.content}
-                        {' '}
+                        {item.content}{' '}
                         <span
                           onClick={e => {
                             e.preventDefault()
@@ -363,8 +362,7 @@ class Role extends React.Component {
                             className="fa fa-pencil-square-o"
                             aria-hidden="true"
                           />
-                        </span>
-                        {' '}
+                        </span>{' '}
                         <span
                           onClick={() => deleteItem(item.item_id)}
                           title="Delete item"
