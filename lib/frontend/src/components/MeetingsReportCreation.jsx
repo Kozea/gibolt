@@ -280,10 +280,8 @@ export default withRouter(
                `
               break
             case 'actions':
-              actions += `${event.target.form[i].checked ? (`
-[X]`) : (`
-[ ]`)}
-* ${event.target.form[i].name}
+              actions += `
+* [${event.target.form[i].checked ? 'x' : ' '}] ${event.target.form[i].name}
               `
               break
             case 'milestones':
@@ -293,15 +291,8 @@ export default withRouter(
               break
           }
         }
-        // const fullcontent = [
-        //   actions +
-        //     indicators +
-        //     milestones +
-        //     '### Comments:  ' +
-        //     event.target.form.body.value,
-        // ]
-
-        const fullcontent = [`
+        const fullcontent = [
+          `
 ### Indicators:
 
 ${indicators}
@@ -318,7 +309,8 @@ ${milestones}
 
 ${event.target.form.body.value}
 
-        `]
+        `,
+        ]
         dispatch(submitReport(event, fullcontent, history))
       },
       sync: locationSearch => {
