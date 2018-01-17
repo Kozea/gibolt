@@ -136,7 +136,8 @@ class MeetingsReportCreation extends React.Component {
                                 name={item.content}
                                 id="actions"
                               />
-                              {item.content}</li>
+                              {item.content}
+                            </li>
                           ))}
                     </ul>
                     <h3>Indicators:</h3>
@@ -268,33 +269,56 @@ export default withRouter(
       },
       onSubmit: (event, history) => {
         event.preventDefault()
-        let indicators = '### Indicators:'
-        let actions = '### Recurrent Actions:'
-        let milestones = '### Milestones:'
+        let indicators = ''
+        let actions = ''
+        let milestones = ''
         for (let i = 0; i < event.target.form.length; i++) {
           switch (event.target.form[i].id) {
             case 'indicateurs':
-              indicators +=
-              `
-                * ${event.target.form[i].name} :${event.target.form[i].value}
+              indicators += `
+* ${event.target.form[i].name} : ${event.target.form[i].value}
                `
               break
             case 'actions':
-              actions +=
-              `
-                * ${event.target.form[i].name} : ${event.target.form[i].value}
+              actions += `${event.target.form[i].checked ? (`
+[X]`) : (`
+[ ]`)}
+* ${event.target.form[i].name}
               `
               break
             case 'milestones':
-              milestones +=
-              `
-                * ${event.target.form[i].name} : ${event.target.form[i].value}
+              milestones += `
+* ${event.target.form[i].name} : ${event.target.form[i].value}
               `
               break
           }
         }
-        const fullcontent = [actions + indicators + milestones +
-          '### Comments:  ' + event.target.form.body.value]
+        // const fullcontent = [
+        //   actions +
+        //     indicators +
+        //     milestones +
+        //     '### Comments:  ' +
+        //     event.target.form.body.value,
+        // ]
+
+        const fullcontent = [`
+### Indicators:
+
+${indicators}
+
+### Recurrent Actions:
+
+${actions}
+
+### Milestones:
+
+${milestones}
+
+### Comments:
+
+${event.target.form.body.value}
+
+        `]
         dispatch(submitReport(event, fullcontent, history))
       },
       sync: locationSearch => {
