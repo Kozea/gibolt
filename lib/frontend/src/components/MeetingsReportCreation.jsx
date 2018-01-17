@@ -6,7 +6,6 @@ import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
-import { fetchCircle } from '../actions/circle'
 import { submitReport, updateReportsList } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
@@ -20,12 +19,12 @@ class MeetingsReportCreation extends React.Component {
     this.props.sync({
       circle_id: search.circle_id ? +search.circle_id : '',
       meeting_name: search.meeting_name ? search.meeting_name : '',
+      // role_id: search.role_id ? search.role_id : '',
     })
   }
 
   render() {
     const {
-      circle,
       circles,
       history,
       items,
@@ -35,7 +34,6 @@ class MeetingsReportCreation extends React.Component {
       onSelectChange,
       onSubmit,
       params,
-      roles,
       search,
     } = this.props
     return (
@@ -94,27 +92,26 @@ class MeetingsReportCreation extends React.Component {
               </select>
             </label>
             <br />
-            {circle &&
-              circle.results &&
-              circle.results.roles &&
-              circle.results.roles.length > 0 && (
+            {circles.results &&
+              circles.results.filter(
+                circle =>
+                circle.circle_id === params.circle_id)[0].roles.length > 0 && (
                 <span>
-                  <label>
+                  <label id="checklists">
                     <h3>Recurrent actions:</h3>
                     {items &&
-                      roles &&
                       items.filter(item => item.item_type === 'checklist') &&
                       items
                         .filter(item => item.item_type === 'checklist')
                         .filter(
                           item =>
                             item.role_id ===
-                            roles.find(
-                              role => role.circle_id === params.circle_id
-                            ).role_id
+                            circles.results.filter(circle =>
+                              circle.circle_id === params.circle_id)[0]
+                              .roles.find(role => role.role_id).role_id
                         )
                         .map(item => (
-                          <li key={item.item_id}>{item.content}</li>
+                          <li key={item.item_id} >{item.content}</li>
                         ))}
                   </label>
                   <label>
@@ -126,13 +123,13 @@ class MeetingsReportCreation extends React.Component {
                         .filter(
                           item =>
                             item.role_id ===
-                            roles.find(
-                              role => role.circle_id === params.circle_id
-                            ).role_id
+                            circles.results.filter(circle =>
+                              circle.circle_id === params.circle_id)[0]
+                              .roles.find(role => role.role_id).role_id
                         )
                         .map(item => (
                           <li key={item.item_id}>
-                            <span>{item.content}</span> :{' '}
+                            {item.content} :{' '}
                             <input type="text" id="indicData" />
                           </li>
                         ))}
@@ -163,13 +160,11 @@ class MeetingsReportCreation extends React.Component {
 export default withRouter(
   connect(
     state => ({
-      circle: state.circle,
       circles: state.circles,
       items: state.items.results,
       labels: state.labels.results.qualifier,
       meetings: state.meetings,
       meetingsTypes: state.meetingsTypes,
-      roles: state.roles.results,
       search: state.router.location.search,
       params: state.params,
     }),
@@ -186,8 +181,6 @@ export default withRouter(
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
-        dispatch(setLoading('circle'))
-        dispatch(fetchCircle())
         dispatch(setLoading('circles'))
         dispatch(fetchResults('circles'))
         dispatch(setLoading('meetingsTypes'))
