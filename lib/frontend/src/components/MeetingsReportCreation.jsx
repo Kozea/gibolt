@@ -104,7 +104,10 @@ class MeetingsReportCreation extends React.Component {
             </label>
             <br />
             <div className={b('content')}>
-              {circles.results &&
+              {circles && circles.results &&
+                circles.results.filter(
+                  circle => circle.circle_id === params.circle_id
+                )[0] &&
                 circles.results.filter(
                   circle => circle.circle_id === params.circle_id
                 )[0].roles.length > 0 && (
@@ -119,8 +122,9 @@ class MeetingsReportCreation extends React.Component {
                             item =>
                               item.role_id ===
                               circles.results
-                                .filter(circle =>
-                                  circle.circle_id === params.circle_id
+                                .filter(
+                                  circle =>
+                                    circle.circle_id === params.circle_id
                                 )[0]
                                 .roles.find(role => role.role_id).role_id
                           )
@@ -138,8 +142,9 @@ class MeetingsReportCreation extends React.Component {
                             item =>
                               item.role_id ===
                               circles.results
-                                .filter(circle =>
-                                  circle.circle_id === params.circle_id
+                                .filter(
+                                  circle =>
+                                    circle.circle_id === params.circle_id
                                 )[0]
                                 .roles.find(role => role.role_id).role_id
                           )
