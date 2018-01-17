@@ -104,7 +104,10 @@ class MeetingsReportCreation extends React.Component {
               <label className={b('lab')}>Projects:</label>
               <ul>
                 {circleMilestones.map(milestone => (
-                  <li key={milestone.milestone_number}>
+                  <li
+                    key={milestone.milestone_number}
+                    title={milestone.description}
+                  >
                     <span className={b('bullet')} />
                     {milestone.repo_name}
                     {' - '}
