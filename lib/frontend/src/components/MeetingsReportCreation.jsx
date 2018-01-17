@@ -8,7 +8,7 @@ import { Link, withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import { submitReport, updateReportsList } from '../actions/meetings'
-import { fetchCircleMilestones } from '../actions/milestones'
+import { fetchCircleMilestonesAndItems } from '../actions/milestones'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
@@ -29,7 +29,7 @@ class MeetingsReportCreation extends React.Component {
       nextProps.circles !== this.props.circles ||
       nextProps.params.circle_id !== this.props.params.circle_id
     ) {
-      this.props.getMilestones()
+      this.props.getMilestonesAndItems()
     }
   }
 
@@ -115,58 +115,34 @@ class MeetingsReportCreation extends React.Component {
                   <span>
                     <h3>Recurrent actions:</h3>
                     <ul>
-                      {items &&
-                        items.filter(item => item.item_type === 'checklist') &&
-                        items
-                          .filter(item => item.item_type === 'checklist')
-                          .filter(
-                            item =>
-                              item.role_id ===
-                              circles.results
-                                .filter(
-                                  circle =>
-                                    circle.circle_id === params.circle_id
-                                )[0]
-                                .roles.find(role => role.role_id).role_id
-                          )
-                          .map(item => (
-                            <li key={item.item_id}>
-                              <input
-                                type="checkbox"
-                                name={item.content}
-                                id="actions"
-                              />
-                              {item.content}
-                            </li>
-                          ))}
+                      {items
+                        .filter(item => item.item_type === 'checklist')
+                        .map(item => (
+                          <li key={item.item_id}>
+                            <input
+                              type="checkbox"
+                              name={item.content}
+                              id="actions"
+                            />
+                            {item.content}
+                          </li>
+                        ))}
                     </ul>
                     <h3>Indicators:</h3>
                     <ul>
-                      {items &&
-                        items.filter(item => item.item_type === 'indicator') &&
-                        items
-                          .filter(item => item.item_type === 'indicator')
-                          .filter(
-                            item =>
-                              item.role_id ===
-                              circles.results
-                                .filter(
-                                  circle =>
-                                    circle.circle_id === params.circle_id
-                                )[0]
-                                .roles.find(role => role.role_id).role_id
-                          )
-                          .map(item => (
-                            <li key={item.item_id}>
-                              {item.content} :{' '}
-                              <input
-                                type="text"
-                                name={item.content}
-                                id="indicateurs"
-                                className="smallInput"
-                              />
-                            </li>
-                          ))}
+                      {items
+                        .filter(item => item.item_type === 'indicator')
+                        .map(item => (
+                          <li key={item.item_id}>
+                            {item.content} :{' '}
+                            <input
+                              type="text"
+                              name={item.content}
+                              id="indicateurs"
+                              className="smallInput"
+                            />
+                          </li>
+                        ))}
                     </ul>
                   </span>
                 )}
@@ -259,8 +235,8 @@ export default withRouter(
       params: state.params,
     }),
     dispatch => ({
-      getMilestones: () => {
-        dispatch(fetchCircleMilestones())
+      getMilestonesAndItems: () => {
+        dispatch(fetchCircleMilestonesAndItems())
       },
       onGoBack: history => {
         dispatch(goBack(history))
@@ -294,13 +270,14 @@ export default withRouter(
         }
         const fullcontent = [
           `
-### Indicators:
-
-${indicators}
 
 ### Recurrent Actions:
 
 ${actions}
+
+### Indicators:
+
+${indicators}
 
 ### Milestones:
 
@@ -324,8 +301,6 @@ ${event.target.form.body.value}
         dispatch(fetchResults('labels'))
         dispatch(setLoading('meetings'))
         dispatch(fetchResults('meetings'))
-        dispatch(setLoading('items'))
-        dispatch(fetchResults('items'))
       },
     })
   )(MeetingsReportCreation)
