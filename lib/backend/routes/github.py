@@ -6,8 +6,11 @@ import pytz
 from flask import jsonify, request, session
 from flask_github import GitHubError
 
-from .. import app, github
+from .. import Session, app, github
+from ..api.models import Milestone_circle
 from .auth import cache, needlogin
+
+db_session = Session()
 
 
 def date_from_iso(iso_date):
@@ -826,6 +829,7 @@ def timeline():
     user = session.get('user')
     start = params.get('start')
     stop = params.get('stop')
+    without_due_date = params.get('withoutDueDate') == 'true'
     with ThreadPoolExecutor(max_workers=50) as executor:
         for name in repos_name:
             repo = {}
@@ -837,19 +841,35 @@ def timeline():
     for repo in repos:
         milestones.extend(repo.get('milestones', []))
 
+    def getCirclesId(milestone):
+        repo_name = milestone['html_url'].split('/')[4]
+        milestones_circles = db_session.query(Milestone_circle).filter(
+            Milestone_circle.milestone_number == milestone['number'],
+            Milestone_circle.repo_name == repo_name).all()
+        return [{'circle_id': assoc.circle_id} for assoc in milestones_circles]
+
     def milestoneDateToIso(milestone):
         if milestone.get('due_on'):
             milestone['due_on'] = milestone['due_on'].isoformat()
+        milestone['is_in_edition'] = False
+        milestone['circles'] = getCirclesId(milestone)
         return milestone
+
+    def super_if(milestone):
+        return (
+            (milestone.get('due_on')
+             and date_from_iso(start) <= milestone['due_on'] < date_from_iso(stop))  # noqa
+            or (without_due_date
+                and not milestone.get('due_on')  # noqa
+                and not milestone.get('closed_at')))  # noqa
+
+    results = [milestoneDateToIso(milestone) for milestone in milestones
+               if super_if(milestone)]
 
     return jsonify({
         'params': request.get_json(),
         'results': {
-            'milestones': [
-                milestoneDateToIso(milestone) for milestone in milestones
-                if milestone.get('due_on') and date_from_iso(start) <=
-                milestone['due_on'] < date_from_iso(stop)
-            ]
+            'milestones': results
         }
     })
 

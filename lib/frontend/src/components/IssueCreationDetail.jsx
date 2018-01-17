@@ -192,7 +192,7 @@ class IssueCreationDetail extends React.Component {
           <article className={b('action')}>
             <button
               type="submit"
-              onClick={event => onSubmit(event)}
+              onClick={event => onSubmit(event, history)}
               disabled={issueForm.project === '' || issueForm.title === ''}
             >
               Create
@@ -232,7 +232,7 @@ export default withRouter(
       onProjectChange: repoName => {
         dispatch(changeMilestoneSelect(repoName))
       },
-      onSubmit: event => {
+      onSubmit: (event, history) => {
         event.preventDefault()
         dispatch(submitIssue(event, history))
       },

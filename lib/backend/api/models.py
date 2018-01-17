@@ -34,6 +34,9 @@ class Circle(Base):
     is_active = Column(Boolean, default=True, nullable=False)
     circle_children = relationship(
         'Circle', backref=backref('parent', remote_side=[circle_id]))
+    circle_milestones = relationship(
+        'Milestone_circle', backref=backref(
+            'milestone_circle', remote_side=[circle_id]))
 
 
 @listens_for(Circle.is_active, 'set')
@@ -102,6 +105,9 @@ class Milestone_circle(Base):
         Integer,
         ForeignKey('circle.circle_id'),
         primary_key=True)
-    milestone_id = Column(
+    milestone_number = Column(
         Integer,
+        primary_key=True)
+    repo_name = Column(
+        String,
         primary_key=True)

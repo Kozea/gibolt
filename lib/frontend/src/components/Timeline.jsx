@@ -18,30 +18,51 @@ class Timeline extends React.Component {
     this.props.sync()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.search !== this.props.location.search) {
+      this.props.sync()
+    }
+  }
+
   render() {
     const {
+      circles,
+      labels,
       range,
       query,
       loading,
       error,
       milestones,
+      onCheckboxChange,
       onDateChange,
     } = this.props
-
     let milestonesByMonth = values(
       milestones.reduce((months, milestone) => {
-        if (!milestone.due_on) {
+        let month, monthStr
+        if (!milestone.due_on && !range.withoutDueDate) {
           return months
         }
-        const month = startOfMonth(milestone.due_on)
-        const monthStr = format(month, 'YYYY-MM')
-        if (months[monthStr] === void 0) {
-          months[monthStr] = {
-            month: month,
-            milestones: [],
+        if (milestone.due_on) {
+          month = startOfMonth(milestone.due_on)
+          monthStr = format(month, 'YYYY-MM')
+          if (months[monthStr] === void 0) {
+            months[monthStr] = {
+              month: month,
+              milestones: [],
+            }
           }
+          months[monthStr].milestones.push(milestone)
+        } else {
+          month = 'No Due Date'
+          monthStr = month
+          if (months[monthStr] === void 0) {
+            months[monthStr] = {
+              month: month,
+              milestones: [],
+            }
+          }
+          months[monthStr].milestones.push(milestone)
         }
-        months[monthStr].milestones.push(milestone)
         return months
       }, {})
     )
@@ -63,7 +84,16 @@ class Timeline extends React.Component {
             type="date"
             value={range.stop}
             onChange={e => onDateChange(e.target.value, 'stop', query)}
-          />.
+          />
+          <input
+            id="checkbox"
+            type="checkbox"
+            onChange={event => onCheckboxChange(event, query)}
+            checked={range.withoutDueDate === 'true'}
+          />
+          <label className={b('check')} htmlFor="checkbox">
+            display milestones without due date
+          </label>
         </h1>
         {loading && <Loading />}
         {error && (
@@ -72,27 +102,66 @@ class Timeline extends React.Component {
             <code>{error}</code>
           </article>
         )}
-        {milestonesByMonth.map(({ id, month, milestones }) => (
-          <article key={id} className={b('date')}>
-            <h2>
-              {format(month, 'MMMM YYYY')} <sup>({milestones.length})</sup>
-            </h2>
-            <ul>
-              {milestones.map(milestone => (
-                <Milestone
-                  key={milestone.id}
-                  state={milestone.state}
-                  due_on={milestone.due_on}
-                  repo={milestone.repo}
-                  html_url={milestone.html_url}
-                  title={milestone.title}
-                  open_issues={milestone.open_issues}
-                  closed_issues={milestone.closed_issues}
-                />
-              ))}
-            </ul>
-          </article>
-        ))}
+        {milestonesByMonth
+          .filter(mil => mil.month !== 'No Due Date')
+          .map(({ id, month, milestones }) => (
+            <article key={id} className={b('date')}>
+              <h2>
+                {format(month, 'MMMM YYYY')} <sup>({milestones.length})</sup>
+              </h2>
+              <ul>
+                {milestones.map(milestone => (
+                  <Milestone
+                    key={milestone.id}
+                    milestone_id={milestone.id}
+                    milestone_number={milestone.number}
+                    state={milestone.state}
+                    due_on={milestone.due_on}
+                    repo={milestone.repo}
+                    html_url={milestone.html_url}
+                    title={milestone.title}
+                    open_issues={milestone.open_issues}
+                    closed_issues={milestone.closed_issues}
+                    is_in_edition={milestone.is_in_edition}
+                    assoc_circles={milestone.circles}
+                    circles={circles}
+                    labels={labels}
+                  />
+                ))}
+              </ul>
+            </article>
+          ))}
+        {range.withoutDueDate === 'true' &&
+          milestonesByMonth
+            .filter(mil => mil.month === 'No Due Date')
+            .map(({ id, milestones }) => (
+              <article key={id} className={b('date')}>
+                <h2>
+                  {'Open milestones without due date'}{' '}
+                  <sup>({milestones.length})</sup>
+                </h2>
+                <ul>
+                  {milestones.map(milestone => (
+                    <Milestone
+                      key={milestone.id}
+                      milestone_id={milestone.id}
+                      milestone_number={milestone.number}
+                      state={milestone.state}
+                      due_on={milestone.due_on}
+                      repo={milestone.html_url.split('/')[4]}
+                      html_url={milestone.html_url}
+                      title={milestone.title}
+                      open_issues={milestone.open_issues}
+                      closed_issues={milestone.closed_issues}
+                      is_in_edition={milestone.is_in_edition}
+                      assoc_circles={milestone.circles}
+                      circles={circles}
+                      labels={labels}
+                    />
+                  ))}
+                </ul>
+              </article>
+            ))}
       </section>
     )
   }
@@ -104,8 +173,22 @@ export default connect(
     loading: state.timeline.loading,
     error: state.timeline.error,
     range: timelineRangeFromState(state),
+    circles: state.circles.results,
+    labels: state.labels.results.qualifier,
+    location: state.router.location,
   }),
   dispatch => ({
+    onCheckboxChange: (e, query) => {
+      dispatch(
+        push({
+          pathname: '/timeline',
+          search: stringify({
+            ...query,
+            ['withoutDueDate']: e.target.checked,
+          }),
+        })
+      )
+    },
     onDateChange: (date, type, query) => {
       dispatch(
         push({
@@ -120,6 +203,10 @@ export default connect(
     sync: () => {
       dispatch(setLoading('timeline'))
       dispatch(fetchResults('timeline'))
+      dispatch(setLoading('circles'))
+      dispatch(fetchResults('circles'))
+      dispatch(setLoading('labels'))
+      dispatch(fetchResults('labels'))
     },
   })
 )(Timeline)
