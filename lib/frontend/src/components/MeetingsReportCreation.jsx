@@ -94,8 +94,8 @@ class MeetingsReportCreation extends React.Component {
             <br />
             {circles.results &&
               circles.results.filter(
-                circle =>
-                circle.circle_id === params.circle_id)[0].roles.length > 0 && (
+                circle => circle.circle_id === params.circle_id
+              )[0].roles.length > 0 && (
                 <span>
                   <label id="checklists">
                     <h3>Recurrent actions:</h3>
@@ -106,12 +106,14 @@ class MeetingsReportCreation extends React.Component {
                         .filter(
                           item =>
                             item.role_id ===
-                            circles.results.filter(circle =>
-                              circle.circle_id === params.circle_id)[0]
+                            circles.results
+                              .filter(
+                                circle => circle.circle_id === params.circle_id
+                              )[0]
                               .roles.find(role => role.role_id).role_id
                         )
                         .map(item => (
-                          <li key={item.item_id} >{item.content}</li>
+                          <li key={item.item_id}>{item.content}</li>
                         ))}
                   </label>
                   <label>
@@ -123,8 +125,10 @@ class MeetingsReportCreation extends React.Component {
                         .filter(
                           item =>
                             item.role_id ===
-                            circles.results.filter(circle =>
-                              circle.circle_id === params.circle_id)[0]
+                            circles.results
+                              .filter(
+                                circle => circle.circle_id === params.circle_id
+                              )[0]
                               .roles.find(role => role.role_id).role_id
                         )
                         .map(item => (
