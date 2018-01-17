@@ -69,6 +69,7 @@ class MeetingsReportCreation extends React.Component {
         {(circles.loading || meetingsTypes.loading) && <Loading />}
         <article className={b('meetings')}>
           <h2>Create a report</h2>
+
           <form onSubmit={event => event.preventDefault()}>
             <label>
               Circle:
@@ -105,54 +106,65 @@ class MeetingsReportCreation extends React.Component {
               </select>
             </label>
             <br />
-            {circle &&
-              circle.results &&
-              circle.results.roles &&
-              circle.results.roles.length > 0 && (
-                <span>
-                  <label>
-                    <h3>Recurrent actions:</h3>
-                    {items &&
-                      roles &&
-                      items.filter(item => item.item_type === 'checklist') &&
-                      items
-                        .filter(item => item.item_type === 'checklist')
-                        .filter(
-                          item =>
-                            item.role_id ===
-                            roles.find(
-                              role => role.circle_id === params.circle_id
-                            ).role_id
-                        )
-                        .map(item => (
-                          <li key={item.item_id}>{item.content}</li>
-                        ))}
-                  </label>
-                  <label>
-                    <h3>Indicators:</h3>
-                    {items &&
-                      items.filter(item => item.item_type === 'indicator') &&
-                      items
-                        .filter(item => item.item_type === 'indicator')
-                        .filter(
-                          item =>
-                            item.role_id ===
-                            roles.find(
-                              role => role.circle_id === params.circle_id
-                            ).role_id
-                        )
-                        .map(item => (
-                          <li key={item.item_id}>
-                            <span>{item.content}</span> :{' '}
-                            <input type="text" id="indicData" />
-                          </li>
-                        ))}
-                  </label>
-                </span>
-              )}
-            <br />
             <div className={b('content')}>
-              <label className={b('lab')}>Projects:</label>
+              {circle &&
+                circle.results &&
+                circle.results.roles &&
+                circle.results.roles.length > 0 && (
+                  <span>
+                    <h3>Recurrent actions:</h3>
+                    <ul>
+                      {items &&
+                        roles &&
+                        items.filter(item => item.item_type === 'checklist') &&
+                        items
+                          .filter(item => item.item_type === 'checklist')
+                          .filter(
+                            item =>
+                              item.role_id ===
+                              roles.find(
+                                role => role.circle_id === params.circle_id
+                              ).role_id
+                          )
+                          .map(item => (
+                            <li key={item.item_id}>
+                              <input
+                                key={item.item_id}
+                                id="checkbox"
+                                type="checkbox"
+                              />
+                              <label>{item.content}</label>
+                            </li>
+                          ))}
+                    </ul>
+                    <h3>Indicators:</h3>
+                    <ul>
+                      {items &&
+                        items.filter(item => item.item_type === 'indicator') &&
+                        items
+                          .filter(item => item.item_type === 'indicator')
+                          .filter(
+                            item =>
+                              item.role_id ===
+                              roles.find(
+                                role => role.circle_id === params.circle_id
+                              ).role_id
+                          )
+                          .map(item => (
+                            <li key={item.item_id}>
+                              <span className={b('bullet')} />
+                              <span>{item.content}</span> :
+                              <input
+                                className="smallInput"
+                                type="text"
+                                id="indicData"
+                              />
+                            </li>
+                          ))}
+                    </ul>
+                  </span>
+                )}
+              <h3>Projects:</h3>
               <ul>
                 {circleMilestones.map(milestone => (
                   <li
@@ -206,6 +218,7 @@ class MeetingsReportCreation extends React.Component {
                     </Link>
                     <br />
                     <input
+                      className="largeInput"
                       id={`comment-${milestone.milestone_number}`}
                       name={`comment-${milestone.milestone_number}`}
                     />
@@ -214,7 +227,7 @@ class MeetingsReportCreation extends React.Component {
               </ul>
             </div>
             <div className={b('content')}>
-              <label className={b('lab')}>Report content:</label>
+              <h3>Report content:</h3>
               <MarkdownEditor />
             </div>
             <article className={b('action')}>
