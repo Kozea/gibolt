@@ -1,10 +1,10 @@
 @import ../vars
 
 .Milestone
-  display: flex
   align-items: center
   background: #fff
   border: 1px solid darken($body, 5%)
+  display: flex
   margin: 0.25em 1em
   padding: 0.5em
   position: relative
@@ -26,9 +26,37 @@
     &-closed:before
       border-color: $close-issue
 
+  &__btn
+    background: #bac9d5
+    border: none
+    font-family: $text-font
+    font-size: .8em
+    margin: .5em 0 .5em 1em
+    padding: .5em
+    transition: background 0.2s
+
+  &__circles
+    margin-left: 0.5em
+
   &__link
     color: $text
     padding: 0.5em
 
   &__repo
+    font-weight: bold
     padding-left: .25em
+
+  &__tag
+    border: .2em solid
+    border-radius: .7em
+    font-family: $text-font
+    font-size: 0.7em
+    margin: .5em 0 .5em 1em
+    padding: .4em
+    transition: background 0.2s
+
+  &__unlink
+    color: #000000
+
+.addCircle
+  margin-left: .5em
