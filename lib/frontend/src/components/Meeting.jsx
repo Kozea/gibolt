@@ -6,8 +6,8 @@ import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import {
-  checkAccountabilities,
-  delAccountabilities,
+  checkMarkdown,
+  delMarkdown,
   fetchResults,
   goBack,
   setLoading,
@@ -120,13 +120,13 @@ export default withRouter(
     dispatch => ({
       onCancelClick: () => {
         dispatch(toggleEdition())
-        dispatch(delAccountabilities())
+        dispatch(delMarkdown())
       },
       onEditClick: (content, meeetingOnEdition) => {
         if (meeetingOnEdition) {
-          dispatch(delAccountabilities())
+          dispatch(delMarkdown())
         } else {
-          dispatch(checkAccountabilities(content))
+          dispatch(checkMarkdown(content))
         }
         dispatch(toggleEdition())
       },

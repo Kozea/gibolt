@@ -4,7 +4,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { checkAccountabilities, fetchResults, setLoading } from '../actions'
+import { checkMarkdown, fetchResults, setLoading } from '../actions'
 import {
   addItem,
   cancelClickItem,
@@ -397,7 +397,7 @@ export default withRouter(
       },
       editClick: content => {
         dispatch(editRole())
-        dispatch(checkAccountabilities(content))
+        dispatch(checkMarkdown(content))
       },
       editItem: (item, e, roleId) => {
         const formItem = [].slice
@@ -425,7 +425,7 @@ export default withRouter(
           { circle_id: role.circle_id }
         )
         dispatch(updateRole(role.role_id, formRole, history))
-        dispatch(checkAccountabilities(''))
+        dispatch(checkMarkdown(''))
         dispatch(fetchRole())
       },
       addChecklist: (role, e) => {
