@@ -104,7 +104,8 @@ class MeetingsReportCreation extends React.Component {
             </label>
             <br />
             <div className={b('content')}>
-              {circles && circles.results &&
+              {circles &&
+                circles.results &&
                 circles.results.filter(
                   circle => circle.circle_id === params.circle_id
                 )[0] &&

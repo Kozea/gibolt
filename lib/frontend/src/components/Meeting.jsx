@@ -5,7 +5,13 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { fetchResults, goBack, setLoading } from '../actions'
+import {
+  checkAccountabilities,
+  delAccountabilities,
+  fetchResults,
+  goBack,
+  setLoading,
+} from '../actions'
 import { fetchReport, toggleEdition } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
@@ -28,6 +34,7 @@ class Meeting extends React.Component {
       meeting,
       meeetingOnEdition,
       onGoBack,
+      onCancelClick,
       onEditClick,
       users,
     } = this.props
@@ -56,7 +63,9 @@ class Meeting extends React.Component {
                   <i
                     className="fa fa-edit editMeeting"
                     aria-hidden="true"
-                    onClick={() => onEditClick()}
+                    onClick={() =>
+                      onEditClick(meeting.content, meeetingOnEdition)
+                    }
                   />
                 </span>
               )}
@@ -75,7 +84,7 @@ class Meeting extends React.Component {
                   </div>
                   <article className={b('action')}>
                     <button type="submit">Submit</button>
-                    <button type="submit" onClick={() => onEditClick()}>
+                    <button type="submit" onClick={() => onCancelClick()}>
                       Cancel
                     </button>
                   </article>
@@ -109,7 +118,16 @@ export default withRouter(
       users: state.users.results,
     }),
     dispatch => ({
-      onEditClick: () => {
+      onCancelClick: () => {
+        dispatch(toggleEdition())
+        dispatch(delAccountabilities())
+      },
+      onEditClick: (content, meeetingOnEdition) => {
+        if (meeetingOnEdition) {
+          dispatch(delAccountabilities())
+        } else {
+          dispatch(checkAccountabilities(content))
+        }
         dispatch(toggleEdition())
       },
       onGoBack: history => {
