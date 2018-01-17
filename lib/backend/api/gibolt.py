@@ -41,7 +41,7 @@ rest(
 
 rest(
     Report,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
     relationships={
         'circle': rest(Circle, only=['circle_name']),
     },
@@ -65,12 +65,6 @@ rest(
         if request.values.get('role_id')
         else True,
     ),
-    auth=needlogin)
-
-rest(
-    Milestone_circle,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
-    name='milestones_circles',
     auth=needlogin)
 
 

@@ -96,6 +96,8 @@ class Report(Base):
     created_at = Column(DateTime, default=datetime.datetime.now())
     author_id = Column(Integer)
     content = Column(Text)
+    modified_at = Column(DateTime, onupdate=datetime.datetime.now())
+    modified_by = Column(Integer)
     circle = relationship(Circle, backref='reports')
 
 

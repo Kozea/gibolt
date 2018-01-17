@@ -12,7 +12,7 @@ import {
   goBack,
   setLoading,
 } from '../actions'
-import { fetchReport, toggleEdition } from '../actions/meetings'
+import { fetchReport, toggleEdition, updateReport } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
@@ -36,27 +36,25 @@ class Meeting extends React.Component {
       onGoBack,
       onCancelClick,
       onEditClick,
+      onSubmit,
       users,
     } = this.props
     return (
       <section className={b()}>
         <Helmet>
-          <title>Gibolt - Meetings</title>
+          <title>Gibolt - Meeting</title>
         </Helmet>
-
         <article className={b('meeting')}>
+          <h2>Meeting</h2>
           {error && (
             <article className={b('group', { error: true })}>
-              <h2>Meeting</h2>
-              <h2>Error during fetch</h2>
+              <h2>Error</h2>
               <code>{error}</code>
             </article>
           )}
           {loading && <Loading />}
-          <h2>Meeting</h2>
           {meeting.report_id && (
             <div>
-              {format(new Date(meeting.created_at), 'DD/MM/YYYY')} -{' '}
               {meeting.circle[0].circle_name} - {meeting.report_type}{' '}
               {!meeetingOnEdition && (
                 <span className={b('unlink')} title="Edit report">
@@ -68,12 +66,29 @@ class Meeting extends React.Component {
                     }
                   />
                 </span>
-              )}
+              )}{' '}
               <br />
-              author:{' '}
+              created by:{' '}
               {users
                 .filter(user => user.user_id === meeting.author_id)
-                .map(user => user.user_name)}
+                .map(user => user.user_name)}{' '}
+              <span className={b('date')}>
+                <i className="fa fa-clock-o" aria-hidden="true" />{' '}
+                {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
+              </span>
+              {meeting.modified_at && (
+                <span>
+                  <br />
+                  modified by:{' '}
+                  {users
+                    .filter(user => user.user_id === meeting.modified_by)
+                    .map(user => user.user_name)}{' '}
+                  <span className={b('date')}>
+                    <i className="fa fa-clock-o" aria-hidden="true" />{' '}
+                    {format(new Date(meeting.modified_at), 'DD/MM/YYYY HH:mm')}
+                  </span>
+                </span>
+              )}
               {meeetingOnEdition ? (
                 <form onSubmit={event => event.preventDefault()}>
                   <div className={b('editor')}>
@@ -83,7 +98,12 @@ class Meeting extends React.Component {
                     </label>
                   </div>
                   <article className={b('action')}>
-                    <button type="submit">Submit</button>
+                    <button
+                      type="submit"
+                      onClick={event => onSubmit(event, meeting.report_id)}
+                    >
+                      Submit
+                    </button>
                     <button type="submit" onClick={() => onCancelClick()}>
                       Cancel
                     </button>
@@ -132,6 +152,10 @@ export default withRouter(
       },
       onGoBack: history => {
         dispatch(goBack(history))
+      },
+      onSubmit: (event, reportId) => {
+        event.preventDefault()
+        dispatch(updateReport(reportId, event.target.form.body.value))
       },
       sync: () => {
         dispatch(setLoading('users'))
