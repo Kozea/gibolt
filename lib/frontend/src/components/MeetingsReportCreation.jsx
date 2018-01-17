@@ -130,7 +130,14 @@ class MeetingsReportCreation extends React.Component {
                                 .roles.find(role => role.role_id).role_id
                           )
                           .map(item => (
-                            <li key={item.item_id}>{item.content}</li>
+                            <li key={item.item_id}>
+                              <input
+                                type="checkbox"
+                                name={item.content}
+                                id="actions"
+                              />
+                              {item.content}
+                            </li>
                           ))}
                     </ul>
                     <h3>Indicators:</h3>
@@ -152,7 +159,11 @@ class MeetingsReportCreation extends React.Component {
                           .map(item => (
                             <li key={item.item_id}>
                               {item.content} :{' '}
-                              <input type="text" id="indicData" />
+                              <input
+                                type="text"
+                                name={item.content}
+                                id="indicateurs"
+                              />
                             </li>
                           ))}
                     </ul>
@@ -213,8 +224,8 @@ class MeetingsReportCreation extends React.Component {
                     <br />
                     <input
                       className="largeInput"
-                      id={`comment-${milestone.milestone_number}`}
-                      name={`comment-${milestone.milestone_number}`}
+                      id="milestones"
+                      name={milestone.milestone_title}
                     />
                   </li>
                 ))}
@@ -258,7 +269,49 @@ export default withRouter(
       },
       onSubmit: (event, history) => {
         event.preventDefault()
-        dispatch(submitReport(event, history))
+        let indicators = ''
+        let actions = ''
+        let milestones = ''
+        for (let i = 0; i < event.target.form.length; i++) {
+          switch (event.target.form[i].id) {
+            case 'indicateurs':
+              indicators += `
+* ${event.target.form[i].name} : ${event.target.form[i].value}
+               `
+              break
+            case 'actions':
+              actions += `
+* [${event.target.form[i].checked ? 'x' : ' '}] ${event.target.form[i].name}
+              `
+              break
+            case 'milestones':
+              milestones += `
+* ${event.target.form[i].name} : ${event.target.form[i].value}
+              `
+              break
+          }
+        }
+        const fullcontent = [
+          `
+### Indicators:
+
+${indicators}
+
+### Recurrent Actions:
+
+${actions}
+
+### Milestones:
+
+${milestones}
+
+### Comments:
+
+${event.target.form.body.value}
+
+        `,
+        ]
+        dispatch(submitReport(event, fullcontent, history))
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
