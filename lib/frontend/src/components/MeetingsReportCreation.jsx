@@ -109,125 +109,135 @@ class MeetingsReportCreation extends React.Component {
               </select>
             </label>
             <br />
+
             <div className={b('content')}>
-              {circles &&
-                circles.results &&
-                circles.results.filter(
-                  circle => circle.circle_id === params.circle_id
-                )[0] &&
-                circles.results.filter(
-                  circle => circle.circle_id === params.circle_id
-                )[0].roles.length > 0 && (
-                  <span>
-                    <h3>Recurrent actions:</h3>
-                    <ul>
-                      {items.map(roleItems =>
-                        roleItems.items
-                          .filter(item => item.item_type === 'checklist')
-                          .map(item => (
-                            <li key={item.item_id}>
-                              <input
-                                type="checkbox"
-                                name={`${roleItems.role_name} - ${
-                                  item.content
-                                }`}
-                                id="actions"
-                              />
-                              {roleItems.role_name} - {item.content}
-                            </li>
-                          ))
-                      )}
-                    </ul>
-                    <h3>Indicators:</h3>
-                    <ul>
-                      {items.map(roleItems =>
-                        roleItems.items
-                          .filter(item => item.item_type === 'indicator')
-                          .map(item => (
-                            <li key={item.item_id}>
-                              <span className={b('bullet')} />
-                              {roleItems.role_name} - {item.content} :{' '}
-                              <input
-                                type="text"
-                                name={`${roleItems.role_name} - ${
-                                  item.content
-                                }`}
-                                id="indicateurs"
-                                className="smallInput"
-                                defaultValue="0"
-                              />
-                            </li>
-                          ))
-                      )}
-                    </ul>
-                  </span>
-                )}
-              <h3>Projects:</h3>
-              <ul>
-                {circleMilestones.map(milestone => (
-                  <li
-                    key={milestone.milestone_number}
-                    title={milestone.description}
-                  >
-                    <a
-                      className={b('unlink')}
-                      href={milestone.html_url}
-                      target="_blank"
-                    >
-                      <span className={b('bullet')} />
-                      {milestone.repo_name}
-                      {' - '}
-                      <span className={b('lab')}>
-                        {milestone.milestone_title}
+              {params.meeting_name === 'Triage' && (
+                <span>
+                  {circles &&
+                    circles.results &&
+                    circles.results.filter(
+                      circle => circle.circle_id === params.circle_id
+                    )[0] &&
+                    circles.results.filter(
+                      circle => circle.circle_id === params.circle_id
+                    )[0].roles.length > 0 && (
+                      <span>
+                        <h3>Recurrent actions:</h3>
+                        <ul>
+                          {items.map(roleItems =>
+                            roleItems.items
+                              .filter(item => item.item_type === 'checklist')
+                              .map(item => (
+                                <li key={item.item_id}>
+                                  <input
+                                    type="checkbox"
+                                    name={`${roleItems.role_name} - ${
+                                      item.content
+                                    }`}
+                                    id="actions"
+                                  />
+                                  {roleItems.role_name} - {item.content}
+                                </li>
+                              ))
+                          )}
+                        </ul>
+                        <h3>Indicators:</h3>
+                        <ul>
+                          {items.map(roleItems =>
+                            roleItems.items
+                              .filter(item => item.item_type === 'indicator')
+                              .map(item => (
+                                <li key={item.item_id}>
+                                  <span className={b('bullet')} />
+                                  {roleItems.role_name} - {item.content} :{' '}
+                                  <input
+                                    type="text"
+                                    name={`${roleItems.role_name} - ${
+                                      item.content
+                                    }`}
+                                    id="indicateurs"
+                                    className="smallInput"
+                                  />
+                                </li>
+                              ))
+                          )}
+                        </ul>
                       </span>
-                    </a>
-                    {' -'}
-                    <Progress
-                      val={milestone.closed_issues}
-                      total={milestone.open_issues + milestone.closed_issues}
-                    />
-                    <span className={b('due-date')}>
-                      {' ('}
-                      {milestone.due_on
-                        ? `due on: ${format(
-                            new Date(milestone.due_on),
-                            'DD/MM/YYYY'
-                          )}`
-                        : 'no due date'}
-                      {')'}
-                    </span>
-                    <Link
-                      className={b('unlink')}
-                      target="_blank"
-                      to={{
-                        pathname: '/createIssue',
-                        search: stringify({
-                          grouper: 'milestone',
-                          group: `${milestone.repo_name} ⦔ ${
-                            milestone.milestone_number
-                          }`,
-                        }),
-                      }}
-                    >
-                      <i
-                        className="fa fa-plus-circle addCircle"
-                        aria-hidden="true"
-                      />
-                    </Link>
-                    <br />
-                    <input
-                      className="largeInput"
-                      id="milestones"
-                      name={milestone.milestone_title}
-                    />
-                  </li>
-                ))}
-              </ul>
+                    )}
+                  <h3>Projects:</h3>
+                  <ul>
+                    {circleMilestones.map(milestone => (
+                      <li
+                        key={milestone.milestone_number}
+                        title={milestone.description}
+                      >
+                        <a
+                          className={b('unlink')}
+                          href={milestone.html_url}
+                          target="_blank"
+                        >
+                          <span className={b('bullet')} />
+                          {milestone.repo_name}
+                          {' - '}
+                          <span className={b('lab')}>
+                            {milestone.milestone_title}
+                          </span>
+                        </a>
+                        {' -'}
+                        <Progress
+                          val={milestone.closed_issues}
+                          total={
+                            milestone.open_issues + milestone.closed_issues
+                          }
+                        />
+                        <span className={b('due-date')}>
+                          {' ('}
+                          {milestone.due_on
+                            ? `due on: ${format(
+                                new Date(milestone.due_on),
+                                'DD/MM/YYYY'
+                              )}`
+                            : 'no due date'}
+                          {')'}
+                        </span>
+                        <Link
+                          className={b('unlink')}
+                          target="_blank"
+                          to={{
+                            pathname: '/createIssue',
+                            search: stringify({
+                              grouper: 'milestone',
+                              group: `${milestone.repo_name} ⦔ ${
+                                milestone.milestone_number
+                              }`,
+                            }),
+                          }}
+                        >
+                          <i
+                            className="fa fa-plus-circle addCircle"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                        <br />
+                        <input
+                          className="largeInput"
+                          id="milestones"
+                          name={milestone.milestone_title}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </span>
+              )}
+
               <h3>Report content:</h3>
               <MarkdownEditor />
             </div>
             <article className={b('action')}>
-              <button type="submit" onClick={event => onSubmit(event, history)}>
+              <button
+                type="submit"
+                onClick={event => onSubmit(event, params.meeting_name, history)}
+              >
                 Submit
               </button>
               <button type="submit" onClick={() => onGoBack(history)}>
@@ -262,52 +272,9 @@ export default withRouter(
       onSelectChange: event => {
         dispatch(updateReportsList(event))
       },
-      onSubmit: (event, history) => {
+      onSubmit: (event, meetingType, history) => {
         event.preventDefault()
-        let indicators = ''
-        let actions = ''
-        let milestones = ''
-        for (let i = 0; i < event.target.form.length; i++) {
-          switch (event.target.form[i].id) {
-            case 'indicateurs':
-              indicators += `
-* ${event.target.form[i].name} : ${event.target.form[i].value}
-               `
-              break
-            case 'actions':
-              actions += `
-* [${event.target.form[i].checked ? 'x' : ' '}] ${event.target.form[i].name}
-              `
-              break
-            case 'milestones':
-              milestones += `
-* ${event.target.form[i].name} : ${event.target.form[i].value}
-              `
-              break
-          }
-        }
-        const fullcontent = [
-          `
-
-### Recurrent Actions:
-
-${actions}
-
-### Indicators:
-
-${indicators}
-
-### Milestones:
-
-${milestones}
-
-### Comments:
-
-${event.target.form.body.value}
-
-        `,
-        ]
-        dispatch(submitReport(event, fullcontent, history))
+        dispatch(submitReport(event, meetingType, history))
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
