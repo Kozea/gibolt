@@ -163,6 +163,7 @@ class MeetingsReportCreation extends React.Component {
                                 type="text"
                                 name={item.content}
                                 id="indicateurs"
+                                className="smallInput"
                               />
                             </li>
                           ))}

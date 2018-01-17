@@ -46,6 +46,9 @@ class Meetings extends React.Component {
       onSelectChange,
       params,
     } = this.props
+    const sortedMeetings = meetings.results.sort(
+      (a, b) => a.created_at - b.created_at
+    )
     return (
       <section className={b()}>
         <Helmet>
@@ -121,9 +124,9 @@ class Meetings extends React.Component {
               </button>
             </Link>
           </form>
-          {meetings.results.length > 0 ? (
+          {sortedMeetings.length > 0 ? (
             <ul>
-              {meetings.results.map(meeting => (
+              {sortedMeetings.map(meeting => (
                 <li
                   key={meeting.report_id}
                   className={b('item')}
@@ -144,7 +147,7 @@ class Meetings extends React.Component {
                     }}
                   >
                     <span className={b('unlink')}>
-                      {format(new Date(meeting.created_at), 'DD/MM/YYYY')}
+                      {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
                       {' - '}
                       {meeting.circle[0].circle_name} -{' '}
                     </span>
