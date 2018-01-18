@@ -8,6 +8,7 @@ import { Link, withRouter } from 'react-router-dom'
 
 import {
   checkMarkdown,
+  delMarkdown,
   fetchResults,
   goBack,
   setLoading,
@@ -124,43 +125,53 @@ class MeetingsReportCreation extends React.Component {
                       <span>
                         <h3>Recurrent actions:</h3>
                         <ul>
-                          {items.map(roleItems =>
-                            roleItems.items
-                              .filter(item => item.item_type === 'checklist')
+                          {items &&
+                            items.map(
+                              roleItems =>
+                                roleItems.items &&
+                                roleItems.items
+                              .filter(
+                                item => item.item_type === 'checklist'
+                              )
                               .map(item => (
                                 <li key={item.item_id}>
                                   <input
                                     type="checkbox"
                                     name={`${roleItems.role_name} - ${
-                                      item.content
-                                    }`}
+                                          item.content
+                                        }`}
                                     id="actions"
                                   />
                                   {roleItems.role_name} - {item.content}
                                 </li>
                               ))
-                          )}
+                            )}
                         </ul>
                         <h3>Indicators:</h3>
                         <ul>
-                          {items.map(roleItems =>
-                            roleItems.items
-                              .filter(item => item.item_type === 'indicator')
+                          {items &&
+                            items.map(
+                              roleItems =>
+                                roleItems.items &&
+                                roleItems.items
+                              .filter(
+                                item => item.item_type === 'indicator'
+                              )
                               .map(item => (
                                 <li key={item.item_id}>
                                   <span className={b('bullet')} />
-                                  {roleItems.role_name} - {item.content} :{' '}
+                                  {roleItems.role_name} - {item.content}:{' '}
                                   <input
                                     type="text"
                                     name={`${roleItems.role_name} - ${
-                                      item.content
-                                    }`}
+                                          item.content
+                                        }`}
                                     id="indicateurs"
                                     className="smallInput"
                                   />
                                 </li>
                               ))
-                          )}
+                            )}
                         </ul>
                       </span>
                     )}
@@ -267,6 +278,7 @@ export default withRouter(
         dispatch(fetchCircleMilestonesAndItems())
       },
       onGoBack: history => {
+        dispatch(delMarkdown())
         dispatch(goBack(history))
       },
       onSelectChange: event => {
