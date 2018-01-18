@@ -137,25 +137,28 @@ class Issues extends React.Component {
                   )
                 }
               />
-              {(grouper === 'project' || grouper === 'milestone') && (
-                <Link
-                  className={b('link')}
-                  to={{
-                    pathname: '/createIssue',
-                    search:
-                      grouper === 'milestone'
-                        ? stringify({
-                            grouper,
-                            group: id.split('|')[1]
-                              ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}`
-                              : `${group.split(' ⦔ ')[0]} ⦔ No milestone`,
-                          })
-                        : stringify({ grouper, group }),
-                  }}
-                >
-                  <button className={b('newTicket')}>Create issue</button>
-                </Link>
-              )}
+              {(grouper === 'project' ||
+                (grouper === 'milestone' &&
+                  (issues[0].milestone_state === 'open' ||
+                    group.split(' ⦔ ')[1] === 'No milestone'))) && (
+                      <Link
+                        className={b('link')}
+                        to={{
+                          pathname: '/createIssue',
+                          search:
+                          grouper === 'milestone'
+                            ? stringify({
+                              grouper,
+                              group: id.split('|')[1]
+                                ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}` // eslint-disable-line max-len
+                                : group,
+                            })
+                            : stringify({ grouper, group }),
+                        }}
+                      >
+                        <button className={b('newTicket')}>Create issue</button>
+                      </Link>
+                    )}
               {issuesState === 'all' &&
                 grouper !== 'state' && (
                   <Progress
