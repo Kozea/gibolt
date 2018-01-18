@@ -17,6 +17,7 @@ rest(
     methods=['GET', 'PUT', 'POST', 'DELETE'],
     relationships={
         'roles': rest(Role, only=['role_id', 'role_name', 'user_id']),
+        'circle_milestones': rest(Milestone_circle),
     },
     name='circles',
     query=lambda query: query.filter(
@@ -40,7 +41,7 @@ rest(
 
 rest(
     Report,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
     relationships={
         'circle': rest(Circle, only=['circle_name']),
     },
@@ -64,12 +65,6 @@ rest(
         if request.values.get('role_id')
         else True,
     ),
-    auth=needlogin)
-
-rest(
-    Milestone_circle,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
-    name='milestones_circles',
     auth=needlogin)
 
 

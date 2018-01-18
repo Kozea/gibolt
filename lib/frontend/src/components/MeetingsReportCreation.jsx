@@ -1,15 +1,25 @@
 import './MeetingsReportCreation.sass'
 
-import { parse } from 'query-string'
+import { format } from 'date-fns'
+import { parse, stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 
-import { fetchResults, goBack, setLoading, setParams } from '../actions'
+import {
+  checkMarkdown,
+  delMarkdown,
+  fetchResults,
+  goBack,
+  setLoading,
+  setParams,
+} from '../actions'
 import { submitReport, updateReportsList } from '../actions/meetings'
+import { fetchCircleMilestonesAndItems } from '../actions/milestones'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
+import Progress from './Progress'
 
 const b = block('MeetingsReportCreation')
 
@@ -21,12 +31,21 @@ class MeetingsReportCreation extends React.Component {
       meeting_name: search.meeting_name ? search.meeting_name : '',
     })
   }
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.circles !== this.props.circles ||
+      nextProps.params.circle_id !== this.props.params.circle_id
+    ) {
+      this.props.getMilestonesAndItems()
+    }
+  }
 
   render() {
     const {
+      circleMilestones,
       circles,
       history,
-      meetings,
+      items,
       meetingsTypes,
       onGoBack,
       onSelectChange,
@@ -39,7 +58,7 @@ class MeetingsReportCreation extends React.Component {
         <Helmet>
           <title>Gibolt - Create a report</title>
         </Helmet>
-        {(circles.error || meetingsTypes.error || meetings.error) && (
+        {(circles.error || meetingsTypes.error) && (
           <article className={b('group', { error: true })}>
             <h2>Error during fetch or creation</h2>
             <code>
@@ -47,13 +66,14 @@ class MeetingsReportCreation extends React.Component {
                 ? `circles : ${circles.error}`
                 : meetingsTypes.error
                   ? `Meetings types: ${meetingsTypes.error}`
-                  : `Reports: ${meetings.error}`}
+                  : ''}
             </code>
           </article>
         )}
         {(circles.loading || meetingsTypes.loading) && <Loading />}
         <article className={b('meetings')}>
           <h2>Create a report</h2>
+
           <form onSubmit={event => event.preventDefault()}>
             <label>
               Circle:
@@ -89,14 +109,149 @@ class MeetingsReportCreation extends React.Component {
                 ))}
               </select>
             </label>
+            <br />
+
             <div className={b('content')}>
-              <label>
-                Report content:
-                <MarkdownEditor />
-              </label>
+              {params.meeting_name === 'Triage' && (
+                <span>
+                  {circles &&
+                    circles.results &&
+                    circles.results.filter(
+                      circle => circle.circle_id === params.circle_id
+                    )[0] &&
+                    circles.results.filter(
+                      circle => circle.circle_id === params.circle_id
+                    )[0].roles.length > 0 && (
+                      <span>
+                        <h3>Recurrent actions:</h3>
+                        <ul>
+                          {items &&
+                            items.map(
+                              roleItems =>
+                                roleItems.items &&
+                                roleItems.items
+                              .filter(
+                                item => item.item_type === 'checklist'
+                              )
+                              .map(item => (
+                                <li key={item.item_id}>
+                                  <input
+                                    type="checkbox"
+                                    name={`${roleItems.role_name} - ${
+                                          item.content
+                                        }`}
+                                    id="actions"
+                                  />
+                                  {roleItems.role_name} - {item.content}
+                                </li>
+                              ))
+                            )}
+                        </ul>
+                        <h3>Indicators:</h3>
+                        <ul>
+                          {items &&
+                            items.map(
+                              roleItems =>
+                                roleItems.items &&
+                                roleItems.items
+                              .filter(
+                                item => item.item_type === 'indicator'
+                              )
+                              .map(item => (
+                                <li key={item.item_id}>
+                                  <span className={b('bullet')} />
+                                  {roleItems.role_name} -
+                                  {item.content}:{' '}
+                                  <input
+                                    type="text"
+                                    name={`${roleItems.role_name} - ${
+                                          item.content
+                                        }`}
+                                    id="indicateurs"
+                                    className="smallInput"
+                                  />
+                                </li>
+                              ))
+                            )}
+                        </ul>
+                      </span>
+                    )}
+                  <h3>Projects:</h3>
+                  <ul>
+                    {circleMilestones.map(milestone => (
+                      <li
+                        key={milestone.milestone_number}
+                        title={milestone.description}
+                      >
+                        <a
+                          className={b('unlink')}
+                          href={milestone.html_url}
+                          target="_blank"
+                        >
+                          <span className={b(`bullet ${milestone.state}`)} />
+                          {milestone.repo_name}
+                          {' - '}
+                          <span className={b('lab')}>
+                            {milestone.milestone_title}
+                          </span>
+                        </a>
+                        {' -'}
+                        <Progress
+                          val={milestone.closed_issues}
+                          total={
+                            milestone.open_issues + milestone.closed_issues
+                          }
+                        />
+                        <span className={b('due-date')}>
+                          {' ('}
+                          {milestone.due_on
+                            ? `due on: ${format(
+                                new Date(milestone.due_on),
+                                'DD/MM/YYYY'
+                              )}`
+                            : 'no due date'}
+                          {')'}
+                        </span>
+                        {milestone.state === 'open' && (
+                          <Link
+                            className={b('unlink')}
+                            target="_blank"
+                            to={{
+                              pathname: '/createIssue',
+                              search: stringify({
+                                grouper: 'milestone',
+                                group: `${milestone.repo_name} ⦔ ${
+                                  milestone.milestone_number
+                                }`,
+                              }),
+                            }}
+                          >
+                            <i
+                              className="fa fa-plus-circle addCircle"
+                              aria-hidden="true"
+                            />
+                          </Link>
+                        )}
+                        <br />
+                        <input
+                          className="largeInput"
+                          id="milestones"
+                          name={milestone.milestone_title}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </span>
+              )}
+
+              <h3>Report content:</h3>
+              <MarkdownEditor />
             </div>
             <article className={b('action')}>
-              <button type="submit" onClick={event => onSubmit(event, history)}>
+              <button
+                type="submit"
+                onClick={event => onSubmit(event, params.meeting_name, history)}
+              >
                 Submit
               </button>
               <button type="submit" onClick={() => onGoBack(history)}>
@@ -112,23 +267,29 @@ class MeetingsReportCreation extends React.Component {
 export default withRouter(
   connect(
     state => ({
+      circleMilestones: state.circleMilestones.results,
       circles: state.circles,
-      labels: state.labels.results.qualifier,
-      meetings: state.meetings,
+      items: state.items.results,
       meetingsTypes: state.meetingsTypes,
       search: state.router.location.search,
       params: state.params,
     }),
     dispatch => ({
+      getMilestonesAndItems: () => {
+        dispatch(setLoading('circleMilestones'))
+        dispatch(setLoading('items'))
+        dispatch(fetchCircleMilestonesAndItems())
+      },
       onGoBack: history => {
+        dispatch(delMarkdown())
         dispatch(goBack(history))
       },
       onSelectChange: event => {
         dispatch(updateReportsList(event))
       },
-      onSubmit: (event, history) => {
+      onSubmit: (event, meetingType, history) => {
         event.preventDefault()
-        dispatch(submitReport(event, history))
+        dispatch(submitReport(event, meetingType, history))
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
@@ -140,6 +301,7 @@ export default withRouter(
         dispatch(fetchResults('labels'))
         dispatch(setLoading('meetings'))
         dispatch(fetchResults('meetings'))
+        dispatch(checkMarkdown('### Ordre du jour:'))
       },
     })
   )(MeetingsReportCreation)

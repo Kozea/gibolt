@@ -53,7 +53,11 @@ class IssueCreationDetail extends React.Component {
           : this.props.issueForm.milestonesSelect.length > 0
             ? this.props.issueForm.milestonesSelect.filter(
                 milestone => milestone.milestone_number === +splitValue
-              )[0].milestone_number
+              )[0]
+              ? this.props.issueForm.milestonesSelect.filter(
+                  milestone => milestone.milestone_number === +splitValue
+                )[0].milestone_number
+              : ''
             : ''
     return value
   }
@@ -192,7 +196,7 @@ class IssueCreationDetail extends React.Component {
           <article className={b('action')}>
             <button
               type="submit"
-              onClick={event => onSubmit(event)}
+              onClick={event => onSubmit(event, history)}
               disabled={issueForm.project === '' || issueForm.title === ''}
             >
               Create
@@ -232,7 +236,7 @@ export default withRouter(
       onProjectChange: repoName => {
         dispatch(changeMilestoneSelect(repoName))
       },
-      onSubmit: event => {
+      onSubmit: (event, history) => {
         event.preventDefault()
         dispatch(submitIssue(event, history))
       },

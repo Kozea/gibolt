@@ -2127,6 +2127,12 @@ draft-js-import-element@^1.2.1:
     draft-js-utils "^1.2.0"
     synthetic-dom "^1.2.0"
 
+draft-js-import-html@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/draft-js-import-html/-/draft-js-import-html-1.2.1.tgz#88adb8ce5dbe1a5a777663b1893cee6a35239eaa"
+  dependencies:
+    draft-js-import-element "^1.2.1"
+
 draft-js-import-markdown@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-1.2.1.tgz#ec18eb15008bab13d9878d65db50e181dd64a5ce"

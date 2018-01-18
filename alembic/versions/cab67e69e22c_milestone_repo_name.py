@@ -23,7 +23,7 @@ def upgrade():
         sa.Column('circle_id', sa.Integer(), nullable=False),
         sa.Column('milestone_number', sa.Integer(), nullable=False),
         sa.Column('repo_name', sa.String(), nullable=False),
-        sa.ForeignKeyConstraint(['circle_id'], ['circle.milestone_number'], ),
+        sa.ForeignKeyConstraint(['circle_id'], ['circle.circle_id'], ),
         sa.PrimaryKeyConstraint('circle_id', 'milestone_number', 'repo_name'))
 
 

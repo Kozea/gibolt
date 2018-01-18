@@ -1,14 +1,23 @@
 import './Meeting.sass'
 
 import { format } from 'date-fns'
+import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { fetchResults, goBack, setLoading } from '../actions'
-import { fetchReport } from '../actions/meetings'
+import {
+  checkMarkdown,
+  delMarkdown,
+  fetchResults,
+  goBack,
+  setLoading,
+  setParams,
+} from '../actions'
+import { fetchReport, toggleEdition, updateReport } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
+import MarkdownEditor from './MarkdownEditor'
 
 var ReactMarkdown = require('react-markdown')
 
@@ -16,46 +25,106 @@ const b = block('Meeting')
 
 class Meeting extends React.Component {
   componentWillMount() {
-    this.props.sync()
+    const search = parse(this.props.location.search)
+    this.props.sync(search)
   }
-
   render() {
-    const { error, history, loading, meeting, onGoBack, users } = this.props
+    const {
+      error,
+      history,
+      loading,
+      meeting,
+      meeetingOnEdition,
+      onGoBack,
+      onCancelClick,
+      onEditClick,
+      onSubmit,
+      users,
+    } = this.props
     return (
       <section className={b()}>
         <Helmet>
-          <title>Gibolt - Meetings</title>
+          <title>Gibolt - Meeting</title>
         </Helmet>
-
         <article className={b('meeting')}>
+          <h2>Meeting</h2>
           {error && (
             <article className={b('group', { error: true })}>
-              <h2>Meeting</h2>
-              <h2>Error during fetch</h2>
+              <h2>Error</h2>
               <code>{error}</code>
             </article>
           )}
           {loading && <Loading />}
           {meeting.report_id && (
             <div>
-              <h2>Meeting</h2>
-              {format(new Date(meeting.created_at), 'DD/MM/YYYY')} -{' '}
-              {meeting.circle[0].circle_name} - {meeting.report_type}
+              {meeting.circle[0].circle_name} - {meeting.report_type}{' '}
+              {!meeetingOnEdition && (
+                <span className={b('unlink')} title="Edit report">
+                  <i
+                    className="fa fa-edit editMeeting"
+                    aria-hidden="true"
+                    onClick={() =>
+                      onEditClick(meeting.content, meeetingOnEdition)
+                    }
+                  />
+                </span>
+              )}{' '}
               <br />
-              author:{' '}
+              created by:{' '}
               {users
                 .filter(user => user.user_id === meeting.author_id)
-                .map(user => user.user_name)}
-              <ReactMarkdown
-                className={b('content').toString()}
-                source={meeting.content}
-              />
+                .map(user => user.user_name)}{' '}
+              <span className={b('date')}>
+                <i className="fa fa-clock-o" aria-hidden="true" />{' '}
+                {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
+              </span>
+              {meeting.modified_at && (
+                <span>
+                  <br />
+                  modified by:{' '}
+                  {users
+                    .filter(user => user.user_id === meeting.modified_by)
+                    .map(user => user.user_name)}{' '}
+                  <span className={b('date')}>
+                    <i className="fa fa-clock-o" aria-hidden="true" />{' '}
+                    {format(new Date(meeting.modified_at), 'DD/MM/YYYY HH:mm')}
+                  </span>
+                </span>
+              )}
+              {meeetingOnEdition ? (
+                <form onSubmit={event => event.preventDefault()}>
+                  <div className={b('editor')}>
+                    <label>
+                      Report content:
+                      <MarkdownEditor />
+                    </label>
+                  </div>
+                  <article className={b('action')}>
+                    <button
+                      type="submit"
+                      onClick={event => onSubmit(event, meeting.report_id)}
+                    >
+                      Submit
+                    </button>
+                    <button type="submit" onClick={() => onCancelClick()}>
+                      Cancel
+                    </button>
+                  </article>
+                </form>
+              ) : (
+                <span>
+                  <ReactMarkdown
+                    className={b('content').toString()}
+                    source={meeting.content}
+                  />
+                  <br />
+                  <button type="submit" onClick={() => onGoBack(history)}>
+                    Back
+                  </button>
+                </span>
+              )}
             </div>
           )}
-          <br />
-          <button type="submit" onClick={() => onGoBack(history)}>
-            Back
-          </button>
         </article>
       </section>
     )
@@ -67,17 +136,35 @@ export default withRouter(
       error: state.meeting.error,
       loading: state.meeting.loading,
       meeting: state.meeting.results,
+      meeetingOnEdition: state.meeting.is_in_edition,
       users: state.users.results,
     }),
     dispatch => ({
+      onCancelClick: () => {
+        dispatch(toggleEdition())
+        dispatch(delMarkdown())
+      },
+      onEditClick: (content, meeetingOnEdition) => {
+        if (meeetingOnEdition) {
+          dispatch(delMarkdown())
+        } else {
+          dispatch(checkMarkdown(content))
+        }
+        dispatch(toggleEdition())
+      },
       onGoBack: history => {
         dispatch(goBack(history))
       },
-      sync: () => {
+      onSubmit: (event, reportId) => {
+        event.preventDefault()
+        dispatch(updateReport(reportId, event.target.form.body.value))
+      },
+      sync: locationSearch => {
+        dispatch(setParams(locationSearch))
         dispatch(setLoading('users'))
         dispatch(fetchResults('users'))
         dispatch(setLoading('meeting'))
-        dispatch(fetchReport())
+        dispatch(fetchReport(locationSearch))
       },
     })
   )(Meeting)

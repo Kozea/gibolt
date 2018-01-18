@@ -34,6 +34,9 @@ class Circle(Base):
     is_active = Column(Boolean, default=True, nullable=False)
     circle_children = relationship(
         'Circle', backref=backref('parent', remote_side=[circle_id]))
+    circle_milestones = relationship(
+        'Milestone_circle', backref=backref(
+            'milestone_circle', remote_side=[circle_id]))
 
 
 @listens_for(Circle.is_active, 'set')
@@ -90,9 +93,11 @@ class Report(Base):
         ForeignKey('circle.circle_id'),
         nullable=False)
     report_type = Column(Enum(*meeting_types))
-    created_at = Column(DateTime, default=datetime.datetime.now())
+    created_at = Column(DateTime, default=datetime.datetime.now)
     author_id = Column(Integer)
     content = Column(Text)
+    modified_at = Column(DateTime, onupdate=datetime.datetime.now)
+    modified_by = Column(Integer)
     circle = relationship(Circle, backref='reports')
 
 

@@ -4,7 +4,7 @@ import { stringify } from 'query-string'
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
 
-import { checkAccountabilities, delAccountabilities } from '../../actions'
+import { checkMarkdown, delMarkdown } from '../../actions'
 import {
   deleteCircle,
   editCircle,
@@ -234,7 +234,7 @@ export default withRouter(
     dispatch => ({
       editClick: content => {
         dispatch(editCircle())
-        dispatch(checkAccountabilities(content))
+        dispatch(checkMarkdown(content))
       },
       onClickAccount: circleAccount => {
         dispatch(toggleAccountExpanded(circleAccount))
@@ -281,7 +281,7 @@ export default withRouter(
         }
         formCircle.is_active = true
         dispatch(updateCircle(id, formCircle))
-        dispatch(delAccountabilities())
+        dispatch(delMarkdown())
       },
       onDisableCircle: circle => {
         const circleData = {}
@@ -294,7 +294,7 @@ export default withRouter(
         dispatch(updateCircle(circle.circle_id, circleData))
       },
       cancelClick: () => {
-        dispatch(delAccountabilities())
+        dispatch(delMarkdown())
       },
     })
   )(CircleDetails)
