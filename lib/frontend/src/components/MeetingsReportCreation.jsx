@@ -130,21 +130,21 @@ class MeetingsReportCreation extends React.Component {
                               roleItems =>
                                 roleItems.items &&
                                 roleItems.items
-                                  .filter(
-                                    item => item.item_type === 'checklist'
-                                  )
-                                  .map(item => (
-                                    <li key={item.item_id}>
-                                      <input
-                                        type="checkbox"
-                                        name={`${roleItems.role_name} - ${
+                              .filter(
+                                item => item.item_type === 'checklist'
+                              )
+                              .map(item => (
+                                <li key={item.item_id}>
+                                  <input
+                                    type="checkbox"
+                                    name={`${roleItems.role_name} - ${
                                           item.content
                                         }`}
-                                        id="actions"
-                                      />
-                                      {roleItems.role_name} - {item.content}
-                                    </li>
-                                  ))
+                                    id="actions"
+                                  />
+                                  {roleItems.role_name} - {item.content}
+                                </li>
+                              ))
                             )}
                         </ul>
                         <h3>Indicators:</h3>
@@ -154,24 +154,24 @@ class MeetingsReportCreation extends React.Component {
                               roleItems =>
                                 roleItems.items &&
                                 roleItems.items
-                                  .filter(
-                                    item => item.item_type === 'indicator'
-                                  )
-                                  .map(item => (
-                                    <li key={item.item_id}>
-                                      <span className={b('bullet')} />
-                                      {roleItems.role_name} -
-                                      {item.content}:{' '}
-                                      <input
-                                        type="text"
-                                        name={`${roleItems.role_name} - ${
+                              .filter(
+                                item => item.item_type === 'indicator'
+                              )
+                              .map(item => (
+                                <li key={item.item_id}>
+                                  <span className={b('bullet')} />
+                                  {roleItems.role_name} -
+                                  {item.content}:{' '}
+                                  <input
+                                    type="text"
+                                    name={`${roleItems.role_name} - ${
                                           item.content
                                         }`}
-                                        id="indicateurs"
-                                        className="smallInput"
-                                      />
-                                    </li>
-                                  ))
+                                    id="indicateurs"
+                                    className="smallInput"
+                                  />
+                                </li>
+                              ))
                             )}
                         </ul>
                       </span>
@@ -188,7 +188,7 @@ class MeetingsReportCreation extends React.Component {
                           href={milestone.html_url}
                           target="_blank"
                         >
-                          <span className={b('bullet')} />
+                          <span className={b(`bullet ${milestone.state}`)} />
                           {milestone.repo_name}
                           {' - '}
                           <span className={b('lab')}>
@@ -212,24 +212,26 @@ class MeetingsReportCreation extends React.Component {
                             : 'no due date'}
                           {')'}
                         </span>
-                        <Link
-                          className={b('unlink')}
-                          target="_blank"
-                          to={{
-                            pathname: '/createIssue',
-                            search: stringify({
-                              grouper: 'milestone',
-                              group: `${milestone.repo_name} ⦔ ${
-                                milestone.milestone_number
-                              }`,
-                            }),
-                          }}
-                        >
-                          <i
-                            className="fa fa-plus-circle addCircle"
-                            aria-hidden="true"
-                          />
-                        </Link>
+                        {milestone.state === 'open' && (
+                          <Link
+                            className={b('unlink')}
+                            target="_blank"
+                            to={{
+                              pathname: '/createIssue',
+                              search: stringify({
+                                grouper: 'milestone',
+                                group: `${milestone.repo_name} ⦔ ${
+                                  milestone.milestone_number
+                                }`,
+                              }),
+                            }}
+                          >
+                            <i
+                              className="fa fa-plus-circle addCircle"
+                              aria-hidden="true"
+                            />
+                          </Link>
+                        )}
                         <br />
                         <input
                           className="largeInput"

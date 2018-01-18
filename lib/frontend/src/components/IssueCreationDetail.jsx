@@ -53,7 +53,11 @@ class IssueCreationDetail extends React.Component {
           : this.props.issueForm.milestonesSelect.length > 0
             ? this.props.issueForm.milestonesSelect.filter(
                 milestone => milestone.milestone_number === +splitValue
-              )[0].milestone_number
+              )[0]
+              ? this.props.issueForm.milestonesSelect.filter(
+                  milestone => milestone.milestone_number === +splitValue
+                )[0].milestone_number
+              : ''
             : ''
     return value
   }
