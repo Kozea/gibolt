@@ -381,6 +381,9 @@ def list_tickets():
                  'milestone_number': (
                      ticket['milestone']['number']
                      if ticket['milestone'] else None),
+                 'milestone_state': (
+                     ticket['milestone']['state']
+                     if ticket['milestone'] else None),
                  'milestone_title': (
                      ticket['milestone']['title']
                      if ticket['milestone'] else None),

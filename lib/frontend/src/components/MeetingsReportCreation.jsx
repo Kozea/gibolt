@@ -130,21 +130,21 @@ class MeetingsReportCreation extends React.Component {
                               roleItems =>
                                 roleItems.items &&
                                 roleItems.items
-                              .filter(
-                                item => item.item_type === 'checklist'
-                              )
-                              .map(item => (
-                                <li key={item.item_id}>
-                                  <input
-                                    type="checkbox"
-                                    name={`${roleItems.role_name} - ${
+                                  .filter(
+                                    item => item.item_type === 'checklist'
+                                  )
+                                  .map(item => (
+                                    <li key={item.item_id}>
+                                      <input
+                                        type="checkbox"
+                                        name={`${roleItems.role_name} - ${
                                           item.content
                                         }`}
-                                    id="actions"
-                                  />
-                                  {roleItems.role_name} - {item.content}
-                                </li>
-                              ))
+                                        id="actions"
+                                      />
+                                      {roleItems.role_name} - {item.content}
+                                    </li>
+                                  ))
                             )}
                         </ul>
                         <h3>Indicators:</h3>
@@ -154,24 +154,24 @@ class MeetingsReportCreation extends React.Component {
                               roleItems =>
                                 roleItems.items &&
                                 roleItems.items
-                              .filter(
-                                item => item.item_type === 'indicator'
-                              )
-                              .map(item => (
-                                <li key={item.item_id}>
-                                  <span className={b('bullet')} />
-                                  {roleItems.role_name} -
-                                  {item.content}:{' '}
-                                  <input
-                                    type="text"
-                                    name={`${roleItems.role_name} - ${
+                                  .filter(
+                                    item => item.item_type === 'indicator'
+                                  )
+                                  .map(item => (
+                                    <li key={item.item_id}>
+                                      <span className={b('bullet')} />
+                                      {roleItems.role_name} -
+                                      {item.content}:{' '}
+                                      <input
+                                        type="text"
+                                        name={`${roleItems.role_name} - ${
                                           item.content
                                         }`}
-                                    id="indicateurs"
-                                    className="smallInput"
-                                  />
-                                </li>
-                              ))
+                                        id="indicateurs"
+                                        className="smallInput"
+                                      />
+                                    </li>
+                                  ))
                             )}
                         </ul>
                       </span>
