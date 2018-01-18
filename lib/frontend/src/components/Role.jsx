@@ -218,12 +218,13 @@ class Role extends React.Component {
                                 editItem(item, e, role.role_id)
                               }}
                             >
-                              <label>edit item:{' '}
-                              <input
-                                name="content"
-                                defaultValue={item.content}
-                                required
-                              />
+                              <label>
+                                edit item:{' '}
+                                <input
+                                  name="content"
+                                  defaultValue={item.content}
+                                  required
+                                />
                               </label>
                               <label>
                                 role :
@@ -323,12 +324,13 @@ class Role extends React.Component {
                                 editItem(item, e, role.role_id)
                               }}
                             >
-                              <label>edit item:{' '}
-                              <input
-                                name="content"
-                                defaultValue={item.content}
-                                required
-                              />
+                              <label>
+                                edit item:{' '}
+                                <input
+                                  name="content"
+                                  defaultValue={item.content}
+                                  required
+                                />
                               </label>
                               <label>
                                 role :{' '}
