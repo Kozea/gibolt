@@ -28,12 +28,6 @@ class Meeting extends React.Component {
     const search = parse(this.props.location.search)
     this.props.sync(search)
   }
-  componentDidUpdate() {
-    if (!this.props.meeting.report_id) {
-      this.props.syncMeeting()
-    }
-  }
-
   render() {
     const {
       error,
@@ -169,10 +163,8 @@ export default withRouter(
         dispatch(setParams(locationSearch))
         dispatch(setLoading('users'))
         dispatch(fetchResults('users'))
-      },
-      syncMeeting: () => {
         dispatch(setLoading('meeting'))
-        dispatch(fetchReport())
+        dispatch(fetchReport(locationSearch))
       },
     })
   )(Meeting)
