@@ -1,6 +1,7 @@
 import './Meeting.sass'
 
 import { format } from 'date-fns'
+import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
@@ -11,6 +12,7 @@ import {
   fetchResults,
   goBack,
   setLoading,
+  setParams,
 } from '../actions'
 import { fetchReport, toggleEdition, updateReport } from '../actions/meetings'
 import { block, connect } from '../utils'
@@ -23,7 +25,13 @@ const b = block('Meeting')
 
 class Meeting extends React.Component {
   componentWillMount() {
-    this.props.sync()
+    const search = parse(this.props.location.search)
+    this.props.sync(search)
+  }
+  componentDidUpdate() {
+    if (!this.props.meeting.report_id) {
+      this.props.syncMeeting()
+    }
   }
 
   render() {
@@ -157,9 +165,12 @@ export default withRouter(
         event.preventDefault()
         dispatch(updateReport(reportId, event.target.form.body.value))
       },
-      sync: () => {
+      sync: locationSearch => {
+        dispatch(setParams(locationSearch))
         dispatch(setLoading('users'))
         dispatch(fetchResults('users'))
+      },
+      syncMeeting: () => {
         dispatch(setLoading('meeting'))
         dispatch(fetchReport())
       },
