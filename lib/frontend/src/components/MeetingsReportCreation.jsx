@@ -160,7 +160,7 @@ class MeetingsReportCreation extends React.Component {
                               type="checkbox"
                               name={user.user_name}
                               id="users"
-                              checked
+                              defaultChecked
                             />
                             {user.user_name}
                           </li>
