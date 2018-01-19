@@ -57,6 +57,17 @@ class MeetingsReportCreation extends React.Component {
       this.props.getMilestonesAndItems()
     }
   }
+  getUsersListFromRoles(roles, users) {
+    const usersList = roles.map(
+      role => users.filter(user => role.user_id === user.user_id)[0]
+    )
+    if (usersList.length > 0) {
+      return usersList.sort().filter(function(user, pos, arr) {
+        return !pos || user !== arr[pos - 1]
+      })
+    }
+    return []
+  }
 
   render() {
     const {
@@ -70,9 +81,14 @@ class MeetingsReportCreation extends React.Component {
       onSubmit,
       params,
       search,
+      users,
     } = this.props
     const { selectedCircle } = this.state
     selectedCircle.selectedCircle = this.state.selectedCircle
+    let usersList = []
+    if (selectedCircle.roles && users) {
+      usersList = this.getUsersListFromRoles(selectedCircle.roles, users)
+    }
 
     return (
       <section className={b()}>
@@ -132,6 +148,30 @@ class MeetingsReportCreation extends React.Component {
             </label>
             <br />
             <div className={b('content')}>
+              <span>
+                <h3>Presents:</h3>
+                {selectedCircle.roles && (
+                  <span>
+                    {selectedCircle.roles.length > 0 ? (
+                      <ul>
+                        {usersList.map(user => (
+                          <li key={user.user_id}>
+                            <input
+                              type="checkbox"
+                              name={user.user_name}
+                              id="users"
+                              checked
+                            />
+                            {user.user_name}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      'No roles defined'
+                    )}
+                  </span>
+                )}
+              </span>
               {params.meeting_name === 'Triage' && (
                 <span>
                   {selectedCircle.roles &&
