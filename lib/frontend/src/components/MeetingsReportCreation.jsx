@@ -24,6 +24,12 @@ import Progress from './Progress'
 const b = block('MeetingsReportCreation')
 
 class MeetingsReportCreation extends React.Component {
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      selectedCircle: {},
+    }
+  }
   componentWillMount() {
     const search = parse(this.props.location.search)
     this.props.sync({
@@ -36,6 +42,18 @@ class MeetingsReportCreation extends React.Component {
       nextProps.circles !== this.props.circles ||
       nextProps.params.circle_id !== this.props.params.circle_id
     ) {
+      if (nextProps.circles.results.length > 0) {
+        this.setState({
+          selectedCircle:
+            nextProps.circles.results.filter(
+              circle => circle.circle_id === nextProps.params.circle_id
+            ).length > 0
+              ? nextProps.circles.results.filter(
+                  circle => circle.circle_id === nextProps.params.circle_id
+                )[0]
+              : {},
+        })
+      }
       this.props.getMilestonesAndItems()
     }
   }
@@ -53,6 +71,9 @@ class MeetingsReportCreation extends React.Component {
       params,
       search,
     } = this.props
+    const { selectedCircle } = this.state
+    selectedCircle.selectedCircle = this.state.selectedCircle
+
     return (
       <section className={b()}>
         <Helmet>
@@ -110,18 +131,11 @@ class MeetingsReportCreation extends React.Component {
               </select>
             </label>
             <br />
-
             <div className={b('content')}>
               {params.meeting_name === 'Triage' && (
                 <span>
-                  {circles &&
-                    circles.results &&
-                    circles.results.filter(
-                      circle => circle.circle_id === params.circle_id
-                    )[0] &&
-                    circles.results.filter(
-                      circle => circle.circle_id === params.circle_id
-                    )[0].roles.length > 0 && (
+                  {selectedCircle.roles &&
+                    selectedCircle.roles.length > 0 && (
                       <span>
                         <h3>Recurrent actions:</h3>
                         <ul>
@@ -243,7 +257,6 @@ class MeetingsReportCreation extends React.Component {
                   </ul>
                 </span>
               )}
-
               <h3>Report content:</h3>
               <MarkdownEditor />
             </div>
@@ -273,6 +286,7 @@ export default withRouter(
       meetingsTypes: state.meetingsTypes,
       search: state.router.location.search,
       params: state.params,
+      users: state.users.results,
     }),
     dispatch => ({
       getMilestonesAndItems: () => {
@@ -293,6 +307,8 @@ export default withRouter(
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
+        dispatch(setLoading('users'))
+        dispatch(fetchResults('users'))
         dispatch(setLoading('circles'))
         dispatch(fetchResults('circles'))
         dispatch(setLoading('meetingsTypes'))
