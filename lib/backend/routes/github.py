@@ -250,7 +250,8 @@ def get_a_milestone(repo_name, milestone_number):
         'state': milestone_request['state'],
         'updated_at': milestone_request['updated_at'],
         'due_on': milestone_request['due_on'],
-        'closed_at': milestone_request['closed_at']}
+        'closed_at': milestone_request['closed_at'],
+        'is_expanded': False}
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,

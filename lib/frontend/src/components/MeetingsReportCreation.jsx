@@ -15,7 +15,10 @@ import {
   setParams,
 } from '../actions'
 import { submitReport, updateReportsList } from '../actions/meetings'
-import { fetchCircleMilestonesAndItems } from '../actions/milestones'
+import {
+  fetchCircleMilestonesAndItems,
+  expandMilestone,
+} from '../actions/milestones'
 import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
@@ -74,9 +77,11 @@ class MeetingsReportCreation extends React.Component {
       circleMilestones,
       circles,
       history,
+      issues,
       items,
       meetingsTypes,
       onGoBack,
+      onMilestoneClick,
       onSelectChange,
       onSubmit,
       params,
@@ -286,6 +291,41 @@ class MeetingsReportCreation extends React.Component {
                             />
                           </Link>
                         )}
+                        {issues.length > 0 &&
+                          issues.filter(
+                            issue =>
+                              issue.milestone_id === milestone.milestone_id
+                          ).length > 0 && (
+                            <span>
+                              <span
+                                className={b('see-more')}
+                                onClick={() =>
+                                  onMilestoneClick(milestone.milestone_id)
+                                }
+                              >
+                                see closed issues since last report
+                              </span>
+                              {milestone.is_expanded && (
+                                <span>
+                                  <br />
+                                  <ul>
+                                    {issues
+                                      .filter(
+                                        issue =>
+                                          issue.milestone_number ===
+                                          milestone.milestone_number
+                                      )
+                                      .map(issue => (
+                                        <li key={issue.ticket_id}>
+                                          <span className={b('bullet')} />{' '}
+                                          {issue.ticket_title}
+                                        </li>
+                                      ))}
+                                  </ul>
+                                </span>
+                              )}
+                            </span>
+                          )}
                         <br />
                         <input
                           className="largeInput"
@@ -323,6 +363,7 @@ export default withRouter(
       circleMilestones: state.circleMilestones.results,
       circles: state.circles,
       items: state.items.results,
+      issues: state.issues.results.issues,
       meetingsTypes: state.meetingsTypes,
       search: state.router.location.search,
       params: state.params,
@@ -337,6 +378,9 @@ export default withRouter(
       onGoBack: history => {
         dispatch(delMarkdown())
         dispatch(goBack(history))
+      },
+      onMilestoneClick: milestoneId => {
+        dispatch(expandMilestone(milestoneId))
       },
       onSelectChange: event => {
         dispatch(updateReportsList(event))
