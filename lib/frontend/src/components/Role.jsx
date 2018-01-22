@@ -28,7 +28,7 @@ const b = block('Role')
 var ReactMarkdown = require('react-markdown')
 
 class Role extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
 

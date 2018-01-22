@@ -16,7 +16,7 @@ import Loading from './Loading'
 const b = block('Repository')
 
 class Repository extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
 

@@ -42,7 +42,7 @@ function checkboxState(issues) {
 const b = block('Issues')
 
 class Issues extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
 

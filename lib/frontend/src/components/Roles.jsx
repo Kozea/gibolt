@@ -12,7 +12,7 @@ import Loading from './Loading'
 const b = block('Roles')
 
 class Roles extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
 

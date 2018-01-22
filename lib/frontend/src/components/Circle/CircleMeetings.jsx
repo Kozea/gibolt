@@ -10,7 +10,7 @@ import { block, connect } from '../../utils'
 const b = block('Circle')
 
 class CircleMeetings extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
 

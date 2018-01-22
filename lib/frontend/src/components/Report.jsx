@@ -59,7 +59,7 @@ const groupByRepository = issues =>
 const b = block('Report')
 
 class Report extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
 
