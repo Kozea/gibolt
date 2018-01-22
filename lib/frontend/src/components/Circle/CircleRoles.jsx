@@ -16,7 +16,7 @@ function getUserInfo(roleUser, user) {
 }
 
 class CircleRoles extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
 

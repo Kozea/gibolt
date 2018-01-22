@@ -14,7 +14,7 @@ import Milestone from './Milestone'
 const b = block('Timeline')
 
 class Timeline extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
 
@@ -66,7 +66,7 @@ class Timeline extends React.Component {
         return months
       }, {})
     )
-    milestonesByMonth = milestonesByMonth.sort((a, b) => a.month - b.month)
+    milestonesByMonth = milestonesByMonth.sort((a, c) => a.month - c.month)
     return (
       <section className={b()}>
         <Helmet>
