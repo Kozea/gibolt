@@ -5,6 +5,14 @@
   overflow: auto
   position: relative
 
+  &__avatar
+    border-radius: 10px
+    margin-left: 5px
+    max-height: 20px
+    order: 0
+    vertical-align: middle
+    width: 20px
+
   &__bullet
     background-color: #000
     border-radius: 0.25em
@@ -12,13 +20,18 @@
     display: inline-block
     height: 0.5em
     font-size: 0.9em
-    margin: 0 0.5em
+    margin: 0.5em 0.5em 0 0.5em
     vertical-align: middle
     width: 0.5em
 
   &__content
     margin-top: 1em
     width: 49em
+
+  &__dates
+    color: #323232
+    font-size: .8em
+    margin-left: .5em
 
   &__due-date
     font-size: .8em
@@ -35,6 +48,9 @@
     color: #323232
     font-size: .8em
     margin-left: .5em
+
+  &__tickets
+    margin-left: 1em
 
   &__unlink
     color: #000000

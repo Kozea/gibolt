@@ -460,8 +460,6 @@ def get_repo_tickets(repo_name):
         if value:
             query += '&{0}={1}'.format(key, value)
 
-    print('repos/{0}/{1}/issues?{2}'.format(
-        app.config['ORGANISATION'], repo_name, query))
     try:
         ticket_request = github.request(
             'GET',
