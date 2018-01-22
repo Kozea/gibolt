@@ -225,8 +225,7 @@ class MeetingsReportCreation extends React.Component {
                                   .map(item => (
                                     <li key={item.item_id}>
                                       <span className={b('bullet')} />
-                                      {roleItems.role_name} -
-                                      {item.content}:{' '}
+                                      {roleItems.role_name} - {item.content}:{' '}
                                       <input
                                         type="text"
                                         name={`${roleItems.role_name} - ${
@@ -306,7 +305,7 @@ class MeetingsReportCreation extends React.Component {
                             ).length > 0 && (
                               <span>
                                 <span
-                                  className={b('see-more')}
+                                  className={b('lighter')}
                                   onClick={() =>
                                     onMilestoneClick(milestone.milestone_id)
                                   }
@@ -336,7 +335,7 @@ class MeetingsReportCreation extends React.Component {
                                               #{issue.ticket_number}
                                             </a>{' '}
                                             {issue.ticket_title},
-                                            <span className={b('dates')}>
+                                            <span className={b('lighter')}>
                                               closed:{' '}
                                               {format(
                                                 new Date(issue.closed_at),

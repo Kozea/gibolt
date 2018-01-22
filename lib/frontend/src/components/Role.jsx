@@ -50,6 +50,7 @@ class Role extends React.Component {
       onAddClick,
       onEditItem,
       onEditRole,
+      onGoBack,
       role,
       roles,
       users,
@@ -405,6 +406,12 @@ class Role extends React.Component {
                   )}
                 </ul>
               </div>
+              <button
+                type="submit"
+                onClick={() => onGoBack(role.circle_id, history)}
+              >
+                Back to circle
+              </button>
             </article>
           )}
         </article>
@@ -508,6 +515,9 @@ export default withRouter(
         dispatch(delItem(itemId))
       },
       onEditItem: itemId => dispatch(editClickItem(itemId)),
+      onGoBack: (circleId, history) => {
+        history.push(`/circle?circle_id=${circleId}`)
+      },
       cancelEditItem: itemId => dispatch(cancelClickItem(itemId)),
       sync: () => {
         dispatch(setLoading('circles'))
