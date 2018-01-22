@@ -5,7 +5,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
-import { block, connect } from '../../utils'
+import { block, connect, sortRoles } from '../../utils'
 
 const b = block('Circle')
 
@@ -22,6 +22,8 @@ class CircleRoles extends React.Component {
 
   render() {
     const { circle, users } = this.props
+    const sortedRoles = sortRoles(circle.roles)
+
     return (
       <article>
         <h3>
@@ -43,9 +45,9 @@ class CircleRoles extends React.Component {
             </Link>
           )}
         </h3>
-        {circle.roles && circle.roles.length > 0 ? (
+        {sortedRoles && sortedRoles.length > 0 ? (
           <ul>
-            {circle.roles.map(role => (
+            {sortedRoles.map(role => (
               <li key={role.role_id} className={b('role')}>
                 <span className={b('bullet')} />
                 <Link
