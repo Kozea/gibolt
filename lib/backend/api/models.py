@@ -14,6 +14,17 @@ Base = declarative_base()
 item_types = ['checklist', 'indicator']
 meeting_types = [
     type_name for type_id, type_name in app.config['MEETINGS_TYPES']]
+label_types = ['circle']
+
+
+class Label(Base):
+    __tablename__ = 'label'
+    label_id = Column(
+        Integer,
+        primary_key=True)
+    label_type = Column(Enum(*label_types))
+    label_name = Column(String)
+    label_color = Column(String)
 
 
 class Circle(Base):
@@ -32,11 +43,16 @@ class Circle(Base):
     circle_domain = Column(String)
     circle_accountabilities = Column(String)
     is_active = Column(Boolean, default=True, nullable=False)
+    label_id = Column(
+        Integer,
+        ForeignKey('label.label_id', name='fk_label_id'),
+        nullable=True)
     circle_children = relationship(
         'Circle', backref=backref('parent', remote_side=[circle_id]))
     circle_milestones = relationship(
         'Milestone_circle', backref=backref(
             'milestone_circle', remote_side=[circle_id]))
+    labels = relationship(Label, backref='circles')
 
 
 @listens_for(Circle.is_active, 'set')

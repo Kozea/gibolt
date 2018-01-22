@@ -4,7 +4,7 @@ from unrest import UnRest
 
 from .. import Session, app, session_unrest
 from ..routes.auth import needlogin
-from .models import Circle, Item, Milestone_circle, Report, Role
+from .models import Circle, Item, Label, Milestone_circle, Report, Role
 
 session = Session()
 
@@ -18,6 +18,7 @@ rest(
     relationships={
         'roles': rest(Role, only=['role_id', 'role_name', 'user_id']),
         'circle_milestones': rest(Milestone_circle),
+        'labels': rest(Label)
     },
     name='circles',
     query=lambda query: query.filter(
@@ -71,6 +72,12 @@ rest(
         if request.values.get('role_id')
         else True,
     ),
+    auth=needlogin)
+
+rest(
+    Item,
+    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    name='labels',
     auth=needlogin)
 
 
