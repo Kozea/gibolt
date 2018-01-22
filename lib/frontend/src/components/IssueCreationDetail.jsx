@@ -20,7 +20,7 @@ import MarkdownEditor from './MarkdownEditor'
 const b = block('IssueCreationDetail')
 
 class IssueCreationDetail extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     const search = parse(this.props.location.search)
     this.props.sync(search)
   }

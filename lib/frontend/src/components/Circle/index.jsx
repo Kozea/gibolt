@@ -16,7 +16,7 @@ import Loading from './../Loading'
 const b = block('Circle')
 
 class Circle extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.location.pathname === '/circle') {
       this.props.sync()
     }

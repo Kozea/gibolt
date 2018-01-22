@@ -14,7 +14,7 @@ import MarkdownEditor from './MarkdownEditor'
 const b = block('Createrole')
 
 class Createrole extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
   render() {

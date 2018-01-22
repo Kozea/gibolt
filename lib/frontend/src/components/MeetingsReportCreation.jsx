@@ -33,7 +33,7 @@ class MeetingsReportCreation extends React.Component {
       selectedCircle: {},
     }
   }
-  componentWillMount() {
+  componentDidMount() {
     const search = parse(this.props.location.search)
     this.props.sync({
       circle_id: search.circle_id ? +search.circle_id : '',
