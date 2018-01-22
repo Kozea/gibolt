@@ -16,7 +16,7 @@ import {
 } from '../actions'
 import { submitReport, updateReportsList } from '../actions/meetings'
 import {
-  fetchCircleMilestonesAndItems,
+  fetchCircleMilestonesIssuesAndItems,
   expandMilestone,
 } from '../actions/milestones'
 import { block, connect } from '../utils'
@@ -43,7 +43,8 @@ class MeetingsReportCreation extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.circles !== this.props.circles ||
-      nextProps.params.circle_id !== this.props.params.circle_id
+      nextProps.params.circle_id !== this.props.params.circle_id ||
+      nextProps.params.meeting_name !== this.props.params.meeting_name
     ) {
       if (nextProps.circles.results.length > 0) {
         this.setState({
@@ -57,7 +58,9 @@ class MeetingsReportCreation extends React.Component {
               : {},
         })
       }
-      this.props.getMilestonesAndItems()
+      if (nextProps.params.meeting_name === 'Triage') {
+        this.props.getMilestonesAndItems()
+      }
     }
   }
   getUsersListFromRoles(roles, users) {
@@ -159,17 +162,20 @@ class MeetingsReportCreation extends React.Component {
                   <span>
                     {selectedCircle.roles.length > 0 && usersList.length > 0 ? (
                       <ul>
-                        {usersList.map(user => (
-                          <li key={user.user_id}>
-                            <input
-                              type="checkbox"
-                              name={user.user_name}
-                              id="users"
-                              defaultChecked
-                            />
-                            {user.user_name}
-                          </li>
-                        ))}
+                        {usersList.map(
+                          user =>
+                          user && (
+                            <li key={user.user_id}>
+                              <input
+                                type="checkbox"
+                                name={user.user_name}
+                                id="users"
+                                defaultChecked
+                              />
+                              {user.user_name}
+                            </li>
+                          )
+                        )}
                       </ul>
                     ) : (
                       'No roles defined'
@@ -405,7 +411,8 @@ export default withRouter(
       getMilestonesAndItems: () => {
         dispatch(setLoading('circleMilestones'))
         dispatch(setLoading('items'))
-        dispatch(fetchCircleMilestonesAndItems())
+        dispatch(setLoading('issues'))
+        dispatch(fetchCircleMilestonesIssuesAndItems())
       },
       onGoBack: history => {
         dispatch(delMarkdown())

@@ -10,7 +10,6 @@ import {
   checkMarkdown,
   delMarkdown,
   fetchResults,
-  goBack,
   setLoading,
   setParams,
 } from '../actions'
@@ -118,8 +117,11 @@ class Meeting extends React.Component {
                     source={meeting.content}
                   />
                   <br />
-                  <button type="submit" onClick={() => onGoBack(history)}>
-                    Back
+                  <button
+                    type="submit"
+                    onClick={() => onGoBack(meeting.circle_id, history)}
+                  >
+                    Back to circle
                   </button>
                 </span>
               )}
@@ -152,8 +154,8 @@ export default withRouter(
         }
         dispatch(toggleEdition())
       },
-      onGoBack: history => {
-        dispatch(goBack(history))
+      onGoBack: (circleId, history) => {
+        history.push(`/circle?circle_id=${circleId}`)
       },
       onSubmit: (event, reportId) => {
         event.preventDefault()
