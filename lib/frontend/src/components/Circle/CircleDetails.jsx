@@ -271,7 +271,9 @@ export default withRouter(
           formCircle = [].slice
             .call(e.target.elements)
             .reduce(function(map, obj) {
-              if (obj.name === 'parent_circle_id') {
+              if (obj.name === 'body') {
+                map.circle_accountabilities = obj.value
+              } else if (obj.name === 'parent_circle_id') {
                 map[obj.name] = +obj.value
               } else if (obj.name) {
                 map[obj.name] = obj.value
