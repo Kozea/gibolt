@@ -164,17 +164,17 @@ class MeetingsReportCreation extends React.Component {
                       <ul>
                         {usersList.map(
                           user =>
-                          user && (
-                            <li key={user.user_id}>
-                              <input
-                                type="checkbox"
-                                name={user.user_name}
-                                id="users"
-                                defaultChecked
-                              />
-                              {user.user_name}
-                            </li>
-                          )
+                            user && (
+                              <li key={user.user_id}>
+                                <input
+                                  type="checkbox"
+                                  name={user.user_name}
+                                  id="users"
+                                  defaultChecked
+                                />
+                                {user.user_name}
+                              </li>
+                            )
                         )}
                       </ul>
                     ) : (
