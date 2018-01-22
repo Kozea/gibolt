@@ -24,7 +24,7 @@ import Progress from './Progress'
 const b = block('MeetingsReportCreation')
 
 class MeetingsReportCreation extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     const search = parse(this.props.location.search)
     this.props.sync({
       circle_id: search.circle_id ? +search.circle_id : '',

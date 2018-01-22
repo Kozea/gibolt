@@ -24,7 +24,7 @@ var ReactMarkdown = require('react-markdown')
 const b = block('Meeting')
 
 class Meeting extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     const search = parse(this.props.location.search)
     this.props.sync(search)
   }

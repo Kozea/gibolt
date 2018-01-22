@@ -14,7 +14,7 @@ import Loading from './Loading'
 const b = block('Meetings')
 
 class Meetings extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.updateData(this.props.location.search, this.props.sync)
   }
 

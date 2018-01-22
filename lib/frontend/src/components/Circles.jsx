@@ -13,7 +13,7 @@ import Loading from './Loading'
 const b = block('Circles')
 
 class Circles extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.sync()
   }
 
