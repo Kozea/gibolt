@@ -225,7 +225,8 @@ class MeetingsReportCreation extends React.Component {
                                   .map(item => (
                                     <li key={item.item_id}>
                                       <span className={b('bullet')} />
-                                      {roleItems.role_name} - {item.content}:{' '}
+                                      {roleItems.role_name} - {item.content}
+                                      :{' '}
                                       <input
                                         type="text"
                                         name={`${roleItems.role_name} - ${
@@ -320,7 +321,8 @@ class MeetingsReportCreation extends React.Component {
                                         .filter(
                                           issue =>
                                             issue.milestone_number ===
-                                            milestone.milestone_number
+                                              milestone.milestone_number &&
+                                            !issue.pull_request
                                         )
                                         .map(issue => (
                                           <li
