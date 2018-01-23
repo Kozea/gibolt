@@ -71,25 +71,25 @@ class Role extends React.Component {
             </span>{' '}
             {items.results.filter(item => item.role_id === role.role_id)
               .length > 0 ? (
-              ''
-            ) : (
-              <span
-                onClick={() => btnClick(role.role_id, role.circle_id, history)}
-                title="Delete role"
-              >
-                <i className="fa fa-trash" aria-hidden="true" />
-              </span>
-            )}
+                ''
+              ) : (
+                <span
+                  onClick={() => btnClick(role.role_id, role.circle_id, history)}
+                  title="Delete role"
+                >
+                  <i className="fa fa-trash" aria-hidden="true" />
+                </span>
+              )}
           </h1>
           {items.results.filter(item => item.role_id === role.role_id).length >
-          0 ? (
-            <code>
-              {'You cannot delete this role, '}
-              {'please first delete the items.'}
-            </code>
-          ) : (
-            ' '
-          )}
+            0 ? (
+              <code>
+                {'You cannot delete this role, '}
+                {'please first delete the items.'}
+              </code>
+            ) : (
+              ' '
+            )}
           {error && (
             <article className={b('date', { error: true })}>
               <h2>Error during issue fetch</h2>
@@ -129,7 +129,11 @@ class Role extends React.Component {
                 </label>
                 <label>
                   User :
-                  <select name="user_id" defaultValue={role.user_id}>
+                  <select
+                    name="user_id"
+                    defaultValue={role.user_id}
+                    className={b('long')}
+                  >
                     {users.map(user => (
                       <option key={user.user_id} value={user.user_id}>
                         {user.user_name}
@@ -141,6 +145,7 @@ class Role extends React.Component {
                   Name :
                   <input
                     name="role_name"
+                    className={b('long')}
                     defaultValue={role.role_name}
                     required
                   />
@@ -149,6 +154,7 @@ class Role extends React.Component {
                   Purpose :
                   <input
                     name="role_purpose"
+                    className={b('long')}
                     defaultValue={role.role_purpose}
                     required
                   />
@@ -157,6 +163,7 @@ class Role extends React.Component {
                   Domain :
                   <input
                     name="role_domain"
+                    className={b('long')}
                     defaultValue={role.role_domain}
                     required
                   />
@@ -180,7 +187,7 @@ class Role extends React.Component {
                     circle => circle.circle_id === role.circle_id
                   ) &&
                     circles.find(circle => circle.circle_id === role.circle_id)
-                      .circle_name}
+                  .circle_name}
                 </p>
               </div>
               <h3>Purpose</h3>
@@ -223,6 +230,7 @@ class Role extends React.Component {
                                 edit item:{' '}
                                 <input
                                   name="content"
+                                  className={b('short')}
                                   defaultValue={item.content}
                                   required
                                 />
@@ -231,6 +239,7 @@ class Role extends React.Component {
                                 role :
                                 <select
                                   name="role_id"
+                                  className={b('short')}
                                   defaultValue={item.role_id}
                                 >
                                   {roles &&
