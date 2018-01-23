@@ -72,9 +72,7 @@ class MeetingsReportCreation extends React.Component {
       role => users.filter(user => role.user_id === user.user_id)[0]
     )
     if (usersList.length > 0) {
-      return usersList.sort().filter(function(user, pos, arr) {
-        return !pos || user !== arr[pos - 1]
-      })
+      return Array.from(new Set(usersList))
     }
     return []
   }
@@ -435,6 +433,7 @@ export default withRouter(
       onSubmit: (event, meetingType, history) => {
         event.preventDefault()
         dispatch(submitReport(event, meetingType, history))
+        dispatch(delMarkdown())
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
