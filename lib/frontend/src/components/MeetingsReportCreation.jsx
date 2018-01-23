@@ -19,7 +19,7 @@ import {
   fetchCircleMilestonesIssuesAndItems,
   expandMilestone,
 } from '../actions/milestones'
-import { block, connect } from '../utils'
+import { block, connect, sortUsers } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
 import Progress from './Progress'
@@ -96,6 +96,9 @@ class MeetingsReportCreation extends React.Component {
     let usersList = []
     if (selectedCircle.roles && users) {
       usersList = this.getUsersListFromRoles(selectedCircle.roles, users)
+    }
+    if (usersList.length > 0) {
+      usersList = sortUsers(usersList)
     }
 
     return (
