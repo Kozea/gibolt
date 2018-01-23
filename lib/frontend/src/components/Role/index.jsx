@@ -4,7 +4,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { checkMarkdown, fetchResults, setLoading } from '../actions'
+import { checkMarkdown, fetchResults, setLoading } from '../../actions'
 import {
   addItem,
   cancelClickItem,
@@ -19,10 +19,10 @@ import {
   indicatorForm,
   updateItem,
   updateRole,
-} from '../actions/roles'
-import { block, connect } from '../utils'
-import Loading from './Loading'
-import MarkdownEditor from './MarkdownEditor'
+} from '../../actions/roles'
+import { block, connect } from '../../utils'
+import Loading from './../Loading'
+import MarkdownEditor from './../MarkdownEditor'
 
 const b = block('Role')
 var ReactMarkdown = require('react-markdown')
@@ -71,25 +71,25 @@ class Role extends React.Component {
             </span>{' '}
             {items.results.filter(item => item.role_id === role.role_id)
               .length > 0 ? (
-                ''
-              ) : (
-                <span
-                  onClick={() => btnClick(role.role_id, role.circle_id, history)}
-                  title="Delete role"
-                >
-                  <i className="fa fa-trash" aria-hidden="true" />
-                </span>
-              )}
+              ''
+            ) : (
+              <span
+                onClick={() => btnClick(role.role_id, role.circle_id, history)}
+                title="Delete role"
+              >
+                <i className="fa fa-trash" aria-hidden="true" />
+              </span>
+            )}
           </h1>
           {items.results.filter(item => item.role_id === role.role_id).length >
-            0 ? (
-              <code>
-                {'You cannot delete this role, '}
-                {'please first delete the items.'}
-              </code>
-            ) : (
-              ' '
-            )}
+          0 ? (
+            <code>
+              {'You cannot delete this role, '}
+              {'please first delete the items.'}
+            </code>
+          ) : (
+            ' '
+          )}
           {error && (
             <article className={b('date', { error: true })}>
               <h2>Error during issue fetch</h2>
@@ -187,7 +187,7 @@ class Role extends React.Component {
                     circle => circle.circle_id === role.circle_id
                   ) &&
                     circles.find(circle => circle.circle_id === role.circle_id)
-                  .circle_name}
+                      .circle_name}
                 </p>
               </div>
               <h3>Purpose</h3>
