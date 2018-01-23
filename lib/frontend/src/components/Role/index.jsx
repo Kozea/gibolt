@@ -60,7 +60,7 @@ class Role extends React.Component {
               ''
             ) : (
               <span
-                onClick={() => btnClick(role.role_id, role.circle_id, history)}
+                onClick={() => btnClick(role.role_id, role.circle_id, history)} // eslint-disable-line max-len
                 title="Delete role"
               >
                 <i className="fa fa-trash" aria-hidden="true" />
@@ -105,7 +105,11 @@ class Role extends React.Component {
                 <h1>Edit {role.role_name} role :</h1>
                 <label>
                   Circle :
-                  <select name="circle_id" defaultValue={role.circle_id}>
+                  <select
+                    name="circle_id"
+                    defaultValue={role.circle_id}
+                    className={b('long')}
+                  >
                     {circles.map(circle => (
                       <option key={circle.circle_id} value={circle.circle_id}>
                         {circle.circle_name}
