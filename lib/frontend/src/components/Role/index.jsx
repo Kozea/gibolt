@@ -25,6 +25,16 @@ class Role extends React.Component {
   componentDidMount() {
     this.props.sync()
   }
+  componentWillReceiveProps(nextProps) {
+    if (
+      (nextProps.location.pathname !== this.props.location.pathname &&
+        nextProps.location.pathname === '/role') ||
+      (nextProps.location.pathname === this.props.location.pathname &&
+        nextProps.location.search !== this.props.location.search)
+    ) {
+      this.props.sync()
+    }
+  }
 
   render() {
     const {
@@ -229,6 +239,7 @@ export default withRouter(
       error: state.role.error,
       items: state.items,
       loading: state.role.loading,
+      location: state.router.location,
       role: state.role.results,
       roles: state.roles.results,
       users: state.users.results,
