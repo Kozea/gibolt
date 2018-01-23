@@ -41,6 +41,9 @@ def format_ticket_response(ticket_request, repo_name):
         'milestone_number': (
             ticket_request['milestone']['number']
             if ticket_request['milestone'] else None),
+        'milestone_state': (
+            ticket_request['milestone']['state']
+            if ticket_request['milestone'] else None),
         'milestone_title': (
             ticket_request['milestone']['title']
             if ticket_request['milestone'] else None),
@@ -247,7 +250,8 @@ def get_a_milestone(repo_name, milestone_number):
         'state': milestone_request['state'],
         'updated_at': milestone_request['updated_at'],
         'due_on': milestone_request['due_on'],
-        'closed_at': milestone_request['closed_at']}
+        'closed_at': milestone_request['closed_at'],
+        'is_expanded': False}
     objects = {
         'objects': response,
         'occurences': 1 if response else 0,
@@ -437,6 +441,39 @@ def get_a_ticket(repo_name, ticket_number):
         'primary_keys': [
             'repo_name',
             'ticket_number']}
+    return jsonify(objects)
+
+
+@app.route('/api/repos/<repo_name>/milestone_tickets', methods=['GET'])
+@needlogin
+def get_repo_tickets(repo_name):
+    params = request.args.copy()
+    if len(params) == 0:
+        response = {
+            'status': 'error',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response), 400
+
+    query = ''
+    for key, value in params.items():
+        if value:
+            query += '&{0}={1}'.format(key, value)
+
+    try:
+        ticket_request = github.request(
+            'GET',
+            'repos/{0}/{1}/issues?{2}'.format(
+                app.config['ORGANISATION'], repo_name, query))
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+
+    response = [format_ticket_response(ticket, repo_name)
+                for ticket in ticket_request]
+    objects = {
+        'objects': response,
+        'occurences': len(response),
+        'primary_keys': ['repo_name', 'ticket_number']}
     return jsonify(objects)
 
 

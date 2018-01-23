@@ -93,10 +93,10 @@ class Report(Base):
         ForeignKey('circle.circle_id'),
         nullable=False)
     report_type = Column(Enum(*meeting_types))
-    created_at = Column(DateTime, default=datetime.datetime.now)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
     author_id = Column(Integer)
     content = Column(Text)
-    modified_at = Column(DateTime, onupdate=datetime.datetime.now)
+    modified_at = Column(DateTime, onupdate=datetime.datetime.utcnow)
     modified_by = Column(Integer)
     circle = relationship(Circle, backref='reports')
 

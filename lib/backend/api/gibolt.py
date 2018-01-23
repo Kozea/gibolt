@@ -53,8 +53,14 @@ rest(
         Report.report_type == request.values.get('meeting_name')
         if request.values.get('meeting_name')
         else True,
-    ).order_by(Report.created_at.desc()),
-    auth=needlogin)
+    ).order_by(
+        Report.created_at.desc(),
+        Report.report_id.desc()
+    ).limit(
+        int(request.values.get('limit'))
+        if request.values.get('limit')
+        else None
+    ), auth=needlogin)
 
 rest(
     Item,
