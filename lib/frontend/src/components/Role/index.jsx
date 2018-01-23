@@ -6,21 +6,15 @@ import { withRouter } from 'react-router-dom'
 
 import { checkMarkdown, fetchResults, setLoading } from '../../actions'
 import {
-  addItem,
-  cancelClickItem,
-  checkForm,
   deleteRole,
-  delItem,
-  editClickItem,
   editRole,
   fetchItems,
   fetchRole,
   fetchRoles,
-  indicatorForm,
-  updateItem,
   updateRole,
 } from '../../actions/roles'
 import { block, connect } from '../../utils'
+import Items from './Items'
 import Loading from './../Loading'
 import MarkdownEditor from './../MarkdownEditor'
 
@@ -34,21 +28,13 @@ class Role extends React.Component {
 
   render() {
     const {
-      addChecklist,
-      addClick,
-      addIndicator,
       btnClick,
-      cancelEditItem,
       circles,
-      deleteItem,
       editClick,
-      editItem,
       error,
       history,
       items,
       loading,
-      onAddClick,
-      onEditItem,
       onEditRole,
       onGoBack,
       role,
@@ -202,219 +188,22 @@ class Role extends React.Component {
               <div>
                 <ReactMarkdown source={role.role_accountabilities} />
               </div>
-              <h3>
-                Recurrent actions{' '}
-                <span
-                  onClick={() => addClick()}
-                  className={b('unlink')}
-                  title="Add item"
-                >
-                  <i className="fa fa-plus-circle" aria-hidden="true" />
-                </span>
-              </h3>
-              <div>
-                <ul>
-                  {items.results
-                    .filter(item => item.item_type === 'checklist')
-                    .map(item => (
-                      <li key={item.item_id}>
-                        {item.editItem ? (
-                          <div>
-                            <form
-                              onSubmit={e => {
-                                e.preventDefault()
-                                editItem(item, e, role.role_id)
-                              }}
-                            >
-                              <label>
-                                edit item:{' '}
-                                <input
-                                  name="content"
-                                  className={b('short')}
-                                  defaultValue={item.content}
-                                  required
-                                />
-                              </label>
-                              <label>
-                                role :
-                                <select
-                                  name="role_id"
-                                  className={b('short')}
-                                  defaultValue={item.role_id}
-                                >
-                                  {roles &&
-                                    roles
-                                      .filter(
-                                        rol => rol.circle_id === role.circle_id
-                                      )
-                                      .map(rolee => (
-                                        <option
-                                          key={rolee.role_id}
-                                          value={rolee.role_id}
-                                        >
-                                          {rolee.role_name}
-                                        </option>
-                                      ))}
-                                </select>
-                              </label>
-                              <button type="submit">Send</button>
-                            </form>
-                            <button
-                              type="submit"
-                              onClick={e => {
-                                e.preventDefault()
-                                cancelEditItem(item.item_id)
-                              }}
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : (
-                          <span>
-                            <span className={b('bullet')} />
-                            {item.content}{' '}
-                            <span
-                              onClick={e => {
-                                e.preventDefault()
-                                onEditItem(item.item_id)
-                              }}
-                              title="Edit item"
-                            >
-                              <i
-                                className="fa fa-pencil-square-o"
-                                aria-hidden="true"
-                              />
-                            </span>{' '}
-                            <span
-                              onClick={() => deleteItem(item.item_id)}
-                              title="Delete item"
-                            >
-                              <i className="fa fa-trash" aria-hidden="true" />
-                            </span>
-                          </span>
-                        )}
-                      </li>
-                    ))}
-                  {items &&
-                    items.form_checklist && (
-                      <form
-                        onSubmit={e => {
-                          e.preventDefault()
-                          addChecklist(role, e)
-                        }}
-                      >
-                        <label>New item:</label>
-                        <input name="content" required />
-                        <button type="submit">Send</button>
-                      </form>
-                    )}
-                </ul>
-              </div>
-              <h3>
-                Indicators{' '}
-                <span
-                  onClick={() => onAddClick()}
-                  className={b('unlink')}
-                  title="Add item"
-                >
-                  <i className="fa fa-plus-circle" aria-hidden="true" />
-                </span>
-              </h3>
-              <div>
-                <ul>
-                  {items.results
-                    .filter(item => item.item_type === 'indicator')
-                    .map(item => (
-                      <li key={item.item_id}>
-                        {item.editItem ? (
-                          <div>
-                            <form
-                              onSubmit={e => {
-                                e.preventDefault()
-                                editItem(item, e, role.role_id)
-                              }}
-                            >
-                              <label>
-                                edit item:{' '}
-                                <input
-                                  name="content"
-                                  defaultValue={item.content}
-                                  required
-                                />
-                              </label>
-                              <label>
-                                role :{' '}
-                                <select
-                                  name="role_id"
-                                  defaultValue={item.role_id}
-                                >
-                                  {roles &&
-                                    roles
-                                      .filter(
-                                        rol => rol.circle_id === role.circle_id
-                                      )
-                                      .map(rolee => (
-                                        <option
-                                          key={rolee.role_id}
-                                          value={rolee.role_id}
-                                        >
-                                          {rolee.role_name}
-                                        </option>
-                                      ))}
-                                </select>
-                              </label>
-                              <button type="submit">Send</button>
-                            </form>
-                            <button
-                              type="submit"
-                              onClick={e => {
-                                e.preventDefault()
-                                cancelEditItem(item.item_id)
-                              }}
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        ) : (
-                          <span>
-                            <span className={b('bullet')} />
-                            {item.content}{' '}
-                            <span
-                              onClick={e => {
-                                e.preventDefault()
-                                onEditItem(item.item_id)
-                              }}
-                              title="Edit item"
-                            >
-                              <i
-                                className="fa fa-pencil-square-o"
-                                aria-hidden="true"
-                              />
-                            </span>{' '}
-                            <span
-                              onClick={() => deleteItem(item.item_id)}
-                              title="Delete item"
-                            >
-                              <i className="fa fa-trash" aria-hidden="true" />
-                            </span>
-                          </span>
-                        )}
-                      </li>
-                    ))}
-                  {items.form_indicator && (
-                    <form
-                      onSubmit={e => {
-                        e.preventDefault()
-                        addIndicator(role, e)
-                      }}
-                    >
-                      <label>New item:</label>
-                      <input name="content" required />
-                      <button type="submit">Send</button>
-                    </form>
-                  )}
-                </ul>
-              </div>
+              <Items
+                formType={items.form_checklist}
+                items={items}
+                itemType="checklist"
+                title="Recurrent actions"
+                role={role}
+                roles={roles}
+              />
+              <Items
+                formType={items.form_indicator}
+                items={items}
+                itemType="indicator"
+                title="Indicators"
+                role={role}
+                roles={roles}
+              />
               <button
                 type="submit"
                 onClick={() => onGoBack(role.circle_id, history)}
@@ -441,30 +230,12 @@ export default withRouter(
       users: state.users.results,
     }),
     dispatch => ({
-      addClick: () => {
-        dispatch(checkForm())
-      },
-      onAddClick: () => {
-        dispatch(indicatorForm())
-      },
       btnClick: (roleId, circleId, history) => {
         dispatch(deleteRole(roleId, circleId, history))
       },
       editClick: content => {
         dispatch(editRole())
         dispatch(checkMarkdown(content))
-      },
-      editItem: (item, e) => {
-        const formItem = [].slice
-          .call(e.target.elements)
-          .reduce(function(map, obj) {
-            map.item_type = item.item_type
-            if (obj.name) {
-              map[obj.name] = obj.value
-            }
-            return map
-          }, {})
-        dispatch(updateItem(item.item_id, formItem))
       },
       onEditRole: (role, e, history) => {
         const formRole = [].slice.call(e.target.elements).reduce(
@@ -482,52 +253,13 @@ export default withRouter(
         dispatch(checkMarkdown(''))
         dispatch(fetchRole())
       },
-      addChecklist: (role, e) => {
-        const formChecklist = [].slice
-          .call(e.target.elements)
-          .reduce(function(map, obj) {
-            map.role_id = role.role_id
-            map.item_type = 'checklist'
-            if (obj.name === '0') {
-              map.role_accountabilities = obj.value
-            } else if (obj.name && obj.value) {
-              map[obj.name] = obj.value
-            }
-
-            return map
-          }, {})
-        dispatch(addItem(formChecklist))
-        dispatch(checkForm())
-      },
-      addIndicator: (role, e) => {
-        const formChecklist = [].slice
-          .call(e.target.elements)
-          .reduce(function(map, obj) {
-            map.role_id = role.role_id
-            map.item_type = 'indicator'
-            if (obj.name === '0') {
-              map.role_accountabilities = obj.value
-            } else if (obj.name && obj.value) {
-              map[obj.name] = obj.value
-            }
-
-            return map
-          }, {})
-        dispatch(addItem(formChecklist))
-        dispatch(indicatorForm())
+      onGoBack: (circleId, history) => {
+        history.push(`/circle?circle_id=${circleId}`)
       },
       loadItems: () => {
         dispatch(setLoading('items'))
         dispatch(fetchItems())
       },
-      deleteItem: itemId => {
-        dispatch(delItem(itemId))
-      },
-      onEditItem: itemId => dispatch(editClickItem(itemId)),
-      onGoBack: (circleId, history) => {
-        history.push(`/circle?circle_id=${circleId}`)
-      },
-      cancelEditItem: itemId => dispatch(cancelClickItem(itemId)),
       sync: () => {
         dispatch(setLoading('circles'))
         dispatch(fetchResults('circles'))
