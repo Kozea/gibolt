@@ -33,6 +33,9 @@ class MeetingsReportCreation extends React.Component {
       selectedCircle: {},
     }
   }
+  componentWillMount() {
+    this.props.updateMarkdown()
+  }
   componentDidMount() {
     const search = parse(this.props.location.search)
     this.props.sync({
@@ -63,6 +66,7 @@ class MeetingsReportCreation extends React.Component {
       }
     }
   }
+
   getUsersListFromRoles(roles, users) {
     const usersList = roles.map(
       role => users.filter(user => role.user_id === user.user_id)[0]
@@ -444,6 +448,8 @@ export default withRouter(
         dispatch(fetchResults('labels'))
         dispatch(setLoading('meetings'))
         dispatch(fetchResults('meetings'))
+      },
+      updateMarkdown: () => {
         dispatch(checkMarkdown('### Ordre du jour:'))
       },
     })
