@@ -1,4 +1,4 @@
-import './Labels.sass'
+import './AdminLabels.sass'
 
 import React from 'react'
 

@@ -947,22 +947,22 @@ def report():
     })
 
 
-@app.route('/api/labels', methods=['GET', 'POST'])
-@needlogin
-def labels():
-    return jsonify({
-        'objects': {
-            'priority': [{
-                'text': text,
-                'color': '#%s' % color
-            } for text, color in app.config['PRIORITY_LABELS']],
-            'ack': [{
-                'text': text,
-                'color': '#%s' % color
-            } for text, color in app.config['ACK_LABELS']],
-            'qualifier': [{
-                'text': text,
-                'color': '#%s' % color
-            } for text, color in app.config['QUALIFIER_LABELS']]
-        }
-    })
+# @app.route('/api/labels', methods=['GET', 'POST'])
+# @needlogin
+# def labels():
+#     return jsonify({
+#         'objects': {
+#             'priority': [{
+#                 'text': text,
+#                 'color': '#%s' % color
+#             } for text, color in app.config['PRIORITY_LABELS']],
+#             'ack': [{
+#                 'text': text,
+#                 'color': '#%s' % color
+#             } for text, color in app.config['ACK_LABELS']],
+#             'qualifier': [{
+#                 'text': text,
+#                 'color': '#%s' % color
+#             } for text, color in app.config['QUALIFIER_LABELS']]
+#         }
+#     })

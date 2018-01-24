@@ -4,7 +4,9 @@ from unrest import UnRest
 
 from .. import Session, app, session_unrest
 from ..routes.auth import needlogin
-from .models import Circle, Item, Label, Milestone_circle, Report, Role
+from .models import (
+    Circle, Item, Label, Label_type, Milestone_circle, Priority, Report, Role
+)
 
 session = Session()
 
@@ -18,7 +20,7 @@ rest(
     relationships={
         'roles': rest(Role, only=['role_id', 'role_name', 'user_id']),
         'circle_milestones': rest(Milestone_circle),
-        'labels': rest(Label)
+        'label': rest(Label)
     },
     name='circles',
     query=lambda query: query.filter(
@@ -26,7 +28,8 @@ rest(
         if request.values.get('parent_circle_id')
         else True,
     ),
-    auth=needlogin)
+    auth=needlogin
+)
 
 rest(
     Role,
@@ -37,7 +40,8 @@ rest(
         if request.values.get('circle_id')
         else True,
     ),
-    auth=needlogin)
+    auth=needlogin
+)
 
 rest(
     Report,
@@ -61,7 +65,8 @@ rest(
         if request.values.get('limit')
         else None
     ),
-    auth=needlogin)
+    auth=needlogin
+)
 
 rest(
     Item,
@@ -72,13 +77,28 @@ rest(
         if request.values.get('role_id')
         else True,
     ),
-    auth=needlogin)
+    auth=needlogin
+)
+
+labels = rest(
+    Label,
+    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    relationships={
+        'priorities': rest(Priority, only=['value'])
+    },
+    name='labels',
+    auth=needlogin
+)
 
 rest(
-    Item,
+    Label_type,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
-    name='db_labels',
-    auth=needlogin)
+    relationships={
+        'labels': labels
+    },
+    name='labels',
+    # auth=needlogin
+)
 
 
 @app.route('/api/milestone_circles/<int:milestone_number>', methods=['POST'])
