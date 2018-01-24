@@ -26,8 +26,7 @@ rest(
         if request.values.get('parent_circle_id')
         else True,
     ),
-    auth=needlogin
-)
+    auth=needlogin)
 
 rest(
     Role,
@@ -61,7 +60,8 @@ rest(
         int(request.values.get('limit'))
         if request.values.get('limit')
         else None
-    ), auth=needlogin)
+    ),
+    auth=needlogin)
 
 rest(
     Item,
@@ -77,7 +77,7 @@ rest(
 rest(
     Item,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
-    name='labels',
+    name='db_labels',
     auth=needlogin)
 
 
