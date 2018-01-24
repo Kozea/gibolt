@@ -27,6 +27,18 @@ class Label(Base):
     label_color = Column(String)
 
 
+class Priority(Base):
+    __tablename__ = 'priority'
+    priority_id = Column(
+        Integer,
+        primary_key=True)
+    label_id = Column(
+        Integer,
+        ForeignKey('label.label_id', name='fk_priority_label'),
+        nullable=False)
+    priority_label = Column(Integer)
+
+
 class Circle(Base):
     __tablename__ = 'circle'
     circle_id = Column(
@@ -45,7 +57,7 @@ class Circle(Base):
     is_active = Column(Boolean, default=True, nullable=False)
     label_id = Column(
         Integer,
-        ForeignKey('label.label_id', name='fk_label_id'),
+        ForeignKey('label.label_id', name='fk_circle_label'),
         nullable=True)
     circle_children = relationship(
         'Circle', backref=backref('parent', remote_side=[circle_id]))
