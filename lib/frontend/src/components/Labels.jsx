@@ -35,7 +35,6 @@ class Labels extends React.Component {
         }
         return { ...query, [type]: [...queryLabels[type], label] }
       }
-
       if (queryLabels[type].find(x => x === label)) {
         return {
           ...query,
@@ -55,7 +54,7 @@ class Labels extends React.Component {
 
     return (
       <aside className={b()}>
-        {['priority', 'ack', 'qualifier'].map(type => (
+        {['circle', 'priority', 'ack', 'qualifier'].map(type => (
           <ul key={type} className={b('set', { type })}>
             {labels[type].map(label => (
               <Label
