@@ -19,7 +19,7 @@ import {
   fetchCircleMilestonesIssuesAndItems,
   expandMilestone,
 } from '../actions/milestones'
-import { block, connect } from '../utils'
+import { block, connect, sortUsers } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
 import Progress from './Progress'
@@ -32,6 +32,9 @@ class MeetingsReportCreation extends React.Component {
     this.state = {
       selectedCircle: {},
     }
+  }
+  componentWillMount() {
+    this.props.updateMarkdown()
   }
   componentDidMount() {
     const search = parse(this.props.location.search)
@@ -63,14 +66,13 @@ class MeetingsReportCreation extends React.Component {
       }
     }
   }
+
   getUsersListFromRoles(roles, users) {
     const usersList = roles.map(
       role => users.filter(user => role.user_id === user.user_id)[0]
     )
     if (usersList.length > 0) {
-      return usersList.sort().filter(function(user, pos, arr) {
-        return !pos || user !== arr[pos - 1]
-      })
+      return Array.from(new Set(usersList))
     }
     return []
   }
@@ -96,6 +98,9 @@ class MeetingsReportCreation extends React.Component {
     let usersList = []
     if (selectedCircle.roles && users) {
       usersList = this.getUsersListFromRoles(selectedCircle.roles, users)
+    }
+    if (usersList.length > 0) {
+      usersList = sortUsers(usersList)
     }
 
     return (
@@ -428,6 +433,7 @@ export default withRouter(
       onSubmit: (event, meetingType, history) => {
         event.preventDefault()
         dispatch(submitReport(event, meetingType, history))
+        dispatch(delMarkdown())
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
@@ -441,6 +447,8 @@ export default withRouter(
         dispatch(fetchResults('labels'))
         dispatch(setLoading('meetings'))
         dispatch(fetchResults('meetings'))
+      },
+      updateMarkdown: () => {
         dispatch(checkMarkdown('### Ordre du jour:'))
       },
     })

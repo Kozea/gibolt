@@ -4,7 +4,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { goBack, setLoading } from '../../actions'
+import { setLoading } from '../../actions'
 import { fetchCircle } from '../../actions/circle'
 import { block, connect } from '../../utils'
 import CircleDetails from './CircleDetails'
@@ -82,7 +82,7 @@ class Circle extends React.Component {
                   )}
                   <br />
                   <button type="submit" onClick={() => onGoBack(history)}>
-                    Back
+                    Back to circles
                   </button>
                 </div>
               )}
@@ -105,7 +105,7 @@ export default withRouter(
     }),
     dispatch => ({
       onGoBack: history => {
-        dispatch(goBack(history))
+        history.push('/circles')
       },
       sync: () => {
         dispatch(setLoading('circle'))
