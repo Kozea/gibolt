@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet'
 import { Route, Switch } from 'react-router-dom'
 
 import { block } from '../utils'
+import Admin from './Admin'
 import Circle from './Circle'
 import Circles from './Circles'
 import IssueCreation from './IssueCreation'
@@ -54,6 +55,7 @@ export default class App extends Component {
           <Route path="/meeting" component={Meeting} />
           <Route path="/meetings" component={Meetings} />
           <Route path="/createReport" component={MeetingsReportCreation} />
+          <Route path="/admin" component={Admin} />
           <Route component={NotFound} />
         </Switch>
       </main>
