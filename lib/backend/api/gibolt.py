@@ -110,12 +110,13 @@ def labels():
         labels_list[label_type.label_type_name] = []
 
         for label in label_type.labels:
-            labels_list[label_type.label_type_name].append({
+            labels_data = {
                 'text': label.label_name,
-                'color': label.label_color,
-                'priority':
-                    label.priorities.value if label.priorities else None
-            })
+                'color': label.label_color
+            }
+            if label.priorities:
+                labels_data['priority'] = label.priorities.value
+            labels_list[label_type.label_type_name].append(labels_data)
     return jsonify({'objects': labels_list})
 
 
