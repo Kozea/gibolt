@@ -2,7 +2,8 @@ import './AdminLabels.sass'
 
 import React from 'react'
 
-import { fetchResults, setLoading } from '../../actions'
+import { setLoading } from '../../actions'
+import { fetchLabels } from '../../actions/labels'
 import { block, connect } from '../../utils'
 
 const b = block('Labels-admin')
@@ -23,14 +24,14 @@ class Labels extends React.Component {
 
 export default connect(
   state => ({
-    labels: state.labels.results,
-    error: state.labels.error,
-    loading: state.labels.loading,
+    adminLabels: state.adminLabels.results,
+    error: state.adminLabels.error,
+    loading: state.adminLabels.loading,
   }),
   dispatch => ({
     sync: () => {
-      dispatch(setLoading('labels'))
-      dispatch(fetchResults('labels'))
+      dispatch(setLoading('adminLabels'))
+      dispatch(fetchLabels())
     },
   })
 )(Labels)

@@ -174,7 +174,7 @@ export default connect(
     error: state.timeline.error,
     range: timelineRangeFromState(state),
     circles: state.circles.results,
-    labels: state.labels.results.qualifier,
+    labels: state.labels.results.circle,
     location: state.router.location,
   }),
   dispatch => ({

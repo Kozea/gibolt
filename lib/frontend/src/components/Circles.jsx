@@ -87,7 +87,7 @@ class Circles extends React.Component {
 export default connect(
   state => ({
     error: state.circles.errors,
-    labels: state.labels.results.qualifier,
+    labels: state.labels.results.circle,
     loading: state.circles.loading,
     results: state.circles.results,
   }),

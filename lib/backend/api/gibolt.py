@@ -80,12 +80,9 @@ rest(
     auth=needlogin
 )
 
-labels = rest(
+rest(
     Label,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
-    relationships={
-        'priorities': rest(Priority, only=['value'])
-    },
     name='labels',
     auth=needlogin
 )
@@ -93,10 +90,14 @@ labels = rest(
 rest(
     Label_type,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
-    relationships={
-        'labels': labels
-    },
     name='label_types',
+    auth=needlogin
+)
+
+rest(
+    Priority,
+    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    name='priorities',
     auth=needlogin
 )
 

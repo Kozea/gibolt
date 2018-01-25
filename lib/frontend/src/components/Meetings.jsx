@@ -171,7 +171,7 @@ export default withRouter(
   connect(
     state => ({
       circles: state.circles,
-      labels: state.labels.results.qualifier,
+      labels: state.labels.results.circle,
       meetings: state.meetings,
       meetingsTypes: state.meetingsTypes,
       params: state.params,
