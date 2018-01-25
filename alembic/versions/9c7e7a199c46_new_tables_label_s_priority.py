@@ -93,7 +93,7 @@ def upgrade():
                 'label_id': 3,
                 'label_type_id': 1,
                 'label_name': 'Vu',
-                'label_color': '#b7b7b7b'
+                'label_color': '#b7b7b7'
             },
             {
                 'label_id': 4,
