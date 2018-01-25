@@ -31,18 +31,16 @@
   &__text
     color: $text
 
+  form
+    display: flex
+
   label
+    align-items: center
+    display: flex
     margin: .10em
     max-width: 100%
 
-    input
-      background: #e0e9f0
-      box-sizing: border-box
-      font-family: Lato, sans-serif
-      margin: 0 0.5em
-      outline: none
-
-    select
+    input, select
       background: #e0e9f0
       border: none
       box-sizing: border-box
@@ -51,3 +49,12 @@
       margin: .5em
       outline: none
       width: 15em
+
+    input[type=number]
+      width: 5em
+
+    input[type=color]
+      width: 3em
+
+.btn
+  margin-left: .3em
