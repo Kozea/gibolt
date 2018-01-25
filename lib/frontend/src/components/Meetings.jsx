@@ -47,7 +47,7 @@ class Meetings extends React.Component {
       params,
     } = this.props
     const sortedMeetings = meetings.results.sort(
-      (a, b) => a.created_at - b.created_at
+      (a, c) => a.created_at - c.created_at
     )
     return (
       <section className={b()}>

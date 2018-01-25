@@ -83,6 +83,9 @@ rest(
 rest(
     Label,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
+    relationships={
+        'priorities': rest(Priority)
+    },
     name='labels',
     auth=needlogin
 )
