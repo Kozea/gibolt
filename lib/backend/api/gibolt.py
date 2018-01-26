@@ -82,7 +82,7 @@ rest(
 
 rest(
     Label,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    methods=['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
     relationships={
         'priorities': rest(Priority)
     },
@@ -99,7 +99,7 @@ rest(
 
 rest(
     Priority,
-    methods=['GET', 'POST'],
+    methods=['GET', 'POST', 'PATCH'],
     name='priorities',
     auth=needlogin
 )

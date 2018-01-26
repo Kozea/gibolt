@@ -4,8 +4,10 @@ import React from 'react'
 
 import { setLoading } from '../../actions'
 import {
-  addLabelAndPriority,
+  addOrEditLabelAndPriority,
   deleteLabel,
+  disableLabelEdition,
+  enableLabelEdition,
   fetchLabels,
   updateSelectedLabelType,
 } from '../../actions/labels'
@@ -44,7 +46,9 @@ class Labels extends React.Component {
       adminLabels,
       error,
       loading,
+      onCancelLabelEdition,
       onDeleteLabel,
+      onEnableLabelEdition,
       onSubmit,
       onTypeChange,
       selectedLabelTypeId,
@@ -97,31 +101,82 @@ class Labels extends React.Component {
                   }}
                 >
                   <span className={b('text')}>
-                    {label.label_name}
-                    {label.priorities[0] &&
-                      ` (priority: ${label.priorities[0].value})`}
-                    <i className="fa fa-edit btn" aria-hidden="true" />
-                    <span
-                      onClick={() => onDeleteLabel(label.label_id)}
-                      title="Delete label"
-                    >
-                      <i className="fa fa-trash btn" aria-hidden="true" />
-                    </span>
+                    {label.isLabelInEdition ? (
+                      <form
+                        className={b('labelEdition')}
+                        onSubmit={event =>
+                          onSubmit(event, selectedLabelTypeId, 'edition', label)
+                        }
+                      >
+                        <input
+                          className="labelInput"
+                          id="labelName"
+                          name="labelName"
+                          defaultValue={label.label_name}
+                          required
+                        />
+                        <input
+                          className="labelColor"
+                          id="labelColor"
+                          defaultValue={label.label_color}
+                          name="labelColor"
+                          type="color"
+                          required
+                        />
+                        {selectedLabelTypeId === priorityLabelId && (
+                          <input
+                            className="labelPriority"
+                            id="labelPriority"
+                            defaultValue={label.priorities[0].value}
+                            name="labelPriority"
+                            required
+                            type="number"
+                          />
+                        )}
+                        <button className="labelBtn">Edit</button>
+                        <button
+                          className="labelBtn"
+                          onClick={() => onCancelLabelEdition(label.label_id)}
+                        >
+                          Cancel
+                        </button>
+                      </form>
+                    ) : (
+                      <span>
+                        {label.label_name}
+                        {label.priorities[0] &&
+                          ` (priority: ${label.priorities[0].value})`}
+                        <span
+                          onClick={() => onEnableLabelEdition(label.label_id)}
+                          title="Edit label"
+                        >
+                          <i className="fa fa-edit btn" aria-hidden="true" />
+                        </span>
+                        <span
+                          onClick={() => onDeleteLabel(label.label_id)}
+                          title="Delete label"
+                        >
+                          <i className="fa fa-trash btn" aria-hidden="true" />
+                        </span>
+                      </span>
+                    )}
                   </span>
                 </li>
               ))}
           </ul>
           <br />
           Add a new label:
-          <form onSubmit={event => onSubmit(event, selectedLabelTypeId)}>
+          <form
+            onSubmit={event => onSubmit(event, selectedLabelTypeId, 'creation')}
+          >
             <label>
-              Name <input id="newLabelName" name="newLabelName" required />
+              Name <input id="newLabelName" name="labelName" required />
             </label>
             <label>
               Color:{' '}
               <input
                 id="newLabelColor"
-                name="newLabelColor"
+                name="labelColor"
                 type="color"
                 required
               />
@@ -131,7 +186,7 @@ class Labels extends React.Component {
                 Priority:
                 <input
                   id="newLabelPriority"
-                  name="newLabelPriority"
+                  name="labelPriority"
                   required
                   type="number"
                 />
@@ -155,20 +210,34 @@ export default connect(
     selectedLabelTypeId: state.adminLabels.selectedLabelTypeId,
   }),
   dispatch => ({
+    onCancelLabelEdition: labelId => {
+      dispatch(disableLabelEdition(labelId))
+    },
     onDeleteLabel: labelId => {
       dispatch(deleteLabel(labelId))
     },
-    onSubmit: (event, selectedLabelTypeId) => {
+    onEnableLabelEdition: labelId => {
+      dispatch(enableLabelEdition(labelId))
+    },
+    onSubmit: (event, selectedLabelTypeId, actionType, label = null) => {
       event.preventDefault()
-      const NewLabel = {
+      const newLabel = {
         label_type_id: selectedLabelTypeId,
-        label_name: event.target.newLabelName.value,
-        label_color: event.target.newLabelColor.value,
+        label_name: event.target.labelName.value,
+        label_color: event.target.labelColor.value,
       }
-      const NewPriorityValue = event.target.newLabelPriority
-        ? +event.target.newLabelPriority.value
+      if (actionType === 'edition') {
+        newLabel.label_id = label.label_id
+      }
+      const priorityData = event.target.labelPriority
+        ? actionType === 'edition'
+          ? {
+              priority_id: label.priorities[0].priority_id,
+              value: +event.target.labelPriority.value,
+            }
+          : +event.target.labelPriority.value
         : null
-      dispatch(addLabelAndPriority(NewLabel, NewPriorityValue))
+      dispatch(addOrEditLabelAndPriority(newLabel, priorityData, actionType))
       event.target.reset()
     },
     onTypeChange: value => {

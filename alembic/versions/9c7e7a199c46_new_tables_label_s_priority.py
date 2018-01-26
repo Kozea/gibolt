@@ -86,7 +86,7 @@ def upgrade():
             {
                 'label_id': 2,
                 'label_type_id': 1,
-                'label_name': 'A venir',
+                'label_name': 'À venir',
                 'label_color': '#9FC5E8'
             },
             {
