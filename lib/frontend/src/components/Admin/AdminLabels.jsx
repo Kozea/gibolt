@@ -3,7 +3,11 @@ import './AdminLabels.sass'
 import React from 'react'
 
 import { setLoading } from '../../actions'
-import { fetchLabels, updateSelectedLabelType } from '../../actions/labels'
+import {
+  addLabelAndPriority,
+  fetchLabels,
+  updateSelectedLabelType,
+} from '../../actions/labels'
 import { block, connect } from '../../utils'
 import Loading from './../Loading'
 
@@ -79,7 +83,6 @@ class Labels extends React.Component {
             </select>
           </label>
           <br />
-          <br />
           <label>Labels</label>
           <ul>
             {adminLabels.labels
@@ -149,15 +152,15 @@ export default connect(
     onSubmit: (event, selectedLabelTypeId) => {
       event.preventDefault()
       const NewLabel = {
+        label_type_id: selectedLabelTypeId,
         label_name: event.target.newLabelName.value,
         label_color: event.target.newLabelColor.value,
       }
       const NewPriorityValue = event.target.newLabelPriority
         ? +event.target.newLabelPriority.value
         : null
-      console.log(NewLabel)
-      console.log(NewPriorityValue)
-      console.log(selectedLabelTypeId)
+      dispatch(addLabelAndPriority(NewLabel, NewPriorityValue))
+      event.target.reset()
     },
     onTypeChange: value => {
       dispatch(updateSelectedLabelType(+value))

@@ -92,7 +92,7 @@ rest(
 
 rest(
     Label_type,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    methods=['GET'],
     name='label_types',
     auth=needlogin
 )
