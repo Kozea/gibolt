@@ -99,7 +99,7 @@ rest(
 
 rest(
     Priority,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    methods=['GET', 'POST'],
     name='priorities',
     auth=needlogin
 )

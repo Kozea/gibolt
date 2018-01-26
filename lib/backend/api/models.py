@@ -54,7 +54,9 @@ class Priority(Base):
         ForeignKey('label.label_id', name='fk_priority_label'),
         nullable=False)
     value = Column(Integer)
-    labels = relationship(Label, backref=backref('priorities', uselist=False))
+    labels = relationship(Label, backref=backref(
+        'priorities', cascade="all,delete", uselist=False)
+    )
 
 
 class Circle(Base):

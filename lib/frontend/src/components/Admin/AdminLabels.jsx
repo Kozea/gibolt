@@ -5,6 +5,7 @@ import React from 'react'
 import { setLoading } from '../../actions'
 import {
   addLabelAndPriority,
+  deleteLabel,
   fetchLabels,
   updateSelectedLabelType,
 } from '../../actions/labels'
@@ -43,6 +44,7 @@ class Labels extends React.Component {
       adminLabels,
       error,
       loading,
+      onDeleteLabel,
       onSubmit,
       onTypeChange,
       selectedLabelTypeId,
@@ -59,8 +61,7 @@ class Labels extends React.Component {
           <h3>Labels</h3>
           {error && (
             <article className={b('group', { error: true })}>
-              <h2>Error during fetch</h2>
-              <code>{error}</code>
+              <code>ERROR: {error}</code>
             </article>
           )}
           {loading && <Loading />}
@@ -100,7 +101,12 @@ class Labels extends React.Component {
                     {label.priorities[0] &&
                       ` (priority: ${label.priorities[0].value})`}
                     <i className="fa fa-edit btn" aria-hidden="true" />
-                    <i className="fa fa-trash btn" aria-hidden="true" />
+                    <span
+                      onClick={() => onDeleteLabel(label.label_id)}
+                      title="Delete label"
+                    >
+                      <i className="fa fa-trash btn" aria-hidden="true" />
+                    </span>
                   </span>
                 </li>
               ))}
@@ -149,6 +155,9 @@ export default connect(
     selectedLabelTypeId: state.adminLabels.selectedLabelTypeId,
   }),
   dispatch => ({
+    onDeleteLabel: labelId => {
+      dispatch(deleteLabel(labelId))
+    },
     onSubmit: (event, selectedLabelTypeId) => {
       event.preventDefault()
       const NewLabel = {
