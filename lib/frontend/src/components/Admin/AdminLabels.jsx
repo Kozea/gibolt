@@ -17,6 +17,11 @@ import Loading from './../Loading'
 const b = block('AdminLabels')
 
 class Labels extends React.Component {
+  constructor(props) {
+    super(props)
+    this.checkPriorityUniqueness = this.checkPriorityUniqueness.bind(this)
+  }
+
   componentDidMount() {
     this.props.sync()
   }
@@ -39,6 +44,26 @@ class Labels extends React.Component {
       return priorityLabel[0].label_type_id
     }
     return null
+  }
+
+  isPriorityValueUnique(labelTypeId, newPriorityValue, labels) {
+    const filteredLabels = labels.filter(
+      label =>
+        (label.type_id =
+          labelTypeId &&
+          label.priorities.filter(
+            priority => priority.value === newPriorityValue
+          ).length > 0)
+    )
+    return !filteredLabels.length > 0
+  }
+
+  checkPriorityUniqueness(event, labelTypeId, labels) {
+    if (this.isPriorityValueUnique(labelTypeId, +event.target.value, labels)) {
+      event.target.setCustomValidity('')
+    } else {
+      event.target.setCustomValidity('The priority value must be unique')
+    }
   }
 
   render() {
@@ -129,6 +154,13 @@ class Labels extends React.Component {
                             id="labelPriority"
                             defaultValue={label.priorities[0].value}
                             name="labelPriority"
+                            onChange={event =>
+                              this.checkPriorityUniqueness(
+                                event,
+                                priorityLabelId,
+                                adminLabels.labels
+                              )
+                            }
                             required
                             type="number"
                           />
@@ -187,6 +219,13 @@ class Labels extends React.Component {
                 <input
                   id="newLabelPriority"
                   name="labelPriority"
+                  onChange={event =>
+                    this.checkPriorityUniqueness(
+                      event,
+                      priorityLabelId,
+                      adminLabels.labels
+                    )
+                  }
                   required
                   type="number"
                 />
