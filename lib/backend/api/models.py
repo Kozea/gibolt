@@ -1,7 +1,8 @@
 import datetime
 
 from sqlalchemy import (
-    Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+    Boolean, Column, DateTime, ForeignKey, Integer, String, Text,
+    UniqueConstraint
 )
 from sqlalchemy.event import listens_for
 from sqlalchemy.ext.declarative import declarative_base
@@ -44,6 +45,7 @@ class Label(Base):
 
 class Priority(Base):
     __tablename__ = 'priority'
+    __table_args__ = (UniqueConstraint('value', name='value_unique'),)
     priority_id = Column(
         Integer,
         autoincrement=True,

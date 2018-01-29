@@ -218,6 +218,7 @@ class Labels extends React.Component {
                 Priority:
                 <input
                   id="newLabelPriority"
+                  min="0"
                   name="labelPriority"
                   onChange={event =>
                     this.checkPriorityUniqueness(

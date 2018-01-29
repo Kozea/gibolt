@@ -80,6 +80,14 @@ rest(
     auth=needlogin
 )
 
+
+rest(
+    Label_type,
+    methods=['GET'],
+    name='label_types',
+    auth=needlogin
+)
+
 rest(
     Label,
     methods=['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
@@ -90,19 +98,82 @@ rest(
     auth=needlogin
 )
 
-rest(
-    Label_type,
-    methods=['GET'],
-    name='label_types',
-    auth=needlogin
-)
 
 rest(
     Priority,
-    methods=['GET', 'POST', 'PATCH'],
+    methods=['GET'],
     name='priorities',
     auth=needlogin
 )
+
+
+@app.route('/api/priorities', methods=['POST'])
+@needlogin
+def add_priority():
+    data = request.get_json()
+    label_id = data.get('label_id')
+    value = data.get('value')
+    try:
+        new_priority = Priority(label_id=label_id, value=value)
+        session.add(new_priority)
+        session.commit()
+        response = [{
+            "priority_id": new_priority.priority_id,
+            "label_id": new_priority.label_id,
+            "value": new_priority.value
+        }]
+        objects = {
+            'objects': response,
+            'occurences': 1,
+            'primary_keys': ['priority_id']}
+        return jsonify(objects)
+    except (exc.IntegrityError) as e:
+        session.rollback()
+        # in this case, the associated label must be deleted
+        # to ensure there are no priority labels w/o priority
+        session.query(Label).filter(Label.label_id == label_id).delete()
+        session.commit()
+        response_object = {
+            'status': 'error',
+            'message': 'Invalid payload.'
+        }
+        return jsonify(response_object), 400
+    except (exc.OperationalError, ValueError) as e:
+        session.rollback()
+        response_object = {
+            'status': 'error',
+            'message': 'Error. Please try again or contact the administrator.'
+        }
+        return jsonify(response_object), 500
+
+
+@app.route('/api/priorities/<int:priority_id>', methods=['PATCH'])
+@needlogin
+def update_priority(priority_id):
+    data = request.get_json()
+    new_value = data.get('value')
+    try:
+        priority = session.query(Priority).filter(
+            Priority.priority_id == priority_id).first()
+        priority.value = new_value
+        session.commit()
+        response = [{
+            "priority_id": priority.priority_id,
+            "label_id": priority.label_id,
+            "value": priority.value
+        }]
+        objects = {
+            'objects': response,
+            'occurences': 1,
+            'primary_keys': ['priority_id']}
+        return jsonify(objects)
+    except (exc.IntegrityError, exc.OperationalError, ValueError) as e:
+        session.rollback()
+        response_object = {
+            'status': 'error',
+            'message': 'Error. Please try again or contact the administrator.'
+        }
+        return jsonify(response_object), 500
 
 
 @app.route('/api/filtered_labels', methods=['GET', 'POST'])
