@@ -5,7 +5,7 @@ from unrest import UnRest
 from .. import Session, app, session_unrest
 from ..routes.auth import needlogin
 from .models import (
-    Circle, Item, Label, Label_type, Milestone_circle, Priority, Report, Role
+    Circle, Item, Label, Milestone_circle, Priority, Report, Role, label_types
 )
 
 session = Session()
@@ -81,28 +81,34 @@ rest(
 )
 
 
-rest(
-    Label_type,
-    methods=['GET'],
-    name='label_types',
-    auth=needlogin
-)
+@app.route('/api/labels', methods=['GET'])
+@needlogin
+def labels():
+    labels_list = {}
+    for label_type in label_types:
+        labels_list[label_type] = []
+        labels = session.query(Label).filter(
+            Label.label_type == label_type).all()
+
+        for label in labels:
+            labels_data = {
+                'text': label.text,
+                'color': label.color,
+                'label_id': label.label_id,
+            }
+            if label.priorities:
+                labels_data['priority'] = label.priorities.value
+            labels_list[label_type].append(labels_data)
+    return jsonify({'objects': labels_list})
+
 
 rest(
     Label,
-    methods=['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
+    methods=['PUT', 'POST', 'PATCH', 'DELETE'],
     relationships={
         'priorities': rest(Priority)
     },
     name='labels',
-    auth=needlogin
-)
-
-
-rest(
-    Priority,
-    methods=['GET'],
-    name='priorities',
     auth=needlogin
 )
 
@@ -174,26 +180,6 @@ def update_priority(priority_id):
             'message': 'Error. Please try again or contact the administrator.'
         }
         return jsonify(response_object), 500
-
-
-@app.route('/api/filtered_labels', methods=['GET', 'POST'])
-@needlogin
-def labels():
-    label_types = session.query(Label_type).all()
-    labels_list = {}
-    for label_type in label_types:
-        labels_list[label_type.label_type_name] = []
-
-        for label in label_type.labels:
-            labels_data = {
-                'text': label.label_name,
-                'color': label.label_color,
-                'label_id': label.label_id,
-            }
-            if label.priorities:
-                labels_data['priority'] = label.priorities.value
-            labels_list[label_type.label_type_name].append(labels_data)
-    return jsonify({'objects': labels_list})
 
 
 @app.route('/api/milestone_circles/<int:milestone_number>', methods=['POST'])

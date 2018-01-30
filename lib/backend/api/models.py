@@ -15,32 +15,22 @@ Base = declarative_base()
 item_types = ['checklist', 'indicator']
 meeting_types = [
     type_name for type_id, type_name in app.config['MEETINGS_TYPES']]
-
-
-class Label_type(Base):
-    __tablename__ = 'label_type'
-    label_type_id = Column(
-        Integer,
-        autoincrement=True,
-        primary_key=True,
-        nullable=False)
-    label_type_name = Column(String)
+label_types = ['ack', 'circle', 'priority', 'qualifier']
 
 
 class Label(Base):
     __tablename__ = 'label'
+    __table_args__ = (UniqueConstraint(
+        'text', name='text'),
+    )
     label_id = Column(
         Integer,
         autoincrement=True,
         primary_key=True,
         nullable=False)
-    label_type_id = Column(
-        Integer,
-        ForeignKey('label_type.label_type_id', name='fk_labeltype_label'),
-        nullable=False)
-    label_name = Column(String)
-    label_color = Column(String)
-    label_types = relationship(Label_type, backref='labels')
+    label_type = Column(Enum(*label_types))
+    text = Column(String)
+    color = Column(String)
 
 
 class Priority(Base):
