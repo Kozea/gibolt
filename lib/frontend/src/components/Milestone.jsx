@@ -7,7 +7,7 @@ import {
   milestoneOnEdition,
   updateMilestoneCircles,
 } from '../actions/milestones'
-import { block, connect, getColor } from '../utils'
+import { block, connect } from '../utils'
 import Progress from './Progress'
 
 const b = block('Milestone')
@@ -97,20 +97,23 @@ function Milestone(props) {
           {props.assoc_circles.map(assocCircle =>
             props.circles
               .filter(circle => circle.circle_id === assocCircle.circle_id)
-              .map(circle => (
-                <span
-                  className={b('tag')}
-                  key={circle.circle_name}
-                  style={{
-                    borderColor: `${props.labels
-                      .filter(label => getColor(label, circle.circle_name))
-                      .map(label => label.color)
-                      .toString()}`,
-                  }}
-                >
-                  {circle.circle_name}
-                </span>
-              ))
+              .map(
+                circle =>
+                  circle.label_id &&
+                  props.labels
+                    .filter(label => label.label_id === circle.label_id)
+                    .map(label => (
+                      <span
+                        key={label.label_id}
+                        className={b('tag')}
+                        style={{
+                          borderColor: label.color,
+                        }}
+                      >
+                        {label.text}
+                      </span>
+                    ))
+              )
           )}
           <span className={b('unlink')} title="Add to a circle">
             <i

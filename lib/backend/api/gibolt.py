@@ -47,7 +47,7 @@ rest(
     Report,
     methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
     relationships={
-        'circle': rest(Circle, only=['circle_name']),
+        'circle': rest(Circle, only=['circle_name', 'label_id']),
     },
     name='reports',
     query=lambda query: query.filter(

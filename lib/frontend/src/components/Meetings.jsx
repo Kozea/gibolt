@@ -8,7 +8,7 @@ import { Link, withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import { updateReportsList } from '../actions/meetings'
-import { block, connect, getColor } from '../utils'
+import { block, connect } from '../utils'
 import Loading from './Loading'
 
 const b = block('Meetings')
@@ -132,8 +132,8 @@ class Meetings extends React.Component {
                   className={b('item')}
                   style={{
                     color: `${labels
-                      .filter(label =>
-                        getColor(label, meeting.circle[0].circle_name)
+                      .filter(
+                        label => label.label_id === meeting.circle[0].label_id
                       )
                       .map(label => label.color)
                       .toString()}`,

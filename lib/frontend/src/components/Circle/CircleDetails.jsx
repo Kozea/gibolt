@@ -14,7 +14,7 @@ import {
   updateCircle,
 } from '../../actions/circle'
 import { getUnusedCircleLabels } from '../../actions/labels'
-import { block, connect, getColor } from '../../utils'
+import { block, connect } from '../../utils'
 import MarkdownEditor from './../MarkdownEditor'
 
 var ReactMarkdown = require('react-markdown')
@@ -142,19 +142,20 @@ class CircleDetails extends React.Component {
             <h1>
               {circle.circle_name}
               {circle.is_active ? '' : ' (disabled)'}{' '}
-              {circle.label_id && (
-                <span
-                  className={b('tag')}
-                  style={{
-                    borderColor: `${circleLabels
-                      .filter(label => getColor(label, circle.circle_name))
-                      .map(label => label.color)
-                      .toString()}`,
-                  }}
-                >
-                  {circle.circle_name}
-                </span>
-              )}
+              {circle.label_id &&
+                circleLabels
+                  .filter(label => label.label_id === circle.label_id)
+                  .map(label => (
+                    <span
+                      key={label.label_id}
+                      className={b('tag')}
+                      style={{
+                        borderColor: label.color,
+                      }}
+                    >
+                      {label.text}
+                    </span>
+                  ))}
               <span
                 onClick={() => editClick(circle.circle_accountabilities)}
                 disabled={!circle.is_active}
