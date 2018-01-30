@@ -11,6 +11,7 @@ export default function AddLabel(props) {
   const { labels, selectedLabelType, onLabelSubmit } = props
   return (
     <section className={b()}>
+      Add a new label:
       <form
         id="addLabelForm"
         onSubmit={event => onLabelSubmit(event, selectedLabelType, 'creation')}

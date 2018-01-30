@@ -74,7 +74,7 @@ class Circles extends React.Component {
           )}
           <Link
             to={{
-              pathname: '/createcircle',
+              pathname: '/createCircle',
             }}
           >
             <button type="submit">Add a circle</button>

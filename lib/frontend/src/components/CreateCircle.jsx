@@ -1,4 +1,4 @@
-import './Createcircle.sass'
+import './CreateCircle.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
@@ -12,7 +12,7 @@ import AddLabel from './Admin/AddLabel'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
 
-const b = block('Createcircle')
+const b = block('CreateCircle')
 
 function getUnusedCircleLabels(circles, labels) {
   const unusedLabels = labels.filter(
@@ -22,7 +22,7 @@ function getUnusedCircleLabels(circles, labels) {
   return unusedLabels
 }
 
-class Createcircle extends React.Component {
+class CreateCircle extends React.Component {
   componentDidMount() {
     this.props.sync()
   }
@@ -59,6 +59,13 @@ class Createcircle extends React.Component {
         </Helmet>
         {loading && <Loading />}
         <h2>Create a new circle :</h2>
+        {selectedLabel === 'AddLabel' && (
+          <AddLabel
+            adminLabels={circleLabels}
+            selectedLabelTypeId={'circle'}
+            onLabelSubmit={event => onLabelSubmit(event, 'circle', 'creation')}
+          />
+        )}
         <form onSubmit={e => e.preventDefault()}>
           <label>
             Name :
@@ -79,15 +86,6 @@ class Createcircle extends React.Component {
               ))}
               <option value="AddLabel">Add a label...</option>
             </select>
-            {selectedLabel === 'AddLabel' && (
-              <AddLabel
-                adminLabels={circleLabels}
-                selectedLabelTypeId={'circle'}
-                onLabelSubmit={event =>
-                  onLabelSubmit(event, 'circle', 'creation')
-                }
-              />
-            )}
           </label>
           <br />
           <label>
@@ -174,5 +172,5 @@ export default withRouter(
         dispatch(fetchResults('circles'))
       },
     })
-  )(Createcircle)
+  )(CreateCircle)
 )

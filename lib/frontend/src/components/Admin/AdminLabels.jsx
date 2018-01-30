@@ -154,7 +154,6 @@ class Labels extends React.Component {
               ))}
           </ul>
           <br />
-          Add a new label:
           <AddLabel
             labels={labels}
             selectedLabelType={selectedLabelType}
