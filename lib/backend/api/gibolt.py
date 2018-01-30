@@ -187,7 +187,8 @@ def labels():
         for label in label_type.labels:
             labels_data = {
                 'text': label.label_name,
-                'color': label.label_color
+                'color': label.label_color,
+                'label_id': label.label_id,
             }
             if label.priorities:
                 labels_data['priority'] = label.priorities.value

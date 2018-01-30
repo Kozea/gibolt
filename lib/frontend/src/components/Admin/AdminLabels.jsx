@@ -4,14 +4,16 @@ import React from 'react'
 
 import { setLoading } from '../../actions'
 import {
-  addOrEditLabelAndPriority,
+  checkPriorityUniqueness,
   deleteLabel,
   disableLabelEdition,
   enableLabelEdition,
   fetchLabels,
+  labelSubmit,
   updateSelectedLabelType,
 } from '../../actions/labels'
 import { block, connect } from '../../utils'
+import AddLabel from './AddLabel'
 import Loading from './../Loading'
 
 const b = block('AdminLabels')
@@ -19,7 +21,7 @@ const b = block('AdminLabels')
 class Labels extends React.Component {
   constructor(props) {
     super(props)
-    this.checkPriorityUniqueness = this.checkPriorityUniqueness.bind(this)
+    this.checkPriorityUniqueness = checkPriorityUniqueness.bind(this)
   }
 
   componentDidMount() {
@@ -44,26 +46,6 @@ class Labels extends React.Component {
       return priorityLabel[0].label_type_id
     }
     return null
-  }
-
-  isPriorityValueUnique(labelTypeId, newPriorityValue, labels) {
-    const filteredLabels = labels.filter(
-      label =>
-        (label.type_id =
-          labelTypeId &&
-          label.priorities.filter(
-            priority => priority.value === newPriorityValue
-          ).length > 0)
-    )
-    return !filteredLabels.length > 0
-  }
-
-  checkPriorityUniqueness(event, labelTypeId, labels) {
-    if (this.isPriorityValueUnique(labelTypeId, +event.target.value, labels)) {
-      event.target.setCustomValidity('')
-    } else {
-      event.target.setCustomValidity('The priority value must be unique')
-    }
   }
 
   render() {
@@ -198,44 +180,14 @@ class Labels extends React.Component {
           </ul>
           <br />
           Add a new label:
-          <form
-            onSubmit={event => onSubmit(event, selectedLabelTypeId, 'creation')}
-          >
-            <label>
-              Name <input id="newLabelName" name="labelName" required />
-            </label>
-            <label>
-              Color:{' '}
-              <input
-                id="newLabelColor"
-                name="labelColor"
-                type="color"
-                required
-              />
-            </label>
-            {selectedLabelTypeId === priorityLabelId && (
-              <label>
-                Priority:
-                <input
-                  id="newLabelPriority"
-                  min="0"
-                  name="labelPriority"
-                  onChange={event =>
-                    this.checkPriorityUniqueness(
-                      event,
-                      priorityLabelId,
-                      adminLabels.labels
-                    )
-                  }
-                  required
-                  type="number"
-                />
-              </label>
-            )}
-            <article className={b('action')}>
-              <button type="submit">Add Label</button>
-            </article>
-          </form>
+          <AddLabel
+            adminLabels={adminLabels}
+            priorityLabelId={priorityLabelId}
+            selectedLabelTypeId={selectedLabelTypeId}
+            onLabelSubmit={event =>
+              onSubmit(event, selectedLabelTypeId, 'creation')
+            }
+          />
         </article>
       </section>
     )
@@ -261,23 +213,7 @@ export default connect(
     },
     onSubmit: (event, selectedLabelTypeId, actionType, label = null) => {
       event.preventDefault()
-      const newLabel = {
-        label_type_id: selectedLabelTypeId,
-        label_name: event.target.labelName.value,
-        label_color: event.target.labelColor.value,
-      }
-      if (actionType === 'edition') {
-        newLabel.label_id = label.label_id
-      }
-      const priorityData = event.target.labelPriority
-        ? actionType === 'edition'
-          ? {
-              priority_id: label.priorities[0].priority_id,
-              value: +event.target.labelPriority.value,
-            }
-          : +event.target.labelPriority.value
-        : null
-      dispatch(addOrEditLabelAndPriority(newLabel, priorityData, actionType))
+      dispatch(labelSubmit(event, selectedLabelTypeId, actionType, label))
       event.target.reset()
     },
     onTypeChange: value => {
