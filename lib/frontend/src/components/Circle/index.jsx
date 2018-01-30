@@ -4,7 +4,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { setLoading } from '../../actions'
+import { fetchResults, setLoading } from '../../actions'
 import { fetchCircle } from '../../actions/circle'
 import { block, connect } from '../../utils'
 import CircleDetails from './CircleDetails'
@@ -108,6 +108,8 @@ export default withRouter(
         history.push('/circles')
       },
       sync: () => {
+        dispatch(setLoading('labels'))
+        dispatch(fetchResults('labels'))
         dispatch(setLoading('circle'))
         dispatch(fetchCircle())
       },

@@ -6,21 +6,17 @@ import { withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading } from '../actions'
 import { createCircle } from '../actions/circle'
-import { labelSubmit, updateSelectedLabel } from '../actions/labels'
+import {
+  getUnusedCircleLabels,
+  labelSubmit,
+  updateSelectedLabel,
+} from '../actions/labels'
 import { block, connect } from '../utils'
 import AddLabel from './Admin/AddLabel'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
 
 const b = block('CreateCircle')
-
-function getUnusedCircleLabels(circles, labels) {
-  const unusedLabels = labels.filter(
-    label =>
-      circles.filter(circle => circle.label_id === label.label_id).length === 0
-  )
-  return unusedLabels
-}
 
 class CreateCircle extends React.Component {
   componentDidMount() {

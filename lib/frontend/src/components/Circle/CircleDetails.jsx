@@ -13,10 +13,13 @@ import {
   togglePurposeExpanded,
   updateCircle,
 } from '../../actions/circle'
-import { connect } from '../../utils'
+import { getUnusedCircleLabels } from '../../actions/labels'
+import { block, connect, getColor } from '../../utils'
 import MarkdownEditor from './../MarkdownEditor'
 
 var ReactMarkdown = require('react-markdown')
+
+const b = block('Circle')
 
 class CircleDetails extends React.Component {
   componentWillMount() {}
@@ -25,6 +28,7 @@ class CircleDetails extends React.Component {
     const {
       cancelClick,
       circle,
+      circleLabels,
       circles,
       editClick,
       history,
@@ -36,6 +40,7 @@ class CircleDetails extends React.Component {
       onDelete,
       onDisableCircle,
     } = this.props
+    const unusedLabels = getUnusedCircleLabels(circles, circleLabels)
 
     return (
       <div>
@@ -59,6 +64,25 @@ class CircleDetails extends React.Component {
                 defaultValue={circle.circle_name}
                 required
               />
+            </label>
+            <br />
+            <label>
+              Label :
+              <select name="label_id">
+                {circle.label_id !== null && (
+                  <option value={circle.label_id}>
+                    {circleLabels
+                      .filter(label => label.label_id === circle.label_id)
+                      .map(label => label.text)
+                      .toString()}
+                  </option>
+                )}
+                {unusedLabels.map(label => (
+                  <option key={label.label_id} value={label.label_id}>
+                    {label.text}
+                  </option>
+                ))}
+              </select>
             </label>
             <br />
             <label>
@@ -118,6 +142,19 @@ class CircleDetails extends React.Component {
             <h1>
               {circle.circle_name}
               {circle.is_active ? '' : ' (disabled)'}{' '}
+              {circle.label_id && (
+                <span
+                  className={b('tag')}
+                  style={{
+                    borderColor: `${circleLabels
+                      .filter(label => getColor(label, circle.circle_name))
+                      .map(label => label.color)
+                      .toString()}`,
+                  }}
+                >
+                  {circle.circle_name}
+                </span>
+              )}
               <span
                 onClick={() => editClick(circle.circle_accountabilities)}
                 disabled={!circle.is_active}
@@ -228,6 +265,7 @@ export default withRouter(
   connect(
     state => ({
       circle: state.circle.results,
+      circleLabels: state.labels.results.circle,
       circles: state.circles.results,
       isCircleInEdition: state.circle.is_in_edition,
     }),
@@ -274,7 +312,7 @@ export default withRouter(
               if (obj.name === 'body') {
                 map.circle_accountabilities = obj.value
               } else if (obj.name === 'parent_circle_id') {
-                map[obj.name] = +obj.value
+                map[obj.name] = obj.value === '' ? null : +obj.value
               } else if (obj.name) {
                 map[obj.name] = obj.value
               }
