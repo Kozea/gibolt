@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading } from '../actions'
 import { createCircle } from '../actions/circle'
-import { labelSubmit } from '../actions/labels'
+import { labelSubmit, updateSelectedLabel } from '../actions/labels'
 import { block, connect } from '../utils'
 import AddLabel from './Admin/AddLabel'
 import Loading from './Loading'
@@ -23,22 +23,20 @@ function getUnusedCircleLabels(circles, labels) {
 }
 
 class Createcircle extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      displayAddLabels: false,
-    }
-    this.displayAddLabels = this.displayAddLabels.bind(this)
-  }
-
   componentDidMount() {
     this.props.sync()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.circleLabels !== this.propscircleLabels) {
+      this.setState({
+        displayAddLabels: false,
+      })
+    }
+  }
+
   displayAddLabels(labelSelectValue) {
-    this.setState({
-      displayAddLabels: labelSelectValue === '',
-    })
+    this.props.onLabelChange(labelSelectValue)
   }
 
   render() {
@@ -50,9 +48,9 @@ class Createcircle extends React.Component {
       onGoBack,
       onLabelSubmit,
       onSubmit,
+      selectedLabel,
     } = this.props
     const unusedLabels = getUnusedCircleLabels(circles, circleLabels)
-    const { displayAddLabels } = this.state
 
     return (
       <article className={b()}>
@@ -72,20 +70,22 @@ class Createcircle extends React.Component {
             <select
               name="label_id"
               onChange={event => this.displayAddLabels(event.target.value)}
+              value={selectedLabel}
             >
               {unusedLabels.map(label => (
                 <option key={label.label_id} value={label.label_id}>
                   {label.text}
                 </option>
               ))}
-              <option value="">Add a label...</option>
+              <option value="AddLabel">Add a label...</option>
             </select>
-            {displayAddLabels && (
+            {selectedLabel === 'AddLabel' && (
               <AddLabel
                 adminLabels={circleLabels}
-                priorityLabelId={null}
-                selectedLabelTypeId={4}
-                onLabelSubmit={event => onLabelSubmit(event, 4, 'creation')}
+                selectedLabelTypeId={'circle'}
+                onLabelSubmit={event =>
+                  onLabelSubmit(event, 'circle', 'creation')
+                }
               />
             )}
           </label>
@@ -138,14 +138,18 @@ export default withRouter(
       circleLabels: state.labels.results.circle,
       loading: state.circles.loading,
       error: state.circles.errors,
+      selectedLabel: state.labels.selectedLabel,
     }),
     dispatch => ({
       onGoBack: history => {
         dispatch(goBack(history))
       },
-      onLabelSubmit: (event, selectedLabelTypeId, actionType, label = null) => {
+      onLabelChange: label => {
+        dispatch(updateSelectedLabel(label))
+      },
+      onLabelSubmit: (event, selectedLabelType, actionType, label = null) => {
         event.preventDefault()
-        dispatch(labelSubmit(event, selectedLabelTypeId, actionType, label))
+        dispatch(labelSubmit(event, selectedLabelType, actionType, label))
         event.target.reset()
       },
       onSubmit: (e, history) => {

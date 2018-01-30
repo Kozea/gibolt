@@ -98,6 +98,7 @@ def labels():
             }
             if label.priorities:
                 labels_data['priority'] = label.priorities.value
+                labels_data['priority_id'] = label.priorities.priority_id
             labels_list[label_type].append(labels_data)
     return jsonify({'objects': labels_list})
 
