@@ -17,6 +17,10 @@ import Loading from './../Loading'
 
 const b = block('AdminLabels')
 
+function isLabelAssociatedToCircle(labelId, circles) {
+  return circles.filter(circle => circle.label_id === labelId).length > 0
+}
+
 class Labels extends React.Component {
   constructor(props) {
     super(props)
@@ -29,8 +33,9 @@ class Labels extends React.Component {
 
   render() {
     const {
-      labels,
+      circles,
       error,
+      labels,
       loading,
       onCancelLabelEdition,
       onDeleteLabel,
@@ -130,6 +135,20 @@ class Labels extends React.Component {
                       <span>
                         {label.text}
                         {label.priority && ` (priority: ${label.priority})`}
+                        {selectedLabelType === 'circle' &&
+                          isLabelAssociatedToCircle(
+                            label.label_id,
+                            circles
+                          ) && (
+                            <span className={b('association')}>
+                              {`associated to '${circles
+                                .filter(
+                                  circle => circle.label_id === label.label_id
+                                )
+                                .map(circle => circle.circle_name)
+                                .toString()}'`}
+                            </span>
+                          )}
                         <span
                           onClick={() =>
                             onEnableLabelEdition(
@@ -169,8 +188,9 @@ class Labels extends React.Component {
 
 export default connect(
   state => ({
-    labels: state.labels.results,
+    circles: state.circles.results,
     error: state.labels.error,
+    labels: state.labels.results,
     loading: state.labels.loading,
     selectedLabelType: state.labels.selectedLabelType,
   }),
@@ -195,6 +215,8 @@ export default connect(
     sync: () => {
       dispatch(setLoading('labels'))
       dispatch(fetchResults('labels'))
+      dispatch(setLoading('circles'))
+      dispatch(fetchResults('circles'))
     },
   })
 )(Labels)

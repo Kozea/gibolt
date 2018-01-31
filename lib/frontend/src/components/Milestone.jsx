@@ -70,8 +70,12 @@ function Milestone(props) {
             )}
           >
             {props.circles.map(circle => (
-              <option key={circle.circle_id} value={circle.circle_id}>
-                {circle.circle_name}
+              <option
+                key={circle.circle_id}
+                value={circle.circle_id}
+                disabled={circle.label_id === null}
+              >
+                {circle.circle_name} {circle.label_id === null && ' (No label)'}
               </option>
             ))}
           </select>

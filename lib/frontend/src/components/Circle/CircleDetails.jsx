@@ -48,7 +48,6 @@ class CircleDetails extends React.Component {
           <form
             onSubmit={e => {
               e.preventDefault()
-              onEdit(circle.circle_id, e)
             }}
           >
             {' '}
@@ -132,7 +131,9 @@ class CircleDetails extends React.Component {
               <MarkdownEditor />
             </label>
             <br />
-            <button type="submit">Edit</button>
+            <button type="submit" onClick={e => onEdit(circle.circle_id, e)}>
+              Edit
+            </button>
             <button type="submit" onClick={() => cancelClick()}>
               Cancel
             </button>
@@ -184,18 +185,19 @@ class CircleDetails extends React.Component {
                 </span>
               ) : (
                 <span>
-                  {circle.roles.length === 0 && (
-                    <span
-                      onClick={e => {
-                        e.preventDefault()
-                        onDelete(circle.circle_id, history)
-                      }}
-                      disabled={circle.roles.length > 0}
-                      title="Delete circle"
-                    >
-                      <i className="fa fa-trash" aria-hidden="true" />
-                    </span>
-                  )}
+                  {circle.roles.length === 0 &&
+                    circle.circle_milestones.length === 0 && (
+                      <span
+                        onClick={e => {
+                          e.preventDefault()
+                          onDelete(circle.circle_id, history)
+                        }}
+                        disabled={circle.roles.length > 0}
+                        title="Delete circle"
+                      >
+                        <i className="fa fa-trash" aria-hidden="true" />
+                      </span>
+                    )}
                 </span>
               )}
             </h1>
@@ -218,11 +220,23 @@ class CircleDetails extends React.Component {
               </span>
             )}{' '}
             {circle.nb_reports === 0 &&
-              circle.roles.length > 0 && (
+              (circle.roles.length > 0 ||
+                circle.circle_milestones.length > 0) && (
                 <div>
                   <code>
-                    {'You cannot delete this circle, '}
-                    {'please first delete the roles.'}
+                    {'You cannot delete this circle, please first: '}
+                    {circle.roles.length > 0 && (
+                      <span>
+                        <br />
+                        - delete the roles
+                      </span>
+                    )}
+                    {circle.circle_milestones.length > 0 && (
+                      <span>
+                        <br />
+                        - dissociate milestones
+                      </span>
+                    )}
                   </code>
                 </div>
               )}
@@ -289,7 +303,7 @@ export default withRouter(
       },
       onEdit: (id, e) => {
         let formCircle = []
-        if (e.target.elements[1].value === '') {
+        if (e.target.form.elements[1].value === '') {
           formCircle = [
             e.target.elements[0],
             e.target.elements[2],
@@ -308,7 +322,7 @@ export default withRouter(
           }, {})
         } else {
           formCircle = [].slice
-            .call(e.target.elements)
+            .call(e.target.form.elements)
             .reduce(function(map, obj) {
               if (obj.name === 'body') {
                 map.circle_accountabilities = obj.value
@@ -335,6 +349,7 @@ export default withRouter(
         dispatch(updateCircle(circle.circle_id, circleData))
       },
       cancelClick: () => {
+        dispatch(editCircle())
         dispatch(delMarkdown())
       },
     })
