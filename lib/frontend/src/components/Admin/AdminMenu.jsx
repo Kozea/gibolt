@@ -27,6 +27,16 @@ export default function AdminMenu() {
               Labels
             </Link>
           </li>
+          <li className={b('item')}>
+            <Link
+              className={b('link')}
+              to={{
+                pathname: '/admin/repositories',
+              }}
+            >
+              Repositories
+            </Link>
+          </li>
         </ul>
       </article>
     </section>

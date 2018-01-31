@@ -8,6 +8,8 @@ import { block } from '../../utils'
 import AdminLabels from './AdminLabels'
 import AdminMenu from './AdminMenu'
 import NotFound from './../NotFound'
+import Repositories from './../Repositories'
+import Repository from './../Repository'
 
 const b = block('Admin')
 
@@ -20,6 +22,8 @@ export default function Admin() {
       <Switch>
         <Route exact path="/admin" component={AdminMenu} />
         <Route path="/admin/labels" component={AdminLabels} />
+        <Route path="/admin/repositories" component={Repositories} />
+        <Route path="/admin/repository" component={Repository} />
         <Route component={NotFound} />
       </Switch>
     </section>

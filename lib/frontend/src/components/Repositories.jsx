@@ -38,7 +38,7 @@ class Repositories extends React.Component {
                 <Link
                   className={b('link')}
                   to={{
-                    pathname: '/repository',
+                    pathname: '/admin/repository',
                     search: stringify({ name: repository.repo_name }),
                   }}
                 >
