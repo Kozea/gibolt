@@ -8,8 +8,8 @@ import { block } from '../../utils'
 import AdminLabels from './AdminLabels'
 import AdminMenu from './AdminMenu'
 import NotFound from './../NotFound'
-import Repositories from './../Repositories'
-import Repository from './../Repository'
+import Repositories from './AdminRepositories'
+import Repository from './AdminRepository'
 
 const b = block('Admin')
 

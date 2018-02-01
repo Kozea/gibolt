@@ -90,6 +90,21 @@ def refresh_repo_milestones(repo_name, repo, access_token):
             )
 
 
+def get_repo_labels(repo_name, repo, access_token):
+    url = 'repos/{0}/{1}/labels?type=all&per_page=100'.format(
+        app.config['ORGANISATION'], repo_name
+    )
+    try:
+        label_request = github.get(url, access_token=access_token)
+    except GitHubError as e:
+        return e.response.content, e.response.status_code
+    for label in label_request:
+        repo['labels'] = [{'label_id': label['id'],
+                           'repo_name': repo['repo_name'],
+                           'label_name':label['name'],
+                           'color':label['color']} for label in label_request]
+
+
 def return_github_message(github_response):
     return (github_response.json()['message'], github_response.status_code)
 
@@ -153,7 +168,6 @@ def list_repos():
                 app.config['ORGANISATION']), all_pages=True)
     except GitHubError as e:
         return e.response.content, e.response.status_code
-
     response = [{'repo_id': repository['id'], 'repo_name': repository['name'],
                  'description': repository['description'],
                  'permissions':{
@@ -162,6 +176,16 @@ def list_repos():
                      'pull': repository['permissions']['pull']}
                  }
                 for repository in repo_request]
+
+    user = session.get('user')
+    with ThreadPoolExecutor(max_workers=50) as executor:
+        for repo in response:
+            repo['labels'] = []
+            try:
+                executor.submit(get_repo_labels, repo['repo_name'], repo, user)
+            except GitHubError as e:
+                return e.response.content, e.response.status_code
+
     objects = {'objects': {
         'repositories': response},
         'occurences': len(response),
@@ -184,6 +208,7 @@ def get_a_repo(repo_name):
         'repo_id': repo_request['id'],
         'repo_name': repo_request['name'],
         'description': repo_request['description'],
+        'html_url': repo_request['html_url'],
         'permissions': {
             'admin': repo_request['permissions']['admin'],
             'push': repo_request['permissions']['push'],
