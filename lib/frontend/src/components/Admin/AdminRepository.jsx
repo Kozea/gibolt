@@ -22,11 +22,13 @@ class Repository extends React.Component {
 
   render() {
     const {
+      history,
       loading,
       results,
       reponame,
       onCreateLabels,
       onDeleteLabels,
+      onGoBack,
     } = this.props
     return (
       <section className={b()}>
@@ -129,6 +131,9 @@ class Repository extends React.Component {
             <p>None</p>
           )}
         </article>
+        <button type="submit" onClick={() => onGoBack(history)}>
+          Back to repositories
+        </button>
       </section>
     )
   }
@@ -145,6 +150,9 @@ export default connect(
     },
     onDeleteLabels: results => {
       dispatch(deleteLabels(results))
+    },
+    onGoBack: history => {
+      history.push('/admin/repositories')
     },
     sync: () => {
       dispatch(setLoading('labels'))

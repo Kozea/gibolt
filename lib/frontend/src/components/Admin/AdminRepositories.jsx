@@ -46,23 +46,33 @@ class Repositories extends React.Component {
         <Helmet>
           <title>Gibolt - Repositories</title>
         </Helmet>
-        <span>
-          <h1 className={b('head')}>Repositories</h1>
-          <button
-            disabled={selectedRepositories.length === 0}
-            onClick={() => onUpdateRepo()}
-            type="submit"
-          >
-            Update labels for selected repositories
-          </button>
-        </span>
-        {loading && <Loading />}
-        {error && (
-          <article className={b('date', { error: true })}>
-            <h2>Error during report fetch</h2>
-            <code>{error}</code>
-          </article>
-        )}
+        <article className={b('topRepositories')}>
+          <span>
+            <h1 className={b('head')}>Repositories</h1>
+            <button
+              disabled={selectedRepositories.length === 0}
+              onClick={() => onUpdateRepo()}
+              type="submit"
+            >
+              Update labels for selected repositories
+            </button>
+            {selectedRepositories.length > 0 && (
+              <span className={b('unlink')}>
+                Selected repositories:
+                {selectedRepositories
+                  .map(repo => ` ${repo.repo_name}`)
+                  .toString()}
+              </span>
+            )}
+          </span>
+          {loading && <Loading />}
+          {error && (
+            <article className={b('date', { error: true })}>
+              <h2>Error during report fetch</h2>
+              <code>{error}</code>
+            </article>
+          )}
+        </article>
         <article className={b('repositories')}>
           <ul>
             {repositories.map(repository => (
@@ -75,6 +85,11 @@ class Repositories extends React.Component {
                       type="checkbox"
                       key={repository.repo_name}
                       onChange={event => onCheckboxChange(event, repository)}
+                      checked={
+                        selectedRepositories.filter(
+                          repo => repo.repo_name === repository.repo_name
+                        ).length !== 0
+                      }
                     />
                   ) : (
                     <span className={b('space')} />
