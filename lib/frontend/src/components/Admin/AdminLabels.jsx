@@ -110,9 +110,13 @@ class Labels extends React.Component {
                             className="labelPriority"
                             id="labelPriority"
                             defaultValue={label.priority}
+                            min={0}
                             name="labelPriority"
                             onChange={event =>
-                              this.checkPriorityUniqueness(event, labels.labels)
+                              this.checkPriorityUniqueness(
+                                event,
+                                labels.priority
+                              )
                             }
                             required
                             type="number"
@@ -134,7 +138,8 @@ class Labels extends React.Component {
                     ) : (
                       <span>
                         {label.text}
-                        {label.priority && ` (priority: ${label.priority})`}
+                        {(label.priority || label.priority === 0) &&
+                          ` (priority: ${label.priority})`}
                         {selectedLabelType === 'circle' &&
                           isLabelAssociatedToCircle(
                             label.label_id,
