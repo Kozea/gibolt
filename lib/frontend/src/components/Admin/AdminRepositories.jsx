@@ -114,6 +114,23 @@ class Repositories extends React.Component {
             ))}
           </ul>
         </article>
+        <span>
+          <button
+            disabled={selectedRepositories.length === 0}
+            onClick={() => onUpdateRepo()}
+            type="submit"
+          >
+            Update labels for selected repositories
+          </button>
+          {selectedRepositories.length > 0 && (
+            <span className={b('unlink')}>
+              Selected repositories:
+              {selectedRepositories
+                .map(repo => ` ${repo.repo_name}`)
+                .toString()}
+            </span>
+          )}
+        </span>
       </section>
     )
   }
