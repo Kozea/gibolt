@@ -1,4 +1,4 @@
-import './Repository.sass'
+import './AdminRepository.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
@@ -9,9 +9,9 @@ import {
   fetchRepository,
   fetchResults,
   setLoading,
-} from '../actions'
-import { block, connect, repositoryNameFromState } from '../utils'
-import Loading from './Loading'
+} from '../../actions'
+import { block, connect, repositoryNameFromState } from '../../utils'
+import Loading from './../Loading'
 
 const b = block('Repository')
 
@@ -22,18 +22,28 @@ class Repository extends React.Component {
 
   render() {
     const {
+      history,
       loading,
       results,
       reponame,
       onCreateLabels,
       onDeleteLabels,
+      onGoBack,
     } = this.props
     return (
       <section className={b()}>
         <Helmet>
           <title>Gibolt - Repository</title>
         </Helmet>
-        <h1>{reponame}</h1>
+        <h1>
+          {results.repository.html_url ? (
+            <a href={results.repository.html_url} target="_blank">
+              {reponame}
+            </a>
+          ) : (
+            reponame
+          )}
+        </h1>
         {results.errors && (
           <div>
             <ul>
@@ -77,7 +87,7 @@ class Repository extends React.Component {
           {results.missingLabels.length > 0 ? (
             results.repository.permissions.push ? (
               <article className={b('action')}>
-                <button type="submit" onClick={() => onCreateLabels()}>
+                <button type="submit" onClick={() => onCreateLabels(results)}>
                   Add missing labels
                 </button>
               </article>
@@ -107,7 +117,7 @@ class Repository extends React.Component {
           {results.overlyLabels.length > 0 ? (
             results.repository.permissions.push ? (
               <article className={b('action')}>
-                <button type="submit" onClick={() => onDeleteLabels()}>
+                <button type="submit" onClick={() => onDeleteLabels(results)}>
                   Delete Unconfigured labels
                 </button>
               </article>
@@ -121,6 +131,9 @@ class Repository extends React.Component {
             <p>None</p>
           )}
         </article>
+        <button type="submit" onClick={() => onGoBack(history)}>
+          Back to repositories
+        </button>
       </section>
     )
   }
@@ -132,11 +145,14 @@ export default connect(
     reponame: repositoryNameFromState(state).name,
   }),
   dispatch => ({
-    onCreateLabels: () => {
-      dispatch(createLabels())
+    onCreateLabels: results => {
+      dispatch(createLabels(results))
     },
-    onDeleteLabels: () => {
-      dispatch(deleteLabels())
+    onDeleteLabels: results => {
+      dispatch(deleteLabels(results))
+    },
+    onGoBack: history => {
+      history.push('/admin/repositories')
     },
     sync: () => {
       dispatch(setLoading('labels'))

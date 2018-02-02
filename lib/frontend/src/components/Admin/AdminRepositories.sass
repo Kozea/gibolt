@@ -2,6 +2,8 @@
 
 .Repositories
   flex: 1
+  margin-left: 1em
+  margin-right: .5em
   overflow: auto
   position: relative
 
@@ -24,6 +26,20 @@
       position: absolute
       top: -1px
 
-  &__repositories
-    margin-left: 1em
-    margin-right: .5em
+  &__space
+    margin: 0 .7em
+
+  &__unlink
+    color: #808080
+    font-style: italic
+    margin-left: .5em
+
+  li
+    display: flex
+
+    input[type=checkbox]
+      margin-right: .5em
+
+    div
+      align-items: center
+      display: flex

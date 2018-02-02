@@ -1,0 +1,90 @@
+@import ../vars
+
+.AdminLabels
+  flex: 1
+  overflow: auto
+  position: relative
+
+  &__adminLabels
+    margin-left: 1em
+    margin-right: .5em
+
+  &__association
+    color: #808080
+    font-style: italic
+    margin: 0 0.5em
+
+  &__item
+    background: #fff
+    border: 1px solid darken($body, 5%)
+    display: flex
+    flex-direction: column
+    margin: 0.25em 0
+    padding: 0.5em
+    position: relative
+    transition: color 0.2s
+
+    &:before
+      border-left: 0.25em solid
+      bottom: -1px
+      content: ''
+      display: block
+      left: -1px
+      position: absolute
+      top: -1px
+
+  &__labelEdition
+
+    align-items: center
+    display: flex
+    height: 1.2em
+    margin: .10em
+
+  &__text
+    color: $text
+
+  form
+    display: flex
+
+  label
+    align-items: center
+    display: flex
+    margin: .10em
+    max-width: 100%
+
+    input, select
+      background: #e0e9f0
+      border: none
+      box-sizing: border-box
+      font-family: Lato, sans-serif
+      height: 2.5em
+      margin: .5em
+      outline: none
+      width: 15em
+
+    input[type=number]
+      width: 5em
+
+    input[type=color]
+      width: 3em
+
+  .btn
+    margin-left: .3em
+
+  .labelBtn
+    background: #bac9d5
+    border: none
+    font-size: .85em
+    margin-left: .5em
+    padding: .15em .7em
+
+  .labelColor
+    margin-left: .5em
+    width: 2.5em
+
+  .labelInput
+    height: 1.6em
+    width: 10em
+
+  .labelPriority
+    width: 3em

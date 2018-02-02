@@ -1,7 +1,8 @@
 import datetime
 
 from sqlalchemy import (
-    Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+    Boolean, Column, DateTime, ForeignKey, Integer, String, Text,
+    UniqueConstraint
 )
 from sqlalchemy.event import listens_for
 from sqlalchemy.ext.declarative import declarative_base
@@ -14,6 +15,40 @@ Base = declarative_base()
 item_types = ['checklist', 'indicator']
 meeting_types = [
     type_name for type_id, type_name in app.config['MEETINGS_TYPES']]
+label_types = ['ack', 'circle', 'priority', 'qualifier']
+
+
+class Label(Base):
+    __tablename__ = 'label'
+    __table_args__ = (UniqueConstraint(
+        'text', name='text'),
+    )
+    label_id = Column(
+        Integer,
+        autoincrement=True,
+        primary_key=True,
+        nullable=False)
+    label_type = Column(Enum(*label_types))
+    text = Column(String)
+    color = Column(String)
+
+
+class Priority(Base):
+    __tablename__ = 'priority'
+    __table_args__ = (UniqueConstraint('value', name='value_unique'),)
+    priority_id = Column(
+        Integer,
+        autoincrement=True,
+        primary_key=True,
+        nullable=False)
+    label_id = Column(
+        Integer,
+        ForeignKey('label.label_id', name='fk_priority_label'),
+        nullable=False)
+    value = Column(Integer)
+    labels = relationship(Label, backref=backref(
+        'priorities', cascade="all,delete", uselist=False)
+    )
 
 
 class Circle(Base):
@@ -27,6 +62,10 @@ class Circle(Base):
         Integer,
         ForeignKey('circle.circle_id'),
         nullable=True)
+    label_id = Column(
+        Integer,
+        ForeignKey('label.label_id', name='fk_circle_label'),
+        nullable=True)
     circle_name = Column(String, unique=True)
     circle_purpose = Column(String)
     circle_domain = Column(String)
@@ -37,6 +76,7 @@ class Circle(Base):
     circle_milestones = relationship(
         'Milestone_circle', backref=backref(
             'milestone_circle', remote_side=[circle_id]))
+    label = relationship(Label, backref='circle')
 
 
 @listens_for(Circle.is_active, 'set')

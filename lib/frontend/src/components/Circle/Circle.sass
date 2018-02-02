@@ -1,6 +1,9 @@
 @import ../vars
 
 .Circle
+  flex: 1
+  overflow: auto
+  position: relative
 
   h3
     font-style: italic
@@ -45,6 +48,15 @@
   &__circle
     margin-left: 1em
     margin-right: .5em
+
+  &__tag
+    border: .2em solid
+    border-radius: .7em
+    font-family: $text-font
+    font-size: 0.7em
+    margin: .5em 1em .5em .5em
+    padding: .4em
+    transition: background 0.2s
 
   &__unlink
     color: #000000

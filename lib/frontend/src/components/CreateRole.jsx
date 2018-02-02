@@ -1,4 +1,4 @@
-import './Createrole.sass'
+import './CreateRole.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
@@ -11,9 +11,9 @@ import { block, connect } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './MarkdownEditor'
 
-const b = block('Createrole')
+const b = block('CreateRole')
 
-class Createrole extends React.Component {
+class CreateRole extends React.Component {
   componentDidMount() {
     this.props.sync()
   }
@@ -124,5 +124,5 @@ export default withRouter(
         dispatch(fetchCircle())
       },
     })
-  )(Createrole)
+  )(CreateRole)
 )

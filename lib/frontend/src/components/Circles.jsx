@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../actions'
 import { createCircle } from '../actions/circle'
-import { block, connect, getColor, sortGroupCircles } from '../utils'
+import { block, connect, sortGroupCircles } from '../utils'
 import Loading from './Loading'
 
 const b = block('Circles')
@@ -43,7 +43,7 @@ class Circles extends React.Component {
                   className={b('item')}
                   style={{
                     color: `${labels
-                      .filter(label => getColor(label, circle.circle_name))
+                      .filter(label => label.label_id === circle.label_id)
                       .map(label => label.color)
                       .toString()}`,
                   }}
@@ -74,7 +74,7 @@ class Circles extends React.Component {
           )}
           <Link
             to={{
-              pathname: '/createcircle',
+              pathname: '/createCircle',
             }}
           >
             <button type="submit">Add a circle</button>
@@ -87,7 +87,7 @@ class Circles extends React.Component {
 export default connect(
   state => ({
     error: state.circles.errors,
-    labels: state.labels.results.qualifier,
+    labels: state.labels.results.circle,
     loading: state.circles.loading,
     results: state.circles.results,
   }),

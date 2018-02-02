@@ -13,10 +13,13 @@ import {
   togglePurposeExpanded,
   updateCircle,
 } from '../../actions/circle'
-import { connect } from '../../utils'
+import { getUnusedCircleLabels } from '../../actions/labels'
+import { block, connect } from '../../utils'
 import MarkdownEditor from './../MarkdownEditor'
 
 var ReactMarkdown = require('react-markdown')
+
+const b = block('Circle')
 
 class CircleDetails extends React.Component {
   componentWillMount() {}
@@ -25,6 +28,7 @@ class CircleDetails extends React.Component {
     const {
       cancelClick,
       circle,
+      circleLabels,
       circles,
       editClick,
       history,
@@ -36,6 +40,7 @@ class CircleDetails extends React.Component {
       onDelete,
       onDisableCircle,
     } = this.props
+    const unusedLabels = getUnusedCircleLabels(circles, circleLabels)
 
     return (
       <div>
@@ -43,7 +48,6 @@ class CircleDetails extends React.Component {
           <form
             onSubmit={e => {
               e.preventDefault()
-              onEdit(circle.circle_id, e)
             }}
           >
             {' '}
@@ -59,6 +63,25 @@ class CircleDetails extends React.Component {
                 defaultValue={circle.circle_name}
                 required
               />
+            </label>
+            <br />
+            <label>
+              Label :
+              <select name="label_id">
+                {circle.label_id !== null && (
+                  <option value={circle.label_id}>
+                    {circleLabels
+                      .filter(label => label.label_id === circle.label_id)
+                      .map(label => label.text)
+                      .toString()}
+                  </option>
+                )}
+                {unusedLabels.map(label => (
+                  <option key={label.label_id} value={label.label_id}>
+                    {label.text}
+                  </option>
+                ))}
+              </select>
             </label>
             <br />
             <label>
@@ -108,7 +131,9 @@ class CircleDetails extends React.Component {
               <MarkdownEditor />
             </label>
             <br />
-            <button type="submit">Edit</button>
+            <button type="submit" onClick={e => onEdit(circle.circle_id, e)}>
+              Edit
+            </button>
             <button type="submit" onClick={() => cancelClick()}>
               Cancel
             </button>
@@ -118,11 +143,26 @@ class CircleDetails extends React.Component {
             <h1>
               {circle.circle_name}
               {circle.is_active ? '' : ' (disabled)'}{' '}
+              {circle.label_id &&
+                circleLabels
+                  .filter(label => label.label_id === circle.label_id)
+                  .map(label => (
+                    <span
+                      key={label.label_id}
+                      className={b('tag')}
+                      style={{
+                        borderColor: label.color,
+                      }}
+                    >
+                      {label.text}
+                    </span>
+                  ))}
               <span
                 onClick={() => editClick(circle.circle_accountabilities)}
                 disabled={!circle.is_active}
                 title="Edit circle"
               >
+                {' '}
                 <i className="fa fa-pencil-square-o" aria-hidden="true" />
               </span>{' '}
               {circle.nb_reports > 0 ? (
@@ -146,18 +186,19 @@ class CircleDetails extends React.Component {
                 </span>
               ) : (
                 <span>
-                  {circle.roles.length === 0 && (
-                    <span
-                      onClick={e => {
-                        e.preventDefault()
-                        onDelete(circle.circle_id, history)
-                      }}
-                      disabled={circle.roles.length > 0}
-                      title="Delete circle"
-                    >
-                      <i className="fa fa-trash" aria-hidden="true" />
-                    </span>
-                  )}
+                  {circle.roles.length === 0 &&
+                    circle.circle_milestones.length === 0 && (
+                      <span
+                        onClick={e => {
+                          e.preventDefault()
+                          onDelete(circle.circle_id, history)
+                        }}
+                        disabled={circle.roles.length > 0}
+                        title="Delete circle"
+                      >
+                        <i className="fa fa-trash" aria-hidden="true" />
+                      </span>
+                    )}
                 </span>
               )}
             </h1>
@@ -180,11 +221,23 @@ class CircleDetails extends React.Component {
               </span>
             )}{' '}
             {circle.nb_reports === 0 &&
-              circle.roles.length > 0 && (
+              (circle.roles.length > 0 ||
+                circle.circle_milestones.length > 0) && (
                 <div>
                   <code>
-                    {'You cannot delete this circle, '}
-                    {'please first delete the roles.'}
+                    {'You cannot delete this circle, please first: '}
+                    {circle.roles.length > 0 && (
+                      <span>
+                        <br />
+                        - delete the roles
+                      </span>
+                    )}
+                    {circle.circle_milestones.length > 0 && (
+                      <span>
+                        <br />
+                        - dissociate milestones
+                      </span>
+                    )}
                   </code>
                 </div>
               )}
@@ -228,6 +281,7 @@ export default withRouter(
   connect(
     state => ({
       circle: state.circle.results,
+      circleLabels: state.labels.results.circle,
       circles: state.circles.results,
       isCircleInEdition: state.circle.is_in_edition,
     }),
@@ -250,7 +304,7 @@ export default withRouter(
       },
       onEdit: (id, e) => {
         let formCircle = []
-        if (e.target.elements[1].value === '') {
+        if (e.target.form.elements[1].value === '') {
           formCircle = [
             e.target.elements[0],
             e.target.elements[2],
@@ -269,12 +323,12 @@ export default withRouter(
           }, {})
         } else {
           formCircle = [].slice
-            .call(e.target.elements)
+            .call(e.target.form.elements)
             .reduce(function(map, obj) {
               if (obj.name === 'body') {
                 map.circle_accountabilities = obj.value
               } else if (obj.name === 'parent_circle_id') {
-                map[obj.name] = +obj.value
+                map[obj.name] = obj.value === '' ? null : +obj.value
               } else if (obj.name) {
                 map[obj.name] = obj.value
               }
@@ -296,6 +350,7 @@ export default withRouter(
         dispatch(updateCircle(circle.circle_id, circleData))
       },
       cancelClick: () => {
+        dispatch(editCircle())
         dispatch(delMarkdown())
       },
     })

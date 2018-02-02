@@ -1,6 +1,7 @@
 import './Report.sass'
 
 import moment from 'moment'
+import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { push } from 'react-router-redux'
@@ -61,6 +62,12 @@ const b = block('Report')
 class Report extends React.Component {
   componentDidMount() {
     this.props.sync()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.query !== this.props.location.query) {
+      this.props.sync()
+    }
   }
 
   render() {
@@ -157,16 +164,17 @@ export default connect(
     loading: state.report.loading,
     error: state.report.error,
     range: reportRangeFromState(state),
+    location: state.router.location,
   }),
   dispatch => ({
     onDateChange: (date, type, query) => {
       dispatch(
         push({
           pathname: '/report',
-          query: {
+          query: stringify({
             ...query,
             [type]: date || void 0,
-          },
+          }),
         })
       )
     },

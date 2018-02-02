@@ -8,7 +8,7 @@ import { Link, withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import { updateReportsList } from '../actions/meetings'
-import { block, connect, getColor } from '../utils'
+import { block, connect } from '../utils'
 import Loading from './Loading'
 
 const b = block('Meetings')
@@ -47,7 +47,7 @@ class Meetings extends React.Component {
       params,
     } = this.props
     const sortedMeetings = meetings.results.sort(
-      (a, b) => a.created_at - b.created_at
+      (a, c) => a.created_at - c.created_at
     )
     return (
       <section className={b()}>
@@ -132,8 +132,8 @@ class Meetings extends React.Component {
                   className={b('item')}
                   style={{
                     color: `${labels
-                      .filter(label =>
-                        getColor(label, meeting.circle[0].circle_name)
+                      .filter(
+                        label => label.label_id === meeting.circle[0].label_id
                       )
                       .map(label => label.color)
                       .toString()}`,
@@ -171,7 +171,7 @@ export default withRouter(
   connect(
     state => ({
       circles: state.circles,
-      labels: state.labels.results.qualifier,
+      labels: state.labels.results.circle,
       meetings: state.meetings,
       meetingsTypes: state.meetingsTypes,
       params: state.params,
