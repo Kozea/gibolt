@@ -104,7 +104,21 @@ class Repositories extends React.Component {
                     {repository.repo_name}
                     {(repository.missingLabels.length > 0 ||
                       repository.overlyLabels.length > 0) && (
-                      <span className={b('unlink')}>
+                      <span
+                        className={b('unlink')}
+                        title={(repository.missingLabels.length > 0
+                          ? `Missing labels: ${repository.missingLabels
+                              .map(lab => ` ${lab.text}`)
+                              .toString()}`
+                          : ''
+                        ).concat(
+                          repository.overlyLabels.length > 0
+                            ? ` | Overly labels: ${repository.overlyLabels
+                                .map(lbl => ` ${lbl.label_name}`)
+                                .toString()}`
+                            : ''
+                        )}
+                      >
                         some labels are missing or unconfigured
                       </span>
                     )}

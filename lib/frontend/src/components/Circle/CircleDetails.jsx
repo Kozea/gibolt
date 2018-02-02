@@ -162,6 +162,7 @@ class CircleDetails extends React.Component {
                 disabled={!circle.is_active}
                 title="Edit circle"
               >
+                {' '}
                 <i className="fa fa-pencil-square-o" aria-hidden="true" />
               </span>{' '}
               {circle.nb_reports > 0 ? (
