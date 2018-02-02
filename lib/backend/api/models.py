@@ -47,7 +47,7 @@ class Priority(Base):
         nullable=False)
     value = Column(Integer)
     labels = relationship(Label, backref=backref(
-        'priorities', cascade="all,delete", uselist=False)
+        'priorities', cascade='all,delete', uselist=False)
     )
 
 

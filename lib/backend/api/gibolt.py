@@ -125,9 +125,9 @@ def add_priority():
         session.add(new_priority)
         session.commit()
         response = [{
-            "priority_id": new_priority.priority_id,
-            "label_id": new_priority.label_id,
-            "value": new_priority.value
+            'priority_id': new_priority.priority_id,
+            'label_id': new_priority.label_id,
+            'value': new_priority.value
         }]
         objects = {
             'objects': response,
@@ -165,9 +165,9 @@ def update_priority(priority_id):
         priority.value = new_value
         session.commit()
         response = [{
-            "priority_id": priority.priority_id,
-            "label_id": priority.label_id,
-            "value": priority.value
+            'priority_id': priority.priority_id,
+            'label_id': priority.label_id,
+            'value': priority.value
         }]
         objects = {
             'objects': response,
