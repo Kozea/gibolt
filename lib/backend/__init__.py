@@ -5,12 +5,13 @@ import os
 import requests
 from urllib.parse import urlparse
 
-from cachecontrol import CacheControl
+from cachecontrol import CacheControlAdapter
 from cachecontrol.caches.file_cache import FileCache
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from .routes.models import GitHubController
+from .customCacheControl.github_controller import GitHubController
+from .customCacheControl.heuristic import ZeroSecondsHeuristic
 
 try:
     __version__ = pkg_resources.require('gibolt')[0].version
@@ -28,11 +29,22 @@ engine = create_engine(
 )
 
 github = GitHub(app)
-github.session = CacheControl(
-    requests.Session(),
-    cache=FileCache('/tmp/gibolt-cache'),
+file_cache = FileCache('/tmp/gibolt-cache')
+adapter = CacheControlAdapter(
+    cache=file_cache, controller_class=GitHubController
+)
+custom_adapter = CacheControlAdapter(
+    heuristic=ZeroSecondsHeuristic(),
+    cache=file_cache,
     controller_class=GitHubController
 )
+github.session = requests.Session()
+github.session.mount('http://', adapter)
+github.session.mount('https://', adapter)
+# CacheControl always verifies the cache freshness before ETag
+# To ensure data for repos are always up to date compared to Github,
+# the cache freshness is defined to 0 by a custom caching strategy
+github.session.mount('https://api.github.com/repos/', custom_adapter)
 
 Session = sessionmaker(bind=engine, autoflush=False)
 Session.configure(bind=engine)
