@@ -84,6 +84,7 @@ class MeetingsReportCreation extends React.Component {
       history,
       issues,
       items,
+      loading,
       meetingsTypes,
       onGoBack,
       onMilestoneClick,
@@ -120,7 +121,7 @@ class MeetingsReportCreation extends React.Component {
             </code>
           </article>
         )}
-        {(circles.loading || meetingsTypes.loading) && <Loading />}
+        {loading !== 0 && <Loading />}
         <article className={b('meetings')}>
           <h2>Create a report</h2>
 
@@ -412,6 +413,12 @@ export default withRouter(
       search: state.router.location.search,
       params: state.params,
       users: state.users.results,
+      loading:
+        (state.circleMilestones.loading ? 1 : 0) +
+        (state.circles.loading ? 1 : 0) +
+        (state.items.loading ? 1 : 0) +
+        (state.issues.loading ? 1 : 0) +
+        (state.users.loading ? 1 : 0),
     }),
     dispatch => ({
       getMilestonesAndItems: () => {
