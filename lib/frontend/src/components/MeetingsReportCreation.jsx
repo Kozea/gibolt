@@ -112,310 +112,318 @@ class MeetingsReportCreation extends React.Component {
           <title>Gibolt - Create a report</title>
         </Helmet>
         {loading !== 0 && <Loading />}
-        <h2>Create a report</h2>
-        {errors.circles ||
-        errors.items ||
-        errors.meetingsTypes ||
-        errors.projects ||
-        errors.users ? (
-          <article className={b('group', { error: true })}>
-            <h2>Error during fetch</h2>
-            <code>
-              {Object.keys(errors).map(
-                key => (errors[key] === null ? '' : `${key}: ${errors[key]} `)
-              )}
-            </code>
-            <br />
-          </article>
-        ) : (
-          <article className={b('meetings')}>
-            <h2>Create a report</h2>
-            {errors.meetings && (
-              <article className={b('group', { error: true })}>
-                <h2>Error during creation</h2>
-                <code>{`meetings : ${errors.meetings}`}</code>
-                <br />
-              </article>
-            )}
-            <form onSubmit={event => event.preventDefault()}>
-              <label>
-                Circle:
-                <select
-                  id="circles"
-                  name="circles"
-                  value={params.circle_id}
-                  disabled={search !== ''}
-                  onChange={event => onSelectChange(event)}
-                >
-                  <option value="" />
-                  {circles.results.map(circle => (
-                    <option key={circle.circle_id} value={circle.circle_id}>
-                      {circle.circle_name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Meetings:
-                <select
-                  id="meetingType"
-                  name="meetingType"
-                  value={params.meeting_name}
-                  disabled={search !== ''}
-                  onChange={event => onSelectChange(event)}
-                >
-                  <option value="" />
-                  {meetingsTypes.results.map(type => (
-                    <option key={type.type_id} value={type.type_name}>
-                      {type.type_name}
-                    </option>
-                  ))}
-                </select>
-              </label>
+        <article className={b('meetings')}>
+          <h2>Create a report</h2>
+          {errors.circles ||
+          errors.items ||
+          errors.meetingsTypes ||
+          errors.projects ||
+          errors.users ? (
+            <article className={b('group', { error: true })}>
+              <h2>Error during fetch</h2>
+              <code>
+                {Object.keys(errors).map(
+                  key =>
+                    errors[key] === null ? (
+                      ''
+                    ) : (
+                      <div>{`${key}: ${errors[key]} `}</div>
+                    )
+                )}
+              </code>
               <br />
-              <div className={b('content')}>
-                <span>
-                  <h3>Presents:</h3>
-                  {selectedCircle.roles && (
+            </article>
+          ) : (
+            <span>
+              {errors.meetings && (
+                <article className={b('group', { error: true })}>
+                  <h2>Error during creation</h2>
+                  <code>{`meetings : ${errors.meetings}`}</code>
+                  <br />
+                </article>
+              )}
+              <form onSubmit={event => event.preventDefault()}>
+                <label>
+                  Circle:
+                  <select
+                    id="circles"
+                    name="circles"
+                    value={params.circle_id}
+                    disabled={search !== ''}
+                    onChange={event => onSelectChange(event)}
+                  >
+                    <option value="" />
+                    {circles.results.map(circle => (
+                      <option key={circle.circle_id} value={circle.circle_id}>
+                        {circle.circle_name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Meetings:
+                  <select
+                    id="meetingType"
+                    name="meetingType"
+                    value={params.meeting_name}
+                    disabled={search !== ''}
+                    onChange={event => onSelectChange(event)}
+                  >
+                    <option value="" />
+                    {meetingsTypes.results.map(type => (
+                      <option key={type.type_id} value={type.type_name}>
+                        {type.type_name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <br />
+                <div className={b('content')}>
+                  <span>
+                    <h3>Presents:</h3>
+                    {selectedCircle.roles && (
+                      <span>
+                        {selectedCircle.roles.length > 0 &&
+                        usersList.length > 0 ? (
+                          <ul>
+                            {usersList.map(
+                              user =>
+                                user && (
+                                  <li key={user.user_id}>
+                                    <input
+                                      type="checkbox"
+                                      name={user.user_name}
+                                      id="users"
+                                      defaultChecked
+                                    />
+                                    {user.user_name}
+                                  </li>
+                                )
+                            )}
+                          </ul>
+                        ) : (
+                          'No roles defined'
+                        )}
+                      </span>
+                    )}
+                  </span>
+                  {params.meeting_name === 'Triage' && (
                     <span>
-                      {selectedCircle.roles.length > 0 &&
-                      usersList.length > 0 ? (
-                        <ul>
-                          {usersList.map(
-                            user =>
-                              user && (
-                                <li key={user.user_id}>
-                                  <input
-                                    type="checkbox"
-                                    name={user.user_name}
-                                    id="users"
-                                    defaultChecked
+                      {selectedCircle.roles &&
+                        selectedCircle.roles.length > 0 && (
+                          <span>
+                            <h3>Recurrent actions:</h3>
+                            <ul>
+                              {items === [] &&
+                                items.map(
+                                  roleItems =>
+                                    roleItems.items &&
+                                    roleItems.items
+                                      .filter(
+                                        item => item.item_type === 'checklist'
+                                      )
+                                      .map(item => (
+                                        <li key={item.item_id}>
+                                          <input
+                                            type="checkbox"
+                                            name={`${roleItems.role_name} - ${
+                                              item.content
+                                            }`}
+                                            id="actions"
+                                          />
+                                          {roleItems.role_name} - {item.content}
+                                        </li>
+                                      ))
+                                )}
+                            </ul>
+                            <h3>Indicators:</h3>
+                            <ul>
+                              {items === [] &&
+                                items.map(
+                                  roleItems =>
+                                    roleItems.items &&
+                                    roleItems.items
+                                      .filter(
+                                        item => item.item_type === 'indicator'
+                                      )
+                                      .map(item => (
+                                        <li key={item.item_id}>
+                                          <span className={b('bullet')} />
+                                          {roleItems.role_name} - {item.content}
+                                          :{' '}
+                                          <input
+                                            type="text"
+                                            name={`${roleItems.role_name} - ${
+                                              item.content
+                                            }`}
+                                            id="indicateurs"
+                                            className="smallInput"
+                                          />
+                                        </li>
+                                      ))
+                                )}
+                            </ul>
+                          </span>
+                        )}
+                      <h3>Projects:</h3>
+                      <ul>
+                        {circleMilestones.length > 0 &&
+                          circleMilestones.map(milestone => (
+                            <li
+                              key={milestone.milestone_number}
+                              title={milestone.description}
+                            >
+                              <a
+                                className={b('unlink')}
+                                href={milestone.html_url}
+                                target="_blank"
+                              >
+                                <span
+                                  className={b(`bullet ${milestone.state}`)}
+                                />
+                                {milestone.repo_name}
+                                {' - '}
+                                <span className={b('lab')}>
+                                  {milestone.milestone_title}
+                                </span>
+                              </a>
+                              {' -'}
+                              <Progress
+                                val={milestone.closed_issues}
+                                total={
+                                  milestone.open_issues +
+                                  milestone.closed_issues
+                                }
+                              />
+                              <span className={b('due-date')}>
+                                {' ('}
+                                {milestone.due_on
+                                  ? `due on: ${format(
+                                      new Date(milestone.due_on),
+                                      'DD/MM/YYYY'
+                                    )}`
+                                  : 'no due date'}
+                                {')'}
+                              </span>
+                              {milestone.state === 'open' && (
+                                <Link
+                                  className={b('unlink')}
+                                  target="_blank"
+                                  title="open an issue"
+                                  to={{
+                                    pathname: '/createIssue',
+                                    search: stringify({
+                                      grouper: 'milestone',
+                                      group: `${milestone.repo_name} ⦔ ${
+                                        milestone.milestone_number
+                                      }`,
+                                    }),
+                                  }}
+                                >
+                                  <i
+                                    className="fa fa-plus-circle addCircle"
+                                    aria-hidden="true"
                                   />
-                                  {user.user_name}
-                                </li>
-                              )
-                          )}
-                        </ul>
-                      ) : (
-                        'No roles defined'
-                      )}
+                                </Link>
+                              )}
+                              {issues.length > 0 &&
+                                issues.filter(
+                                  issue =>
+                                    issue.milestone_id ===
+                                    milestone.milestone_id
+                                ).length > 0 && (
+                                  <span>
+                                    <span
+                                      className={b('lighter')}
+                                      onClick={() =>
+                                        onMilestoneClick(milestone.milestone_id)
+                                      }
+                                    >
+                                      show/hide closed issues since last report
+                                    </span>
+                                    {milestone.is_expanded && (
+                                      <span>
+                                        <br />
+                                        <ul className={b('tickets')}>
+                                          {issues
+                                            .filter(
+                                              issue =>
+                                                issue.milestone_number ===
+                                                  milestone.milestone_number &&
+                                                !issue.pull_request
+                                            )
+                                            .map(issue => (
+                                              <li
+                                                key={issue.ticket_id}
+                                                title={issue.body}
+                                              >
+                                                <span className={b('bullet')} />
+                                                <a
+                                                  href={issue.html_url}
+                                                  target="_blank"
+                                                >
+                                                  #{issue.ticket_number}
+                                                </a>{' '}
+                                                {issue.ticket_title},
+                                                <span className={b('lighter')}>
+                                                  closed:{' '}
+                                                  {format(
+                                                    new Date(issue.closed_at),
+                                                    'DD/MM/YYYY HH:mm'
+                                                  )}
+                                                  , last update:{' '}
+                                                  {format(
+                                                    new Date(issue.updated_at),
+                                                    'DD/MM/YYYY HH:mm'
+                                                  )}
+                                                </span>
+                                                {issue.assignees.map(user => (
+                                                  <img
+                                                    key={user.user_id}
+                                                    className={b('avatar')}
+                                                    src={user.avatar_url}
+                                                    alt="avatar"
+                                                    title={user.user_name}
+                                                  />
+                                                ))}
+                                              </li>
+                                            ))}
+                                        </ul>
+                                      </span>
+                                    )}
+                                  </span>
+                                )}
+                              <br />
+                              <input
+                                className="largeInput"
+                                id="milestones"
+                                name={milestone.milestone_title}
+                              />
+                            </li>
+                          ))}
+                      </ul>
                     </span>
                   )}
-                </span>
-                {params.meeting_name === 'Triage' && (
-                  <span>
-                    {selectedCircle.roles &&
-                      selectedCircle.roles.length > 0 && (
-                        <span>
-                          <h3>Recurrent actions:</h3>
-                          <ul>
-                            {items &&
-                              items.map(
-                                roleItems =>
-                                  roleItems.items &&
-                                  roleItems.items
-                                    .filter(
-                                      item => item.item_type === 'checklist'
-                                    )
-                                    .map(item => (
-                                      <li key={item.item_id}>
-                                        <input
-                                          type="checkbox"
-                                          name={`${roleItems.role_name} - ${
-                                            item.content
-                                          }`}
-                                          id="actions"
-                                        />
-                                        {roleItems.role_name} - {item.content}
-                                      </li>
-                                    ))
-                              )}
-                          </ul>
-                          <h3>Indicators:</h3>
-                          <ul>
-                            {items &&
-                              items.map(
-                                roleItems =>
-                                  roleItems.items &&
-                                  roleItems.items
-                                    .filter(
-                                      item => item.item_type === 'indicator'
-                                    )
-                                    .map(item => (
-                                      <li key={item.item_id}>
-                                        <span className={b('bullet')} />
-                                        {roleItems.role_name} - {item.content}
-                                        :{' '}
-                                        <input
-                                          type="text"
-                                          name={`${roleItems.role_name} - ${
-                                            item.content
-                                          }`}
-                                          id="indicateurs"
-                                          className="smallInput"
-                                        />
-                                      </li>
-                                    ))
-                              )}
-                          </ul>
-                        </span>
-                      )}
-                    <h3>Projects:</h3>
-                    <ul>
-                      {circleMilestones.length > 0 &&
-                        circleMilestones.map(milestone => (
-                          <li
-                            key={milestone.milestone_number}
-                            title={milestone.description}
-                          >
-                            <a
-                              className={b('unlink')}
-                              href={milestone.html_url}
-                              target="_blank"
-                            >
-                              <span
-                                className={b(`bullet ${milestone.state}`)}
-                              />
-                              {milestone.repo_name}
-                              {' - '}
-                              <span className={b('lab')}>
-                                {milestone.milestone_title}
-                              </span>
-                            </a>
-                            {' -'}
-                            <Progress
-                              val={milestone.closed_issues}
-                              total={
-                                milestone.open_issues + milestone.closed_issues
-                              }
-                            />
-                            <span className={b('due-date')}>
-                              {' ('}
-                              {milestone.due_on
-                                ? `due on: ${format(
-                                    new Date(milestone.due_on),
-                                    'DD/MM/YYYY'
-                                  )}`
-                                : 'no due date'}
-                              {')'}
-                            </span>
-                            {milestone.state === 'open' && (
-                              <Link
-                                className={b('unlink')}
-                                target="_blank"
-                                title="open an issue"
-                                to={{
-                                  pathname: '/createIssue',
-                                  search: stringify({
-                                    grouper: 'milestone',
-                                    group: `${milestone.repo_name} ⦔ ${
-                                      milestone.milestone_number
-                                    }`,
-                                  }),
-                                }}
-                              >
-                                <i
-                                  className="fa fa-plus-circle addCircle"
-                                  aria-hidden="true"
-                                />
-                              </Link>
-                            )}
-                            {issues.length > 0 &&
-                              issues.filter(
-                                issue =>
-                                  issue.milestone_id === milestone.milestone_id
-                              ).length > 0 && (
-                                <span>
-                                  <span
-                                    className={b('lighter')}
-                                    onClick={() =>
-                                      onMilestoneClick(milestone.milestone_id)
-                                    }
-                                  >
-                                    show/hide closed issues since last report
-                                  </span>
-                                  {milestone.is_expanded && (
-                                    <span>
-                                      <br />
-                                      <ul className={b('tickets')}>
-                                        {issues
-                                          .filter(
-                                            issue =>
-                                              issue.milestone_number ===
-                                                milestone.milestone_number &&
-                                              !issue.pull_request
-                                          )
-                                          .map(issue => (
-                                            <li
-                                              key={issue.ticket_id}
-                                              title={issue.body}
-                                            >
-                                              <span className={b('bullet')} />
-                                              <a
-                                                href={issue.html_url}
-                                                target="_blank"
-                                              >
-                                                #{issue.ticket_number}
-                                              </a>{' '}
-                                              {issue.ticket_title},
-                                              <span className={b('lighter')}>
-                                                closed:{' '}
-                                                {format(
-                                                  new Date(issue.closed_at),
-                                                  'DD/MM/YYYY HH:mm'
-                                                )}
-                                                , last update:{' '}
-                                                {format(
-                                                  new Date(issue.updated_at),
-                                                  'DD/MM/YYYY HH:mm'
-                                                )}
-                                              </span>
-                                              {issue.assignees.map(user => (
-                                                <img
-                                                  key={user.user_id}
-                                                  className={b('avatar')}
-                                                  src={user.avatar_url}
-                                                  alt="avatar"
-                                                  title={user.user_name}
-                                                />
-                                              ))}
-                                            </li>
-                                          ))}
-                                      </ul>
-                                    </span>
-                                  )}
-                                </span>
-                              )}
-                            <br />
-                            <input
-                              className="largeInput"
-                              id="milestones"
-                              name={milestone.milestone_title}
-                            />
-                          </li>
-                        ))}
-                    </ul>
-                  </span>
-                )}
-                <h3>Report content:</h3>
-                <MarkdownEditor />
-              </div>
-              <article className={b('action')}>
-                <button
-                  type="submit"
-                  onClick={event =>
-                    onSubmit(event, params.meeting_name, history)
-                  }
-                >
-                  Submit
-                </button>
-                <button type="submit" onClick={() => onGoBack(history)}>
-                  Cancel
-                </button>
-              </article>
-            </form>
-          </article>
-        )}
+                  <h3>Report content:</h3>
+                  <MarkdownEditor />
+                </div>
+                <article className={b('action')}>
+                  <button
+                    type="submit"
+                    onClick={event =>
+                      onSubmit(event, params.meeting_name, history)
+                    }
+                  >
+                    Submit
+                  </button>
+                  <button type="submit" onClick={() => onGoBack(history)}>
+                    Cancel
+                  </button>
+                </article>
+              </form>
+            </span>
+          )}
+        </article>
       </section>
     )
   }
