@@ -8,11 +8,9 @@ import { Link } from 'react-router-dom'
 import { setLoading } from '../actions'
 import {
   fetchIssues,
-  getAndToggleCommentsExpanded,
   setIssuesSelectness,
   setModal,
   updateIssues,
-  toggleExpanded,
   toggleIssue,
 } from '../actions/issues'
 import {
@@ -27,6 +25,7 @@ import {
   sortIssues,
 } from '../utils'
 import Issue from './Issue'
+import IssueDetail from './IssueDetail'
 import Loading from './Loading'
 import Progress from './Progress'
 
@@ -71,8 +70,6 @@ class Issues extends React.Component {
       onModalDisplay,
       onToggleSelected,
       onToggleGrouper,
-      onToggleExpanded,
-      onToggleCommentsExpanded,
       onChangeTickets,
     } = this.props
 
@@ -109,11 +106,13 @@ class Issues extends React.Component {
         <ReactModal
           className={b('modal')}
           overlayClassName={b('modal-overlay')}
-          isOpen={!!modal}
+          isOpen={!!modal.display}
           onRequestClose={() => onModalClose()}
           shouldCloseOnOverlayClick
         >
-          {modal}
+          <IssueDetail
+            issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
+          />
           <button onClick={onModalClose}>Close</button>
         </ReactModal>
         {loading && <Loading />}
@@ -207,9 +206,7 @@ class Issues extends React.Component {
                   nb_comments={issue.nb_comments}
                   comments={issue.comments}
                   onBoxChange={() => onToggleSelected(issue.ticket_id)}
-                  onClick={() => onToggleExpanded(issue.ticket_id)}
-                  onClickComments={() => onToggleCommentsExpanded(issue)}
-                  onModalDisplay={() => onModalDisplay(issue.ticket_title)}
+                  onModalDisplay={() => onModalDisplay(issue.ticket_id)}
                 />
               ))}
             </ul>
@@ -257,19 +254,13 @@ export default connect(
   },
   dispatch => ({
     onModalClose: () => {
-      dispatch(setModal(null))
+      dispatch(setModal(false, null))
     },
-    onModalDisplay: content => {
-      dispatch(setModal(content))
+    onModalDisplay: issueId => {
+      dispatch(setModal(true, issueId))
     },
     onToggleSelected: issueId => {
       dispatch(toggleIssue(issueId))
-    },
-    onToggleExpanded: issueId => {
-      dispatch(toggleExpanded(issueId))
-    },
-    onToggleCommentsExpanded: issue => {
-      dispatch(getAndToggleCommentsExpanded(issue))
     },
     onToggleGrouper: (issuesId, isSelected) => {
       dispatch(setIssuesSelectness(issuesId, isSelected))
