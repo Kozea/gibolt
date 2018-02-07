@@ -13,7 +13,31 @@ function IssueDetail(props) {
   const { issue, onToggleCommentsExpanded } = props
   return (
     <section className={b()}>
-      <h2>{issue.ticket_title}</h2>
+      <span className={b('title')}>
+        {' '}
+        {issue.assignees.map(user => (
+          <img
+            key={user.user_id}
+            className={b('avatar')}
+            src={user.avatar_url}
+            alt="avatar"
+            title={user.user_name}
+          />
+        ))}
+        {issue.ticket_title}
+      </span>
+      <span className={b('infos')}>
+        #{issue.ticket_number} {issue.repo_name}
+      </span>
+      {issue.labels.map(label => (
+        <span key={label.label_name} className={b('label')}>
+          <span
+            className={b('bullet')}
+            style={{ backgroundColor: `#${label.label_color}` }}
+          />
+          {label.label_name}
+        </span>
+      ))}
       {issue.body && (
         <div>
           <ReactMarkdown className={b('body').toString()} source={issue.body} />

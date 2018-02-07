@@ -113,7 +113,9 @@ class Issues extends React.Component {
           <IssueDetail
             issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
           />
-          <button onClick={onModalClose}>Close</button>
+          <button type="submit" onClick={onModalClose}>
+            Close
+          </button>
         </ReactModal>
         {loading && <Loading />}
         {error && (
