@@ -214,7 +214,7 @@ class MeetingsReportCreation extends React.Component {
                           <span>
                             <h3>Recurrent actions:</h3>
                             <ul>
-                              {items === [] &&
+                              {items &&
                                 items.map(
                                   roleItems =>
                                     roleItems.items &&
@@ -238,7 +238,7 @@ class MeetingsReportCreation extends React.Component {
                             </ul>
                             <h3>Indicators:</h3>
                             <ul>
-                              {items === [] &&
+                              {items &&
                                 items.map(
                                   roleItems =>
                                     roleItems.items &&
