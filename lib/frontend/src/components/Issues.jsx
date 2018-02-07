@@ -2,6 +2,7 @@ import './Issues.sass'
 
 import { stringify } from 'query-string'
 import React from 'react'
+import ReactModal from 'react-modal'
 import { Link } from 'react-router-dom'
 
 import { setLoading } from '../actions'
@@ -41,6 +42,7 @@ function checkboxState(issues) {
 }
 
 const b = block('Issues')
+ReactModal.setAppElement('#root')
 
 class Issues extends React.Component {
   componentDidMount() {
@@ -64,6 +66,8 @@ class Issues extends React.Component {
       loading,
       grouper,
       error,
+      modal,
+      onModalClose,
       onModalDisplay,
       onToggleSelected,
       onToggleGrouper,
@@ -102,6 +106,16 @@ class Issues extends React.Component {
           />
           <Progress val={closedLen} total={labelFilteredIssues.length} />
         </h1>
+        <ReactModal
+          className={b('modal')}
+          overlayClassName={b('modal-overlay')}
+          isOpen={!!modal}
+          onRequestClose={() => onModalClose()}
+          shouldCloseOnOverlayClick
+        >
+          {modal}
+          <button onClick={onModalClose}>Close</button>
+        </ReactModal>
         {loading && <Loading />}
         {error && (
           <article className={b('group', { error: true })}>
@@ -143,24 +157,24 @@ class Issues extends React.Component {
                 (grouper === 'milestone' &&
                   (issues[0].milestone_state === 'open' ||
                     group.split(' ⦔ ')[1] === 'No milestone'))) && (
-                      <Link
-                        className={b('link')}
-                        to={{
-                          pathname: '/createIssue',
-                          search:
-                          grouper === 'milestone'
-                            ? stringify({
-                              grouper,
-                              group: id.split('|')[1]
-                                ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}` // eslint-disable-line max-len
-                                : group,
-                            })
-                            : stringify({ grouper, group }),
-                        }}
-                      >
-                        <button className={b('newTicket')}>Create issue</button>
-                      </Link>
-                    )}
+                <Link
+                  className={b('link')}
+                  to={{
+                    pathname: '/createIssue',
+                    search:
+                      grouper === 'milestone'
+                        ? stringify({
+                            grouper,
+                            group: id.split('|')[1]
+                              ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}` // eslint-disable-line max-len
+                              : group,
+                          })
+                        : stringify({ grouper, group }),
+                  }}
+                >
+                  <button className={b('newTicket')}>Create issue</button>
+                </Link>
+              )}
               {issuesState === 'all' &&
                 grouper !== 'state' && (
                   <Progress
@@ -238,9 +252,13 @@ export default connect(
       grouper: grouperFromState(state),
       issuesState: issuesStateFromState(state),
       error: state.issues.error,
+      modal: state.modal,
     }
   },
   dispatch => ({
+    onModalClose: () => {
+      dispatch(setModal(null))
+    },
     onModalDisplay: content => {
       dispatch(setModal(content))
     },
