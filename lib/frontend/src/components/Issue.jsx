@@ -46,6 +46,9 @@ export default function Issue(props) {
         ))}
       </a>
       <div>
+        <span className={b('view')} onClick={props.onModalDisplay}>
+          view
+        </span>
         {props.body && (
           <div onClick={props.onClick}>
             {props.expanded ? (

@@ -9,6 +9,7 @@ import {
   fetchIssues,
   getAndToggleCommentsExpanded,
   setIssuesSelectness,
+  setModal,
   updateIssues,
   toggleExpanded,
   toggleIssue,
@@ -63,6 +64,7 @@ class Issues extends React.Component {
       loading,
       grouper,
       error,
+      onModalDisplay,
       onToggleSelected,
       onToggleGrouper,
       onToggleExpanded,
@@ -141,24 +143,24 @@ class Issues extends React.Component {
                 (grouper === 'milestone' &&
                   (issues[0].milestone_state === 'open' ||
                     group.split(' ⦔ ')[1] === 'No milestone'))) && (
-                <Link
-                  className={b('link')}
-                  to={{
-                    pathname: '/createIssue',
-                    search:
-                      grouper === 'milestone'
-                        ? stringify({
-                            grouper,
-                            group: id.split('|')[1]
-                              ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}` // eslint-disable-line max-len
-                              : group,
-                          })
-                        : stringify({ grouper, group }),
-                  }}
-                >
-                  <button className={b('newTicket')}>Create issue</button>
-                </Link>
-              )}
+                      <Link
+                        className={b('link')}
+                        to={{
+                          pathname: '/createIssue',
+                          search:
+                          grouper === 'milestone'
+                            ? stringify({
+                              grouper,
+                              group: id.split('|')[1]
+                                ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}` // eslint-disable-line max-len
+                                : group,
+                            })
+                            : stringify({ grouper, group }),
+                        }}
+                      >
+                        <button className={b('newTicket')}>Create issue</button>
+                      </Link>
+                    )}
               {issuesState === 'all' &&
                 grouper !== 'state' && (
                   <Progress
@@ -193,6 +195,7 @@ class Issues extends React.Component {
                   onBoxChange={() => onToggleSelected(issue.ticket_id)}
                   onClick={() => onToggleExpanded(issue.ticket_id)}
                   onClickComments={() => onToggleCommentsExpanded(issue)}
+                  onModalDisplay={() => onModalDisplay(issue.ticket_title)}
                 />
               ))}
             </ul>
@@ -238,6 +241,9 @@ export default connect(
     }
   },
   dispatch => ({
+    onModalDisplay: content => {
+      dispatch(setModal(content))
+    },
     onToggleSelected: issueId => {
       dispatch(toggleIssue(issueId))
     },
