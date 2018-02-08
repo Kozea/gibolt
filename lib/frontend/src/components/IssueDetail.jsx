@@ -1,10 +1,11 @@
 import './IssueDetail.sass'
 
-import React from 'react'
 import { format } from 'date-fns'
+import React from 'react'
 
 import { getAndToggleCommentsExpanded } from '../actions/issues'
 import { block, connect } from '../utils'
+import MultiSelect from './MultiSelect'
 
 const b = block('IssueDetail')
 var ReactMarkdown = require('react-markdown')
@@ -31,8 +32,18 @@ class IssueDetail extends React.Component {
   }
 
   render() {
-    const { issue, onToggleCommentsExpanded } = this.props
+    const { issue, labels, onToggleCommentsExpanded } = this.props
     const { areLabelsInEdtion } = this.state
+    const options = []
+    Object.keys(labels).map(key =>
+      labels[key].map(label =>
+        options.push({
+          label: label.text,
+          value: label.label_id,
+          color: label.color,
+        })
+      )
+    )
     return (
       <section className={b()}>
         <span
@@ -65,7 +76,11 @@ class IssueDetail extends React.Component {
           <span className={b('infos')}>
             {issue.repo_name}
             {areLabelsInEdtion ? (
-              '  edition  '
+              <MultiSelect
+                closeOnSelect={false}
+                options={options}
+                removeSelected
+              />
             ) : (
               <span>
                 {issue.labels.length === 0 ? (
@@ -134,7 +149,9 @@ class IssueDetail extends React.Component {
   }
 }
 export default connect(
-  () => ({}),
+  state => ({
+    labels: state.labels.results,
+  }),
   dispatch => ({
     onToggleCommentsExpanded: issue => {
       dispatch(getAndToggleCommentsExpanded(issue))
