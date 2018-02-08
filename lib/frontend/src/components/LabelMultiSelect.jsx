@@ -6,13 +6,14 @@ import Select from 'react-select'
 export default class LabelMultiSelect extends React.Component {
   constructor(props, context) {
     super(props, context)
+    this.updateOptions(props.value)
     this.state = {
-      value: '',
+      value: props.value,
       options: props.options,
     }
   }
 
-  handleSelectChange(value) {
+  updateOptions(value) {
     const types = []
     value.filter(label => {
       if (!types.find(x => x === label.type)) {
@@ -22,6 +23,10 @@ export default class LabelMultiSelect extends React.Component {
     this.props.options.map(opt => {
       opt.disabled = !(typeof types.find(x => x === opt.type) === 'undefined')
     })
+  }
+
+  handleSelectChange(value) {
+    this.updateOptions(value)
     this.setState({
       value,
     })

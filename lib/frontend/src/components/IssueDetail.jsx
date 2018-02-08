@@ -35,8 +35,9 @@ class IssueDetail extends React.Component {
     const { issue, labels, onToggleCommentsExpanded } = this.props
     const { areLabelsInEdtion } = this.state
     const options = []
+    const issuesLabels = []
     Object.keys(labels).map(key =>
-      labels[key].map(label =>
+      labels[key].map(label => {
         options.push({
           color: label.color,
           label: label.text,
@@ -44,7 +45,15 @@ class IssueDetail extends React.Component {
           value: label.label_id,
           disabled: false,
         })
-      )
+        if (issue.labels.find(x => x.label_name === label.text)) {
+          issuesLabels.push({
+            color: label.color,
+            label: label.text,
+            type: key,
+            value: label.label_id,
+          })
+        }
+      })
     )
     return (
       <section className={b()}>
@@ -88,7 +97,7 @@ class IssueDetail extends React.Component {
                   closeOnSelect={false}
                   options={options}
                   removeSelected
-                  value={[]}
+                  value={issuesLabels}
                 />
                 <button type="submit">Update</button>
               </form>
