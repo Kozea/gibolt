@@ -5,7 +5,7 @@ import React from 'react'
 
 import { getAndToggleCommentsExpanded } from '../actions/issues'
 import { block, connect } from '../utils'
-import MultiSelect from './MultiSelect'
+import LabelMultiSelect from './LabelMultiSelect'
 
 const b = block('IssueDetail')
 var ReactMarkdown = require('react-markdown')
@@ -38,9 +38,11 @@ class IssueDetail extends React.Component {
     Object.keys(labels).map(key =>
       labels[key].map(label =>
         options.push({
-          label: label.text,
-          value: label.label_id,
           color: label.color,
+          label: label.text,
+          type: key,
+          value: label.label_id,
+          disabled: false,
         })
       )
     )
@@ -82,10 +84,11 @@ class IssueDetail extends React.Component {
                   e.preventDefault()
                 }}
               >
-                <MultiSelect
+                <LabelMultiSelect
                   closeOnSelect={false}
                   options={options}
                   removeSelected
+                  value={[]}
                 />
                 <button type="submit">Update</button>
               </form>
