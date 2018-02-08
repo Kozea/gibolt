@@ -8,11 +8,10 @@
   margin-right: .5em
 
   &__avatar
-    max-height: 40px
-    order: 0
-    padding-right: .5em
+    border-radius: 15px
+    margin-left: .5em
+    max-height: 30px
     vertical-align: middle
-    width: 40px
 
   &__bullet
     background-color: #000
@@ -25,12 +24,49 @@
     vertical-align: middle
     width: 0.5em
 
+  &__comment
+    background: white
+    font-size: .9em
+    margin: 1em .5em
+    padding: .1em .5em
+
+  &__commentDetail
+    font-size: .9em
+    margin: .5em
+    padding: .1em .5em
+
+  &__content
+    background: white
+    font-size: .9em
+    margin: .5em
+    padding: .1em .5em
+
+  &__infos
+    color: #6A6A6A
+    font-size: .9em
+
   &__label
     color: #6A6A6A
+    font-size: .9em
     margin: 0 0.3em
+
+  &__owner
+    color: #6A6A6A
+    font-size: .8em
 
   &__title
     display: block
     font-size: 1.2em
     margin-bottom: 0.25em
     padding-top: .5em
+
+  &--pull-request &__title::after
+    border-radius: 1.5em
+    content: "PR"
+    display: inline-block
+    font-size: 0.5em
+    margin-left: 0.5em
+    vertical-align: top
+
+  img
+    max-width: 100%
