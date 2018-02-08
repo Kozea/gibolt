@@ -76,11 +76,19 @@ class IssueDetail extends React.Component {
           <span className={b('infos')}>
             {issue.repo_name}
             {areLabelsInEdtion ? (
-              <MultiSelect
-                closeOnSelect={false}
-                options={options}
-                removeSelected
-              />
+              <form
+                id="updateLabelForm"
+                onSubmit={e => {
+                  e.preventDefault()
+                }}
+              >
+                <MultiSelect
+                  closeOnSelect={false}
+                  options={options}
+                  removeSelected
+                />
+                <button type="submit">Update</button>
+              </form>
             ) : (
               <span>
                 {issue.labels.length === 0 ? (
