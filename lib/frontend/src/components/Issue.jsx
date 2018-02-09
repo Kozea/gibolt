@@ -44,7 +44,7 @@ export default function Issue(props) {
       </a>
       <div>
         <span className={b('view')} onClick={props.onModalDisplay}>
-          view issue detail
+          view issue details
         </span>
       </div>
     </li>

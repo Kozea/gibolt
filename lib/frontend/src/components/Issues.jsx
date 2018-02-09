@@ -41,11 +41,11 @@ function checkboxState(issues) {
 }
 
 const b = block('Issues')
-ReactModal.setAppElement('#root')
 
 class Issues extends React.Component {
   componentDidMount() {
     this.props.sync()
+    ReactModal.setAppElement('#root')
   }
 
   componentWillReceiveProps(nextProps) {

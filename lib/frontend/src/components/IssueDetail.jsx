@@ -3,7 +3,10 @@ import './IssueDetail.sass'
 import { format } from 'date-fns'
 import React from 'react'
 
-import { getAndToggleCommentsExpanded } from '../actions/issues'
+import {
+  getAndToggleCommentsExpanded,
+  updateIssueLabels,
+} from '../actions/issues'
 import { block, connect } from '../utils'
 import LabelMultiSelect from './LabelMultiSelect'
 
@@ -32,7 +35,12 @@ class IssueDetail extends React.Component {
   }
 
   render() {
-    const { issue, labels, onToggleCommentsExpanded } = this.props
+    const {
+      issue,
+      labels,
+      onToggleCommentsExpanded,
+      onUpdateIssueLabels,
+    } = this.props
     const { areLabelsInEdtion } = this.state
     const options = []
     const issuesLabels = []
@@ -91,6 +99,8 @@ class IssueDetail extends React.Component {
                 id="updateLabelForm"
                 onSubmit={e => {
                   e.preventDefault()
+                  onUpdateIssueLabels(e, issue, options)
+                  this.updateLabelsEditionStatus(false)
                 }}
               >
                 <LabelMultiSelect
@@ -100,6 +110,12 @@ class IssueDetail extends React.Component {
                   value={issuesLabels}
                 />
                 <button type="submit">Update</button>
+                <button
+                  type="submit"
+                  onClick={() => this.updateLabelsEditionStatus(false)}
+                >
+                  Cancel
+                </button>
               </form>
             ) : (
               <span>
@@ -157,6 +173,7 @@ class IssueDetail extends React.Component {
                       />
                     </div>
                   ))}
+                  <button type="submit">hide comments</button>
                 </div>
               ) : (
                 <button type="submit">show comments</button>
@@ -175,6 +192,21 @@ export default connect(
   dispatch => ({
     onToggleCommentsExpanded: issue => {
       dispatch(getAndToggleCommentsExpanded(issue))
+    },
+    onUpdateIssueLabels: (event, issue, labels) => {
+      const selectedLabels = []
+      for (let i = 0; i < event.target.labelMultiSelect.length; i++) {
+        const selectedLabel = labels
+          .filter(lab => lab.value === +event.target.labelMultiSelect[i].value)
+          .map(lab => ({
+            label_name: lab.label,
+            label_color: lab.color,
+          }))
+        if (selectedLabel[0]) {
+          selectedLabels.push(selectedLabel[0])
+        }
+      }
+      dispatch(updateIssueLabels(selectedLabels, issue))
     },
   })
 )(IssueDetail)

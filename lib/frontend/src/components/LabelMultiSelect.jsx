@@ -41,6 +41,7 @@ export default class LabelMultiSelect extends React.Component {
       <Select
         closeOnSelect={this.props.closeOnSelect}
         multi
+        name="labelMultiSelect"
         options={this.state.options}
         removeSelected={this.props.removeSelected}
         onChange={v => this.handleSelectChange(v)}
