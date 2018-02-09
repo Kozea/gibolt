@@ -14,7 +14,11 @@ import {
   setLoading,
   setParams,
 } from '../actions'
-import { submitReport, updateReportsList } from '../actions/meetings'
+import {
+  fetchCircleAgendaIssues,
+  submitReport,
+  updateReportsList,
+} from '../actions/meetings'
 import {
   fetchCircleItems,
   fetchCircleMilestonesAndIssues,
@@ -51,16 +55,23 @@ class MeetingsReportCreation extends React.Component {
       nextProps.params.meeting_name !== this.props.params.meeting_name
     ) {
       if (nextProps.circles.results.length > 0) {
+        const crcl =
+          nextProps.circles.results.filter(
+            circle => circle.circle_id === nextProps.params.circle_id
+          ).length > 0
+            ? nextProps.circles.results.filter(
+                circle => circle.circle_id === nextProps.params.circle_id
+              )[0]
+            : {}
         this.setState({
-          selectedCircle:
-            nextProps.circles.results.filter(
-              circle => circle.circle_id === nextProps.params.circle_id
-            ).length > 0
-              ? nextProps.circles.results.filter(
-                  circle => circle.circle_id === nextProps.params.circle_id
-                )[0]
-              : {},
+          selectedCircle: crcl,
         })
+        if (crcl.circle_name && nextProps.params.meeting_name !== '') {
+          this.props.getAgendaIssues(
+            crcl.circle_name,
+            nextProps.params.meeting_name
+          )
+        }
       }
       if (nextProps.params.meeting_name === 'Triage') {
         this.props.getMilestonesAndItems(nextProps.params.circle_id)
@@ -461,6 +472,10 @@ export default withRouter(
         dispatch(setLoading('issues'))
         dispatch(fetchCircleMilestonesAndIssues(circleId))
         dispatch(fetchCircleItems(circleId))
+      },
+      getAgendaIssues: (circleId, meetingType) => {
+        dispatch(setLoading('issues'))
+        dispatch(fetchCircleAgendaIssues(circleId, meetingType))
       },
       onGoBack: history => {
         dispatch(delMarkdown())
