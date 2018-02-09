@@ -26,6 +26,7 @@ import {
 import { block, connect, sortUsers } from '../../utils'
 import Loading from './../Loading'
 import MarkdownEditor from './../MarkdownEditor'
+import ReportAgenda from './ReportAgenda'
 import ReportItems from './ReportItems'
 import ReportProjects from './ReportProjects'
 
@@ -91,6 +92,7 @@ class MeetingsReportCreation extends React.Component {
 
   render() {
     const {
+      agendaIssues,
       circleMilestones,
       circles,
       errors,
@@ -231,6 +233,12 @@ class MeetingsReportCreation extends React.Component {
                       />
                     </span>
                   )}
+                  {(params.meeting_name === 'Triage' ||
+                    params.meeting_name === 'Gouvernance') && (
+                    <span>
+                      <ReportAgenda issues={agendaIssues} />
+                    </span>
+                  )}
                   <h3>Report content:</h3>
                   <MarkdownEditor />
                 </div>
@@ -258,6 +266,7 @@ class MeetingsReportCreation extends React.Component {
 export default withRouter(
   connect(
     state => ({
+      agendaIssues: state.issues.results.agenda,
       circleMilestones: state.circleMilestones.results,
       circles: state.circles,
       errors: {
@@ -322,7 +331,7 @@ export default withRouter(
         dispatch(fetchResults('meetings'))
       },
       updateMarkdown: () => {
-        dispatch(checkMarkdown('### Ordre du jour:'))
+        dispatch(checkMarkdown(''))
       },
     })
   )(MeetingsReportCreation)

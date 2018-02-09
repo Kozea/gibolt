@@ -126,7 +126,7 @@ export default function ReportProjects(props) {
               <input
                 className="largeInput"
                 id="milestones"
-                name={milestone.milestone_title}
+                name={`${milestone.repo_name} - ${milestone.milestone_title}`}
               />
             </li>
           ))}
