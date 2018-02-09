@@ -38,7 +38,11 @@ function Presets({ location, user }) {
   const query = parse(location.search)
   return (
     <header className={b()}>
-      <h1 className={b('title')}>Gibolt</h1>
+      <h1 className={b('title')}>
+        <a href="" className={b('ttl')}>
+          Gibolt
+        </a>
+      </h1>
       <nav>
         <ul className={b('nav')}>
           <Preset
