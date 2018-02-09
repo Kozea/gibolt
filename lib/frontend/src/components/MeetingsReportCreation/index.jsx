@@ -13,21 +13,21 @@ import {
   goBack,
   setLoading,
   setParams,
-} from '../actions'
+} from '../../actions'
 import {
   fetchCircleAgendaIssues,
   submitReport,
   updateReportsList,
-} from '../actions/meetings'
+} from '../../actions/meetings'
 import {
   fetchCircleItems,
   fetchCircleMilestonesAndIssues,
   expandMilestone,
-} from '../actions/milestones'
-import { block, connect, sortUsers } from '../utils'
-import Loading from './Loading'
-import MarkdownEditor from './MarkdownEditor'
-import Progress from './Progress'
+} from '../../actions/milestones'
+import { block, connect, sortUsers } from '../../utils'
+import Loading from './../Loading'
+import MarkdownEditor from './../MarkdownEditor'
+import Progress from './../Progress'
 
 const b = block('MeetingsReportCreation')
 
