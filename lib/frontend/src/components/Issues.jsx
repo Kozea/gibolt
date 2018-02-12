@@ -2,15 +2,15 @@ import './Issues.sass'
 
 import { stringify } from 'query-string'
 import React from 'react'
+import ReactModal from 'react-modal'
 import { Link } from 'react-router-dom'
 
 import { setLoading } from '../actions'
 import {
   fetchIssues,
-  getAndToggleCommentsExpanded,
   setIssuesSelectness,
+  setModal,
   updateIssues,
-  toggleExpanded,
   toggleIssue,
 } from '../actions/issues'
 import {
@@ -25,6 +25,7 @@ import {
   sortIssues,
 } from '../utils'
 import Issue from './Issue'
+import IssueDetail from './IssueDetail'
 import Loading from './Loading'
 import Progress from './Progress'
 
@@ -44,6 +45,7 @@ const b = block('Issues')
 class Issues extends React.Component {
   componentDidMount() {
     this.props.sync()
+    ReactModal.setAppElement('#root')
   }
 
   componentWillReceiveProps(nextProps) {
@@ -63,10 +65,11 @@ class Issues extends React.Component {
       loading,
       grouper,
       error,
+      modal,
+      onModalClose,
+      onModalDisplay,
       onToggleSelected,
       onToggleGrouper,
-      onToggleExpanded,
-      onToggleCommentsExpanded,
       onChangeTickets,
     } = this.props
 
@@ -100,6 +103,20 @@ class Issues extends React.Component {
           />
           <Progress val={closedLen} total={labelFilteredIssues.length} />
         </h1>
+        <ReactModal
+          className={b('modal')}
+          overlayClassName={b('modal-overlay')}
+          isOpen={!!modal.display}
+          onRequestClose={() => onModalClose()}
+          shouldCloseOnOverlayClick
+        >
+          <IssueDetail
+            issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
+          />
+          <button type="submit" onClick={onModalClose}>
+            Close
+          </button>
+        </ReactModal>
         {loading && <Loading />}
         {error && (
           <article className={b('group', { error: true })}>
@@ -191,8 +208,7 @@ class Issues extends React.Component {
                   nb_comments={issue.nb_comments}
                   comments={issue.comments}
                   onBoxChange={() => onToggleSelected(issue.ticket_id)}
-                  onClick={() => onToggleExpanded(issue.ticket_id)}
-                  onClickComments={() => onToggleCommentsExpanded(issue)}
+                  onModalDisplay={() => onModalDisplay(issue.ticket_id)}
                 />
               ))}
             </ul>
@@ -235,17 +251,18 @@ export default connect(
       grouper: grouperFromState(state),
       issuesState: issuesStateFromState(state),
       error: state.issues.error,
+      modal: state.modal,
     }
   },
   dispatch => ({
+    onModalClose: () => {
+      dispatch(setModal(false, null))
+    },
+    onModalDisplay: issueId => {
+      dispatch(setModal(true, issueId))
+    },
     onToggleSelected: issueId => {
       dispatch(toggleIssue(issueId))
-    },
-    onToggleExpanded: issueId => {
-      dispatch(toggleExpanded(issueId))
-    },
-    onToggleCommentsExpanded: issue => {
-      dispatch(getAndToggleCommentsExpanded(issue))
     },
     onToggleGrouper: (issuesId, isSelected) => {
       dispatch(setIssuesSelectness(issuesId, isSelected))

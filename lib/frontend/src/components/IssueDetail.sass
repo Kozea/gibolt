@@ -1,0 +1,86 @@
+@import ../vars
+
+.IssueDetail
+  flex: 1
+  margin-left: 1em
+  margin-right: .5em
+  overflow: auto
+  position: relative
+
+  &__avatar
+    border-radius: 15px
+    margin-left: .5em
+    margin-right: .5em
+    max-height: 30px
+    vertical-align: middle
+
+  &__bullet
+    background-color: #000
+    border-radius: 0.25em
+    border-width: 0.25em
+    display: inline-block
+    font-size: 0.9em
+    height: 0.5em
+    margin: 0 0.5em
+    vertical-align: middle
+    width: 0.5em
+
+  &__comment
+    background: white
+    font-size: .9em
+    margin: 1em .5em
+    padding: .1em .5em
+
+  &__commentDetail
+    font-size: .9em
+    margin: .5em
+    padding: .1em .5em
+
+  &__content
+    background: white
+    font-size: .9em
+    margin: .5em
+    padding: .1em .5em
+
+  &__infos
+    align-items: center
+    color: #6A6A6A
+    display: flex
+    font-size: .9em
+    width: 100%
+
+  &__label
+    color: #6A6A6A
+    font-size: .9em
+    margin: 0 0.3em
+
+  &__owner
+    color: #6A6A6A
+    font-size: .8em
+
+  &__title
+    display: block
+    font-size: 1.2em
+    margin-bottom: 0.25em
+    padding-top: .5em
+
+  &--pull-request &__title::after
+    border-radius: 1.5em
+    content: "PR"
+    display: inline-block
+    font-size: 0.5em
+    margin-left: 0.5em
+    vertical-align: top
+
+  img
+    max-width: 100%
+
+  #updateLabelForm
+    align-items: center
+    display: flex
+    max-width: 100%
+
+    .Select-control
+      margin-left: .5em
+      max-width: 100%
+      width: 30em
