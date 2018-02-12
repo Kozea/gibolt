@@ -1,11 +1,10 @@
 import './IssueCreationDetail.sass'
 
-import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { fetchResults, goBack, setLoading, setParams } from '../actions'
+import { fetchResults, goBack, setLoading } from '../actions'
 import { setModal } from '../actions/issues'
 import {
   changeMilestoneSelect,
@@ -22,8 +21,7 @@ const b = block('IssueCreationDetail')
 
 class IssueCreationDetail extends React.Component {
   componentDidMount() {
-    const search = parse(this.props.location.search)
-    this.props.sync(search)
+    this.props.sync(this.props.params)
   }
 
   componentDidUpdate() {
@@ -245,19 +243,13 @@ export default withRouter(
         dispatch(submitIssue(event, history))
         dispatch(setModal(false, false, null))
       },
-      sync: locationSearch => {
-        dispatch(setParams(locationSearch))
+      sync: params => {
         dispatch(setLoading('circles'))
         dispatch(fetchResults('circles'))
-        if (
-          locationSearch.grouper === 'milestone' ||
-          locationSearch.grouper === 'project'
-        ) {
-          dispatch(changeMilestoneSelect(locationSearch.group.split(' ⦔ ')[0]))
+        if (params.grouper === 'milestone' || params.grouper === 'project') {
+          dispatch(changeMilestoneSelect(params.group.split(' ⦔ ')[0]))
           dispatch(setLoading('repository'))
-          dispatch(
-            fetchRepositoryWithoutLabels(locationSearch.group.split(' ⦔ ')[0])
-          )
+          dispatch(fetchRepositoryWithoutLabels(params.group.split(' ⦔ ')[0]))
         } else {
           dispatch(setLoading('repositories'))
           dispatch(fetchResults('repositories'))

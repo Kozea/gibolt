@@ -1,11 +1,9 @@
 import './Issues.sass'
 
-import { stringify } from 'query-string'
 import React from 'react'
 import ReactModal from 'react-modal'
-import { Link } from 'react-router-dom'
 
-import { setLoading } from '../actions'
+import { setLoading, setParams } from '../actions'
 import {
   fetchIssues,
   setIssuesSelectness,
@@ -166,23 +164,12 @@ class Issues extends React.Component {
                 (grouper === 'milestone' &&
                   (issues[0].milestone_state === 'open' ||
                     group.split(' ⦔ ')[1] === 'No milestone'))) && (
-                <Link
-                  className={b('link')}
-                  to={{
-                    pathname: '/createIssue',
-                    search:
-                      grouper === 'milestone'
-                        ? stringify({
-                            grouper,
-                            group: id.split('|')[1]
-                              ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}` // eslint-disable-line max-len
-                              : group,
-                          })
-                        : stringify({ grouper, group }),
-                  }}
+                <button
+                  className={b('newTicket')}
+                  onClick={() => onModalCreation(grouper, group, id)}
                 >
-                  <button className={b('newTicket')}>Create issue</button>
-                </Link>
+                  Create issue
+                </button>
               )}
               {issuesState === 'all' &&
                 grouper !== 'state' && (
@@ -261,7 +248,17 @@ export default connect(
     onModalClose: () => {
       dispatch(setModal(false, false, null))
     },
-    onModalCreation: () => {
+    onModalCreation: (grouper = null, group = null, id = null) => {
+      const params =
+        grouper === 'milestone'
+          ? {
+              grouper,
+              group: id.split('|')[1]
+                ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}`
+                : group,
+            }
+          : { grouper, group }
+      dispatch(setParams(params))
       dispatch(setModal(true, true, null))
     },
     onModalDisplay: issueId => {
