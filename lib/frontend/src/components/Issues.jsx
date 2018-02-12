@@ -111,15 +111,13 @@ class Issues extends React.Component {
           shouldCloseOnOverlayClick
         >
           {modal.creation ? (
-            <IssueCreationDetail />
+            <IssueCreationDetail onModalClose={onModalClose} />
           ) : (
             <span>
               <IssueDetail
                 issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
+                onModalClose={onModalClose}
               />
-              <button type="submit" onClick={onModalClose}>
-                Close
-              </button>
             </span>
           )}
         </ReactModal>

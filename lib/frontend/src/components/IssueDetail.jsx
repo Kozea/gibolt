@@ -38,6 +38,7 @@ class IssueDetail extends React.Component {
     const {
       issue,
       labels,
+      onModalClose,
       onToggleCommentsExpanded,
       onUpdateIssueLabels,
     } = this.props
@@ -180,6 +181,9 @@ class IssueDetail extends React.Component {
               )}
             </div>
           )}
+          <button type="submit" onClick={onModalClose}>
+            Close
+          </button>
         </span>
       </section>
     )

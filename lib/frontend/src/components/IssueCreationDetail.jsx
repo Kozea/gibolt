@@ -232,9 +232,6 @@ export default withRouter(
       onGoBack: history => {
         dispatch(goBack(history))
       },
-      onModalClose: () => {
-        dispatch(setModal(false, false, null))
-      },
       onProjectChange: repoName => {
         dispatch(changeMilestoneSelect(repoName))
       },
