@@ -164,7 +164,7 @@ class IssueDetail extends React.Component {
                         />{' '}
                         {format(
                           new Date(comment.updated_at),
-                          'DD/MM/YYYY HH:MM:ss'
+                          'DD/MM/YYYY HH:mm:ss'
                         )}
                       </span>
                       <ReactMarkdown

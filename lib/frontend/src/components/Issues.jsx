@@ -25,6 +25,7 @@ import {
   sortIssues,
 } from '../utils'
 import Issue from './Issue'
+import IssueCreationDetail from './IssueCreationDetail'
 import IssueDetail from './IssueDetail'
 import Loading from './Loading'
 import Progress from './Progress'
@@ -67,6 +68,7 @@ class Issues extends React.Component {
       error,
       modal,
       onModalClose,
+      onModalCreation,
       onModalDisplay,
       onToggleSelected,
       onToggleGrouper,
@@ -110,12 +112,18 @@ class Issues extends React.Component {
           onRequestClose={() => onModalClose()}
           shouldCloseOnOverlayClick
         >
-          <IssueDetail
-            issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
-          />
-          <button type="submit" onClick={onModalClose}>
-            Close
-          </button>
+          {modal.creation ? (
+            <IssueCreationDetail />
+          ) : (
+            <span>
+              <IssueDetail
+                issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
+              />
+              <button type="submit" onClick={onModalClose}>
+                Close
+              </button>
+            </span>
+          )}
         </ReactModal>
         {loading && <Loading />}
         {error && (
@@ -224,14 +232,9 @@ class Issues extends React.Component {
           <button type="submit" onClick={() => onChangeTickets('close')}>
             Close issue
           </button>
-          <Link
-            className={b('link')}
-            to={{
-              pathname: '/createIssue',
-            }}
-          >
-            <button type="submit">Create issue</button>
-          </Link>
+          <button type="submit" onClick={() => onModalCreation()}>
+            Create issue
+          </button>
         </article>
       </section>
     )
@@ -256,10 +259,13 @@ export default connect(
   },
   dispatch => ({
     onModalClose: () => {
-      dispatch(setModal(false, null))
+      dispatch(setModal(false, false, null))
+    },
+    onModalCreation: () => {
+      dispatch(setModal(true, true, null))
     },
     onModalDisplay: issueId => {
-      dispatch(setModal(true, issueId))
+      dispatch(setModal(true, false, issueId))
     },
     onToggleSelected: issueId => {
       dispatch(toggleIssue(issueId))

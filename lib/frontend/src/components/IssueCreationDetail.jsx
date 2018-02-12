@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
+import { setModal } from '../actions/issues'
 import {
   changeMilestoneSelect,
   changeRolesSelect,
@@ -71,7 +72,7 @@ class IssueCreationDetail extends React.Component {
       labels,
       loading,
       onCircleChange,
-      onGoBack,
+      onModalClose,
       onProjectChange,
       onTitleChange,
       onSubmit,
@@ -201,7 +202,7 @@ class IssueCreationDetail extends React.Component {
             >
               Create
             </button>
-            <button type="submit" onClick={() => onGoBack(history)}>
+            <button type="submit" onClick={() => onModalClose()}>
               Cancel
             </button>
           </article>
@@ -233,12 +234,16 @@ export default withRouter(
       onGoBack: history => {
         dispatch(goBack(history))
       },
+      onModalClose: () => {
+        dispatch(setModal(false, false, null))
+      },
       onProjectChange: repoName => {
         dispatch(changeMilestoneSelect(repoName))
       },
       onSubmit: (event, history) => {
         event.preventDefault()
         dispatch(submitIssue(event, history))
+        dispatch(setModal(false, false, null))
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
