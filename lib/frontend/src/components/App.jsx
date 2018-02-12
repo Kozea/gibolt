@@ -8,7 +8,6 @@ import { block } from '../utils'
 import Admin from './Admin'
 import Circle from './Circle'
 import Circles from './Circles'
-import IssueCreation from './IssueCreation'
 import IssuesDashboard from './IssuesDashboard'
 import Meeting from './Meeting'
 import Meetings from './Meetings'
@@ -47,7 +46,6 @@ export default class App extends Component {
           <Route path="/roles" component={Roles} />
           <Route path="/role" component={Role} />
           <Route path="/createRole" component={CreateRole} />
-          <Route path="/createIssue" component={IssueCreation} />
           <Route path="/meeting" component={Meeting} />
           <Route path="/meetings" component={Meetings} />
           <Route path="/createReport" component={MeetingsReportCreation} />
