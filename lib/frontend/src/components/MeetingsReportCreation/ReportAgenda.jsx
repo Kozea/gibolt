@@ -22,8 +22,14 @@ export default function ReportAgenda(props) {
               </a>{' '}
               {issue.ticket_title},
               <span className={b('lighter')}>
-                closed: {format(new Date(issue.closed_at), 'DD/MM/YYYY HH:mm')}
-                , last update:{' '}
+                {issue.closed_at && (
+                  <span>
+                    closed:{' '}
+                    {format(new Date(issue.closed_at), 'DD/MM/YYYY HH:mm')}
+                    {', '}
+                  </span>
+                )}
+                last update:{' '}
                 {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm')}
               </span>
               {issue.assignees.map(user => (
