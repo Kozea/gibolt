@@ -241,8 +241,6 @@ export default withRouter(
         dispatch(setModal(false, false, null))
       },
       sync: params => {
-        dispatch(setLoading('circles'))
-        dispatch(fetchResults('circles'))
         if (params.grouper === 'milestone' || params.grouper === 'project') {
           dispatch(changeMilestoneSelect(params.group.split(' ⦔ ')[0]))
           dispatch(setLoading('repository'))

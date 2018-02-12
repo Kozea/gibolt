@@ -42,7 +42,7 @@ class IssueDetail extends React.Component {
       onToggleCommentsExpanded,
       onUpdateIssueLabels,
     } = this.props
-    const { areLabelsInEdtion } = this.state
+    const { areLabelsInEdtion, isInEdition } = this.state
     const options = []
     const issuesLabels = []
     Object.keys(labels).map(key =>
@@ -72,12 +72,18 @@ class IssueDetail extends React.Component {
             'pull-request': issue.pull_request !== null,
           })}
         >
-          <span className={b('title')}>
+          <span className={b('ttl')}>
             {' '}
             <a href={issue.html_url} target="_blank">
               #{issue.ticket_number}
             </a>{' '}
-            {issue.ticket_title}
+            {isInEdition ? (
+              <form>
+                <input defaultValue={issue.ticket_title} />
+              </form>
+            ) : (
+              <span className={b('title')}>{issue.ticket_title}</span>
+            )}
             {issue.assignees.map(user => (
               <img
                 key={user.user_id}
@@ -87,10 +93,13 @@ class IssueDetail extends React.Component {
                 title={user.user_name}
               />
             ))}
+            <span onClick={() => this.updateEditionStatus(true)}>
+              <i className="fa fa-edit" />
+            </span>
           </span>
           <span className={b('owner')}>
             {issue.user.user_name} opened this issue, last update:{' '}
-            {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:MM:ss')}
+            {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm:ss')}
           </span>
           <br />
           <span className={b('infos')}>
