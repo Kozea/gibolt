@@ -2,10 +2,8 @@ import './IssueCreationDetail.sass'
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { withRouter } from 'react-router-dom'
 
-import { fetchResults, goBack, setLoading } from '../actions'
-import { setModal } from '../actions/issues'
+import { fetchResults, setLoading } from '../actions'
 import {
   changeMilestoneSelect,
   changeRolesSelect,
@@ -65,7 +63,6 @@ class IssueCreationDetail extends React.Component {
     const {
       circles,
       error,
-      history,
       issueForm,
       labels,
       loading,
@@ -195,7 +192,7 @@ class IssueCreationDetail extends React.Component {
           <article className={b('action')}>
             <button
               type="submit"
-              onClick={event => onSubmit(event, history)}
+              onClick={event => onSubmit(event)}
               disabled={issueForm.project === '' || issueForm.title === ''}
             >
               Create
@@ -210,46 +207,40 @@ class IssueCreationDetail extends React.Component {
   }
 }
 
-export default withRouter(
-  connect(
-    state => ({
-      circles: state.circles.results,
-      error: state.issueForm.results.error,
-      issueForm: state.issueForm.results,
-      labels: state.labels.results.priority,
-      loading: state.circle.loading,
-      params: state.params,
-      repository: state.repository.results.repository,
-      repositories: state.repositories.results.repositories,
-    }),
-    dispatch => ({
-      onTitleChange: event => {
-        dispatch(updateTitle(event.target.value))
-      },
-      onCircleChange: circleId => {
-        dispatch(changeRolesSelect(circleId))
-      },
-      onGoBack: history => {
-        dispatch(goBack(history))
-      },
-      onProjectChange: repoName => {
-        dispatch(changeMilestoneSelect(repoName))
-      },
-      onSubmit: (event, history) => {
-        event.preventDefault()
-        dispatch(submitIssue(event, history))
-        dispatch(setModal(false, false, null))
-      },
-      sync: params => {
-        if (params.grouper === 'milestone' || params.grouper === 'project') {
-          dispatch(changeMilestoneSelect(params.group.split(' ⦔ ')[0]))
-          dispatch(setLoading('repository'))
-          dispatch(fetchRepositoryWithoutLabels(params.group.split(' ⦔ ')[0]))
-        } else {
-          dispatch(setLoading('repositories'))
-          dispatch(fetchResults('repositories'))
-        }
-      },
-    })
-  )(IssueCreationDetail)
-)
+export default connect(
+  state => ({
+    circles: state.circles.results,
+    error: state.issueForm.results.error,
+    issueForm: state.issueForm.results,
+    labels: state.labels.results.priority,
+    loading: state.circle.loading,
+    params: state.params,
+    repository: state.repository.results.repository,
+    repositories: state.repositories.results.repositories,
+  }),
+  dispatch => ({
+    onTitleChange: event => {
+      dispatch(updateTitle(event.target.value))
+    },
+    onCircleChange: circleId => {
+      dispatch(changeRolesSelect(circleId))
+    },
+    onProjectChange: repoName => {
+      dispatch(changeMilestoneSelect(repoName))
+    },
+    onSubmit: event => {
+      event.preventDefault()
+      dispatch(submitIssue(event))
+    },
+    sync: params => {
+      if (params.grouper === 'milestone' || params.grouper === 'project') {
+        dispatch(changeMilestoneSelect(params.group.split(' ⦔ ')[0]))
+        dispatch(setLoading('repository'))
+        dispatch(fetchRepositoryWithoutLabels(params.group.split(' ⦔ ')[0]))
+      } else {
+        dispatch(setLoading('repositories'))
+        dispatch(fetchResults('repositories'))
+      }
+    },
+  })
+)(IssueCreationDetail)
