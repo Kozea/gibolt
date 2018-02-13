@@ -2,6 +2,7 @@ import './IssueDetail.sass'
 
 import { format } from 'date-fns'
 import React from 'react'
+import Octicon from 'react-component-octicons'
 
 import {
   getAndToggleCommentsExpanded,
@@ -97,12 +98,39 @@ class IssueDetail extends React.Component {
               <i className="fa fa-edit" />
             </span>
           </span>
-          <span className={b('owner')}>
+          <span className={b('infos')}>
+            {issue.pull_request === null ? (
+              issue.state === 'closed' ? (
+                <Octicon
+                  className="githubIcons"
+                  name="issue-closed"
+                  style={{ color: 'red' }}
+                />
+              ) : (
+                <Octicon
+                  className="githubIcons"
+                  name="issue-opened"
+                  style={{ color: 'green' }}
+                />
+              )
+            ) : issue.state === 'closed' ? (
+              <Octicon
+                className="githubIcons"
+                name="git-merge"
+                style={{ color: '#6f42c1' }}
+              />
+            ) : (
+              <Octicon
+                className="githubIcons"
+                name="git-pull-request"
+                style={{ color: 'green' }}
+              />
+            )}
             {issue.user.user_name} opened this issue, last update:{' '}
             {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm:ss')}
           </span>
-          <br />
           <span className={b('infos')}>
+            <Octicon name="repo" className="githubIcons" />
             {issue.repo_name}
             {areLabelsInEdtion ? (
               <form
@@ -150,6 +178,13 @@ class IssueDetail extends React.Component {
               </span>
             )}
           </span>
+          {issue.milestone_title && (
+            <span className={b('infos')}>
+              <br />
+              <Octicon name="milestone" className="githubIcons" />
+              {issue.milestone_title}
+            </span>
+          )}
           {issue.body && (
             <div className={b('content')}>
               <ReactMarkdown
