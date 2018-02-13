@@ -4,10 +4,7 @@ import { format } from 'date-fns'
 import React from 'react'
 import Octicon from 'react-component-octicons'
 
-import {
-  getAndToggleCommentsExpanded,
-  updateIssueLabels,
-} from '../actions/issues'
+import { getAndToggleCommentsExpanded, updateATicket } from '../actions/issues'
 import { block, connect } from '../utils'
 import IssueStatusIcon from './Utils/IssueStatusIcon'
 import LabelMultiSelect from './Utils/LabelMultiSelect'
@@ -19,7 +16,7 @@ class IssueDetail extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
-      isInEdition: false,
+      isInEdition: null,
       areLabelsInEdtion: false,
     }
   }
@@ -42,6 +39,7 @@ class IssueDetail extends React.Component {
       labels,
       onModalClose,
       onToggleCommentsExpanded,
+      onUpdateIssue,
       onUpdateIssueLabels,
     } = this.props
     const { areLabelsInEdtion, isInEdition } = this.state
@@ -79,14 +77,31 @@ class IssueDetail extends React.Component {
             <a href={issue.html_url} target="_blank">
               #{issue.ticket_number}
             </a>{' '}
-            {isInEdition ? (
-              <form>
-                <input defaultValue={issue.ticket_title} />
+            {isInEdition === 'title' ? (
+              <form
+                onSubmit={e => {
+                  e.preventDefault()
+                  onUpdateIssue({ title: e.target.titleInput.value }, issue)
+                  this.updateEditionStatus(null)
+                }}
+              >
+                <input
+                  name="titleInput"
+                  defaultValue={issue.ticket_title}
+                  className="Title"
+                />
+                <button type="submit">Update</button>
+                <button
+                  type="submit"
+                  onClick={() => this.updateEditionStatus(null)}
+                >
+                  Cancel
+                </button>
               </form>
             ) : (
               <span className={b('title')}>
                 {issue.ticket_title}{' '}
-                <span onClick={() => this.updateEditionStatus(true)}>
+                <span onClick={() => this.updateEditionStatus('title')}>
                   <i className="fa fa-pencil faTop" title="edit title" />
                 </span>
               </span>
@@ -222,6 +237,9 @@ export default connect(
     onToggleCommentsExpanded: issue => {
       dispatch(getAndToggleCommentsExpanded(issue))
     },
+    onUpdateIssue: (values, issue) => {
+      dispatch(updateATicket(issue, values))
+    },
     onUpdateIssueLabels: (event, issue, labels) => {
       const selectedLabels = []
       for (let i = 0; i < event.target.labelMultiSelect.length; i++) {
@@ -235,7 +253,7 @@ export default connect(
           selectedLabels.push(selectedLabel[0])
         }
       }
-      dispatch(updateIssueLabels(selectedLabels, issue))
+      dispatch(updateATicket(issue, { labels: selectedLabels }))
     },
   })
 )(IssueDetail)
