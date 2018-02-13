@@ -3,7 +3,7 @@ import './Issues.sass'
 import React from 'react'
 import ReactModal from 'react-modal'
 
-import { setLoading, setParams } from '../actions'
+import { fetchResults, setLoading, setParams } from '../actions'
 import {
   fetchIssues,
   setIssuesSelectness,
@@ -282,6 +282,8 @@ export default connect(
     sync: () => {
       dispatch(setLoading('issues'))
       dispatch(fetchIssues())
+      dispatch(setLoading('circles'))
+      dispatch(fetchResults('circles'))
     },
   })
 )(Issues)

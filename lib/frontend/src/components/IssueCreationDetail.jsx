@@ -9,6 +9,8 @@ import {
   changeRolesSelect,
   fetchRepositoryWithoutLabels,
   submitIssue,
+  updateCircle,
+  updateProject,
   updateTitle,
 } from '../actions/issueForm'
 import { block, connect, sortRepos } from '../utils'
@@ -98,7 +100,7 @@ class IssueCreationDetail extends React.Component {
         )}
         <form onSubmit={event => event.preventDefault()}>
           <label>
-            Project (mandatory):
+            Project (required):
             <select
               id="project"
               name="project"
@@ -142,6 +144,7 @@ class IssueCreationDetail extends React.Component {
               id="circle"
               name="circle"
               onChange={event => onCircleChange(event.target.value)}
+              value={issueForm.circleId}
             >
               <option value="" />
               {circles.map(circle => (
@@ -176,7 +179,7 @@ class IssueCreationDetail extends React.Component {
           </label>
           <br />
           <label>
-            Title (mandatory):<br />
+            Title (required):<br />
             <input
               id="title"
               name="title"
@@ -213,30 +216,37 @@ export default connect(
     error: state.issueForm.results.error,
     issueForm: state.issueForm.results,
     labels: state.labels.results.priority,
-    loading: state.circle.loading,
+    loading: state.repositories.loading,
     params: state.params,
     repository: state.repository.results.repository,
     repositories: state.repositories.results.repositories,
   }),
   dispatch => ({
-    onTitleChange: event => {
-      dispatch(updateTitle(event.target.value))
-    },
     onCircleChange: circleId => {
+      dispatch(updateCircle(circleId.toString()))
       dispatch(changeRolesSelect(circleId))
     },
     onProjectChange: repoName => {
+      dispatch(updateProject(repoName))
       dispatch(changeMilestoneSelect(repoName))
     },
     onSubmit: event => {
       event.preventDefault()
       dispatch(submitIssue(event))
     },
+    onTitleChange: event => {
+      dispatch(updateTitle(event.target.value))
+    },
     sync: params => {
+      const repoName = params.group
+        ? params.group.split(' ⦔ ')[0].toString()
+        : ''
+      dispatch(updateCircle(params.circle_id))
+      dispatch(updateProject(repoName))
       if (params.grouper === 'milestone' || params.grouper === 'project') {
-        dispatch(changeMilestoneSelect(params.group.split(' ⦔ ')[0]))
+        dispatch(changeMilestoneSelect(repoName))
         dispatch(setLoading('repository'))
-        dispatch(fetchRepositoryWithoutLabels(params.group.split(' ⦔ ')[0]))
+        dispatch(fetchRepositoryWithoutLabels(repoName))
       } else {
         dispatch(setLoading('repositories'))
         dispatch(fetchResults('repositories'))
