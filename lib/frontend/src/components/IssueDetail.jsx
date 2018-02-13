@@ -72,8 +72,10 @@ class IssueDetail extends React.Component {
             'pull-request': issue.pull_request !== null,
           })}
         >
+          <span className="close" onClick={onModalClose}>
+            &times;
+          </span>
           <span className={b('ttl')}>
-            {' '}
             <a href={issue.html_url} target="_blank">
               #{issue.ticket_number}
             </a>{' '}
@@ -207,7 +209,6 @@ class IssueDetail extends React.Component {
             <div className={b('comment')}>
               <span className={b('infos')}>
                 <img
-                  key={issue.user.user_id}
                   className={b('avatar')}
                   src={issue.user.avatar_url}
                   alt="avatar"
@@ -256,10 +257,18 @@ class IssueDetail extends React.Component {
               )}
             </div>
           )}
-          <button type="submit" onClick={onModalClose}>
-            Close
-          </button>
         </span>
+        <button
+          type="submit"
+          onClick={() =>
+            onUpdateIssue(
+              { state: issue.state === 'open' ? 'closed' : 'open' },
+              issue
+            )
+          }
+        >
+          {issue.state === 'open' ? 'close issue' : 'reopen issue'}
+        </button>
       </section>
     )
   }
