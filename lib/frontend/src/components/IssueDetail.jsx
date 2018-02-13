@@ -84,7 +84,12 @@ class IssueDetail extends React.Component {
                 <input defaultValue={issue.ticket_title} />
               </form>
             ) : (
-              <span className={b('title')}>{issue.ticket_title}</span>
+              <span className={b('title')}>
+                {issue.ticket_title}{' '}
+                <span onClick={() => this.updateEditionStatus(true)}>
+                  <i className="fa fa-pencil faTop" title="edit title" />
+                </span>
+              </span>
             )}
             {issue.assignees.map(user => (
               <img
@@ -95,14 +100,15 @@ class IssueDetail extends React.Component {
                 title={user.user_name}
               />
             ))}
-            <span onClick={() => this.updateEditionStatus(true)}>
-              <i className="fa fa-edit" />
-            </span>
+            <i className="fa fa-user faTop" title="modify assignees" />
           </span>
           <span className={b('infos')}>
             <IssueStatusIcon issue={issue} />
             {issue.user.user_name} opened this issue, last update:{' '}
             {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm:ss')}
+            {` · ${issue.nb_comments} comment${
+              issue.nb_comments === 1 ? '' : 's'
+            }`}
           </span>
           <span className={b('infos')}>
             <Octicon name="repo" className="githubIcons" />
@@ -157,7 +163,7 @@ class IssueDetail extends React.Component {
             <span className={b('infos')}>
               <br />
               <Octicon name="milestone" className="githubIcons" />
-              {issue.milestone_title}
+              {issue.milestone_title} <i className="fa fa-cog" />
             </span>
           )}
           {issue.body && (
