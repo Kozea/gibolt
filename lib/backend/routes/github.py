@@ -403,7 +403,8 @@ def list_tickets():
                  'body': ticket['body'],
                  'html_url': ticket['html_url'],
                  'user': {'user_id': ticket['user']['id'],
-                          'user_name': ticket['user']['login']},
+                          'user_name': ticket['user']['login'],
+                          'avatar_url': ticket['user']['avatar_url']},
                  'state': ticket['state'],
                  'milestone_id': (
                  ticket['milestone']['id'] if ticket['milestone'] else None),

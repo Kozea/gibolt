@@ -174,18 +174,53 @@ class IssueDetail extends React.Component {
               </span>
             )}
           </span>
-          {issue.milestone_title && (
-            <span className={b('infos')}>
-              <br />
-              <Octicon name="milestone" className="githubIcons" />
-              {issue.milestone_title} <i className="fa fa-cog" />
-            </span>
-          )}
-          {issue.body && (
-            <div className={b('content')}>
+          <span className={b('infos')}>
+            <br />
+            <Octicon name="milestone" className="githubIcons" />
+            {issue.milestone_title
+              ? issue.milestone_title
+              : 'No milestone defined'}
+            <i className="fa fa-cog" />
+          </span>
+          {isInEdition === 'body' ? (
+            <form
+              onSubmit={e => {
+                e.preventDefault()
+                onUpdateIssue({ body: e.target.bodyInput.value }, issue)
+                this.updateEditionStatus(null)
+              }}
+            >
+              <input
+                name="bodyInput"
+                defaultValue={issue.body}
+                className="Title"
+              />
+              <button type="submit">Update</button>
+              <button
+                type="submit"
+                onClick={() => this.updateEditionStatus(null)}
+              >
+                Cancel
+              </button>
+            </form>
+          ) : (
+            <div className={b('comment')}>
+              <span className={b('infos')}>
+                <img
+                  key={issue.user.user_id}
+                  className={b('avatar')}
+                  src={issue.user.avatar_url}
+                  alt="avatar"
+                  title={issue.user.user_name}
+                />{' '}
+                {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm:ss')}
+                <span onClick={() => this.updateEditionStatus('body')}>
+                  <i className="fa fa-pencil faTop" title="edit body" />
+                </span>
+              </span>
               <ReactMarkdown
-                className={b('body').toString()}
-                source={issue.body}
+                className={b('commentDetail')}
+                source={issue.body ? issue.body : 'No description provided.'}
               />
             </div>
           )}
