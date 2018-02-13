@@ -4,10 +4,12 @@ import { format } from 'date-fns'
 import React from 'react'
 import Octicon from 'react-component-octicons'
 
+import { checkMarkdown } from '../actions'
 import { getAndToggleCommentsExpanded, updateATicket } from '../actions/issues'
 import { block, connect } from '../utils'
 import IssueStatusIcon from './Utils/IssueStatusIcon'
 import LabelMultiSelect from './Utils/LabelMultiSelect'
+import MarkdownEditor from './Utils/MarkdownEditor'
 
 const b = block('IssueDetail')
 var ReactMarkdown = require('react-markdown')
@@ -27,12 +29,6 @@ class IssueDetail extends React.Component {
     })
   }
 
-  updateLabelsEditionStatus(value) {
-    this.setState({
-      areLabelsInEdtion: value,
-    })
-  }
-
   render() {
     const {
       issue,
@@ -41,8 +37,9 @@ class IssueDetail extends React.Component {
       onToggleCommentsExpanded,
       onUpdateIssue,
       onUpdateIssueLabels,
+      updateMarkdown,
     } = this.props
-    const { areLabelsInEdtion, isInEdition } = this.state
+    const { isInEdition } = this.state
     const options = []
     const issuesLabels = []
     Object.keys(labels).map(key =>
@@ -101,8 +98,8 @@ class IssueDetail extends React.Component {
                 </button>
               </form>
             ) : (
-              <span className={b('title')}>
-                {issue.ticket_title}{' '}
+              <span>
+                <span className={b('title')}>{issue.ticket_title} </span>
                 <span onClick={() => this.updateEditionStatus('title')}>
                   <i className="fa fa-pencil faTop" title="edit title" />
                 </span>
@@ -130,13 +127,13 @@ class IssueDetail extends React.Component {
           <span className={b('infos')}>
             <Octicon name="repo" className="githubIcons" />
             {issue.repo_name}
-            {areLabelsInEdtion ? (
+            {isInEdition === 'labels' ? (
               <form
                 id="updateLabelForm"
                 onSubmit={e => {
                   e.preventDefault()
                   onUpdateIssueLabels(e, issue, options)
-                  this.updateLabelsEditionStatus(false)
+                  this.updateEditionStatus(null)
                 }}
               >
                 <LabelMultiSelect
@@ -148,15 +145,15 @@ class IssueDetail extends React.Component {
                 <button type="submit">Update</button>
                 <button
                   type="submit"
-                  onClick={() => this.updateLabelsEditionStatus(false)}
+                  onClick={() => this.updateEditionStatus(null)}
                 >
                   Cancel
                 </button>
               </form>
             ) : (
-              <span>
+              <span className={b('labels')}>
                 {issue.labels.length === 0 ? (
-                  ' - No Labels '
+                  '· No Labels '
                 ) : (
                   <span>
                     {issue.labels.map(label => (
@@ -170,7 +167,7 @@ class IssueDetail extends React.Component {
                     ))}
                   </span>
                 )}
-                <span onClick={() => this.updateLabelsEditionStatus(true)}>
+                <span onClick={() => this.updateEditionStatus('labels')}>
                   <i className="fa fa-cog" />
                 </span>
               </span>
@@ -188,15 +185,12 @@ class IssueDetail extends React.Component {
             <form
               onSubmit={e => {
                 e.preventDefault()
-                onUpdateIssue({ body: e.target.bodyInput.value }, issue)
+                onUpdateIssue({ body: e.target.body.value }, issue)
                 this.updateEditionStatus(null)
+                updateMarkdown('')
               }}
             >
-              <input
-                name="bodyInput"
-                defaultValue={issue.body}
-                className="Title"
-              />
+              <MarkdownEditor />
               <button type="submit">Update</button>
               <button
                 type="submit"
@@ -215,7 +209,12 @@ class IssueDetail extends React.Component {
                   title={issue.user.user_name}
                 />{' '}
                 {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm:ss')}
-                <span onClick={() => this.updateEditionStatus('body')}>
+                <span
+                  onClick={() => {
+                    this.updateEditionStatus('body')
+                    updateMarkdown(issue.body)
+                  }}
+                >
                   <i className="fa fa-pencil faTop" title="edit body" />
                 </span>
               </span>
@@ -225,39 +224,43 @@ class IssueDetail extends React.Component {
               />
             </div>
           )}
-          {issue.nb_comments > 0 && (
-            <div onClick={() => onToggleCommentsExpanded(issue)}>
-              {issue.comments_expanded ? (
-                <div>
-                  {issue.comments.map(comment => (
-                    <div className={b('comment')} key={comment.comment_id}>
-                      <span className={b('infos')}>
-                        <img
-                          key={comment.user.user_id}
-                          className={b('avatar')}
-                          src={comment.user.avatar_url}
-                          alt="avatar"
-                          title={comment.user.user_name}
-                        />{' '}
-                        {format(
-                          new Date(comment.updated_at),
-                          'DD/MM/YYYY HH:mm:ss'
-                        )}
-                      </span>
-                      <ReactMarkdown
-                        className={b('commentDetail')}
-                        source={comment.body}
-                      />
-                    </div>
-                  ))}
-                  <button type="submit">hide comments</button>
-                </div>
-              ) : (
-                <button type="submit">show comments</button>
-              )}
-            </div>
-          )}
+          {issue.nb_comments > 0 &&
+            issue.comments_expanded && (
+              <div>
+                {issue.comments.map(comment => (
+                  <div className={b('comment')} key={comment.comment_id}>
+                    <span className={b('infos')}>
+                      <img
+                        key={comment.user.user_id}
+                        className={b('avatar')}
+                        src={comment.user.avatar_url}
+                        alt="avatar"
+                        title={comment.user.user_name}
+                      />{' '}
+                      {format(
+                        new Date(comment.updated_at),
+                        'DD/MM/YYYY HH:mm:ss'
+                      )}
+                    </span>
+                    <ReactMarkdown
+                      className={b('commentDetail')}
+                      source={comment.body}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
         </span>
+
+        {issue.nb_comments > 0 && (
+          <span onClick={() => onToggleCommentsExpanded(issue)}>
+            {issue.comments_expanded ? (
+              <button type="submit">hide comments</button>
+            ) : (
+              <button type="submit">show comments</button>
+            )}
+          </span>
+        )}
         <button
           type="submit"
           onClick={() =>
@@ -298,6 +301,9 @@ export default connect(
         }
       }
       dispatch(updateATicket(issue, { labels: selectedLabels }))
+    },
+    updateMarkdown: value => {
+      dispatch(checkMarkdown(value))
     },
   })
 )(IssueDetail)
