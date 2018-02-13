@@ -16,7 +16,7 @@ import {
 import { block, connect } from '../../utils'
 import Items from './Items'
 import Loading from './../Loading'
-import MarkdownEditor from './../MarkdownEditor'
+import MarkdownEditor from './../Utils/MarkdownEditor'
 
 const b = block('Role')
 var ReactMarkdown = require('react-markdown')

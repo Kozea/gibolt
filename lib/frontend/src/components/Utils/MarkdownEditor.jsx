@@ -9,7 +9,7 @@ import draftToMarkdown from 'draftjs-to-markdown'
 import React from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 
-import { block, connect } from '../utils'
+import { block, connect } from '../../utils'
 
 const b = block('MarkdownEditor')
 

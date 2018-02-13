@@ -16,7 +16,7 @@ import {
 import { fetchReport, toggleEdition, updateReport } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
-import MarkdownEditor from './MarkdownEditor'
+import MarkdownEditor from './Utils/MarkdownEditor'
 
 var ReactMarkdown = require('react-markdown')
 

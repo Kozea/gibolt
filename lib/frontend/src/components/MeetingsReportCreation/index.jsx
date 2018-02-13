@@ -28,7 +28,7 @@ import {
 import { block, connect, sortUsers } from '../../utils'
 import IssueCreationDetail from './../IssueCreationDetail'
 import Loading from './../Loading'
-import MarkdownEditor from './../MarkdownEditor'
+import MarkdownEditor from './../Utils/MarkdownEditor'
 import ReportAgenda from './ReportAgenda'
 import ReportItems from './ReportItems'
 import ReportProjects from './ReportProjects'

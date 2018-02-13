@@ -15,7 +15,7 @@ import {
 } from '../actions/issueForm'
 import { block, connect, sortRepos } from '../utils'
 import Loading from './Loading'
-import MarkdownEditor from './MarkdownEditor'
+import MarkdownEditor from './Utils/MarkdownEditor'
 
 const b = block('IssueCreationDetail')
 
