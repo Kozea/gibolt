@@ -46,9 +46,11 @@ class MarkdownEditor extends React.Component {
               'blockType',
               'list',
               'link',
+              'image',
               'emoji',
               'history',
             ],
+            image: { previewImage: true },
             inline: {
               options: ['bold', 'italic', 'underline', 'monospace'],
             },

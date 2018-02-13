@@ -87,7 +87,7 @@ class IssueDetail extends React.Component {
                 <input
                   name="titleInput"
                   defaultValue={issue.ticket_title}
-                  className="Title"
+                  className="inputTitle"
                 />
                 <button type="submit">Update</button>
                 <button
@@ -251,27 +251,30 @@ class IssueDetail extends React.Component {
               </div>
             )}
         </span>
-
-        {issue.nb_comments > 0 && (
-          <span onClick={() => onToggleCommentsExpanded(issue)}>
-            {issue.comments_expanded ? (
-              <button type="submit">hide comments</button>
-            ) : (
-              <button type="submit">show comments</button>
+        {isInEdition === null && (
+          <span>
+            {issue.nb_comments > 0 && (
+              <span onClick={() => onToggleCommentsExpanded(issue)}>
+                {issue.comments_expanded ? (
+                  <button type="submit">hide comments</button>
+                ) : (
+                  <button type="submit">show comments</button>
+                )}
+              </span>
             )}
+            <button
+              type="submit"
+              onClick={() =>
+                onUpdateIssue(
+                  { state: issue.state === 'open' ? 'closed' : 'open' },
+                  issue
+                )
+              }
+            >
+              {issue.state === 'open' ? 'close issue' : 'reopen issue'}
+            </button>
           </span>
         )}
-        <button
-          type="submit"
-          onClick={() =>
-            onUpdateIssue(
-              { state: issue.state === 'open' ? 'closed' : 'open' },
-              issue
-            )
-          }
-        >
-          {issue.state === 'open' ? 'close issue' : 'reopen issue'}
-        </button>
       </section>
     )
   }
