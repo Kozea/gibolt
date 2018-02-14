@@ -5,6 +5,7 @@ import React from 'react'
 import Octicon from 'react-component-octicons'
 
 import { checkMarkdown } from '../actions'
+import { changeMilestoneSelect } from '../actions/issueForm'
 import { getAndToggleCommentsExpanded, updateATicket } from '../actions/issues'
 import { block, connect } from '../utils'
 import IssueStatusIcon from './Utils/IssueStatusIcon'
@@ -21,6 +22,7 @@ class IssueDetail extends React.Component {
       isInEdition: null,
       areLabelsInEdtion: false,
     }
+    this.props.getMilestones(this.props.issue.repo_name)
   }
 
   updateEditionStatus(value) {
@@ -33,6 +35,7 @@ class IssueDetail extends React.Component {
     const {
       issue,
       labels,
+      milestones,
       onModalClose,
       onToggleCommentsExpanded,
       onUpdateIssue,
@@ -91,7 +94,7 @@ class IssueDetail extends React.Component {
                 />
                 <button type="submit">Update</button>
                 <button
-                  type="submit"
+                  type="button"
                   onClick={() => this.updateEditionStatus(null)}
                 >
                   Cancel
@@ -144,7 +147,7 @@ class IssueDetail extends React.Component {
                 />
                 <button type="submit">Update</button>
                 <button
-                  type="submit"
+                  type="button"
                   onClick={() => this.updateEditionStatus(null)}
                 >
                   Cancel
@@ -176,10 +179,63 @@ class IssueDetail extends React.Component {
           <span className={b('infos')}>
             <br />
             <Octicon name="milestone" className="githubIcons" />
-            {issue.milestone_title
-              ? issue.milestone_title
-              : 'No milestone defined'}
-            <i className="fa fa-cog" />
+            {isInEdition === 'milestones' ? (
+              <form
+                id="updateMilestoneForm"
+                onSubmit={e => {
+                  e.preventDefault()
+                  onUpdateIssue(
+                    {
+                      milestone:
+                        e.target.milestone.value === ''
+                          ? null
+                          : e.target.milestone.value,
+                    },
+                    issue
+                  )
+                  this.updateEditionStatus(null)
+                }}
+              >
+                <select
+                  className={b('milestoneSelect')}
+                  id="milestone"
+                  name="milestone"
+                  defaultValue={
+                    issue.milestone_number ? issue.milestone_number : ''
+                  }
+                >
+                  <option value="" />
+                  {milestones.map(milestone => (
+                    <option
+                      key={milestone.milestone_id}
+                      value={milestone.milestone_number}
+                    >
+                      {milestone.milestone_title}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit">Update</button>
+                <button
+                  type="button"
+                  onClick={() => this.updateEditionStatus(null)}
+                >
+                  Cancel
+                </button>
+              </form>
+            ) : (
+              <span>
+                {issue.milestone_title
+                  ? issue.milestone_title
+                  : 'No milestone defined'}
+                <span
+                  onClick={() => {
+                    this.updateEditionStatus('milestones')
+                  }}
+                >
+                  <i className="fa fa-cog" />
+                </span>
+              </span>
+            )}
           </span>
           {isInEdition === 'body' ? (
             <form
@@ -193,7 +249,7 @@ class IssueDetail extends React.Component {
               <MarkdownEditor />
               <button type="submit">Update</button>
               <button
-                type="submit"
+                type="button"
                 onClick={() => this.updateEditionStatus(null)}
               >
                 Cancel
@@ -282,8 +338,12 @@ class IssueDetail extends React.Component {
 export default connect(
   state => ({
     labels: state.labels.results,
+    milestones: state.issueForm.results.milestonesSelect,
   }),
   dispatch => ({
+    getMilestones: repoName => {
+      dispatch(changeMilestoneSelect(repoName))
+    },
     onToggleCommentsExpanded: issue => {
       dispatch(getAndToggleCommentsExpanded(issue))
     },

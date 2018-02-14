@@ -88,6 +88,23 @@
       max-width: 100%
       width: 30em
 
+  #updateMilestoneForm
+    align-items: center
+    display: flex
+    max-width: 100%
+
+    select
+      background: #e0e9f0
+      border: none
+      box-sizing: border-box
+      font-family: Lato, sans-serif
+      font-size: 1.1em
+      height: 2.5em
+      margin-left: .5em
+      max-width: 100%
+      outline: none
+      width: 30em
+
   .githubIcons
     margin-right: .5em
 
@@ -104,7 +121,7 @@
 
   .inputTitle
     font-size: 1em
-    height: 2.2em
+    height: 2em
     margin-left: .5em
     width: 20em
 
@@ -126,3 +143,14 @@
     &__editor
       max-width: 100%
       width: 48.8em
+
+  [type=button]
+    background: #bac9d5
+    border: none
+    font-family: $text-font
+    margin: .5em 0 .5em 1em
+    padding: 1em
+    transition: background 0.2s
+
+    &:hover, &:focus
+      background: lighten(#bac9d5, 5%)
