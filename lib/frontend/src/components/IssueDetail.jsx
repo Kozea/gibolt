@@ -38,14 +38,11 @@ class IssueDetail extends React.Component {
   }
 
   updateEditionStatus(value) {
-    this.setState({
-      isInEdition: value,
-    })
+    this.setState({ isInEdition: value })
   }
 
   render() {
     const {
-      getCircle,
       labels,
       milestones,
       onModalClose,
@@ -58,7 +55,6 @@ class IssueDetail extends React.Component {
     const issue = this.props.issue ? this.props.issue : this.props.currentIssue
     const options = []
     const issuesLabels = []
-    let assignedToCircle = ''
     Object.keys(labels).map(key =>
       labels[key].map(label => {
         options.push({
@@ -75,15 +71,9 @@ class IssueDetail extends React.Component {
             type: key,
             value: label.label_id,
           })
-          if (key === 'circle') {
-            assignedToCircle = label.label_id
-          }
         }
       })
     )
-    if (assignedToCircle !== '') {
-      getCircle(assignedToCircle)
-    }
     return (
       <section className={b()}>
         <span
