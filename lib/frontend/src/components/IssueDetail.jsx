@@ -7,7 +7,12 @@ import Octicon from 'react-component-octicons'
 import { checkMarkdown } from '../actions'
 import { fetchCircle } from '../actions/circle'
 import { changeMilestoneSelect } from '../actions/issueForm'
-import { getAndToggleCommentsExpanded, updateATicket } from '../actions/issues'
+import {
+  getAndToggleCommentsExpanded,
+  getOptionsLabels,
+  updateATicket,
+  updateLabelsList,
+} from '../actions/issues'
 import { block, connect } from '../utils'
 import IssueStatusIcon from './Utils/IssueStatusIcon'
 import LabelMultiSelect from './Utils/LabelMultiSelect'
@@ -16,25 +21,34 @@ import MarkdownEditor from './Utils/MarkdownEditor'
 const b = block('IssueDetail')
 var ReactMarkdown = require('react-markdown')
 
-function updateLabelsList(label, labels, selectedLabels) {
-  const selectedLabel = labels.filter(lab => lab.value === label).map(lab => ({
-    label_name: lab.label,
-    label_color: lab.color,
-  }))
-  if (selectedLabel[0]) {
-    selectedLabels.push(selectedLabel[0])
-  }
-  return selectedLabels
-}
-
 class IssueDetail extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
       isInEdition: null,
       areLabelsInEdtion: false,
+      issue: this.props.issue,
+      issuesLabels: [],
+      options: [],
+      circleLabelId: '',
     }
     this.props.getMilestones(this.props.issue.repo_name)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const issue = nextProps.issue ? nextProps.issue : nextProps.currentIssue
+    if (issue.labels) {
+      const data = getOptionsLabels(issue, nextProps.labels)
+      if (data.circleLabelId !== this.state.circleLabelId) {
+        this.props.getCircle(data.circleLabelId)
+      }
+      this.setState({
+        issue,
+        issuesLabels: data.issuesLabels,
+        options: data.options,
+        circleLabelId: data.circleLabelId,
+      })
+    }
   }
 
   updateEditionStatus(value) {
@@ -43,7 +57,6 @@ class IssueDetail extends React.Component {
 
   render() {
     const {
-      labels,
       milestones,
       onModalClose,
       onToggleCommentsExpanded,
@@ -51,29 +64,8 @@ class IssueDetail extends React.Component {
       onUpdateIssueLabels,
       updateMarkdown,
     } = this.props
-    const { isInEdition } = this.state
-    const issue = this.props.issue ? this.props.issue : this.props.currentIssue
-    const options = []
-    const issuesLabels = []
-    Object.keys(labels).map(key =>
-      labels[key].map(label => {
-        options.push({
-          color: label.color,
-          label: label.text,
-          type: key,
-          value: label.label_id,
-          disabled: false,
-        })
-        if (issue.labels.find(x => x.label_name === label.text)) {
-          issuesLabels.push({
-            color: label.color,
-            label: label.text,
-            type: key,
-            value: label.label_id,
-          })
-        }
-      })
-    )
+    const { isInEdition, issue, options, issuesLabels } = this.state
+
     return (
       <section className={b()}>
         <span
@@ -355,7 +347,7 @@ export default connect(
   }),
   dispatch => ({
     getCircle: labelId => {
-      const param = `?label_id=${labelId}`
+      const param = labelId === '' ? '' : `?label_id=${labelId}`
       const fetchOnlyCircle = true
       dispatch(fetchCircle(param, fetchOnlyCircle))
     },
