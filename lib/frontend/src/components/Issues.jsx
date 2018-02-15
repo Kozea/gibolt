@@ -8,6 +8,7 @@ import {
   fetchIssues,
   setIssuesSelectness,
   setModal,
+  updateCurrentIssue,
   updateIssues,
   toggleIssue,
 } from '../actions/issues'
@@ -245,6 +246,7 @@ export default connect(
   dispatch => ({
     onModalClose: () => {
       dispatch(setModal(false, false, null))
+      dispatch(updateCurrentIssue({}))
     },
     onModalCreation: (grouper = null, group = null, id = null) => {
       const params =

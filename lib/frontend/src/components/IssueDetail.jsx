@@ -35,7 +35,6 @@ class IssueDetail extends React.Component {
   render() {
     const {
       getCircle,
-      issue,
       labels,
       milestones,
       onModalClose,
@@ -45,6 +44,7 @@ class IssueDetail extends React.Component {
       updateMarkdown,
     } = this.props
     const { isInEdition } = this.state
+    const issue = this.props.issue ? this.props.issue : this.props.currentIssue
     const options = []
     const issuesLabels = []
     let assignedToCircle = ''
@@ -350,6 +350,7 @@ export default connect(
   state => ({
     labels: state.labels.results,
     milestones: state.issueForm.results.milestonesSelect,
+    currentIssue: state.issues.results.currentIssue,
   }),
   dispatch => ({
     getCircle: labelId => {
