@@ -16,6 +16,17 @@ import MarkdownEditor from './Utils/MarkdownEditor'
 const b = block('IssueDetail')
 var ReactMarkdown = require('react-markdown')
 
+function updateLabelsList(label, labels, selectedLabels) {
+  const selectedLabel = labels.filter(lab => lab.value === label).map(lab => ({
+    label_name: lab.label,
+    label_color: lab.color,
+  }))
+  if (selectedLabel[0]) {
+    selectedLabels.push(selectedLabel[0])
+  }
+  return selectedLabels
+}
+
 class IssueDetail extends React.Component {
   constructor(props, context) {
     super(props, context)
@@ -368,20 +379,22 @@ export default connect(
       dispatch(updateATicket(issue, values))
     },
     onUpdateIssueLabels: (event, issue, labels) => {
-      const selectedLabels = []
+      let selectedLabels = []
       if (event.target.labelMultiSelect) {
-        for (let i = 0; i < event.target.labelMultiSelect.length; i++) {
-          const selectedLabel = labels
-            .filter(
-              lab => lab.value === +event.target.labelMultiSelect[i].value
+        if (event.target.labelMultiSelect.length > 0) {
+          for (let i = 0; i < event.target.labelMultiSelect.length; i++) {
+            selectedLabels = updateLabelsList(
+              +event.target.labelMultiSelect[i].value,
+              labels,
+              selectedLabels
             )
-            .map(lab => ({
-              label_name: lab.label,
-              label_color: lab.color,
-            }))
-          if (selectedLabel[0]) {
-            selectedLabels.push(selectedLabel[0])
           }
+        } else {
+          selectedLabels = updateLabelsList(
+            +event.target.labelMultiSelect.value,
+            labels,
+            selectedLabels
+          )
         }
       }
       dispatch(updateATicket(issue, { labels: selectedLabels }))
