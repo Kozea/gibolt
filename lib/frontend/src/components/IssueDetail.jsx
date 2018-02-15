@@ -5,6 +5,7 @@ import React from 'react'
 import Octicon from 'react-component-octicons'
 
 import { checkMarkdown } from '../actions'
+import { fetchCircle } from '../actions/circle'
 import { changeMilestoneSelect } from '../actions/issueForm'
 import { getAndToggleCommentsExpanded, updateATicket } from '../actions/issues'
 import { block, connect } from '../utils'
@@ -33,6 +34,7 @@ class IssueDetail extends React.Component {
 
   render() {
     const {
+      getCircle,
       issue,
       labels,
       milestones,
@@ -45,6 +47,7 @@ class IssueDetail extends React.Component {
     const { isInEdition } = this.state
     const options = []
     const issuesLabels = []
+    let assignedToCircle = ''
     Object.keys(labels).map(key =>
       labels[key].map(label => {
         options.push({
@@ -61,9 +64,15 @@ class IssueDetail extends React.Component {
             type: key,
             value: label.label_id,
           })
+          if (key === 'circle') {
+            assignedToCircle = label.label_id
+          }
         }
       })
     )
+    if (assignedToCircle !== '') {
+      getCircle(assignedToCircle)
+    }
     return (
       <section className={b()}>
         <span
@@ -163,7 +172,9 @@ class IssueDetail extends React.Component {
                       <span key={label.label_name} className={b('label')}>
                         <span
                           className={b('bullet')}
-                          style={{ backgroundColor: `#${label.label_color}` }}
+                          style={{
+                            backgroundColor: `#${label.label_color}`,
+                          }}
                         />
                         {label.label_name}
                       </span>
@@ -341,6 +352,11 @@ export default connect(
     milestones: state.issueForm.results.milestonesSelect,
   }),
   dispatch => ({
+    getCircle: labelId => {
+      const param = `?label_id=${labelId}`
+      const fetchOnlyCircle = true
+      dispatch(fetchCircle(param, fetchOnlyCircle))
+    },
     getMilestones: repoName => {
       dispatch(changeMilestoneSelect(repoName))
     },
@@ -352,15 +368,19 @@ export default connect(
     },
     onUpdateIssueLabels: (event, issue, labels) => {
       const selectedLabels = []
-      for (let i = 0; i < event.target.labelMultiSelect.length; i++) {
-        const selectedLabel = labels
-          .filter(lab => lab.value === +event.target.labelMultiSelect[i].value)
-          .map(lab => ({
-            label_name: lab.label,
-            label_color: lab.color,
-          }))
-        if (selectedLabel[0]) {
-          selectedLabels.push(selectedLabel[0])
+      if (event.target.labelMultiSelect) {
+        for (let i = 0; i < event.target.labelMultiSelect.length; i++) {
+          const selectedLabel = labels
+            .filter(
+              lab => lab.value === +event.target.labelMultiSelect[i].value
+            )
+            .map(lab => ({
+              label_name: lab.label,
+              label_color: lab.color,
+            }))
+          if (selectedLabel[0]) {
+            selectedLabels.push(selectedLabel[0])
+          }
         }
       }
       dispatch(updateATicket(issue, { labels: selectedLabels }))

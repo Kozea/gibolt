@@ -27,6 +27,9 @@ rest(
         Circle.parent_circle_id == (request.values.get('parent_circle_id'))
         if request.values.get('parent_circle_id')
         else True,
+        Circle.label_id == (request.values.get('label_id'))
+        if request.values.get('label_id')
+        else True,
     ),
     auth=needlogin
 )
