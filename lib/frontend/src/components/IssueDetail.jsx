@@ -11,6 +11,7 @@ import {
   getAndToggleCommentsExpanded,
   getOptionsLabels,
   updateATicket,
+  updateComment,
   updateLabelsList,
 } from '../actions/issues'
 import { block, connect } from '../utils'
@@ -60,6 +61,7 @@ class IssueDetail extends React.Component {
       milestones,
       onModalClose,
       onToggleCommentsExpanded,
+      onUpdateComment,
       onUpdateIssue,
       onUpdateIssueLabels,
       roles,
@@ -328,27 +330,66 @@ class IssueDetail extends React.Component {
           {issue.nb_comments > 0 &&
             issue.comments_expanded && (
               <div>
-                {issue.comments.map(comment => (
-                  <div className={b('comment')} key={comment.comment_id}>
-                    <span className={b('infos')}>
-                      <img
-                        key={comment.user.user_id}
-                        className={b('avatar')}
-                        src={comment.user.avatar_url}
-                        alt="avatar"
-                        title={comment.user.user_name}
-                      />{' '}
-                      {format(
-                        new Date(comment.updated_at),
-                        'DD/MM/YYYY HH:mm:ss'
-                      )}
-                    </span>
-                    <ReactMarkdown
-                      className={b('commentDetail')}
-                      source={comment.body}
-                    />
-                  </div>
-                ))}
+                {issue.comments.map(
+                  comment =>
+                    isInEdition === `comment|${comment.comment_id}` ? (
+                      <form
+                        key={comment.comment_id}
+                        onSubmit={e => {
+                          e.preventDefault()
+                          onUpdateComment(
+                            { body: e.target.body.value },
+                            issue,
+                            comment.comment_id
+                          )
+                          this.updateEditionStatus(null)
+                          updateMarkdown('')
+                        }}
+                      >
+                        <MarkdownEditor />
+                        <button type="submit">Update</button>
+                        <button
+                          type="button"
+                          onClick={() => this.updateEditionStatus(null)}
+                        >
+                          Cancel
+                        </button>
+                      </form>
+                    ) : (
+                      <div className={b('comment')} key={comment.comment_id}>
+                        <span className={b('infos')}>
+                          <img
+                            key={comment.user.user_id}
+                            className={b('avatar')}
+                            src={comment.user.avatar_url}
+                            alt="avatar"
+                            title={comment.user.user_name}
+                          />{' '}
+                          {format(
+                            new Date(comment.updated_at),
+                            'DD/MM/YYYY HH:mm:ss'
+                          )}
+                          <span
+                            onClick={() => {
+                              this.updateEditionStatus(
+                                `comment|${comment.comment_id}`
+                              )
+                              updateMarkdown(comment.body)
+                            }}
+                          >
+                            <i
+                              className="fa fa-pencil faTop"
+                              title="edit body"
+                            />
+                          </span>
+                        </span>
+                        <ReactMarkdown
+                          className={b('commentDetail')}
+                          source={comment.body}
+                        />
+                      </div>
+                    )
+                )}
               </div>
             )}
         </span>
@@ -399,6 +440,9 @@ export default connect(
     },
     onToggleCommentsExpanded: issue => {
       dispatch(getAndToggleCommentsExpanded(issue))
+    },
+    onUpdateComment: (values, issue, commentId) => {
+      dispatch(updateComment(issue, commentId, values))
     },
     onUpdateIssue: (values, issue) => {
       dispatch(updateATicket(issue, values))
