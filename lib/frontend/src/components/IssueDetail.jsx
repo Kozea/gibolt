@@ -11,7 +11,7 @@ import {
   getAndToggleCommentsExpanded,
   getOptionsLabels,
   updateATicket,
-  updateComment,
+  addOrUupdateComment,
   updateLabelsList,
 } from '../actions/issues'
 import { block, connect } from '../utils'
@@ -393,8 +393,41 @@ class IssueDetail extends React.Component {
               </div>
             )}
         </span>
+        {isInEdition === 'addComment' && (
+          <span>
+            <form
+              onSubmit={e => {
+                e.preventDefault()
+                onUpdateComment({ body: e.target.body.value }, issue)
+                this.updateEditionStatus(null)
+                updateMarkdown('')
+              }}
+            >
+              <MarkdownEditor />
+              <button type="submit">Update</button>
+              <button
+                type="button"
+                onClick={() => this.updateEditionStatus(null)}
+              >
+                Cancel
+              </button>
+            </form>
+          </span>
+        )}
         {isInEdition === null && (
           <span>
+            <button
+              type="submit"
+              onClick={() => {
+                updateMarkdown('')
+                this.updateEditionStatus('addComment')
+                if (!issue.comments_expanded) {
+                  onToggleCommentsExpanded(issue)
+                }
+              }}
+            >
+              add a comment
+            </button>
             {issue.nb_comments > 0 && (
               <span onClick={() => onToggleCommentsExpanded(issue)}>
                 {issue.comments_expanded ? (
@@ -442,7 +475,7 @@ export default connect(
       dispatch(getAndToggleCommentsExpanded(issue))
     },
     onUpdateComment: (values, issue, commentId) => {
-      dispatch(updateComment(issue, commentId, values))
+      dispatch(addOrUupdateComment(issue, values, commentId))
     },
     onUpdateIssue: (values, issue) => {
       dispatch(updateATicket(issue, values))

@@ -645,7 +645,7 @@ def create_a_comment(repo_name, ticket_number):
                  'user_name': comment_request['user']['login'],
                  'avatar_url': comment_request['user']['avatar_url']},
         'created_at': comment_request['created_at'],
-        'updtated_at': comment_request['updated_at'],
+        'updated_at': comment_request['updated_at'],
         'body': comment_request['body']}
     objects = [{'objects': [response]}]
     objects = {
