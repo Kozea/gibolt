@@ -6,7 +6,7 @@ import Octicon from 'react-component-octicons'
 
 import { checkMarkdown } from '../actions'
 import { fetchCircle } from '../actions/circle'
-import { changeMilestoneSelect } from '../actions/issueForm'
+import { changeMilestoneSelect, changeRolesSelect } from '../actions/issueForm'
 import {
   getAndToggleCommentsExpanded,
   getOptionsLabels,
@@ -62,6 +62,7 @@ class IssueDetail extends React.Component {
       onToggleCommentsExpanded,
       onUpdateIssue,
       onUpdateIssueLabels,
+      roles,
       updateMarkdown,
     } = this.props
     const { isInEdition, issue, options, issuesLabels } = this.state
@@ -110,17 +111,57 @@ class IssueDetail extends React.Component {
                 </span>
               </span>
             )}
-            {issue.assignees.map(user => (
-              <img
-                key={user.user_id}
-                className={b('avatar')}
-                src={user.avatar_url}
-                alt="avatar"
-                title={user.user_name}
-              />
-            ))}
-            <i className="fa fa-user faTop" title="modify assignees" />
+            {isInEdition !== 'assignee' && (
+              <span>
+                {issue.assignees.map(user => (
+                  <img
+                    key={user.user_id}
+                    className={b('avatar')}
+                    src={user.avatar_url}
+                    alt="avatar"
+                    title={user.user_name}
+                  />
+                ))}
+                <span onClick={() => this.updateEditionStatus('assignee')}>
+                  <i className="fa fa-user faTop" title="modify assignees" />
+                </span>
+              </span>
+            )}
           </span>
+          {isInEdition === 'assignee' && (
+            <span>
+              <form
+                id="updateAssigneeForm"
+                onSubmit={e => {
+                  e.preventDefault()
+                  onUpdateIssue({ assignees: [e.target.assignee.value] }, issue)
+                  this.updateEditionStatus(null)
+                }}
+              >
+                <select
+                  id="assignee"
+                  name="assignee"
+                  defaultValue={
+                    issue.assignees[0] ? issue.assignees[0].user_name : ''
+                  }
+                >
+                  <option value="" />
+                  {roles.map(role => (
+                    <option key={role.role_id} value={role.user_name}>
+                      {role.role_name} ({role.user_name})
+                    </option>
+                  ))}
+                </select>
+                <button type="submit">Update</button>
+                <button
+                  type="button"
+                  onClick={() => this.updateEditionStatus(null)}
+                >
+                  Cancel
+                </button>
+              </form>
+            </span>
+          )}
           <span className={b('infos')}>
             <IssueStatusIcon issue={issue} />
             {issue.user.user_name} opened this issue, last update:{' '}
@@ -341,15 +382,17 @@ class IssueDetail extends React.Component {
 }
 export default connect(
   state => ({
+    currentIssue: state.issues.results.currentIssue,
     labels: state.labels.results,
     milestones: state.issueForm.results.milestonesSelect,
-    currentIssue: state.issues.results.currentIssue,
+    roles: state.issueForm.results.rolesSelect,
   }),
   dispatch => ({
     getCircle: labelId => {
       const param = labelId === '' ? '' : `?label_id=${labelId}`
-      const fetchOnlyCircle = true
-      dispatch(fetchCircle(param, fetchOnlyCircle))
+      dispatch(fetchCircle(param, true)).then(circle => {
+        dispatch(changeRolesSelect(null, circle.roles))
+      })
     },
     getMilestones: repoName => {
       dispatch(changeMilestoneSelect(repoName))

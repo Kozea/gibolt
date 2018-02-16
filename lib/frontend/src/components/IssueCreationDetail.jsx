@@ -161,7 +161,7 @@ class IssueCreationDetail extends React.Component {
               <option value="" />
               {issueForm.rolesSelect.map(role => (
                 <option key={role.role_id} value={role.user_id}>
-                  {role.role_name}
+                  {role.role_name} ({role.user_name})
                 </option>
               ))}
             </select>
