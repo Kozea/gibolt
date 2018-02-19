@@ -14,7 +14,7 @@ import {
   getAndToggleCommentsExpanded,
   getOptionsLabels,
   updateATicket,
-  addOrUupdateComment,
+  addOrUpdateComment,
   updateLabelsList,
 } from '../../actions/issues'
 import { block, connect } from '../../utils'
@@ -40,6 +40,7 @@ class IssueDetail extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // in case of updated issue doesn't fit filters anymore
     const issue = nextProps.issue ? nextProps.issue : nextProps.currentIssue
     if (issue.labels) {
       const data = getOptionsLabels(issue, nextProps.labels)
@@ -478,10 +479,10 @@ export default connect(
       dispatch(getAndToggleCommentsExpanded(issue))
     },
     onUpdateComment: (values, issue, commentId) => {
-      dispatch(addOrUupdateComment(issue, values, commentId))
+      dispatch(addOrUpdateComment(Object.assign({}, issue), values, commentId))
     },
     onUpdateIssue: (values, issue) => {
-      dispatch(updateATicket(issue, values))
+      dispatch(updateATicket(Object.assign({}, issue), values))
     },
     onUpdateIssueLabels: (event, issue, labels) => {
       let selectedLabels = []
