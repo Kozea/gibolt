@@ -202,7 +202,7 @@ class Issues extends React.Component {
                   nb_comments={issue.nb_comments}
                   comments={issue.comments}
                   onBoxChange={() => onToggleSelected(issue.ticket_id)}
-                  onModalDisplay={() => onModalDisplay(issue.ticket_id)}
+                  onModalDisplay={() => onModalDisplay(issue)}
                 />
               ))}
             </ul>
@@ -261,8 +261,9 @@ export default connect(
       dispatch(setParams(params))
       dispatch(setModal(true, true, null))
     },
-    onModalDisplay: issueId => {
-      dispatch(setModal(true, false, issueId))
+    onModalDisplay: issue => {
+      dispatch(setModal(true, false, issue.ticket_id))
+      dispatch(updateCurrentIssue(issue))
     },
     onToggleSelected: issueId => {
       dispatch(toggleIssue(issueId))

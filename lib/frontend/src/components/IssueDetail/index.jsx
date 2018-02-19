@@ -40,8 +40,7 @@ class IssueDetail extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // in case of updated issue doesn't fit filters anymore
-    const issue = nextProps.issue ? nextProps.issue : nextProps.currentIssue
+    const issue = nextProps.currentIssue
     if (issue.labels) {
       const data = getOptionsLabels(issue, nextProps.labels)
       if (data.circleLabelId !== this.state.circleLabelId) {
