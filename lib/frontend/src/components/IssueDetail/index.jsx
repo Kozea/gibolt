@@ -221,23 +221,14 @@ class IssueDetail extends React.Component {
             )}
           </span>
           {isInEdition === 'body' ? (
-            <form
-              onSubmit={e => {
-                e.preventDefault()
-                onUpdateIssue({ body: e.target.body.value }, issue)
-                this.updateEditionStatus(null)
-                updateMarkdown('')
-              }}
-            >
-              <MarkdownEditor />
-              <button type="submit">Update</button>
-              <button
-                type="button"
-                onClick={() => this.updateEditionStatus(null)}
-              >
-                Cancel
-              </button>
-            </form>
+            <IssueForm
+              id="updateBodyForm"
+              issue={issue}
+              milestones={milestones}
+              roles={roles}
+              type="body"
+              updateEditionStatusToNull={() => this.updateEditionStatus(null)}
+            />
           ) : (
             <div className={b('body')}>
               <span

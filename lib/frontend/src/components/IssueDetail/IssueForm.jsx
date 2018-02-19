@@ -72,7 +72,11 @@ class IssueForm extends React.Component {
         id={id}
         onSubmit={e => {
           e.preventDefault()
-          onUpdateIssue(type, e.target.data.value, issue)
+          onUpdateIssue(
+            type,
+            type === 'body' ? e.target.body.value : e.target.data.value,
+            issue
+          )
           updateEditionStatusToNull()
         }}
       >
@@ -95,13 +99,12 @@ export default connect(
           values = { [type]: [targetValue] }
           break
         case 'milestones':
-          values = targetValue === '' ? null : targetValue
+          values = { [type]: targetValue === '' ? null : targetValue }
           break
         default:
           values = { [type]: targetValue }
       }
-
-      dispatch(updateATicket(issue, values))
+      dispatch(updateATicket(Object.assign({}, issue), values))
     },
   })
 )(IssueForm)
