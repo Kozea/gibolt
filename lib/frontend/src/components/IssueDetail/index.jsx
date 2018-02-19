@@ -239,23 +239,15 @@ class IssueDetail extends React.Component {
               </button>
             </form>
           ) : (
-            <div className={b('comment')}>
-              <span className={b('infos')}>
-                <img
-                  className={b('avatar')}
-                  src={issue.user.avatar_url}
-                  alt="avatar"
-                  title={issue.user.user_name}
-                />{' '}
-                {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm:ss')}
-                <span
-                  onClick={() => {
-                    this.updateEditionStatus('body')
-                    updateMarkdown(issue.body)
-                  }}
-                >
-                  <i className="fa fa-pencil faTop" title="edit body" />
-                </span>
+            <div className={b('body')}>
+              <span
+                className={b('infos')}
+                onClick={() => {
+                  this.updateEditionStatus('body')
+                  updateMarkdown(issue.body)
+                }}
+              >
+                <i className="fa fa-pencil faRight" title="edit body" />
               </span>
               <ReactMarkdown
                 className={b('commentDetail')}
@@ -301,6 +293,7 @@ class IssueDetail extends React.Component {
                             alt="avatar"
                             title={comment.user.user_name}
                           />{' '}
+                          last update:{' '}
                           {format(
                             new Date(comment.updated_at),
                             'DD/MM/YYYY HH:mm:ss'
@@ -315,7 +308,7 @@ class IssueDetail extends React.Component {
                           >
                             <i
                               className="fa fa-pencil faTop"
-                              title="edit body"
+                              title="edit comment"
                             />
                           </span>
                         </span>
