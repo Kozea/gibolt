@@ -4,20 +4,23 @@ import { format } from 'date-fns'
 import React from 'react'
 import Octicon from 'react-component-octicons'
 
-import { checkMarkdown } from '../actions'
-import { fetchCircle } from '../actions/circle'
-import { changeMilestoneSelect, changeRolesSelect } from '../actions/issueForm'
+import { checkMarkdown } from '../../actions'
+import { fetchCircle } from '../../actions/circle'
+import {
+  changeMilestoneSelect,
+  changeRolesSelect,
+} from '../../actions/issueForm'
 import {
   getAndToggleCommentsExpanded,
   getOptionsLabels,
   updateATicket,
   addOrUupdateComment,
   updateLabelsList,
-} from '../actions/issues'
-import { block, connect } from '../utils'
-import IssueStatusIcon from './Utils/IssueStatusIcon'
-import LabelMultiSelect from './Utils/LabelMultiSelect'
-import MarkdownEditor from './Utils/MarkdownEditor'
+} from '../../actions/issues'
+import { block, connect } from '../../utils'
+import IssueStatusIcon from './../Utils/IssueStatusIcon'
+import LabelMultiSelect from './../Utils/LabelMultiSelect'
+import MarkdownEditor from './../Utils/MarkdownEditor'
 
 const b = block('IssueDetail')
 var ReactMarkdown = require('react-markdown')
