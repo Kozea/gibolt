@@ -18,6 +18,7 @@ import {
   updateLabelsList,
 } from '../../actions/issues'
 import { block, connect } from '../../utils'
+import IssueForm from './IssueForm'
 import IssueStatusIcon from './../Utils/IssueStatusIcon'
 import LabelMultiSelect from './../Utils/LabelMultiSelect'
 import MarkdownEditor from './../Utils/MarkdownEditor'
@@ -88,26 +89,14 @@ class IssueDetail extends React.Component {
               #{issue.ticket_number}
             </a>{' '}
             {isInEdition === 'title' ? (
-              <form
-                onSubmit={e => {
-                  e.preventDefault()
-                  onUpdateIssue({ title: e.target.titleInput.value }, issue)
-                  this.updateEditionStatus(null)
-                }}
-              >
-                <input
-                  name="titleInput"
-                  defaultValue={issue.ticket_title}
-                  className="inputTitle"
-                />
-                <button type="submit">Update</button>
-                <button
-                  type="button"
-                  onClick={() => this.updateEditionStatus(null)}
-                >
-                  Cancel
-                </button>
-              </form>
+              <IssueForm
+                id="updateTitleForm"
+                issue={issue}
+                milestones={milestones}
+                roles={roles}
+                type="title"
+                updateEditionStatusToNull={() => this.updateEditionStatus(null)}
+              />
             ) : (
               <span>
                 <span className={b('title')}>{issue.ticket_title} </span>
@@ -135,36 +124,14 @@ class IssueDetail extends React.Component {
           </span>
           {isInEdition === 'assignee' && (
             <span>
-              <form
+              <IssueForm
                 id="updateAssigneeForm"
-                onSubmit={e => {
-                  e.preventDefault()
-                  onUpdateIssue({ assignees: [e.target.assignee.value] }, issue)
-                  this.updateEditionStatus(null)
-                }}
-              >
-                <select
-                  id="assignee"
-                  name="assignee"
-                  defaultValue={
-                    issue.assignees[0] ? issue.assignees[0].user_name : ''
-                  }
-                >
-                  <option value="" />
-                  {roles.map(role => (
-                    <option key={role.role_id} value={role.user_name}>
-                      {role.role_name} ({role.user_name})
-                    </option>
-                  ))}
-                </select>
-                <button type="submit">Update</button>
-                <button
-                  type="button"
-                  onClick={() => this.updateEditionStatus(null)}
-                >
-                  Cancel
-                </button>
-              </form>
+                issue={issue}
+                milestones={milestones}
+                roles={roles}
+                type="assignees"
+                updateEditionStatusToNull={() => this.updateEditionStatus(null)}
+              />
             </span>
           )}
           <span className={b('infos')}>
@@ -230,48 +197,14 @@ class IssueDetail extends React.Component {
             <br />
             <Octicon name="milestone" className="githubIcons" />
             {isInEdition === 'milestones' ? (
-              <form
+              <IssueForm
                 id="updateMilestoneForm"
-                onSubmit={e => {
-                  e.preventDefault()
-                  onUpdateIssue(
-                    {
-                      milestone:
-                        e.target.milestone.value === ''
-                          ? null
-                          : e.target.milestone.value,
-                    },
-                    issue
-                  )
-                  this.updateEditionStatus(null)
-                }}
-              >
-                <select
-                  className={b('milestoneSelect')}
-                  id="milestone"
-                  name="milestone"
-                  defaultValue={
-                    issue.milestone_number ? issue.milestone_number : ''
-                  }
-                >
-                  <option value="" />
-                  {milestones.map(milestone => (
-                    <option
-                      key={milestone.milestone_id}
-                      value={milestone.milestone_number}
-                    >
-                      {milestone.milestone_title}
-                    </option>
-                  ))}
-                </select>
-                <button type="submit">Update</button>
-                <button
-                  type="button"
-                  onClick={() => this.updateEditionStatus(null)}
-                >
-                  Cancel
-                </button>
-              </form>
+                issue={issue}
+                milestones={milestones}
+                roles={roles}
+                type="milestone"
+                updateEditionStatusToNull={() => this.updateEditionStatus(null)}
+              />
             ) : (
               <span>
                 {issue.milestone_title
