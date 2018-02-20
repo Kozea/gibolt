@@ -62,6 +62,8 @@ class IssueDetail extends React.Component {
 
   render() {
     const {
+      error,
+      errorIssues,
       milestones,
       onModalClose,
       onToggleCommentsExpanded,
@@ -133,6 +135,11 @@ class IssueDetail extends React.Component {
                 updateEditionStatusToNull={() => this.updateEditionStatus(null)}
               />
             </span>
+          )}
+          {(error || errorIssues) && (
+            <article className={b('date', { error: true })}>
+              <code>ERROR: {error ? error : errorIssues}</code>
+            </article>
           )}
           <span className={b('infos')}>
             <IssueStatusIcon issue={issue} />
@@ -377,6 +384,8 @@ class IssueDetail extends React.Component {
 export default connect(
   state => ({
     currentIssue: state.issues.results.currentIssue,
+    error: state.issueForm.results.error,
+    errorIssues: state.issues.error,
     labels: state.labels.results,
     milestones: state.issueForm.results.milestonesSelect,
     roles: state.issueForm.results.rolesSelect,

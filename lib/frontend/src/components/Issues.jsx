@@ -3,9 +3,16 @@ import './Issues.sass'
 import React from 'react'
 import ReactModal from 'react-modal'
 
-import { checkMarkdown, fetchResults, setLoading, setParams } from '../actions'
+import {
+  checkMarkdown,
+  fetchResults,
+  setError,
+  setLoading,
+  setParams,
+} from '../actions'
 import {
   fetchIssues,
+  setErrorIssue,
   setIssuesSelectness,
   setModal,
   updateCurrentIssue,
@@ -248,6 +255,8 @@ export default connect(
       dispatch(setModal(false, false, null))
       dispatch(updateCurrentIssue({}))
       dispatch(checkMarkdown(''))
+      dispatch(setError(null, 'issueForm'))
+      dispatch(setErrorIssue(null))
     },
     onModalCreation: (grouper = null, group = null, id = null) => {
       const params =
