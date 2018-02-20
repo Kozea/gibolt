@@ -266,7 +266,7 @@ class IssueDetail extends React.Component {
                         }}
                       >
                         <MarkdownEditor />
-                        <button type="submit">Update</button>
+                        <button type="submit">Update comment</button>
                         <button
                           type="button"
                           onClick={() => this.updateEditionStatus(null)}
@@ -324,7 +324,7 @@ class IssueDetail extends React.Component {
               }}
             >
               <MarkdownEditor />
-              <button type="submit">Update</button>
+              <button type="submit">Add comment</button>
               <button
                 type="button"
                 onClick={() => this.updateEditionStatus(null)}
