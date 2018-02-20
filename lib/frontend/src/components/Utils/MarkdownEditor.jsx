@@ -3,22 +3,25 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 import './MarkdownEditor.sass'
 
-import { convertToRaw, EditorState } from 'draft-js'
-import { stateFromMarkdown } from 'draft-js-import-markdown'
-import draftToMarkdown from 'draftjs-to-markdown'
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
+import { mdToDraftjs, draftjsToMd } from 'draftjs-md-converter'
 import React from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 
-import { block, connect } from '../utils'
+import { block, connect } from '../../utils'
 
 const b = block('MarkdownEditor')
+const myMdDict = {
+  UNDERLINE: '__',
+  CODE: '```',
+}
 
 class MarkdownEditor extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
       editorState: EditorState.createWithContent(
-        stateFromMarkdown(this.props.markvalue)
+        convertFromRaw(mdToDraftjs(this.props.markvalue))
       ),
       markvalue: this.props.markvalue,
     }
@@ -46,11 +49,13 @@ class MarkdownEditor extends React.Component {
               'blockType',
               'list',
               'link',
+              'image',
               'emoji',
               'history',
             ],
+            image: { alignmentEnabled: false },
             inline: {
-              options: ['bold', 'italic', 'underline', 'monospace'],
+              options: ['bold', 'italic', 'monospace'],
             },
             list: {
               options: ['unordered', 'ordered'],
@@ -64,7 +69,7 @@ class MarkdownEditor extends React.Component {
           disabled
           value={
             editorState &&
-            draftToMarkdown(convertToRaw(editorState.getCurrentContent()))
+            draftjsToMd(convertToRaw(editorState.getCurrentContent()), myMdDict)
           }
         />
       </div>

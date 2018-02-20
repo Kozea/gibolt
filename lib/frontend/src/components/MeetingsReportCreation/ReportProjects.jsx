@@ -1,17 +1,16 @@
 import './MeetingsReportCreation.sass'
 
 import { format } from 'date-fns'
-import { stringify } from 'query-string'
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import Progress from './../Progress'
-import { block } from '../../utils'
+import { setModal, updateIssueParams } from '../../actions/issues'
+import { block, connect } from '../../utils'
 
 const b = block('MeetingsReportCreation')
 
-export default function ReportProjects(props) {
-  const { circleMilestones, issues, onMilestoneClick } = props
+function ReportProjects(props) {
+  const { circleMilestones, issues, onMilestoneClick, onModalCreation } = props
   return (
     <span>
       <h3>Projects:</h3>
@@ -45,25 +44,20 @@ export default function ReportProjects(props) {
                 {')'}
               </span>
               {milestone.state === 'open' && (
-                <Link
-                  className={b('unlink')}
-                  target="_blank"
-                  title="open an issue"
-                  to={{
-                    pathname: '/createIssue',
-                    search: stringify({
-                      grouper: 'milestone',
-                      group: `${milestone.repo_name} ⦔ ${
-                        milestone.milestone_number
-                      }`,
-                    }),
-                  }}
+                <span
+                  className={b('newTicket')}
+                  onClick={() =>
+                    onModalCreation(
+                      'milestone',
+                      `${milestone.repo_name} ⦔ ${milestone.milestone_number}`
+                    )
+                  }
                 >
                   <i
                     className="fa fa-plus-circle addCircle"
                     aria-hidden="true"
                   />
-                </Link>
+                </span>
               )}
               {issues.length > 0 &&
                 issues.filter(
@@ -134,3 +128,12 @@ export default function ReportProjects(props) {
     </span>
   )
 }
+export default connect(
+  () => ({}),
+  dispatch => ({
+    onModalCreation: (grouper, group) => {
+      dispatch(updateIssueParams({ grouper, group }))
+      dispatch(setModal(true, true, null))
+    },
+  })
+)(ReportProjects)

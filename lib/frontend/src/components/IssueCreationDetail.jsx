@@ -1,28 +1,27 @@
 import './IssueCreationDetail.sass'
 
-import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { withRouter } from 'react-router-dom'
 
-import { fetchResults, goBack, setLoading, setParams } from '../actions'
+import { fetchResults, setLoading } from '../actions'
 import {
   changeMilestoneSelect,
   changeRolesSelect,
   fetchRepositoryWithoutLabels,
   submitIssue,
+  updateCircle,
+  updateProject,
   updateTitle,
 } from '../actions/issueForm'
 import { block, connect, sortRepos } from '../utils'
 import Loading from './Loading'
-import MarkdownEditor from './MarkdownEditor'
+import MarkdownEditor from './Utils/MarkdownEditor'
 
 const b = block('IssueCreationDetail')
 
 class IssueCreationDetail extends React.Component {
   componentDidMount() {
-    const search = parse(this.props.location.search)
-    this.props.sync(search)
+    this.props.sync(this.props.params)
   }
 
   componentDidUpdate() {
@@ -66,12 +65,11 @@ class IssueCreationDetail extends React.Component {
     const {
       circles,
       error,
-      history,
       issueForm,
       labels,
       loading,
       onCircleChange,
-      onGoBack,
+      onModalClose,
       onProjectChange,
       onTitleChange,
       onSubmit,
@@ -102,7 +100,7 @@ class IssueCreationDetail extends React.Component {
         )}
         <form onSubmit={event => event.preventDefault()}>
           <label>
-            Project (mandatory):
+            Project (required):
             <select
               id="project"
               name="project"
@@ -146,6 +144,7 @@ class IssueCreationDetail extends React.Component {
               id="circle"
               name="circle"
               onChange={event => onCircleChange(event.target.value)}
+              value={issueForm.circleId}
             >
               <option value="" />
               {circles.map(circle => (
@@ -162,7 +161,7 @@ class IssueCreationDetail extends React.Component {
               <option value="" />
               {issueForm.rolesSelect.map(role => (
                 <option key={role.role_id} value={role.user_id}>
-                  {role.role_name}
+                  {role.role_name} ({role.user_name})
                 </option>
               ))}
             </select>
@@ -180,7 +179,7 @@ class IssueCreationDetail extends React.Component {
           </label>
           <br />
           <label>
-            Title (mandatory):<br />
+            Title (required):<br />
             <input
               id="title"
               name="title"
@@ -196,12 +195,12 @@ class IssueCreationDetail extends React.Component {
           <article className={b('action')}>
             <button
               type="submit"
-              onClick={event => onSubmit(event, history)}
+              onClick={event => onSubmit(event)}
               disabled={issueForm.project === '' || issueForm.title === ''}
             >
               Create
             </button>
-            <button type="submit" onClick={() => onGoBack(history)}>
+            <button type="button" onClick={() => onModalClose()}>
               Cancel
             </button>
           </article>
@@ -211,53 +210,48 @@ class IssueCreationDetail extends React.Component {
   }
 }
 
-export default withRouter(
-  connect(
-    state => ({
-      circles: state.circles.results,
-      error: state.issueForm.results.error,
-      issueForm: state.issueForm.results,
-      labels: state.labels.results.priority,
-      loading: state.circle.loading,
-      params: state.params,
-      repository: state.repository.results.repository,
-      repositories: state.repositories.results.repositories,
-    }),
-    dispatch => ({
-      onTitleChange: event => {
-        dispatch(updateTitle(event.target.value))
-      },
-      onCircleChange: circleId => {
-        dispatch(changeRolesSelect(circleId))
-      },
-      onGoBack: history => {
-        dispatch(goBack(history))
-      },
-      onProjectChange: repoName => {
+export default connect(
+  state => ({
+    circles: state.circles.results,
+    error: state.issueForm.results.error,
+    issueForm: state.issueForm.results,
+    labels: state.labels.results.priority,
+    loading: state.repositories.loading,
+    params: state.params,
+    repository: state.repository.results.repository,
+    repositories: state.repositories.results.repositories,
+  }),
+  dispatch => ({
+    onCircleChange: circleId => {
+      dispatch(updateCircle(circleId.toString()))
+      dispatch(changeRolesSelect(circleId))
+    },
+    onProjectChange: repoName => {
+      dispatch(updateProject(repoName))
+      dispatch(changeMilestoneSelect(repoName))
+    },
+    onSubmit: event => {
+      event.preventDefault()
+      dispatch(submitIssue(event))
+    },
+    onTitleChange: event => {
+      dispatch(updateTitle(event.target.value))
+    },
+    sync: params => {
+      const repoName = params.group
+        ? params.group.split(' ⦔ ')[0].toString()
+        : ''
+      dispatch(updateCircle(params.circle_id))
+      dispatch(updateProject(repoName))
+      if (params.grouper === 'milestone' || params.grouper === 'project') {
         dispatch(changeMilestoneSelect(repoName))
-      },
-      onSubmit: (event, history) => {
-        event.preventDefault()
-        dispatch(submitIssue(event, history))
-      },
-      sync: locationSearch => {
-        dispatch(setParams(locationSearch))
-        dispatch(setLoading('circles'))
-        dispatch(fetchResults('circles'))
-        if (
-          locationSearch.grouper === 'milestone' ||
-          locationSearch.grouper === 'project'
-        ) {
-          dispatch(changeMilestoneSelect(locationSearch.group.split(' ⦔ ')[0]))
-          dispatch(setLoading('repository'))
-          dispatch(
-            fetchRepositoryWithoutLabels(locationSearch.group.split(' ⦔ ')[0])
-          )
-        } else {
-          dispatch(setLoading('repositories'))
-          dispatch(fetchResults('repositories'))
-        }
-      },
-    })
-  )(IssueCreationDetail)
-)
+        dispatch(setLoading('repository'))
+        dispatch(fetchRepositoryWithoutLabels(repoName))
+      } else {
+        dispatch(setLoading('repositories'))
+        dispatch(fetchResults('repositories'))
+      }
+      dispatch(changeRolesSelect(params.circle_id))
+    },
+  })
+)(IssueCreationDetail)

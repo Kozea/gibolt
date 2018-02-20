@@ -9,7 +9,7 @@ import { fetchCircle } from '../actions/circle'
 import { createRole } from '../actions/roles'
 import { block, connect } from '../utils'
 import Loading from './Loading'
-import MarkdownEditor from './MarkdownEditor'
+import MarkdownEditor from './Utils/MarkdownEditor'
 
 const b = block('CreateRole')
 

@@ -403,7 +403,8 @@ def list_tickets():
                  'body': ticket['body'],
                  'html_url': ticket['html_url'],
                  'user': {'user_id': ticket['user']['id'],
-                          'user_name': ticket['user']['login']},
+                          'user_name': ticket['user']['login'],
+                          'avatar_url': ticket['user']['avatar_url']},
                  'state': ticket['state'],
                  'milestone_id': (
                  ticket['milestone']['id'] if ticket['milestone'] else None),
@@ -644,7 +645,7 @@ def create_a_comment(repo_name, ticket_number):
                  'user_name': comment_request['user']['login'],
                  'avatar_url': comment_request['user']['avatar_url']},
         'created_at': comment_request['created_at'],
-        'updtated_at': comment_request['updated_at'],
+        'updated_at': comment_request['updated_at'],
         'body': comment_request['body']}
     objects = [{'objects': [response]}]
     objects = {
@@ -667,7 +668,7 @@ def update_a_comment(repo_name, comment_id):
     try:
         comment_request = github.request(
             'PATCH',
-            'repos/{0}/{1]/issues/comments/{2}'.format(
+            'repos/{0}/{1}/issues/comments/{2}'.format(
                 app.config['ORGANISATION'],
                 repo_name, comment_id), data=data)
     except GitHubError as e:
@@ -680,7 +681,7 @@ def update_a_comment(repo_name, comment_id):
                  'user_name': comment_request['user']['login'],
                  'avatar_url': comment_request['user']['avatar_url']},
         'created_at': comment_request['created_at'],
-        'updtated_at': comment_request['updated_at'],
+        'updated_at': comment_request['updated_at'],
         'body': comment_request['body']}
     objects = {
         'objects': response,

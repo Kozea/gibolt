@@ -1,15 +1,20 @@
 import './Issues.sass'
 
-import { stringify } from 'query-string'
 import React from 'react'
 import ReactModal from 'react-modal'
-import { Link } from 'react-router-dom'
 
-import { setLoading } from '../actions'
+import {
+  checkMarkdown,
+  fetchResults,
+  setError,
+  setLoading,
+  setParams,
+} from '../actions'
 import {
   fetchIssues,
   setIssuesSelectness,
   setModal,
+  updateCurrentIssue,
   updateIssues,
   toggleIssue,
 } from '../actions/issues'
@@ -25,6 +30,7 @@ import {
   sortIssues,
 } from '../utils'
 import Issue from './Issue'
+import IssueCreationDetail from './IssueCreationDetail'
 import IssueDetail from './IssueDetail'
 import Loading from './Loading'
 import Progress from './Progress'
@@ -67,6 +73,7 @@ class Issues extends React.Component {
       error,
       modal,
       onModalClose,
+      onModalCreation,
       onModalDisplay,
       onToggleSelected,
       onToggleGrouper,
@@ -110,12 +117,16 @@ class Issues extends React.Component {
           onRequestClose={() => onModalClose()}
           shouldCloseOnOverlayClick
         >
-          <IssueDetail
-            issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
-          />
-          <button type="submit" onClick={onModalClose}>
-            Close
-          </button>
+          {modal.creation ? (
+            <IssueCreationDetail onModalClose={onModalClose} />
+          ) : (
+            <span>
+              <IssueDetail
+                issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
+                onModalClose={onModalClose}
+              />
+            </span>
+          )}
         </ReactModal>
         {loading && <Loading />}
         {error && (
@@ -158,23 +169,12 @@ class Issues extends React.Component {
                 (grouper === 'milestone' &&
                   (issues[0].milestone_state === 'open' ||
                     group.split(' ⦔ ')[1] === 'No milestone'))) && (
-                <Link
-                  className={b('link')}
-                  to={{
-                    pathname: '/createIssue',
-                    search:
-                      grouper === 'milestone'
-                        ? stringify({
-                            grouper,
-                            group: id.split('|')[1]
-                              ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}` // eslint-disable-line max-len
-                              : group,
-                          })
-                        : stringify({ grouper, group }),
-                  }}
+                <button
+                  className={b('newTicket')}
+                  onClick={() => onModalCreation(grouper, group, id)}
                 >
-                  <button className={b('newTicket')}>Create issue</button>
-                </Link>
+                  Create issue
+                </button>
               )}
               {issuesState === 'all' &&
                 grouper !== 'state' && (
@@ -208,7 +208,7 @@ class Issues extends React.Component {
                   nb_comments={issue.nb_comments}
                   comments={issue.comments}
                   onBoxChange={() => onToggleSelected(issue.ticket_id)}
-                  onModalDisplay={() => onModalDisplay(issue.ticket_id)}
+                  onModalDisplay={() => onModalDisplay(issue)}
                 />
               ))}
             </ul>
@@ -224,14 +224,9 @@ class Issues extends React.Component {
           <button type="submit" onClick={() => onChangeTickets('close')}>
             Close issue
           </button>
-          <Link
-            className={b('link')}
-            to={{
-              pathname: '/createIssue',
-            }}
-          >
-            <button type="submit">Create issue</button>
-          </Link>
+          <button type="submit" onClick={() => onModalCreation()}>
+            Create issue
+          </button>
         </article>
       </section>
     )
@@ -256,10 +251,29 @@ export default connect(
   },
   dispatch => ({
     onModalClose: () => {
-      dispatch(setModal(false, null))
+      dispatch(setModal(false, false, null))
+      dispatch(updateCurrentIssue({}))
+      dispatch(checkMarkdown(''))
+      dispatch(setError(null, 'issueForm'))
+      dispatch(setLoading('issues'))
+      dispatch(fetchIssues())
     },
-    onModalDisplay: issueId => {
-      dispatch(setModal(true, issueId))
+    onModalCreation: (grouper = null, group = null, id = null) => {
+      const params =
+        grouper === 'milestone'
+          ? {
+              grouper,
+              group: id.split('|')[1]
+                ? `${group.split(' ⦔ ')[0]} ⦔ ${id.split('|')[1]}`
+                : group,
+            }
+          : { grouper, group }
+      dispatch(setParams(params))
+      dispatch(setModal(true, true, null))
+    },
+    onModalDisplay: issue => {
+      dispatch(setModal(true, false, issue.ticket_id))
+      dispatch(updateCurrentIssue(issue))
     },
     onToggleSelected: issueId => {
       dispatch(toggleIssue(issueId))
@@ -281,6 +295,8 @@ export default connect(
     sync: () => {
       dispatch(setLoading('issues'))
       dispatch(fetchIssues())
+      dispatch(setLoading('circles'))
+      dispatch(fetchResults('circles'))
     },
   })
 )(Issues)

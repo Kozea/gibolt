@@ -1,0 +1,159 @@
+@import ../vars
+
+.IssueDetail
+  flex: 1
+  margin-left: 1em
+  margin-right: .5em
+  overflow: auto
+  position: relative
+
+  &__avatar
+    border-radius: 15px
+    margin-left: .5em
+    margin-right: .5em
+    max-height: 30px
+    vertical-align: middle
+
+  &__body, &__comment
+    background: white
+    font-size: .9em
+    margin: 1em .5em
+    padding: .1em .5em
+
+  &__bullet
+    background-color: #000
+    border-radius: 0.25em
+    border-width: 0.25em
+    display: inline-block
+    font-size: 0.9em
+    height: 0.5em
+    margin: 0 0.5em
+    vertical-align: middle
+    width: 0.5em
+
+  &__commentDetail
+    font-size: .9em
+    margin: .5em
+    padding: .1em .5em
+
+  &__content
+    background: white
+    font-size: .9em
+    margin: .5em
+    padding: .1em .5em
+
+  &__infos
+    align-items: center
+    color: #6A6A6A
+    display: flex
+    font-size: .9em
+    margin: 0.3em 0
+    width: 100%
+
+  &__label
+    color: #6A6A6A
+    font-size: .9em
+
+  &__labels
+    margin-left: .5em
+
+  &__title
+    margin-left: .5em
+
+  &__ttl
+    align-items: center
+    display: flex
+    font-size: 1.2em
+    margin-bottom: 0.25em
+    padding-top: .5em
+
+  &--pull-request &__title::after
+    border-radius: 1.5em
+    content: "PR"
+    display: inline-block
+    font-size: 0.5em
+    margin-left: 0.5em
+    vertical-align: top
+
+  img
+    max-width: 100%
+
+  #updateLabelForm
+    align-items: center
+    display: flex
+    max-width: 100%
+
+    .Select-control
+      margin-left: .5em
+      max-width: 100%
+      width: 30em
+
+  #updateMilestoneForm, #updateAssigneeForm
+    align-items: center
+    display: flex
+    max-width: 100%
+
+    select
+      background: #e0e9f0
+      border: none
+      box-sizing: border-box
+      font-family: Lato, sans-serif
+      font-size: 1.1em
+      height: 2.5em
+      margin-left: .5em
+      max-width: 100%
+      outline: none
+      width: 30em
+
+  #updateAssigneeForm
+    font-size: .85em
+
+  .githubIcons
+    margin-right: .5em
+
+  .fa
+    color: #969696
+    font-size: .8em
+    margin-left: .25em
+
+  .faTop
+    vertical-align: top
+
+  .fa-user
+    padding-bottom: 0.4em
+
+  .inputTitle
+    font-size: 1em
+    height: 2em
+    margin-left: .5em
+    width: 20em
+
+  .close
+    color: #aaa
+    float: right
+    font-size: 28px
+    font-weight: bold
+
+  .close:focus,
+  .close:hover  
+    color: black
+    cursor: pointer
+    text-decoration: none
+
+  .MarkdownEditor
+    display: block
+
+    &__editor
+      max-width: 100%
+      width: 48.8em
+
+  [type=button]
+    background: #bac9d5
+    border: none
+    font-family: $text-font
+    margin: .5em 0 .5em 1em
+    padding: 1em
+    transition: background 0.2s
+
+    &:hover, &:focus
+      background: lighten(#bac9d5, 5%)

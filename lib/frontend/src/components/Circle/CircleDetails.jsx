@@ -15,7 +15,7 @@ import {
 } from '../../actions/circle'
 import { getUnusedCircleLabels } from '../../actions/labels'
 import { block, connect } from '../../utils'
-import MarkdownEditor from './../MarkdownEditor'
+import MarkdownEditor from './../Utils/MarkdownEditor'
 
 var ReactMarkdown = require('react-markdown')
 

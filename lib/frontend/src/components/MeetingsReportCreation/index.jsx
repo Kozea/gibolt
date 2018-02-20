@@ -3,6 +3,7 @@ import './MeetingsReportCreation.sass'
 import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import ReactModal from 'react-modal'
 import { withRouter } from 'react-router-dom'
 
 import {
@@ -13,6 +14,7 @@ import {
   setLoading,
   setParams,
 } from '../../actions'
+import { setModal } from '../../actions/issues'
 import {
   fetchCircleAgendaIssues,
   submitReport,
@@ -24,8 +26,9 @@ import {
   expandMilestone,
 } from '../../actions/milestones'
 import { block, connect, sortUsers } from '../../utils'
+import IssueCreationDetail from './../IssueCreationDetail'
 import Loading from './../Loading'
-import MarkdownEditor from './../MarkdownEditor'
+import MarkdownEditor from './../Utils/MarkdownEditor'
 import ReportAgenda from './ReportAgenda'
 import ReportItems from './ReportItems'
 import ReportProjects from './ReportProjects'
@@ -48,6 +51,7 @@ class MeetingsReportCreation extends React.Component {
       circle_id: search.circle_id ? +search.circle_id : '',
       meeting_name: search.meeting_name ? search.meeting_name : '',
     })
+    ReactModal.setAppElement('#root')
   }
   componentWillReceiveProps(nextProps) {
     if (
@@ -101,8 +105,10 @@ class MeetingsReportCreation extends React.Component {
       items,
       loading,
       meetingsTypes,
+      modal,
       onGoBack,
       onMilestoneClick,
+      onModalClose,
       onSelectChange,
       onSubmit,
       params,
@@ -124,6 +130,15 @@ class MeetingsReportCreation extends React.Component {
         <Helmet>
           <title>Gibolt - Create a report</title>
         </Helmet>
+        <ReactModal
+          className={b('modal')}
+          overlayClassName={b('modal-overlay')}
+          isOpen={!!modal.display}
+          onRequestClose={() => onModalClose()}
+          shouldCloseOnOverlayClick
+        >
+          <IssueCreationDetail onModalClose={onModalClose} />
+        </ReactModal>
         {loading !== 0 && <Loading />}
         <article className={b('meetings')}>
           <h2>Create a report</h2>
@@ -280,6 +295,7 @@ export default withRouter(
       items: state.items.results,
       issues: state.issues.results.issues,
       meetingsTypes: state.meetingsTypes,
+      modal: state.modal,
       search: state.router.location.search,
       params: state.params,
       users: state.users.results,
@@ -308,6 +324,9 @@ export default withRouter(
       },
       onMilestoneClick: milestoneId => {
         dispatch(expandMilestone(milestoneId))
+      },
+      onModalClose: () => {
+        dispatch(setModal(false, false, null))
       },
       onSelectChange: event => {
         dispatch(updateReportsList(event))

@@ -14,7 +14,7 @@ import {
 import { block, connect } from '../utils'
 import AddLabel from './Admin/AddLabel'
 import Loading from './Loading'
-import MarkdownEditor from './MarkdownEditor'
+import MarkdownEditor from './Utils/MarkdownEditor'
 
 const b = block('CreateCircle')
 
