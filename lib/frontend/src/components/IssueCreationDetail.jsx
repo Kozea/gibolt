@@ -200,7 +200,7 @@ class IssueCreationDetail extends React.Component {
             >
               Create
             </button>
-            <button type="submit" onClick={() => onModalClose()}>
+            <button type="button" onClick={() => onModalClose()}>
               Cancel
             </button>
           </article>
@@ -251,6 +251,7 @@ export default connect(
         dispatch(setLoading('repositories'))
         dispatch(fetchResults('repositories'))
       }
+      dispatch(changeRolesSelect(params.circle_id))
     },
   })
 )(IssueCreationDetail)
