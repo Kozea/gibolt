@@ -3,7 +3,7 @@ import './Issues.sass'
 import React from 'react'
 import ReactModal from 'react-modal'
 
-import { fetchResults, setLoading, setParams } from '../actions'
+import { checkMarkdown, fetchResults, setLoading, setParams } from '../actions'
 import {
   fetchIssues,
   setIssuesSelectness,
@@ -247,6 +247,7 @@ export default connect(
     onModalClose: () => {
       dispatch(setModal(false, false, null))
       dispatch(updateCurrentIssue({}))
+      dispatch(checkMarkdown(''))
     },
     onModalCreation: (grouper = null, group = null, id = null) => {
       const params =
