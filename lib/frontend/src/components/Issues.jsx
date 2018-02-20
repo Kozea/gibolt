@@ -12,7 +12,6 @@ import {
 } from '../actions'
 import {
   fetchIssues,
-  setErrorIssue,
   setIssuesSelectness,
   setModal,
   updateCurrentIssue,
@@ -256,7 +255,8 @@ export default connect(
       dispatch(updateCurrentIssue({}))
       dispatch(checkMarkdown(''))
       dispatch(setError(null, 'issueForm'))
-      dispatch(setErrorIssue(null))
+      dispatch(setLoading('issues'))
+      dispatch(fetchIssues())
     },
     onModalCreation: (grouper = null, group = null, id = null) => {
       const params =
