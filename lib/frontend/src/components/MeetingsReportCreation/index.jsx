@@ -7,8 +7,7 @@ import ReactModal from 'react-modal'
 import { withRouter } from 'react-router-dom'
 
 import {
-  checkMarkdown,
-  delMarkdown,
+  updateMarkdown,
   fetchResults,
   goBack,
   setLoading,
@@ -43,7 +42,7 @@ class MeetingsReportCreation extends React.Component {
     }
   }
   componentWillMount() {
-    this.props.updateMarkdown()
+    this.props.onUpdateMarkdown()
   }
   componentDidMount() {
     const search = parse(this.props.location.search)
@@ -71,9 +70,9 @@ class MeetingsReportCreation extends React.Component {
         this.setState({
           selectedCircle: crcl,
         })
-        if (crcl.circle_name && nextProps.params.meeting_name !== '') {
+        if (crcl.label[0].text && nextProps.params.meeting_name !== '') {
           this.props.getAgendaIssues(
-            crcl.circle_name,
+            crcl.label[0].text,
             nextProps.params.meeting_name
           )
         }
@@ -314,12 +313,12 @@ export default withRouter(
         dispatch(fetchCircleMilestonesAndIssues(circleId))
         dispatch(fetchCircleItems(circleId))
       },
-      getAgendaIssues: (circleId, meetingType) => {
+      getAgendaIssues: (circleLabel, meetingType) => {
         dispatch(setLoading('issues'))
-        dispatch(fetchCircleAgendaIssues(circleId, meetingType))
+        dispatch(fetchCircleAgendaIssues(circleLabel, meetingType))
       },
       onGoBack: history => {
-        dispatch(delMarkdown())
+        dispatch(updateMarkdown(''))
         dispatch(goBack(history))
       },
       onMilestoneClick: milestoneId => {
@@ -334,7 +333,7 @@ export default withRouter(
       onSubmit: (event, meetingType, history) => {
         event.preventDefault()
         dispatch(submitReport(event, meetingType, history))
-        dispatch(delMarkdown())
+        dispatch(updateMarkdown(''))
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
@@ -349,8 +348,8 @@ export default withRouter(
         dispatch(setLoading('meetings'))
         dispatch(fetchResults('meetings'))
       },
-      updateMarkdown: () => {
-        dispatch(checkMarkdown(''))
+      onUpdateMarkdown: () => {
+        dispatch(updateMarkdown(''))
       },
     })
   )(MeetingsReportCreation)

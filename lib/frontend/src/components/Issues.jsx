@@ -4,7 +4,7 @@ import React from 'react'
 import ReactModal from 'react-modal'
 
 import {
-  checkMarkdown,
+  updateMarkdown,
   fetchResults,
   setError,
   setLoading,
@@ -253,7 +253,7 @@ export default connect(
     onModalClose: () => {
       dispatch(setModal(false, false, null))
       dispatch(updateCurrentIssue({}))
-      dispatch(checkMarkdown(''))
+      dispatch(updateMarkdown(''))
       dispatch(setError(null, 'issueForm'))
       dispatch(setLoading('issues'))
       dispatch(fetchIssues())
