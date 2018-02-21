@@ -42,7 +42,7 @@ class MeetingsReportCreation extends React.Component {
     }
   }
   componentWillMount() {
-    this.props.updateMarkdown()
+    this.props.onUpdateMarkdown()
   }
   componentDidMount() {
     const search = parse(this.props.location.search)
@@ -348,7 +348,7 @@ export default withRouter(
         dispatch(setLoading('meetings'))
         dispatch(fetchResults('meetings'))
       },
-      updateMarkdown: () => {
+      onUpdateMarkdown: () => {
         dispatch(updateMarkdown(''))
       },
     })
