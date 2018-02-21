@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import React from 'react'
 import Octicon from 'react-component-octicons'
 
-import { checkMarkdown } from '../../actions'
+import { updateMarkdown } from '../../actions'
 import { fetchCircle } from '../../actions/circle'
 import {
   changeMilestoneSelect,
@@ -71,7 +71,7 @@ class IssueDetail extends React.Component {
       onUpdateIssue,
       onUpdateIssueLabels,
       roles,
-      updateMarkdown,
+      onUpdateMarkdown,
     } = this.props
     const { isInEdition, issue, options, issuesLabels } = this.state
 
@@ -242,7 +242,7 @@ class IssueDetail extends React.Component {
                 className={b('infos')}
                 onClick={() => {
                   this.updateEditionStatus('body')
-                  updateMarkdown(issue.body)
+                  onUpdateMarkdown(issue.body)
                 }}
               >
                 <i className="fa fa-pencil faRight" title="edit body" />
@@ -269,7 +269,7 @@ class IssueDetail extends React.Component {
                             comment.comment_id
                           )
                           this.updateEditionStatus(null)
-                          updateMarkdown('')
+                          onUpdateMarkdown('')
                         }}
                       >
                         <MarkdownEditor />
@@ -301,7 +301,7 @@ class IssueDetail extends React.Component {
                               this.updateEditionStatus(
                                 `comment|${comment.comment_id}`
                               )
-                              updateMarkdown(comment.body)
+                              onUpdateMarkdown(comment.body)
                             }}
                           >
                             <i
@@ -327,7 +327,7 @@ class IssueDetail extends React.Component {
                 e.preventDefault()
                 onUpdateComment({ body: e.target.body.value }, issue)
                 this.updateEditionStatus(null)
-                updateMarkdown('')
+                onUpdateMarkdown('')
               }}
             >
               <MarkdownEditor />
@@ -346,7 +346,7 @@ class IssueDetail extends React.Component {
             <button
               type="submit"
               onClick={() => {
-                updateMarkdown('')
+                onUpdateMarkdown('')
                 this.updateEditionStatus('addComment')
                 if (!issue.comments_expanded) {
                   onToggleCommentsExpanded(issue)
@@ -430,8 +430,8 @@ export default connect(
       }
       dispatch(updateATicket(issue, { labels: selectedLabels }))
     },
-    updateMarkdown: value => {
-      dispatch(checkMarkdown(value))
+    onUpdateMarkdown: value => {
+      dispatch(updateMarkdown(value))
     },
   })
 )(IssueDetail)

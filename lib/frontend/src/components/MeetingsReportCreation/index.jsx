@@ -7,8 +7,7 @@ import ReactModal from 'react-modal'
 import { withRouter } from 'react-router-dom'
 
 import {
-  checkMarkdown,
-  delMarkdown,
+  updateMarkdown,
   fetchResults,
   goBack,
   setLoading,
@@ -319,7 +318,7 @@ export default withRouter(
         dispatch(fetchCircleAgendaIssues(circleId, meetingType))
       },
       onGoBack: history => {
-        dispatch(delMarkdown())
+        dispatch(updateMarkdown(''))
         dispatch(goBack(history))
       },
       onMilestoneClick: milestoneId => {
@@ -334,7 +333,7 @@ export default withRouter(
       onSubmit: (event, meetingType, history) => {
         event.preventDefault()
         dispatch(submitReport(event, meetingType, history))
-        dispatch(delMarkdown())
+        dispatch(updateMarkdown(''))
       },
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
@@ -350,7 +349,7 @@ export default withRouter(
         dispatch(fetchResults('meetings'))
       },
       updateMarkdown: () => {
-        dispatch(checkMarkdown(''))
+        dispatch(updateMarkdown(''))
       },
     })
   )(MeetingsReportCreation)

@@ -4,7 +4,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { checkMarkdown, fetchResults, setLoading } from '../../actions'
+import { updateMarkdown, fetchResults, setLoading } from '../../actions'
 import {
   deleteRole,
   editRole,
@@ -250,7 +250,7 @@ export default withRouter(
       },
       editClick: content => {
         dispatch(editRole())
-        dispatch(checkMarkdown(content))
+        dispatch(updateMarkdown(content))
       },
       onEditRole: (role, e, history) => {
         const formRole = [].slice.call(e.target.elements).reduce(
@@ -265,7 +265,7 @@ export default withRouter(
           { circle_id: role.circle_id }
         )
         dispatch(updateRole(role.role_id, formRole, history))
-        dispatch(checkMarkdown(''))
+        dispatch(updateMarkdown(''))
         dispatch(fetchRole())
       },
       onGoBack: (circleId, history) => {

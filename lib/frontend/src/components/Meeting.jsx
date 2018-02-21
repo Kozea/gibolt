@@ -6,13 +6,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import {
-  checkMarkdown,
-  delMarkdown,
-  fetchResults,
-  setLoading,
-  setParams,
-} from '../actions'
+import { updateMarkdown, fetchResults, setLoading, setParams } from '../actions'
 import { fetchReport, toggleEdition, updateReport } from '../actions/meetings'
 import { block, connect } from '../utils'
 import Loading from './Loading'
@@ -144,13 +138,13 @@ export default withRouter(
     dispatch => ({
       onCancelClick: () => {
         dispatch(toggleEdition())
-        dispatch(delMarkdown())
+        dispatch(updateMarkdown(''))
       },
       onEditClick: (content, meeetingOnEdition) => {
         if (meeetingOnEdition) {
-          dispatch(delMarkdown())
+          dispatch(updateMarkdown(''))
         } else {
-          dispatch(checkMarkdown(content))
+          dispatch(updateMarkdown(content))
         }
         dispatch(toggleEdition())
       },
