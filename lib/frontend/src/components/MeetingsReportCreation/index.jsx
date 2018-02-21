@@ -70,9 +70,9 @@ class MeetingsReportCreation extends React.Component {
         this.setState({
           selectedCircle: crcl,
         })
-        if (crcl.circle_name && nextProps.params.meeting_name !== '') {
+        if (crcl.label[0].text && nextProps.params.meeting_name !== '') {
           this.props.getAgendaIssues(
-            crcl.circle_name,
+            crcl.label[0].text,
             nextProps.params.meeting_name
           )
         }
@@ -313,9 +313,9 @@ export default withRouter(
         dispatch(fetchCircleMilestonesAndIssues(circleId))
         dispatch(fetchCircleItems(circleId))
       },
-      getAgendaIssues: (circleId, meetingType) => {
+      getAgendaIssues: (circleLabel, meetingType) => {
         dispatch(setLoading('issues'))
-        dispatch(fetchCircleAgendaIssues(circleId, meetingType))
+        dispatch(fetchCircleAgendaIssues(circleLabel, meetingType))
       },
       onGoBack: history => {
         dispatch(updateMarkdown(''))
