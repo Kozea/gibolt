@@ -2,62 +2,36 @@ import './MeetingsReportCreation.sass'
 
 import React from 'react'
 
-import { block } from '../../utils'
-
-const b = block('MeetingsReportCreation')
-
 export default function ReportItems(props) {
-  const { selectedCircle, items } = props
+  const { actions, indicators } = props
   return (
     <span>
-      {selectedCircle.roles &&
-        selectedCircle.roles.length > 0 && (
-          <span>
-            <h3>Recurrent actions:</h3>
-            <ul>
-              {items &&
-                items.map(
-                  roleItems =>
-                    roleItems.items &&
-                    roleItems.items
-                      .filter(item => item.item_type === 'checklist')
-                      .map(item => (
-                        <li key={item.item_id}>
-                          <input
-                            type="checkbox"
-                            name={`${roleItems.role_name} - ${item.content}`}
-                            id="actions"
-                          />
-                          {roleItems.role_name} - {item.content}
-                        </li>
-                      ))
-                )}
-            </ul>
-            <h3>Indicators:</h3>
-            <ul>
-              {items &&
-                items.map(
-                  roleItems =>
-                    roleItems.items &&
-                    roleItems.items
-                      .filter(item => item.item_type === 'indicator')
-                      .map(item => (
-                        <li key={item.item_id}>
-                          <span className={b('bullet')} />
-                          {roleItems.role_name} - {item.content}
-                          :{' '}
-                          <input
-                            type="text"
-                            name={`${roleItems.role_name} - ${item.content}`}
-                            id="indicateurs"
-                            className="smallInput"
-                          />
-                        </li>
-                      ))
-                )}
-            </ul>
-          </span>
-        )}
+      <h3>Recurrent actions:</h3>
+      {actions.length > 0 ? (
+        <ul>
+          {actions.map(action => (
+            <li key={action.id}>
+              <input type="checkbox" name={action.content} id="actions" />
+              {action.content}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        'No actions defined.'
+      )}
+      <h3>Indicators:</h3>
+      {indicators.length > 0 ? (
+        <ul>
+          {indicators.map(indicator => (
+            <li key={indicator.id}>
+              <input type="checkbox" name={indicator.content} id="indicators" />
+              {indicator.content}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        'No indicators defined.'
+      )}
     </span>
   )
 }

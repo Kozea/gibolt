@@ -54,14 +54,11 @@ class MeetingsReportCreation extends React.Component {
 
   render() {
     const {
-      agendaIssues,
-      circleMilestones,
       circles,
       errors,
       history,
-      issues,
-      items,
       loading,
+      meeting,
       meetingsTypes,
       modal,
       onGoBack,
@@ -101,9 +98,9 @@ class MeetingsReportCreation extends React.Component {
         <article className={b('meetings')}>
           <h2>Create a report</h2>
           {errors.circles ||
-          errors.items ||
+          errors.labels ||
+          errors.meeting ||
           errors.meetingsTypes ||
-          errors.projects ||
           errors.users ? (
             <article className={b('group', { error: true })}>
               <h2>Error during fetch</h2>
@@ -196,20 +193,19 @@ class MeetingsReportCreation extends React.Component {
                   {params.meeting_name === 'Triage' && (
                     <span>
                       <ReportItems
-                        items={items}
-                        selectedCircle={selectedCircle}
+                        actions={meeting.actions}
+                        indicators={meeting.indicators}
                       />
-                      <ReportProjects
-                        circleMilestones={circleMilestones}
-                        issues={issues}
-                        onMilestoneClick={onMilestoneClick}
-                      />
+                      {/* <ReportProjects
+                          projects={meeting.projects}
+                          onMilestoneClick={onMilestoneClick}
+                        /> */}
                     </span>
                   )}
                   {(params.meeting_name === 'Triage' ||
                     params.meeting_name === 'Gouvernance') && (
                     <span>
-                      <ReportAgenda issues={agendaIssues} />
+                      <ReportAgenda issues={meeting.agenda} />
                     </span>
                   )}
                   <h3>Report content:</h3>
@@ -239,26 +235,21 @@ class MeetingsReportCreation extends React.Component {
 export default withRouter(
   connect(
     state => ({
-      agendaIssues: state.issues.results.agenda,
-      circleMilestones: state.circleMilestones.results,
       circles: state.circles,
       errors: {
         circles: state.circles.error,
-        items: state.items.error,
-        meetings: state.meetings.error,
+        labels: state.labels.error,
+        meeting: state.meeting.error,
         meetingsTypes: state.meetingsTypes.error,
-        projects: state.circleMilestones.error,
         users: state.users.error,
       },
-      issues: state.issues.results.issues,
-      items: state.items.results,
       loading:
-        (state.circleMilestones.loading ? 1 : 0) +
         (state.circles.loading ? 1 : 0) +
-        (state.items.loading ? 1 : 0) +
-        (state.issues.loading ? 1 : 0) +
+        (state.labels.loading ? 1 : 0) +
+        (state.meeting.loading ? 1 : 0) +
+        (state.meetingsTypes.loading ? 1 : 0) +
         (state.users.loading ? 1 : 0),
-      meeting: state.meeting,
+      meeting: state.meeting.results,
       meetingsTypes: state.meetingsTypes,
       modal: state.modal,
       search: state.router.location.search,
