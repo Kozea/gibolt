@@ -17,6 +17,7 @@ import { setModal } from '../../actions/issues'
 import {
   expandMilestone,
   fetchMeetingData,
+  getLastReport,
   submitReport,
   updateReportsList,
 } from '../../actions/meetings'
@@ -269,7 +270,9 @@ export default withRouter(
           dispatch(fetchResults('circles')),
           dispatch(fetchResults('meetingsTypes')),
           dispatch(fetchResults('labels')),
+          dispatch(getLastReport(locationSearch)),
         ]).then(() => {
+          dispatch(setLoading('meeting'))
           dispatch(fetchMeetingData(locationSearch))
         })
       },
