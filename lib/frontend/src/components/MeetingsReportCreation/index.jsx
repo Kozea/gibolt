@@ -15,15 +15,12 @@ import {
 } from '../../actions'
 import { setModal } from '../../actions/issues'
 import {
-  fetchCircleAgendaIssues,
+  fetchMeetingData,
+  getUsersListFromRoles,
   submitReport,
   updateReportsList,
 } from '../../actions/meetings'
-import {
-  fetchCircleItems,
-  fetchCircleMilestonesAndIssues,
-  expandMilestone,
-} from '../../actions/milestones'
+import { expandMilestone } from '../../actions/milestones'
 import { block, connect, sortUsers } from '../../utils'
 import IssueCreationDetail from './../IssueCreationDetail'
 import Loading from './../Loading'
@@ -41,9 +38,11 @@ class MeetingsReportCreation extends React.Component {
       selectedCircle: {},
     }
   }
+
   componentWillMount() {
     this.props.onUpdateMarkdown()
   }
+
   componentDidMount() {
     const search = parse(this.props.location.search)
     this.props.sync({
@@ -51,46 +50,6 @@ class MeetingsReportCreation extends React.Component {
       meeting_name: search.meeting_name ? search.meeting_name : '',
     })
     ReactModal.setAppElement('#root')
-  }
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.circles !== this.props.circles ||
-      nextProps.params.circle_id !== this.props.params.circle_id ||
-      nextProps.params.meeting_name !== this.props.params.meeting_name
-    ) {
-      if (nextProps.circles.results.length > 0) {
-        const crcl =
-          nextProps.circles.results.filter(
-            circle => circle.circle_id === nextProps.params.circle_id
-          ).length > 0
-            ? nextProps.circles.results.filter(
-                circle => circle.circle_id === nextProps.params.circle_id
-              )[0]
-            : {}
-        this.setState({
-          selectedCircle: crcl,
-        })
-        if (crcl.label[0].text && nextProps.params.meeting_name !== '') {
-          this.props.getAgendaIssues(
-            crcl.label[0].text,
-            nextProps.params.meeting_name
-          )
-        }
-      }
-      if (nextProps.params.meeting_name === 'Triage') {
-        this.props.getMilestonesAndItems(nextProps.params.circle_id)
-      }
-    }
-  }
-
-  getUsersListFromRoles(roles, users) {
-    const usersList = roles.map(
-      role => users.filter(user => role.user_id === user.user_id)[0]
-    )
-    if (usersList.length > 0) {
-      return Array.from(new Set(usersList))
-    }
-    return []
   }
 
   render() {
@@ -118,7 +77,7 @@ class MeetingsReportCreation extends React.Component {
     selectedCircle.selectedCircle = this.state.selectedCircle
     let usersList = []
     if (selectedCircle.roles && users) {
-      usersList = this.getUsersListFromRoles(selectedCircle.roles, users)
+      usersList = getUsersListFromRoles(selectedCircle.roles, users)
     }
     if (usersList.length > 0) {
       usersList = sortUsers(usersList)
@@ -291,32 +250,22 @@ export default withRouter(
         projects: state.circleMilestones.error,
         users: state.users.error,
       },
-      items: state.items.results,
       issues: state.issues.results.issues,
-      meetingsTypes: state.meetingsTypes,
-      modal: state.modal,
-      search: state.router.location.search,
-      params: state.params,
-      users: state.users.results,
+      items: state.items.results,
       loading:
         (state.circleMilestones.loading ? 1 : 0) +
         (state.circles.loading ? 1 : 0) +
         (state.items.loading ? 1 : 0) +
         (state.issues.loading ? 1 : 0) +
         (state.users.loading ? 1 : 0),
+      meeting: state.meeting,
+      meetingsTypes: state.meetingsTypes,
+      modal: state.modal,
+      search: state.router.location.search,
+      params: state.params,
+      users: state.users.results,
     }),
     dispatch => ({
-      getMilestonesAndItems: circleId => {
-        dispatch(setLoading('circleMilestones'))
-        dispatch(setLoading('items'))
-        dispatch(setLoading('issues'))
-        dispatch(fetchCircleMilestonesAndIssues(circleId))
-        dispatch(fetchCircleItems(circleId))
-      },
-      getAgendaIssues: (circleLabel, meetingType) => {
-        dispatch(setLoading('issues'))
-        dispatch(fetchCircleAgendaIssues(circleLabel, meetingType))
-      },
       onGoBack: history => {
         dispatch(updateMarkdown(''))
         dispatch(goBack(history))
@@ -338,15 +287,17 @@ export default withRouter(
       sync: locationSearch => {
         dispatch(setParams(locationSearch))
         dispatch(setLoading('users'))
-        dispatch(fetchResults('users'))
         dispatch(setLoading('circles'))
-        dispatch(fetchResults('circles'))
         dispatch(setLoading('meetingsTypes'))
-        dispatch(fetchResults('meetingsTypes'))
         dispatch(setLoading('labels'))
-        dispatch(fetchResults('labels'))
-        dispatch(setLoading('meetings'))
-        dispatch(fetchResults('meetings'))
+        Promise.all([
+          dispatch(fetchResults('users')),
+          dispatch(fetchResults('circles')),
+          dispatch(fetchResults('meetingsTypes')),
+          dispatch(fetchResults('labels')),
+        ]).then(() => {
+          dispatch(fetchMeetingData(locationSearch))
+        })
       },
       onUpdateMarkdown: () => {
         dispatch(updateMarkdown(''))
