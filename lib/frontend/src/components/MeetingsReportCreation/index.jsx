@@ -52,6 +52,15 @@ class MeetingsReportCreation extends React.Component {
     ReactModal.setAppElement('#root')
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.params.circle_id !== this.props.params.circle_id ||
+      nextProps.params.meeting_name !== this.props.params.meeting_name
+    ) {
+      this.props.onParamsChange(nextProps.params)
+    }
+  }
+
   render() {
     const {
       circles,
@@ -67,7 +76,6 @@ class MeetingsReportCreation extends React.Component {
       onSelectChange,
       onSubmit,
       params,
-      search,
     } = this.props
 
     return (
@@ -89,7 +97,6 @@ class MeetingsReportCreation extends React.Component {
           <h2>Create a report</h2>
           {errors.circles ||
           errors.labels ||
-          errors.meeting ||
           errors.meetingsTypes ||
           errors.users ? (
             <article className={b('group', { error: true })}>
@@ -108,10 +115,9 @@ class MeetingsReportCreation extends React.Component {
             </article>
           ) : (
             <span>
-              {errors.meetings && (
+              {errors.meeting && (
                 <article className={b('group', { error: true })}>
-                  <h2>Error during creation</h2>
-                  <code>{`meetings : ${errors.meetings}`}</code>
+                  <code>{`Error: ${errors.meeting}`}</code>
                   <br />
                 </article>
               )}
@@ -122,7 +128,7 @@ class MeetingsReportCreation extends React.Component {
                     id="circles"
                     name="circles"
                     value={params.circle_id}
-                    disabled={search !== ''}
+                    disabled={params.circle_id !== ''}
                     onChange={event => onSelectChange(event)}
                   >
                     <option value="" />
@@ -139,7 +145,7 @@ class MeetingsReportCreation extends React.Component {
                     id="meetingType"
                     name="meetingType"
                     value={params.meeting_name}
-                    disabled={search !== ''}
+                    disabled={params.meeting_name !== ''}
                     onChange={event => onSelectChange(event)}
                   >
                     <option value="" />
@@ -237,10 +243,13 @@ export default withRouter(
       meeting: state.meeting.results,
       meetingsTypes: state.meetingsTypes,
       modal: state.modal,
-      search: state.router.location.search,
       params: state.params,
     }),
     dispatch => ({
+      onParamsChange: locationSearch => {
+        dispatch(setLoading('meeting'))
+        dispatch(fetchMeetingData(locationSearch))
+      },
       onGoBack: history => {
         dispatch(updateMarkdown(''))
         dispatch(goBack(history))
@@ -272,8 +281,13 @@ export default withRouter(
           dispatch(fetchResults('labels')),
           dispatch(getLastReport(locationSearch)),
         ]).then(() => {
-          dispatch(setLoading('meeting'))
-          dispatch(fetchMeetingData(locationSearch))
+          if (
+            locationSearch.circle_id !== '' &&
+            locationSearch.meeting_name !== ''
+          ) {
+            dispatch(setLoading('meeting'))
+            dispatch(fetchMeetingData(locationSearch))
+          }
         })
       },
       onUpdateMarkdown: () => {
