@@ -17,11 +17,10 @@ import { setModal } from '../../actions/issues'
 import {
   expandMilestone,
   fetchMeetingData,
-  getUsersListFromRoles,
   submitReport,
   updateReportsList,
 } from '../../actions/meetings'
-import { block, connect, sortUsers } from '../../utils'
+import { block, connect } from '../../utils'
 import IssueCreationDetail from './../IssueCreationDetail'
 import Loading from './../Loading'
 import MarkdownEditor from './../Utils/MarkdownEditor'
@@ -68,17 +67,7 @@ class MeetingsReportCreation extends React.Component {
       onSubmit,
       params,
       search,
-      users,
     } = this.props
-    const { selectedCircle } = this.state
-    selectedCircle.selectedCircle = this.state.selectedCircle
-    let usersList = []
-    if (selectedCircle.roles && users) {
-      usersList = getUsersListFromRoles(selectedCircle.roles, users)
-    }
-    if (usersList.length > 0) {
-      usersList = sortUsers(usersList)
-    }
 
     return (
       <section className={b()}>
@@ -164,30 +153,25 @@ class MeetingsReportCreation extends React.Component {
                 <div className={b('content')}>
                   <span>
                     <h3>Presents:</h3>
-                    {selectedCircle.roles && (
-                      <span>
-                        {selectedCircle.roles.length > 0 &&
-                        usersList.length > 0 ? (
-                          <ul>
-                            {usersList.map(
-                              user =>
-                                user && (
-                                  <li key={user.user_id}>
-                                    <input
-                                      type="checkbox"
-                                      name={user.user_name}
-                                      id="users"
-                                      defaultChecked
-                                    />
-                                    {user.user_name}
-                                  </li>
-                                )
-                            )}
-                          </ul>
-                        ) : (
-                          'No roles defined'
+                    {meeting.attendees.length > 0 ? (
+                      <ul>
+                        {meeting.attendees.map(
+                          user =>
+                            user && (
+                              <li key={user.user_id}>
+                                <input
+                                  type="checkbox"
+                                  name={user.user_name}
+                                  id="users"
+                                  defaultChecked
+                                />
+                                {user.user_name}
+                              </li>
+                            )
                         )}
-                      </span>
+                      </ul>
+                    ) : (
+                      'No roles defined.'
                     )}
                   </span>
                   {params.meeting_name === 'Triage' && (
@@ -254,7 +238,6 @@ export default withRouter(
       modal: state.modal,
       search: state.router.location.search,
       params: state.params,
-      users: state.users.results,
     }),
     dispatch => ({
       onGoBack: history => {

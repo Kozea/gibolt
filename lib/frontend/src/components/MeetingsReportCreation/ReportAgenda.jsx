@@ -12,9 +12,9 @@ export default function ReportAgenda(props) {
   return (
     <span>
       <h3>Agenda:</h3>
-      <ul>
-        {issues &&
-          issues.map(issue => (
+      {issues.length > 0 ? (
+        <ul>
+          {issues.map(issue => (
             <li key={issue.ticket_id} title={issue.body}>
               <span className={b(`bullet ${issue.state}`)} />
               <a href={issue.html_url} target="_blank">
@@ -51,7 +51,10 @@ export default function ReportAgenda(props) {
               />
             </li>
           ))}
-      </ul>
+        </ul>
+      ) : (
+        'No selected issues.'
+      )}
     </span>
   )
 }
