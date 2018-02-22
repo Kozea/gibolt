@@ -10,13 +10,13 @@ import { block, connect } from '../../utils'
 const b = block('MeetingsReportCreation')
 
 function ReportProjects(props) {
-  const { circleMilestones, issues, onMilestoneClick, onModalCreation } = props
+  const { onMilestoneClick, onModalCreation, projects } = props
   return (
     <span>
       <h3>Projects:</h3>
-      <ul>
-        {circleMilestones.length > 0 &&
-          circleMilestones.map(milestone => (
+      {projects.length > 0 ? (
+        <ul>
+          {projects.map(milestone => (
             <li key={milestone.milestone_number} title={milestone.description}>
               <a
                 className={b('unlink')}
@@ -59,11 +59,8 @@ function ReportProjects(props) {
                   />
                 </span>
               )}
-              {issues.filter(
-                issue =>
-                  issue.milestone_id === milestone.milestone_id &&
-                  !issue.pull_request
-              ).length > 0 && (
+              {milestone.issues.filter(issue => !issue.pull_request).length >
+                0 && (
                 <span>
                   <span
                     className={b('lighter')}
@@ -74,15 +71,9 @@ function ReportProjects(props) {
                   {milestone.is_expanded && (
                     <span>
                       <br />
-
                       <ul className={b('tickets')}>
-                        {issues
-                          .filter(
-                            issue =>
-                              issue.milestone_number ===
-                                milestone.milestone_number &&
-                              !issue.pull_request
-                          )
+                        {milestone.issues
+                          .filter(issue => !issue.pull_request)
                           .map(issue => (
                             <li key={issue.ticket_id} title={issue.body}>
                               <span className={b('bullet')} />
@@ -126,7 +117,10 @@ function ReportProjects(props) {
               />
             </li>
           ))}
-      </ul>
+        </ul>
+      ) : (
+        'No associated milestones.'
+      )}
     </span>
   )
 }

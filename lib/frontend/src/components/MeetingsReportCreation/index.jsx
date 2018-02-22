@@ -15,12 +15,12 @@ import {
 } from '../../actions'
 import { setModal } from '../../actions/issues'
 import {
+  expandMilestone,
   fetchMeetingData,
   getUsersListFromRoles,
   submitReport,
   updateReportsList,
 } from '../../actions/meetings'
-import { expandMilestone } from '../../actions/milestones'
 import { block, connect, sortUsers } from '../../utils'
 import IssueCreationDetail from './../IssueCreationDetail'
 import Loading from './../Loading'
@@ -196,10 +196,10 @@ class MeetingsReportCreation extends React.Component {
                         actions={meeting.actions}
                         indicators={meeting.indicators}
                       />
-                      {/* <ReportProjects
-                          projects={meeting.projects}
-                          onMilestoneClick={onMilestoneClick}
-                        /> */}
+                      <ReportProjects
+                        projects={meeting.projects}
+                        onMilestoneClick={onMilestoneClick}
+                      />
                     </span>
                   )}
                   {(params.meeting_name === 'Triage' ||
