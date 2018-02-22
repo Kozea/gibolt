@@ -2,6 +2,10 @@ import './MeetingsReportCreation.sass'
 
 import React from 'react'
 
+import { block } from '../../utils'
+
+const b = block('MeetingsReportCreation')
+
 export default function ReportItems(props) {
   const { actions, indicators } = props
   return (
@@ -24,8 +28,15 @@ export default function ReportItems(props) {
         <ul>
           {indicators.map(indicator => (
             <li key={indicator.id}>
-              <input type="checkbox" name={indicator.content} id="indicators" />
+              <span className={b('bullet')} />
               {indicator.content}
+              :{' '}
+              <input
+                type="text"
+                name={indicator.content}
+                id="indicateurs"
+                className="smallInput"
+              />
             </li>
           ))}
         </ul>
