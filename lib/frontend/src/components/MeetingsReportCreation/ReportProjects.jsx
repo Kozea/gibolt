@@ -114,6 +114,7 @@ function ReportProjects(props) {
                 className="largeInput"
                 id="milestones"
                 name={`${milestone.repo_name} - ${milestone.milestone_title}`}
+                value={milestone.comment}
               />
             </li>
           ))}

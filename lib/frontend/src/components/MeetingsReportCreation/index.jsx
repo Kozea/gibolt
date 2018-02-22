@@ -96,89 +96,89 @@ class MeetingsReportCreation extends React.Component {
         <article className={b('meetings')}>
           <h2>Create a report</h2>
           {errors.circles ||
-          errors.labels ||
-          errors.meetingsTypes ||
-          errors.users ? (
-            <article className={b('group', { error: true })}>
-              <h2>Error during fetch</h2>
-              <code>
-                {Object.keys(errors).map(
-                  key =>
+            errors.labels ||
+            errors.meetingsTypes ||
+            errors.users ? (
+              <article className={b('group', { error: true })}>
+                <h2>Error during fetch</h2>
+                <code>
+                  {Object.keys(errors).map(
+                    key =>
                     errors[key] === null ? (
                       ''
                     ) : (
                       <div>{`${key}: ${errors[key]} `}</div>
                     )
-                )}
-              </code>
-              <br />
-            </article>
-          ) : (
-            <span>
-              {errors.meeting && (
-                <article className={b('group', { error: true })}>
-                  <code>{`Error: ${errors.meeting}`}</code>
-                  <br />
-                </article>
-              )}
-              <form onSubmit={event => event.preventDefault()}>
-                <label>
-                  Circle:
-                  <select
-                    id="circles"
-                    name="circles"
-                    value={params.circle_id}
-                    disabled={params.circle_id !== ''}
-                    onChange={event => onSelectChange(event)}
-                  >
-                    <option value="" />
-                    {circles.results.map(circle => (
-                      <option key={circle.circle_id} value={circle.circle_id}>
-                        {circle.circle_name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Meetings:
-                  <select
-                    id="meetingType"
-                    name="meetingType"
-                    value={params.meeting_name}
-                    disabled={params.meeting_name !== ''}
-                    onChange={event => onSelectChange(event)}
-                  >
-                    <option value="" />
-                    {meetingsTypes.results.map(type => (
-                      <option key={type.type_id} value={type.type_name}>
-                        {type.type_name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                  )}
+                </code>
                 <br />
-                <div className={b('content')}>
-                  <span>
-                    <h3>Presents:</h3>
-                    {meeting.attendees.length > 0 ? (
-                      <ul>
-                        {meeting.attendees.map(
-                          user =>
+              </article>
+            ) : (
+              <span>
+                {errors.meeting && (
+                  <article className={b('group', { error: true })}>
+                    <code>{`Error: ${errors.meeting}`}</code>
+                    <br />
+                  </article>
+                )}
+                <form onSubmit={event => event.preventDefault()}>
+                  <label>
+                    Circle:
+                    <select
+                      id="circles"
+                      name="circles"
+                      value={params.circle_id}
+                      disabled={params.circle_id !== ''}
+                      onChange={event => onSelectChange(event)}
+                    >
+                      <option value="" />
+                      {circles.results.map(circle => (
+                        <option key={circle.circle_id} value={circle.circle_id}>
+                          {circle.circle_name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    Meetings:
+                    <select
+                      id="meetingType"
+                      name="meetingType"
+                      value={params.meeting_name}
+                      disabled={params.meeting_name !== ''}
+                      onChange={event => onSelectChange(event)}
+                    >
+                      <option value="" />
+                      {meetingsTypes.results.map(type => (
+                        <option key={type.type_id} value={type.type_name}>
+                          {type.type_name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <br />
+                  <div className={b('content')}>
+                    <span>
+                      <h3>Presents:</h3>
+                      {meeting.attendees.length > 0 ? (
+                        <ul>
+                          {meeting.attendees.map(
+                            user =>
                             user && (
                               <li key={user.user_id}>
                                 <input
-                                  type="checkbox"
-                                  name={user.user_name}
+                                  checked={user.checked}
                                   id="users"
-                                  defaultChecked
+                                  name={user.user_name}
+                                  type="checkbox"
                                 />
                                 {user.user_name}
                               </li>
                             )
-                        )}
-                      </ul>
-                    ) : (
-                      'No roles defined.'
+                          )}
+                        </ul>
+                      ) : (
+                        'No roles defined.'
                     )}
                   </span>
                   {params.meeting_name === 'Triage' && (

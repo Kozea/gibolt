@@ -48,6 +48,7 @@ export default function ReportAgenda(props) {
                 name={`${issue.repo_name} - #${issue.ticket_number} ${
                   issue.ticket_title
                 }`}
+                value={issue.meetingComment}
               />
             </li>
           ))}

@@ -15,7 +15,12 @@ export default function ReportItems(props) {
         <ul>
           {actions.map(action => (
             <li key={action.id}>
-              <input type="checkbox" name={action.content} id="actions" />
+              <input
+                checked={action.checked}
+                id="actions"
+                name={action.content}
+                type="checkbox"
+              />
               {action.content}
             </li>
           ))}
@@ -32,10 +37,11 @@ export default function ReportItems(props) {
               {indicator.content}
               :{' '}
               <input
-                type="text"
-                name={indicator.content}
-                id="indicateurs"
                 className="smallInput"
+                id="indicateurs"
+                name={indicator.content}
+                type="text"
+                value={indicator.value}
               />
             </li>
           ))}
