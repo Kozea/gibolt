@@ -2,12 +2,16 @@ import './MeetingsReportCreation.sass'
 
 import React from 'react'
 
-import { block } from '../../utils'
+import {
+  updateMeetingActions,
+  updateMeetingIndicators,
+} from '../../actions/meetings'
+import { block, connect } from '../../utils'
 
 const b = block('MeetingsReportCreation')
 
-export default function ReportItems(props) {
-  const { actions, indicators } = props
+function ReportItems(props) {
+  const { actions, indicators, onActionsChange, onIndicatorsChange } = props
   return (
     <span>
       <h3>Recurrent actions:</h3>
@@ -19,6 +23,7 @@ export default function ReportItems(props) {
                 checked={action.checked}
                 id="actions"
                 name={action.content}
+                onChange={event => onActionsChange(event.target)}
                 type="checkbox"
               />
               {action.content}
@@ -40,6 +45,7 @@ export default function ReportItems(props) {
                 className="smallInput"
                 id="indicateurs"
                 name={indicator.content}
+                onChange={event => onIndicatorsChange(event.target)}
                 type="text"
                 value={indicator.value}
               />
@@ -52,3 +58,12 @@ export default function ReportItems(props) {
     </span>
   )
 }
+export default connect(
+  () => ({}),
+  dispatch => ({
+    onActionsChange: target =>
+      dispatch(updateMeetingActions(target.name, target.checked)),
+    onIndicatorsChange: target =>
+      dispatch(updateMeetingIndicators(target.name, target.value)),
+  })
+)(ReportItems)

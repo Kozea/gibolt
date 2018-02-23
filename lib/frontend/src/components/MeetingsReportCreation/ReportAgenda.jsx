@@ -3,12 +3,13 @@ import './MeetingsReportCreation.sass'
 import { format } from 'date-fns'
 import React from 'react'
 
-import { block } from '../../utils'
+import { updateMeetingAgenda } from '../../actions/meetings'
+import { block, connect } from '../../utils'
 
 const b = block('MeetingsReportCreation')
 
-export default function ReportAgenda(props) {
-  const { issues } = props
+function ReportAgenda(props) {
+  const { issues, onAgendaChange } = props
   return (
     <span>
       <h3>Agenda:</h3>
@@ -45,9 +46,9 @@ export default function ReportAgenda(props) {
               <input
                 className="largeInput"
                 id="agenda"
-                name={`${issue.repo_name} - #${issue.ticket_number} ${
-                  issue.ticket_title
-                }`}
+                onChange={event =>
+                  onAgendaChange(issue.ticket_id, event.target.value)
+                }
                 value={issue.meetingComment}
               />
             </li>
@@ -59,3 +60,10 @@ export default function ReportAgenda(props) {
     </span>
   )
 }
+export default connect(
+  () => ({}),
+  dispatch => ({
+    onAgendaChange: (ticketId, value) =>
+      dispatch(updateMeetingAgenda(ticketId, value)),
+  })
+)(ReportAgenda)

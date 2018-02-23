@@ -256,7 +256,9 @@ export default withRouter(
         dispatch(fetchMeetingData(locationSearch))
       },
       onAttendeesChange: target =>
-        dispatch(updateMeetingAttendees(target.name, target.checked)),
+        dispatch(
+          updateMeetingAttendees('attendees', target.name, target.checked)
+        ),
       onGoBack: history => {
         dispatch(updateMarkdown(''))
         dispatch(goBack(history))

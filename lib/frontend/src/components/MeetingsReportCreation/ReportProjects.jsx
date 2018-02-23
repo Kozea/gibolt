@@ -5,12 +5,18 @@ import React from 'react'
 
 import Progress from './../Progress'
 import { setModal, updateIssueParams } from '../../actions/issues'
+import { updateMeetingProjects } from '../../actions/meetings'
 import { block, connect } from '../../utils'
 
 const b = block('MeetingsReportCreation')
 
 function ReportProjects(props) {
-  const { onMilestoneClick, onModalCreation, projects } = props
+  const {
+    onMilestoneClick,
+    onModalCreation,
+    onProjectsChange,
+    projects,
+  } = props
   return (
     <span>
       <h3>Projects:</h3>
@@ -113,7 +119,9 @@ function ReportProjects(props) {
               <input
                 className="largeInput"
                 id="milestones"
-                name={`${milestone.repo_name} - ${milestone.milestone_title}`}
+                onChange={event =>
+                  onProjectsChange(milestone.milestone_id, event.target.value)
+                }
                 value={milestone.comment}
               />
             </li>
@@ -132,5 +140,7 @@ export default connect(
       dispatch(updateIssueParams({ grouper, group }))
       dispatch(setModal(true, true, null))
     },
+    onProjectsChange: (milestoneId, value) =>
+      dispatch(updateMeetingProjects(milestoneId, value)),
   })
 )(ReportProjects)
