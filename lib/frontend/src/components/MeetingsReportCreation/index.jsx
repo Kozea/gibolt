@@ -205,7 +205,7 @@ class MeetingsReportCreation extends React.Component {
                     </span>
                   )}
                   <h3>Report content:</h3>
-                  <MarkdownEditor />
+                  <MarkdownEditor useStore />
                 </div>
                 <article className={b('action')}>
                   <button
