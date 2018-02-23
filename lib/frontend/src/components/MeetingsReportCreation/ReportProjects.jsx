@@ -67,54 +67,54 @@ function ReportProjects(props) {
               )}
               {milestone.issues.filter(issue => !issue.pull_request).length >
                 0 && (
-                  <span>
-                    <span
-                      className={b('lighter')}
-                      onClick={() => onMilestoneClick(milestone.milestone_id)}
-                    >
-                      show/hide closed issues since last report
-                    </span>
-                    {milestone.is_expanded && (
-                      <span>
-                        <br />
-                        <ul className={b('tickets')}>
-                          {milestone.issues
-                            .filter(issue => !issue.pull_request)
-                            .map(issue => (
-                              <li key={issue.ticket_id} title={issue.body}>
-                                <span className={b('bullet')} />
-                                <a href={issue.html_url} target="_blank">
-                                  #{issue.ticket_number}
-                                </a>{' '}
-                                {issue.ticket_title},
-                                <span className={b('lighter')}>
-                                  closed:{' '}
-                                  {format(
-                                    new Date(issue.closed_at),
-                                    'DD/MM/YYYY HH:mm'
-                                  )}
-                                  , last update:{' '}
-                                  {format(
-                                    new Date(issue.updated_at),
-                                    'DD/MM/YYYY HH:mm'
-                                  )}
-                                </span>
-                                {issue.assignees.map(user => (
-                                  <img
-                                    key={user.user_id}
-                                    className={b('avatar')}
-                                    src={user.avatar_url}
-                                    alt="avatar"
-                                    title={user.user_name}
-                                  />
-                                ))}
-                              </li>
-                            ))}
-                        </ul>
-                      </span>
-                    )}
+                <span>
+                  <span
+                    className={b('lighter')}
+                    onClick={() => onMilestoneClick(milestone.milestone_id)}
+                  >
+                    show/hide closed issues since last report
                   </span>
-                )}
+                  {milestone.is_expanded && (
+                    <span>
+                      <br />
+                      <ul className={b('tickets')}>
+                        {milestone.issues
+                          .filter(issue => !issue.pull_request)
+                          .map(issue => (
+                            <li key={issue.ticket_id} title={issue.body}>
+                              <span className={b('bullet')} />
+                              <a href={issue.html_url} target="_blank">
+                                #{issue.ticket_number}
+                              </a>{' '}
+                              {issue.ticket_title},
+                              <span className={b('lighter')}>
+                                closed:{' '}
+                                {format(
+                                  new Date(issue.closed_at),
+                                  'DD/MM/YYYY HH:mm'
+                                )}
+                                , last update:{' '}
+                                {format(
+                                  new Date(issue.updated_at),
+                                  'DD/MM/YYYY HH:mm'
+                                )}
+                              </span>
+                              {issue.assignees.map(user => (
+                                <img
+                                  key={user.user_id}
+                                  className={b('avatar')}
+                                  src={user.avatar_url}
+                                  alt="avatar"
+                                  title={user.user_name}
+                                />
+                              ))}
+                            </li>
+                          ))}
+                      </ul>
+                    </span>
+                  )}
+                </span>
+              )}
               <br />
               <input
                 className="largeInput"

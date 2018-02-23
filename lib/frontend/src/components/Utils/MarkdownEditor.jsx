@@ -33,7 +33,7 @@ class MarkdownEditor extends React.Component {
       editorState,
     })
     if (this.props.useStore) {
-      // for meeting report creation
+      // for meeting report creation/edition only
       // in other cases, useStore is not defined
       this.props.onContentChange(
         draftjsToMd(convertToRaw(editorState.getCurrentContent()), myMdDict)
