@@ -1,4 +1,4 @@
-import './MeetingsReportCreation.sass'
+import './MeetingReport.sass'
 
 import { format } from 'date-fns'
 import React from 'react'
@@ -8,10 +8,11 @@ import { setModal, updateIssueParams } from '../../actions/issues'
 import { updateMeetingProjects } from '../../actions/meetings'
 import { block, connect } from '../../utils'
 
-const b = block('MeetingsReportCreation')
+const b = block('MeetingReport')
 
 function ReportProjects(props) {
   const {
+    isEditionDisabled,
     onMilestoneClick,
     onModalCreation,
     onProjectsChange,
@@ -118,6 +119,7 @@ function ReportProjects(props) {
               <br />
               <input
                 className="largeInput"
+                disabled={isEditionDisabled}
                 id="milestones"
                 onChange={event =>
                   onProjectsChange(milestone.milestone_id, event.target.value)

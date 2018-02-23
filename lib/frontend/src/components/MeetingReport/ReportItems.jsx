@@ -1,4 +1,4 @@
-import './MeetingsReportCreation.sass'
+import './MeetingReport.sass'
 
 import React from 'react'
 
@@ -8,10 +8,16 @@ import {
 } from '../../actions/meetings'
 import { block, connect } from '../../utils'
 
-const b = block('MeetingsReportCreation')
+const b = block('MeetingReport')
 
 function ReportItems(props) {
-  const { actions, indicators, onActionsChange, onIndicatorsChange } = props
+  const {
+    actions,
+    indicators,
+    isEditionDisabled,
+    onActionsChange,
+    onIndicatorsChange,
+  } = props
   return (
     <span>
       <h3>Recurrent actions:</h3>
@@ -21,6 +27,7 @@ function ReportItems(props) {
             <li key={action.id}>
               <input
                 checked={action.checked}
+                disabled={isEditionDisabled}
                 id="actions"
                 name={action.content}
                 onChange={event => onActionsChange(event.target)}
@@ -43,6 +50,7 @@ function ReportItems(props) {
               :{' '}
               <input
                 className="smallInput"
+                disabled={isEditionDisabled}
                 id="indicateurs"
                 name={indicator.content}
                 onChange={event => onIndicatorsChange(event.target)}

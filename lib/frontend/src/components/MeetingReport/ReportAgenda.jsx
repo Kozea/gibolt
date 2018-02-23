@@ -1,4 +1,4 @@
-import './MeetingsReportCreation.sass'
+import './MeetingReport.sass'
 
 import { format } from 'date-fns'
 import React from 'react'
@@ -6,10 +6,10 @@ import React from 'react'
 import { updateMeetingAgenda } from '../../actions/meetings'
 import { block, connect } from '../../utils'
 
-const b = block('MeetingsReportCreation')
+const b = block('MeetingReport')
 
 function ReportAgenda(props) {
-  const { issues, onAgendaChange } = props
+  const { isEditionDisabled, issues, onAgendaChange } = props
   return (
     <span>
       <h3>Agenda:</h3>
@@ -45,6 +45,7 @@ function ReportAgenda(props) {
               <br />
               <input
                 className="largeInput"
+                disabled={isEditionDisabled}
                 id="agenda"
                 onChange={event =>
                   onAgendaChange(issue.ticket_id, event.target.value)

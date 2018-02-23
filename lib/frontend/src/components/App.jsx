@@ -11,7 +11,7 @@ import Circles from './Circles'
 import IssuesDashboard from './IssuesDashboard'
 import Meeting from './Meeting'
 import Meetings from './Meetings'
-import MeetingsReportCreation from './MeetingsReportCreation'
+import MeetingReportCreation from './MeetingReportCreation'
 import NotFound from './NotFound'
 import Presets from './Presets'
 import Report from './Report'
@@ -48,7 +48,7 @@ export default class App extends Component {
           <Route path="/createRole" component={CreateRole} />
           <Route path="/meeting" component={Meeting} />
           <Route path="/meetings" component={Meetings} />
-          <Route path="/createReport" component={MeetingsReportCreation} />
+          <Route path="/createReport" component={MeetingReportCreation} />
           <Route path="/admin" component={Admin} />
           <Route component={NotFound} />
         </Switch>
