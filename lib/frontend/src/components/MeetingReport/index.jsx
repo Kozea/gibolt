@@ -10,7 +10,6 @@ import { withRouter } from 'react-router-dom'
 import {
   updateMarkdown,
   fetchResults,
-  goBack,
   setLoading,
   setParams,
 } from '../../actions'
@@ -181,18 +180,21 @@ class MeetingsReportCreation extends React.Component {
                 <span>
                   {meeting.circle ? meeting.circle[0].circle_name : ''} -{' '}
                   {meeting.report_type}{' '}
-                  {isEditionDisabled && (
-                    <span
-                      className={b('unlink')}
-                      title="Edit report"
-                      onClick={() => onEditClick(meeting.content)}
-                    >
-                      <i
-                        className="fa fa-edit editMeeting"
-                        aria-hidden="true"
-                      />
-                    </span>
-                  )}{' '}
+                  {isEditionDisabled &&
+                    (oldReport ? (
+                      ' (Old version, not editable)'
+                    ) : (
+                      <span
+                        className={b('unlink')}
+                        title="Edit report"
+                        onClick={() => onEditClick(meeting.content)}
+                      >
+                        <i
+                          className="fa fa-edit editMeeting"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    ))}{' '}
                   <br />
                   created by:{' '}
                   {users
@@ -290,7 +292,12 @@ class MeetingsReportCreation extends React.Component {
               </div>
               {isEditionDisabled ? (
                 <article className={b('action')}>
-                  <button type="submit">Back to Circle</button>
+                  <button
+                    type="submit"
+                    onClick={() => onGoBack(meeting.circle_id, history)}
+                  >
+                    Back to Circle
+                  </button>
                 </article>
               ) : (
                 <article className={b('action')}>
@@ -300,7 +307,10 @@ class MeetingsReportCreation extends React.Component {
                   >
                     Submit
                   </button>
-                  <button type="submit" onClick={() => onGoBack(history)}>
+                  <button
+                    type="submit"
+                    onClick={() => onGoBack(meeting.circle_id, history)}
+                  >
                     Cancel
                   </button>
                 </article>
@@ -343,9 +353,9 @@ export default withRouter(
         dispatch(updateMarkdown(content))
         dispatch(toggleEdition(false))
       },
-      onGoBack: history => {
+      onGoBack: (circleId, history) => {
         dispatch(updateMarkdown(''))
-        dispatch(goBack(history))
+        history.push(`/circle?circle_id=${circleId}`)
       },
       onMilestoneClick: milestoneId => {
         dispatch(expandMilestone(milestoneId))
@@ -361,6 +371,9 @@ export default withRouter(
         dispatch(updateReportsList(event))
       },
       onSubmit: (history, isCreation) => {
+        if (isCreation) {
+          dispatch(updateMarkdown(''))
+        }
         dispatch(submitOrUpdateReport(history, isCreation))
       },
       sync: (locationSearch, isCreation) => {
