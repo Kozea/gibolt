@@ -49,7 +49,7 @@ function ReportItems(props) {
               {indicator.content}
               :{' '}
               <input
-                className="smallInput"
+                className={`smallInput${isEditionDisabled ? '__disabled' : ''}`}
                 disabled={isEditionDisabled}
                 id="indicateurs"
                 name={indicator.content}

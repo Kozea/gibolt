@@ -44,7 +44,7 @@ function ReportAgenda(props) {
               ))}
               <br />
               <input
-                className="largeInput"
+                className={`largeInput${isEditionDisabled ? '__disabled' : ''}`}
                 disabled={isEditionDisabled}
                 id="agenda"
                 onChange={event =>

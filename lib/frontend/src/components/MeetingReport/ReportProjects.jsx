@@ -61,7 +61,7 @@ function ReportProjects(props) {
                   }
                 >
                   <i
-                    className="fa fa-plus-circle addCircle"
+                    className="fa fa-plus-circle createIssue"
                     aria-hidden="true"
                   />
                 </span>
@@ -118,7 +118,7 @@ function ReportProjects(props) {
               )}
               <br />
               <input
-                className="largeInput"
+                className={`largeInput${isEditionDisabled ? '__disabled' : ''}`}
                 disabled={isEditionDisabled}
                 id="milestones"
                 onChange={event =>

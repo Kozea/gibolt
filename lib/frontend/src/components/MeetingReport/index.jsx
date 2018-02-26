@@ -20,6 +20,7 @@ import {
   expandMilestone,
   fetchMeetingData,
   getLastReport,
+  sortAttendees,
   submitReport,
   updateMeetingAttendees,
   updateReportsList,
@@ -34,18 +35,6 @@ import ReportProjects from './ReportProjects'
 
 const b = block('MeetingReport')
 var ReactMarkdown = require('react-markdown')
-
-const sortPresents = presents => {
-  const presentsList = []
-  for (let i = 0; i < presents.length; i++) {
-    presentsList.push({
-      user_name: presents[i].user_name,
-      checked: presents[i].checked,
-    })
-  }
-  presentsList.sort((a, c) => c.checked - a.checked)
-  return presentsList
-}
 
 class MeetingsReportCreation extends React.Component {
   constructor(props, context) {
@@ -100,7 +89,7 @@ class MeetingsReportCreation extends React.Component {
       params,
       users,
     } = this.props
-    const attendees = sortPresents(meeting.attendees)
+    const attendees = sortAttendees(meeting.attendees)
     const oldReport = meeting.attendees.length === 0
     return (
       <section className={b()}>
@@ -284,8 +273,10 @@ class MeetingsReportCreation extends React.Component {
                 <h3>Report content:</h3>
                 {isEditionDisabled ? (
                   <ReactMarkdown
-                    className={b('markdownContent').toString()}
-                    source={meeting.content}
+                    className={`${b('markdownContent').toString()}${
+                      isEditionDisabled ? '__disabled' : ''
+                    }`}
+                    source={meeting.content === '' ? 'RAS' : meeting.content}
                   />
                 ) : (
                   <MarkdownEditor useStore />

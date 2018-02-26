@@ -88,11 +88,7 @@
     max-width: 100%
 
   input
-      background: #e0e9f0
-      box-sizing: border-box
-      font-family: Lato, sans-serif
-      margin: 0 0.5em
-      outline: none
+    margin: 0 0.5em
 
   select, textarea
     background: #e0e9f0
@@ -106,14 +102,20 @@
   select
     width: 15em
 
-.addCircle
+  .largeInput
+      width: 53em
+
+  .smallInput
+      width: 5em
+
+  .largeInput, .smallInput, &__markdownContent
+      &__disabled
+        background-color: #F0F5F9
+        display: inline
+        width: auto
+
+.createIssue
   margin-left: .5em
-
-.largeInput
-    width: 53em
-
-.smallInput
-    width: 5em
 
 .open
   background-color: $open-issue
