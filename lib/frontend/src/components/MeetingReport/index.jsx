@@ -22,7 +22,9 @@ import {
   getLastReport,
   sortAttendees,
   submitReport,
+  toggleEdition,
   updateMeetingAttendees,
+  updateReport,
   updateReportsList,
 } from '../../actions/meetings'
 import { block, connect } from '../../utils'
@@ -80,6 +82,7 @@ class MeetingsReportCreation extends React.Component {
       meeting,
       meetingsTypes,
       modal,
+      onEditClick,
       onGoBack,
       onMilestoneClick,
       onModalClose,
@@ -180,7 +183,11 @@ class MeetingsReportCreation extends React.Component {
                   {meeting.circle ? meeting.circle[0].circle_name : ''} -{' '}
                   {meeting.report_type}{' '}
                   {isEditionDisabled && (
-                    <span className={b('unlink')} title="Edit report">
+                    <span
+                      className={b('unlink')}
+                      title="Edit report"
+                      onClick={() => onEditClick(meeting.content)}
+                    >
                       <i
                         className="fa fa-edit editMeeting"
                         aria-hidden="true"
@@ -288,7 +295,10 @@ class MeetingsReportCreation extends React.Component {
                 </article>
               ) : (
                 <article className={b('action')}>
-                  <button type="submit" onClick={() => onSubmit(history)}>
+                  <button
+                    type="submit"
+                    onClick={() => onSubmit(history, isCreation)}
+                  >
                     Submit
                   </button>
                   <button type="submit" onClick={() => onGoBack(history)}>
@@ -328,12 +338,12 @@ export default withRouter(
       users: state.users.results,
     }),
     dispatch => ({
-      onParamsChange: locationSearch => {
-        dispatch(setLoading('meeting'))
-        dispatch(fetchMeetingData(locationSearch))
-      },
       onAttendeesChange: target =>
         dispatch(updateMeetingAttendees(target.name, target.checked)),
+      onEditClick: content => {
+        dispatch(updateMarkdown(content))
+        dispatch(toggleEdition(false))
+      },
       onGoBack: history => {
         dispatch(updateMarkdown(''))
         dispatch(goBack(history))
@@ -344,12 +354,20 @@ export default withRouter(
       onModalClose: () => {
         dispatch(setModal(false, false, null))
       },
+      onParamsChange: locationSearch => {
+        dispatch(setLoading('meeting'))
+        dispatch(fetchMeetingData(locationSearch))
+      },
       onSelectChange: event => {
         dispatch(updateReportsList(event))
       },
-      onSubmit: history => {
-        dispatch(submitReport(history))
-        dispatch(updateMarkdown(''))
+      onSubmit: (history, isCreation) => {
+        if (isCreation) {
+          dispatch(submitReport(history))
+          // dispatch(updateMarkdown(''))
+        } else {
+          dispatch(updateReport())
+        }
       },
       sync: (locationSearch, isCreation) => {
         dispatch(setParams(locationSearch))
