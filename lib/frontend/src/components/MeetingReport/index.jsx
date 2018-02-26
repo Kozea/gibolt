@@ -21,10 +21,9 @@ import {
   fetchMeetingData,
   getLastReport,
   sortAttendees,
-  submitReport,
+  submitOrUpdateReport,
   toggleEdition,
   updateMeetingAttendees,
-  updateReport,
   updateReportsList,
 } from '../../actions/meetings'
 import { block, connect } from '../../utils'
@@ -362,12 +361,7 @@ export default withRouter(
         dispatch(updateReportsList(event))
       },
       onSubmit: (history, isCreation) => {
-        if (isCreation) {
-          dispatch(submitReport(history))
-          // dispatch(updateMarkdown(''))
-        } else {
-          dispatch(updateReport())
-        }
+        dispatch(submitOrUpdateReport(history, isCreation))
       },
       sync: (locationSearch, isCreation) => {
         dispatch(setParams(locationSearch))
