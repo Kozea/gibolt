@@ -21,7 +21,7 @@ import {
   getLastReport,
   sortAttendees,
   submitOrUpdateReport,
-  toggleEdition,
+  disableEdition,
   updateMeetingAttendees,
   updateReportsList,
 } from '../../actions/meetings'
@@ -42,10 +42,6 @@ class MeetingsReportCreation extends React.Component {
     this.state = {
       selectedCircle: {},
     }
-  }
-
-  componentWillMount() {
-    this.props.onUpdateMarkdown()
   }
 
   componentDidMount() {
@@ -88,6 +84,7 @@ class MeetingsReportCreation extends React.Component {
       onSelectChange,
       onSubmit,
       params,
+      sync,
       users,
     } = this.props
     const attendees = sortAttendees(meeting.attendees)
@@ -309,7 +306,11 @@ class MeetingsReportCreation extends React.Component {
                   </button>
                   <button
                     type="submit"
-                    onClick={() => onGoBack(meeting.circle_id, history)}
+                    onClick={() =>
+                      isCreation
+                        ? onGoBack(meeting.circle_id, history)
+                        : sync(params, isCreation)
+                    }
                   >
                     Cancel
                   </button>
@@ -349,9 +350,18 @@ export default withRouter(
     dispatch => ({
       onAttendeesChange: target =>
         dispatch(updateMeetingAttendees(target.name, target.checked)),
+      // onCancel: (circleId, history, isCreation, reportId) => {
+      //   if (isCreation) {
+      //     dispatch(updateMarkdown(''))
+      //     history.push(`/circle?circle_id=${circleId}`)
+      //   } else {
+      //     dispatch(disableEdition(true))
+      //     history.push(`/meeting?report_id=${reportId}`)
+      //   }
+      // },
       onEditClick: content => {
         dispatch(updateMarkdown(content))
-        dispatch(toggleEdition(false))
+        dispatch(disableEdition(false))
       },
       onGoBack: (circleId, history) => {
         dispatch(updateMarkdown(''))
