@@ -12,15 +12,12 @@ import Progress from './Progress'
 
 const b = block('Milestone')
 
-function getSelectedCircles(circleSelect, repoName) {
+function getSelectedCircles(circleSelect) {
   const selectedCircles = []
   for (let i = 0; i < circleSelect.options.length; i++) {
     const selectedCircle = circleSelect.options[i]
     if (selectedCircle.selected) {
-      selectedCircles.push({
-        circle_id: +selectedCircle.value,
-        repo_name: repoName,
-      })
+      selectedCircles.push({ circle_id: +selectedCircle.value })
     }
   }
   return selectedCircles
@@ -138,11 +135,10 @@ export default connect(
       dispatch(milestoneOnEdition(milestoneId))
     },
     onSave: (milestoneNumber, repoName, e) => {
-      const selectedCircles = getSelectedCircles(
-        e.target.form.circles,
-        repoName
+      const selectedCircles = getSelectedCircles(e.target.form.circles)
+      dispatch(
+        updateMilestoneCircles(milestoneNumber, repoName, selectedCircles)
       )
-      dispatch(updateMilestoneCircles(milestoneNumber, selectedCircles))
     },
   })
 )(Milestone)
