@@ -4,6 +4,7 @@ from unrest import UnRest
 
 from .. import Session, app, session_unrest
 from ..routes.auth import needlogin
+from ..routes.github import get_a_milestone
 from .models import (
     Circle, Item, Label, Milestone_circle, Priority, Report, Role, label_types
 )
@@ -190,7 +191,7 @@ def update_priority(priority_id):
     '/api/milestone_circles/<string:repo_name>/<int:milestone_number>',
     methods=['POST'])
 @needlogin
-def update_milestones_circles(milestone_number, repo_name):
+def update_milestones_circles(repo_name, milestone_number):
     circles_list = request.get_json()
     existing_milestones_circles = session.query(Milestone_circle).filter(
         Milestone_circle.milestone_number == milestone_number,
@@ -224,11 +225,7 @@ def update_milestones_circles(milestone_number, repo_name):
                 session.add(new_milestone_circle)
 
         session.commit()
-        response_object = {
-            'status': 'success',
-            'message': 'Milestone_circle update successful.'
-        }
-        code = 200
+        return get_a_milestone(repo_name, milestone_number)
 
     except (exc.IntegrityError, exc.OperationalError, ValueError) as e:
         session.rollback()
