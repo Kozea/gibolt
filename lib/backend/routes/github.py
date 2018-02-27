@@ -72,6 +72,17 @@ def format_ticket_response(ticket_request, repo_name):
     return response
 
 
+def update_milestone(milestone, repo_name):
+    if milestone['due_on'] is not None:
+        milestone['due_on'] = date_from_iso(milestone['due_on'])
+        milestone['repo'] = repo_name
+        total = milestone['closed_issues'] + milestone['open_issues']
+        milestone['progress'] = (
+            milestone['closed_issues'] / (total or float('inf'))
+        )
+    return milestone
+
+
 def refresh_repo_milestones(repo_name, repo, access_token):
     url = 'repos/{0}/{1}/milestones?state=all&per_page=100'.format(
         app.config['ORGANISATION'], repo_name
@@ -81,13 +92,7 @@ def refresh_repo_milestones(repo_name, repo, access_token):
     except GitHubError as e:
         return e.response.content, e.response.status_code
     for milestone in repo['milestones']:
-        if milestone['due_on'] is not None:
-            milestone['due_on'] = date_from_iso(milestone['due_on'])
-            milestone['repo'] = repo_name
-            total = milestone['closed_issues'] + milestone['open_issues']
-            milestone['progress'] = (
-                milestone['closed_issues'] / (total or float('inf'))
-            )
+        update_milestone(milestone, repo_name)
 
 
 def get_repo_labels(repo_name, repo, access_token):
@@ -103,6 +108,22 @@ def get_repo_labels(repo_name, repo, access_token):
                            'repo_name': repo['repo_name'],
                            'label_name':label['name'],
                            'color':label['color']} for label in label_request]
+
+
+def getCirclesId(milestone):
+    repo_name = milestone['html_url'].split('/')[4]
+    milestones_circles = db_session.query(Milestone_circle).filter(
+        Milestone_circle.milestone_number == milestone['number'],
+        Milestone_circle.repo_name == repo_name).all()
+    return [{'circle_id': assoc.circle_id} for assoc in milestones_circles]
+
+
+def milestoneDateToIso(milestone):
+    if milestone.get('due_on'):
+        milestone['due_on'] = milestone['due_on'].isoformat()
+    milestone['is_in_edition'] = False
+    milestone['circles'] = getCirclesId(milestone)
+    return milestone
 
 
 def return_github_message(github_response):
@@ -263,23 +284,10 @@ def get_a_milestone(repo_name, milestone_number):
     except GitHubError as e:
         return e.response.content, e.response.status_code
 
-    response = {
-        'milestone_number': milestone_request['number'],
-        'repo_name': repo_name,
-        'milestone_id': milestone_request['id'],
-        'milestone_title': milestone_request['title'],
-        'description': milestone_request['description'],
-        'html_url': milestone_request['html_url'],
-        'open_issues': milestone_request['open_issues'],
-        'closed_issues': milestone_request['closed_issues'],
-        'state': milestone_request['state'],
-        'updated_at': milestone_request['updated_at'],
-        'due_on': milestone_request['due_on'],
-        'closed_at': milestone_request['closed_at'],
-        'is_expanded': False}
+    milestone = update_milestone(milestone_request, repo_name)
     objects = {
-        'objects': response,
-        'occurences': 1 if response else 0,
+        'objects': [milestoneDateToIso(milestone)],
+        'occurences': 1 if milestone else 0,
         'primary_keys': [
             'repo_name',
             'milestone_number']}
@@ -906,20 +914,6 @@ def timeline():
                 return e.response.content, e.response.status_code
     for repo in repos:
         milestones.extend(repo.get('milestones', []))
-
-    def getCirclesId(milestone):
-        repo_name = milestone['html_url'].split('/')[4]
-        milestones_circles = db_session.query(Milestone_circle).filter(
-            Milestone_circle.milestone_number == milestone['number'],
-            Milestone_circle.repo_name == repo_name).all()
-        return [{'circle_id': assoc.circle_id} for assoc in milestones_circles]
-
-    def milestoneDateToIso(milestone):
-        if milestone.get('due_on'):
-            milestone['due_on'] = milestone['due_on'].isoformat()
-        milestone['is_in_edition'] = False
-        milestone['circles'] = getCirclesId(milestone)
-        return milestone
 
     def super_if(milestone):
         return (
