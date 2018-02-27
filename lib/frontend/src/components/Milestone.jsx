@@ -4,36 +4,23 @@ import { format } from 'date-fns'
 import React from 'react'
 
 import {
+  getOptionsCircleLabels,
+  getSelectedCircles,
   milestoneOnEdition,
   updateMilestoneCircles,
 } from '../actions/milestones'
 import { block, connect } from '../utils'
 import Progress from './Progress'
+import LabelMultiSelect from './Utils/LabelMultiSelect'
 
 const b = block('Milestone')
 
-function getSelectedCircles(circleSelect) {
-  const selectedCircles = []
-  for (let i = 0; i < circleSelect.options.length; i++) {
-    const selectedCircle = circleSelect.options[i]
-    if (selectedCircle.selected) {
-      selectedCircles.push({ circle_id: +selectedCircle.value })
-    }
-  }
-  return selectedCircles
-}
-
-function isAssociatedCircles(circles, assocCircles) {
-  return circles
-    .filter(circle =>
-      assocCircles.find(
-        assocCircle => assocCircle.circle_id === circle.circle_id
-      )
-    )
-    .map(circle => circle.circle_id)
-}
-
 function Milestone(props) {
+  const allValues = getOptionsCircleLabels(
+    props.assoc_circles,
+    props.circles,
+    props.labels
+  )
   return (
     <li className={b({ status: props.state })}>
       <span className={b('day')}>
@@ -51,31 +38,17 @@ function Milestone(props) {
       />
       {props.is_in_edition ? (
         <form
+          id="updateCircleForm"
           onSubmit={e => {
             e.preventDefault()
           }}
         >
-          <select
-            className={b('circles')}
-            id="circles"
-            multiple
-            name="circles[]"
-            size={props.circles.length}
-            defaultValue={isAssociatedCircles(
-              props.circles,
-              props.assoc_circles
-            )}
-          >
-            {props.circles.map(circle => (
-              <option
-                key={circle.circle_id}
-                value={circle.circle_id}
-                disabled={circle.label_id === null}
-              >
-                {circle.circle_name} {circle.label_id === null && ' (No label)'}
-              </option>
-            ))}
-          </select>
+          <LabelMultiSelect
+            closeOnSelect={false}
+            options={allValues.options}
+            removeSelected
+            value={allValues.milestoneCirclesValues}
+          />
           <button
             type="submit"
             className={b('btn')}
@@ -86,7 +59,7 @@ function Milestone(props) {
             Save
           </button>
           <button
-            type="submit"
+            type="button"
             className={b('btn')}
             onClick={() => props.onChangeMilestoneEdition(props.milestone_id)}
           >
@@ -95,27 +68,17 @@ function Milestone(props) {
         </form>
       ) : (
         <span>
-          {props.assoc_circles.map(assocCircle =>
-            props.circles
-              .filter(circle => circle.circle_id === assocCircle.circle_id)
-              .map(
-                circle =>
-                  circle.label_id &&
-                  props.labels
-                    .filter(label => label.label_id === circle.label_id)
-                    .map(label => (
-                      <span
-                        key={label.label_id}
-                        className={b('tag')}
-                        style={{
-                          borderColor: label.color,
-                        }}
-                      >
-                        {label.text}
-                      </span>
-                    ))
-              )
-          )}
+          {allValues.milestoneCirclesValues.map(circle => (
+            <span
+              key={circle.value}
+              className={b('tag')}
+              style={{
+                borderColor: circle.color,
+              }}
+            >
+              {circle.label}
+            </span>
+          ))}
           <span className={b('unlink')} title="Add to a circle">
             <i
               className="fa fa-edit addCircle"
@@ -135,7 +98,7 @@ export default connect(
       dispatch(milestoneOnEdition(milestoneId))
     },
     onSave: (milestoneNumber, repoName, e) => {
-      const selectedCircles = getSelectedCircles(e.target.form.circles)
+      const selectedCircles = getSelectedCircles(e.target.form.labelMultiSelect)
       dispatch(
         updateMilestoneCircles(milestoneNumber, repoName, selectedCircles)
       )
