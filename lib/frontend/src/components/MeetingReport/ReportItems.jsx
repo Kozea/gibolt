@@ -55,7 +55,7 @@ function ReportItems(props) {
                 name={indicator.content}
                 onChange={event => onIndicatorsChange(event.target)}
                 type="text"
-                value={indicator.value ? indicator.value : 'no value'}
+                value={indicator.value}
               />
             </li>
           ))}

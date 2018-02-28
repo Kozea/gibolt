@@ -18,20 +18,21 @@ function ReportProjects(props) {
     onProjectsChange,
     projects,
   } = props
+
   return (
     <span>
       <h3>Projects:</h3>
       {projects.length > 0 ? (
         <ul>
           {projects.map(milestone => (
-            <li key={milestone.milestone_id} title={milestone.description}>
+            <li key={milestone.id} title={milestone.description}>
               <a
                 className={b('unlink')}
                 href={milestone.html_url}
                 target="_blank"
               >
                 <span className={b(`bullet ${milestone.state}`)} />
-                {milestone.repo_name}
+                {milestone.repo}
                 {' - '}
                 <span className={b('lab')}>{milestone.title}</span>
               </a>
@@ -122,7 +123,7 @@ function ReportProjects(props) {
                 disabled={isEditionDisabled}
                 id="milestones"
                 onChange={event =>
-                  onProjectsChange(milestone.milestone_id, event.target.value)
+                  onProjectsChange(milestone.id, event.target.value)
                 }
                 value={milestone.comment}
               />
