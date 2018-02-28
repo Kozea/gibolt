@@ -24,7 +24,7 @@ function ReportProjects(props) {
       {projects.length > 0 ? (
         <ul>
           {projects.map(milestone => (
-            <li key={milestone.milestone_number} title={milestone.description}>
+            <li key={milestone.milestone_id} title={milestone.description}>
               <a
                 className={b('unlink')}
                 href={milestone.html_url}
