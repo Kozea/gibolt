@@ -17,7 +17,7 @@ function ReportProjects(props) {
       <ul>
         {circleMilestones.length > 0 &&
           circleMilestones.map(milestone => (
-            <li key={milestone.milestone_number} title={milestone.description}>
+            <li key={milestone.id} title={milestone.description}>
               <a
                 className={b('unlink')}
                 href={milestone.html_url}
@@ -26,7 +26,7 @@ function ReportProjects(props) {
                 <span className={b(`bullet ${milestone.state}`)} />
                 {milestone.repo_name}
                 {' - '}
-                <span className={b('lab')}>{milestone.milestone_title}</span>
+                <span className={b('lab')}>{milestone.title}</span>
               </a>
               {' -'}
               <Progress
@@ -49,7 +49,7 @@ function ReportProjects(props) {
                   onClick={() =>
                     onModalCreation(
                       'milestone',
-                      `${milestone.repo_name} ⦔ ${milestone.milestone_number}`
+                      `${milestone.repo_name} ⦔ ${milestone.number}`
                     )
                   }
                 >
@@ -61,13 +61,12 @@ function ReportProjects(props) {
               )}
               {issues.filter(
                 issue =>
-                  issue.milestone_id === milestone.milestone_id &&
-                  !issue.pull_request
+                  issue.milestone_id === milestone.id && !issue.pull_request
               ).length > 0 && (
                 <span>
                   <span
                     className={b('lighter')}
-                    onClick={() => onMilestoneClick(milestone.milestone_id)}
+                    onClick={() => onMilestoneClick(milestone.id)}
                   >
                     show/hide closed issues since last report
                   </span>
@@ -79,8 +78,7 @@ function ReportProjects(props) {
                         {issues
                           .filter(
                             issue =>
-                              issue.milestone_number ===
-                                milestone.milestone_number &&
+                              issue.milestone_number === milestone.number &&
                               !issue.pull_request
                           )
                           .map(issue => (
@@ -122,7 +120,7 @@ function ReportProjects(props) {
               <input
                 className="largeInput"
                 id="milestones"
-                name={`${milestone.repo_name} - ${milestone.milestone_title}`}
+                name={`${milestone.repo_name} - ${milestone.title}`}
               />
             </li>
           ))}
