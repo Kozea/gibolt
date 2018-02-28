@@ -33,7 +33,7 @@ function ReportProjects(props) {
                 <span className={b(`bullet ${milestone.state}`)} />
                 {milestone.repo_name}
                 {' - '}
-                <span className={b('lab')}>{milestone.milestone_title}</span>
+                <span className={b('lab')}>{milestone.title}</span>
               </a>
               {' -'}
               <Progress
@@ -56,7 +56,7 @@ function ReportProjects(props) {
                   onClick={() =>
                     onModalCreation(
                       'milestone',
-                      `${milestone.repo_name} ⦔ ${milestone.milestone_number}`
+                      `${milestone.repo_name} ⦔ ${milestone.number}`
                     )
                   }
                 >
@@ -71,7 +71,7 @@ function ReportProjects(props) {
                 <span>
                   <span
                     className={b('lighter')}
-                    onClick={() => onMilestoneClick(milestone.milestone_id)}
+                    onClick={() => onMilestoneClick(milestone.id)}
                   >
                     show/hide closed issues since last report
                   </span>

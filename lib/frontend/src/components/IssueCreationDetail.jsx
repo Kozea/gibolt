@@ -147,7 +147,7 @@ class IssueCreationDetail extends React.Component {
               value={issueForm.circleId}
             >
               <option value="" />
-              {circles.map(circle => (
+              {circles.filter(circle => circle.label_id).map(circle => (
                 <option key={circle.circle_id} value={circle.circle_id}>
                   {circle.circle_name}
                 </option>
