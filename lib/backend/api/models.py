@@ -102,6 +102,7 @@ class Role(Base):
     role_purpose = Column(String)
     role_domain = Column(String)
     role_accountabilities = Column(String)
+    is_active = Column(Boolean, default=True, nullable=False)
     circle = relationship(Circle, backref='roles')
 
 
@@ -119,6 +120,8 @@ class Item(Base):
     item_type = Column(Enum(*item_types))
     content = Column(Text)
     role = relationship(Role, backref='items')
+    value_type = Column(String)
+    is_active = Column(Boolean, default=True, nullable=False)
 
 
 class Report(Base):
@@ -153,3 +156,69 @@ class Milestone_circle(Base):
     repo_name = Column(
         String,
         primary_key=True)
+    is_active = Column(Boolean, default=True, nullable=False)
+
+
+class Attendee(Base):
+    __tablename__ = 'attendee'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    user_id = Column(
+        Integer,
+        primary_key=True)
+    is_present = Column(Boolean, default=True, nullable=False)
+
+
+class Checklist_value(Base):
+    __tablename__ = 'checklist_value'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    item_id = Column(
+        Integer,
+        ForeignKey('item.item_id'),
+        primary_key=True)
+    is_checked = Column(Boolean, default=False, nullable=False)
+
+
+class Indicator_value(Base):
+    __tablename__ = 'indicator_value'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    item_id = Column(
+        Integer,
+        ForeignKey('item.item_id'),
+        primary_key=True)
+    value = Column(String)
+
+
+class Milestone_value(Base):
+    __tablename__ = 'milestone_value'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    milestone_number = Column(
+        Integer,
+        primary_key=True)
+    repo_name = Column(
+        String,
+        primary_key=True)
+    comment = Column(String)
+
+
+class Agenda_value(Base):
+    __tablename__ = 'agenda_value'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    ticket_id = Column(
+        Integer,
+        primary_key=True)
+    comment = Column(String)
