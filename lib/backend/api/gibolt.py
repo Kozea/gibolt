@@ -53,7 +53,7 @@ rest(
 
 rest(
     Report,
-    methods=['GET', 'PATCH', 'PUT', 'DELETE'],
+    methods=['GET'],
     relationships={
         'circle': rest(Circle, only=['circle_name', 'label_id']),
         'attendees': rest(Report_attendee),
@@ -238,6 +238,106 @@ def create_report():
             'modified_by': new_report.modified_by
         }],
         'occurences': 1 if new_report else 0,
+        'primary_keys': ['report_id']}
+    return jsonify(response_object)
+
+
+@app.route('/api/reports/<int:report_id>', methods=['PUT'])
+@needlogin
+def update_report(report_id):
+    response_object = {
+        'status': 'error',
+        'message': 'Invalid payload.'
+    }
+    data = request.get_json()
+    report = session.query(Report).filter(
+        Report.report_id == report_id).first()
+    if not report:
+        return jsonify(response_object), 400
+
+    try:
+        report.modified_by = data.get('modified_by')
+        report.content = data.get('content')
+        session.flush()
+    except (exc.IntegrityError) as e:
+        print(e)
+        session.rollback()
+        return jsonify(response_object), 400
+
+    attendees = data.get('attendees')
+    actions = data.get('actions')
+    indicators = data.get('indicators')
+    projects = data.get('projects')
+    tickets = data.get('agenda')
+    try:
+        for attendee in attendees:
+            report_attendee = session.query(Report_attendee).filter(
+                Report_attendee.report_id == report_id,
+                Report_attendee.user_id == attendee.get('user_id'),
+                ).first()
+            if report_attendee:
+                report_attendee.user = json.dumps(attendee)
+                report_attendee.is_present = attendee.get('checked')
+            session.flush()
+
+        for action in actions:
+            report_checklist = session.query(Report_checklist).filter(
+                Report_checklist.report_id == report_id,
+                Report_checklist.item_id == action.get('id'),
+                ).first()
+            if report_checklist:
+                report_checklist.item = json.dumps(action)
+                report_checklist.is_checked = action.get('checked')
+            session.flush()
+
+        for indicator in indicators:
+            report_indicator = session.query(Report_indicator).filter(
+                Report_indicator.report_id == report_id,
+                Report_indicator.item_id == indicator.get('id'),
+                ).first()
+            if report_indicator:
+                report_indicator.item = json.dumps(indicator)
+                report_indicator.value = indicator.get('value')
+            session.flush()
+
+        for project in projects:
+            report_milestone = session.query(Report_milestone).filter(
+                Report_milestone.report_id == report_id,
+                Report_milestone.milestone_number == project.get('number'),
+                Report_milestone.repo_name == project.get('repo'),
+                ).first()
+            if report_milestone:
+                report_milestone.milestone = json.dumps(project)
+                report_milestone.comment = project.get('comment')
+            session.flush()
+
+        for ticket in tickets:
+            report_agenda = session.query(Report_agenda).filter(
+                Report_agenda.report_id == report_id,
+                Report_agenda.ticket_id == ticket.get('ticket_id'),
+                ).first()
+            if report_agenda:
+                report_agenda.ticket = json.dumps(ticket)
+                report_agenda.comment = ticket.get('meeting_comment')
+
+        session.commit()
+    except (exc.IntegrityError) as e:
+        print(e)
+        session.rollback()
+        return jsonify(response_object), 400
+
+    response_object = {
+        'objects': [{
+            'report_id': report.report_id,
+            'circle_id': report.circle_id,
+            'report_type': report.report_type,
+            'created_at': report.created_at,
+            'author_id': report.author_id,
+            'content': report.content,
+            'modified_at': report.modified_at,
+            'modified_by': report.modified_by
+        }],
+        'occurences': 1 if report else 0,
         'primary_keys': ['report_id']}
     return jsonify(response_object)
 
