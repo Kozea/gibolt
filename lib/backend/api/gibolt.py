@@ -153,13 +153,12 @@ def create_report():
     circle_id = data.get('circle_id')
     report_type = data.get('report_type')
     author_id = data.get('author_id')
-    report_content = json.loads(data.get('content'))
-    content = report_content.get('content')
-    attendees = report_content.get('attendees')
-    actions = report_content.get('actions')
-    indicators = report_content.get('indicators')
-    projects = report_content.get('projects')
-    tickets = report_content.get('agenda')
+    content = data.get('content')
+    attendees = data.get('attendees')
+    actions = data.get('actions')
+    indicators = data.get('indicators')
+    projects = data.get('projects')
+    tickets = data.get('agenda')
     try:
         new_report = Report(
             circle_id=circle_id,
@@ -194,7 +193,7 @@ def create_report():
             new_indicator = Report_indicator(
                 report_id=new_report.report_id,
                 item_id=indicator.get('id'),
-                item=json.dumps(action),
+                item=json.dumps(indicator),
                 value=indicator.get('value')
             )
             session.add(new_indicator)
