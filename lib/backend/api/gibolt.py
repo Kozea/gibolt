@@ -56,6 +56,11 @@ rest(
     methods=['GET', 'PATCH', 'PUT', 'DELETE'],
     relationships={
         'circle': rest(Circle, only=['circle_name', 'label_id']),
+        'attendees': rest(Report_attendee),
+        'actions': rest(Report_checklist),
+        'indicators': rest(Report_indicator),
+        'projects': rest(Report_milestone),
+        'agenda': rest(Report_agenda),
     },
     name='reports',
     query=lambda query: query.filter(
@@ -72,6 +77,66 @@ rest(
         int(request.values.get('limit'))
         if request.values.get('limit')
         else None
+    ),
+    auth=needlogin
+)
+
+rest(
+    Report_attendee,
+    methods=['GET', 'PATCH'],
+    name='report_attendees',
+    query=lambda query: query.filter(
+        Report_attendee.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+rest(
+    Report_checklist,
+    methods=['GET', 'PATCH'],
+    name='report_checklists',
+    query=lambda query: query.filter(
+        Report_checklist.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+rest(
+    Report_indicator,
+    methods=['GET', 'PATCH'],
+    name='report_indicators',
+    query=lambda query: query.filter(
+        Report_indicator.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+rest(
+    Report_milestone,
+    methods=['GET', 'PATCH'],
+    name='report_milestones',
+    query=lambda query: query.filter(
+        Report_milestone.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+rest(
+    Report_agenda,
+    methods=['GET', 'PUT'],
+    name='report_agenda',
+    query=lambda query: query.filter(
+        Report_agenda.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
     ),
     auth=needlogin
 )
@@ -109,6 +174,7 @@ def create_report():
             new_attendee = Report_attendee(
                 report_id=new_report.report_id,
                 user_id=attendee.get('user_id'),
+                user=json.dumps(attendee),
                 is_present=attendee.get('checked')
             )
             session.add(new_attendee)
@@ -118,6 +184,7 @@ def create_report():
             new_action = Report_checklist(
                 report_id=new_report.report_id,
                 item_id=action.get('id'),
+                item=json.dumps(action),
                 is_checked=action.get('checked')
             )
             session.add(new_action)
@@ -127,6 +194,7 @@ def create_report():
             new_indicator = Report_indicator(
                 report_id=new_report.report_id,
                 item_id=indicator.get('id'),
+                item=json.dumps(action),
                 value=indicator.get('value')
             )
             session.add(new_indicator)
@@ -135,8 +203,9 @@ def create_report():
         for project in projects:
             new_project = Report_milestone(
                 report_id=new_report.report_id,
-                milestone_number=project.get('milestone_number'),
-                repo_name=project.get('repo_name'),
+                milestone_number=project.get('number'),
+                repo_name=project.get('repo'),
+                milestone=json.dumps(project),
                 comment=project.get('comment')
             )
             session.add(new_project)
@@ -146,7 +215,8 @@ def create_report():
             new_ticket = Report_agenda(
                 report_id=new_report.report_id,
                 ticket_id=ticket.get('ticket_id'),
-                comment=ticket.get('comment')
+                ticket=json.dumps(ticket),
+                comment=ticket.get('meeting_comment')
             )
             session.add(new_ticket)
             session.flush()
@@ -158,10 +228,19 @@ def create_report():
         return jsonify(response_object), 400
 
     response_object = {
-        'objects': 'new_report - WIP',
+        'objects': [{
+            'report_id': new_report.report_id,
+            'circle_id': new_report.circle_id,
+            'report_type': new_report.report_type,
+            'created_at': new_report.created_at,
+            'author_id': new_report.author_id,
+            'content': new_report.content,
+            'modified_at': new_report.modified_at,
+            'modified_by': new_report.modified_by
+        }],
         'occurences': 1 if new_report else 0,
         'primary_keys': ['report_id']}
-    return jsonify({'objects': []})
+    return jsonify(response_object)
 
 
 rest(

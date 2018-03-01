@@ -119,7 +119,6 @@ class Item(Base):
         nullable=False)
     item_type = Column(Enum(*item_types))
     content = Column(Text)
-    role = relationship(Role, backref='items')
     value_type = Column(String)
     is_active = Column(Boolean, default=True, nullable=False)
 
@@ -142,6 +141,11 @@ class Report(Base):
     modified_at = Column(DateTime, onupdate=datetime.datetime.utcnow)
     modified_by = Column(Integer)
     circle = relationship(Circle, backref='reports')
+    attendees = relationship("Report_attendee", backref='report')
+    actions = relationship("Report_checklist", backref='report')
+    indicators = relationship("Report_indicator", backref='report')
+    projects = relationship("Report_milestone", backref='report')
+    agenda = relationship("Report_agenda", backref='report')
 
 
 class Milestone_circle(Base):
@@ -168,6 +172,7 @@ class Report_attendee(Base):
     user_id = Column(
         Integer,
         primary_key=True)
+    user = Column(String)
     is_present = Column(Boolean, default=True, nullable=False)
 
 
@@ -181,6 +186,7 @@ class Report_checklist(Base):
         Integer,
         ForeignKey('item.item_id'),
         primary_key=True)
+    item = Column(String)
     is_checked = Column(Boolean, default=False, nullable=False)
 
 
@@ -194,6 +200,7 @@ class Report_indicator(Base):
         Integer,
         ForeignKey('item.item_id'),
         primary_key=True)
+    item = Column(String)
     value = Column(String)
 
 
@@ -209,6 +216,7 @@ class Report_milestone(Base):
     repo_name = Column(
         String,
         primary_key=True)
+    milestone = Column(String)
     comment = Column(String)
 
 
@@ -221,4 +229,5 @@ class Report_agenda(Base):
     ticket_id = Column(
         Integer,
         primary_key=True)
+    ticket = Column(String)
     comment = Column(String)
