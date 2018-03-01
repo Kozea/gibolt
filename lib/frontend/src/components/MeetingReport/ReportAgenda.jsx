@@ -50,7 +50,7 @@ function ReportAgenda(props) {
                 onChange={event =>
                   onAgendaChange(issue.ticket_id, event.target.value)
                 }
-                value={issue.meetingComment}
+                value={issue.meeting_comment}
               />
             </li>
           ))}

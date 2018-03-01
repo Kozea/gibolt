@@ -1,3 +1,5 @@
+import json
+
 from flask import jsonify, request
 from sqlalchemy import exc
 from unrest import UnRest
@@ -6,7 +8,9 @@ from .. import Session, app, session_unrest
 from ..routes.auth import needlogin
 from ..routes.github import get_a_milestone
 from .models import (
-    Circle, Item, Label, Milestone_circle, Priority, Report, Role, label_types
+    Circle, Item, Label, Milestone_circle, Priority, Report, Report_agenda,
+    Report_attendee, Report_checklist, Report_indicator, Report_milestone,
+    Role, label_types
 )
 
 session = Session()
@@ -49,7 +53,7 @@ rest(
 
 rest(
     Report,
-    methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
+    methods=['GET', 'PATCH', 'PUT', 'DELETE'],
     relationships={
         'circle': rest(Circle, only=['circle_name', 'label_id']),
     },
@@ -71,6 +75,94 @@ rest(
     ),
     auth=needlogin
 )
+
+
+@app.route('/api/reports', methods=['POST'])
+@needlogin
+def create_report():
+    response_object = {
+        'status': 'error',
+        'message': 'Invalid payload.'
+    }
+    data = request.get_json()
+    circle_id = data.get('circle_id')
+    report_type = data.get('report_type')
+    author_id = data.get('author_id')
+    report_content = json.loads(data.get('content'))
+    content = report_content.get('content')
+    attendees = report_content.get('attendees')
+    actions = report_content.get('actions')
+    indicators = report_content.get('indicators')
+    projects = report_content.get('projects')
+    tickets = report_content.get('agenda')
+    try:
+        new_report = Report(
+            circle_id=circle_id,
+            report_type=report_type,
+            author_id=author_id,
+            content=content
+        )
+        session.add(new_report)
+        session.flush()
+
+        for attendee in attendees:
+            new_attendee = Report_attendee(
+                report_id=new_report.report_id,
+                user_id=attendee.get('user_id'),
+                is_present=attendee.get('checked')
+            )
+            session.add(new_attendee)
+            session.flush()
+
+        for action in actions:
+            new_action = Report_checklist(
+                report_id=new_report.report_id,
+                item_id=action.get('id'),
+                is_checked=action.get('checked')
+            )
+            session.add(new_action)
+            session.flush()
+
+        for indicator in indicators:
+            new_indicator = Report_indicator(
+                report_id=new_report.report_id,
+                item_id=indicator.get('id'),
+                value=indicator.get('value')
+            )
+            session.add(new_indicator)
+            session.flush()
+
+        for project in projects:
+            new_project = Report_milestone(
+                report_id=new_report.report_id,
+                milestone_number=project.get('milestone_number'),
+                repo_name=project.get('repo_name'),
+                comment=project.get('comment')
+            )
+            session.add(new_project)
+            session.flush()
+
+        for ticket in tickets:
+            new_ticket = Report_agenda(
+                report_id=new_report.report_id,
+                ticket_id=ticket.get('ticket_id'),
+                comment=ticket.get('comment')
+            )
+            session.add(new_ticket)
+            session.flush()
+
+        session.commit()
+    except (exc.IntegrityError) as e:
+        print(e)
+        session.rollback()
+        return jsonify(response_object), 400
+
+    response_object = {
+        'objects': 'new_report - WIP',
+        'occurences': 1 if new_report else 0,
+        'primary_keys': ['report_id']}
+    return jsonify({'objects': []})
+
 
 rest(
     Item,

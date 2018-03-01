@@ -159,8 +159,8 @@ class Milestone_circle(Base):
     is_active = Column(Boolean, default=True, nullable=False)
 
 
-class Attendee(Base):
-    __tablename__ = 'attendee'
+class Report_attendee(Base):
+    __tablename__ = 'report_attendee'
     report_id = Column(
         Integer,
         ForeignKey('report.report_id'),
@@ -171,8 +171,8 @@ class Attendee(Base):
     is_present = Column(Boolean, default=True, nullable=False)
 
 
-class Checklist_value(Base):
-    __tablename__ = 'checklist_value'
+class Report_checklist(Base):
+    __tablename__ = 'report_checklist'
     report_id = Column(
         Integer,
         ForeignKey('report.report_id'),
@@ -184,8 +184,8 @@ class Checklist_value(Base):
     is_checked = Column(Boolean, default=False, nullable=False)
 
 
-class Indicator_value(Base):
-    __tablename__ = 'indicator_value'
+class Report_indicator(Base):
+    __tablename__ = 'report_indicator'
     report_id = Column(
         Integer,
         ForeignKey('report.report_id'),
@@ -197,8 +197,8 @@ class Indicator_value(Base):
     value = Column(String)
 
 
-class Milestone_value(Base):
-    __tablename__ = 'milestone_value'
+class Report_milestone(Base):
+    __tablename__ = 'report_milestone'
     report_id = Column(
         Integer,
         ForeignKey('report.report_id'),
@@ -212,8 +212,8 @@ class Milestone_value(Base):
     comment = Column(String)
 
 
-class Agenda_value(Base):
-    __tablename__ = 'agenda_value'
+class Report_agenda(Base):
+    __tablename__ = 'report_agenda'
     report_id = Column(
         Integer,
         ForeignKey('report.report_id'),
