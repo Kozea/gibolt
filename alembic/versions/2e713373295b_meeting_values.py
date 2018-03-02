@@ -1,16 +1,18 @@
 """meeting values
 
-Revision ID: 8553c08ad953
+Revision ID: 2e713373295b
 Revises: 0cabf3e7bfb9
-Create Date: 2018-02-28 16:47:13.294054
+Create Date: 2018-03-02 10:04:14.707386
 
 """
 from alembic import op
 import sqlalchemy as sa
 
+from lib.backend.utils.customSQLAlchemy.types import SQLiteJson
+
 
 # revision identifiers, used by Alembic.
-revision = '8553c08ad953'
+revision = '2e713373295b'
 down_revision = '0cabf3e7bfb9'
 branch_labels = None
 depends_on = None
@@ -21,6 +23,7 @@ def upgrade():
     op.create_table('report_agenda',
     sa.Column('report_id', sa.Integer(), nullable=False),
     sa.Column('ticket_id', sa.Integer(), nullable=False),
+    sa.Column('ticket', SQLiteJson(), nullable=True),
     sa.Column('comment', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['report_id'], ['report.report_id'], ),
     sa.PrimaryKeyConstraint('report_id', 'ticket_id')
@@ -28,6 +31,7 @@ def upgrade():
     op.create_table('report_attendee',
     sa.Column('report_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('user', SQLiteJson(), nullable=True),
     sa.Column('is_present', sa.Boolean(), server_default='1', nullable=False),
     sa.ForeignKeyConstraint(['report_id'], ['report.report_id'], ),
     sa.PrimaryKeyConstraint('report_id', 'user_id')
@@ -36,6 +40,7 @@ def upgrade():
     sa.Column('report_id', sa.Integer(), nullable=False),
     sa.Column('milestone_number', sa.Integer(), nullable=False),
     sa.Column('repo_name', sa.String(), nullable=False),
+    sa.Column('milestone', SQLiteJson(), nullable=True),
     sa.Column('comment', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['report_id'], ['report.report_id'], ),
     sa.PrimaryKeyConstraint('report_id', 'milestone_number', 'repo_name')
@@ -43,6 +48,7 @@ def upgrade():
     op.create_table('report_checklist',
     sa.Column('report_id', sa.Integer(), nullable=False),
     sa.Column('item_id', sa.Integer(), nullable=False),
+    sa.Column('item', SQLiteJson(), nullable=True),
     sa.Column('is_checked', sa.Boolean(), server_default='1', nullable=False),
     sa.ForeignKeyConstraint(['item_id'], ['item.item_id'], ),
     sa.ForeignKeyConstraint(['report_id'], ['report.report_id'], ),
@@ -51,6 +57,7 @@ def upgrade():
     op.create_table('report_indicator',
     sa.Column('report_id', sa.Integer(), nullable=False),
     sa.Column('item_id', sa.Integer(), nullable=False),
+    sa.Column('item', SQLiteJson(), nullable=True),
     sa.Column('value', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['item_id'], ['item.item_id'], ),
     sa.ForeignKeyConstraint(['report_id'], ['report.report_id'], ),

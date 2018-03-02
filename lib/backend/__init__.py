@@ -10,8 +10,8 @@ from cachecontrol.caches.file_cache import FileCache
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from .customCacheControl.github_controller import GitHubController
-from .customCacheControl.heuristic import ZeroSecondsHeuristic
+from .utils.customCacheControl.github_controller import GitHubController
+from .utils.customCacheControl.heuristic import ZeroSecondsHeuristic
 
 try:
     __version__ = pkg_resources.require('gibolt')[0].version

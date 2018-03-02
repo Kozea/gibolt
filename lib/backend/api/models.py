@@ -10,6 +10,7 @@ from sqlalchemy.orm import backref, relationship
 from sqlalchemy.types import Enum
 
 from .. import app
+from ..utils.customSQLAlchemy.types import SQLiteJson
 
 Base = declarative_base()
 item_types = ['checklist', 'indicator']
@@ -172,7 +173,7 @@ class Report_attendee(Base):
     user_id = Column(
         Integer,
         primary_key=True)
-    user = Column(String)
+    user = Column(SQLiteJson)
     is_present = Column(Boolean, default=True, nullable=False)
 
 
@@ -186,7 +187,7 @@ class Report_checklist(Base):
         Integer,
         ForeignKey('item.item_id'),
         primary_key=True)
-    item = Column(String)
+    item = Column(SQLiteJson)
     is_checked = Column(Boolean, default=False, nullable=False)
 
 
@@ -200,7 +201,7 @@ class Report_indicator(Base):
         Integer,
         ForeignKey('item.item_id'),
         primary_key=True)
-    item = Column(String)
+    item = Column(SQLiteJson)
     value = Column(String)
 
 
@@ -216,7 +217,7 @@ class Report_milestone(Base):
     repo_name = Column(
         String,
         primary_key=True)
-    milestone = Column(String)
+    milestone = Column(SQLiteJson)
     comment = Column(String)
 
 
@@ -229,5 +230,5 @@ class Report_agenda(Base):
     ticket_id = Column(
         Integer,
         primary_key=True)
-    ticket = Column(String)
+    ticket = Column(SQLiteJson)
     comment = Column(String)

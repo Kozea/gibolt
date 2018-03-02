@@ -173,7 +173,7 @@ def create_report():
             new_attendee = Report_attendee(
                 report_id=new_report.report_id,
                 user_id=attendee.get('user_id'),
-                user=json.dumps(attendee),
+                user=attendee,
                 is_present=attendee.get('checked')
             )
             session.add(new_attendee)
@@ -183,7 +183,7 @@ def create_report():
             new_action = Report_checklist(
                 report_id=new_report.report_id,
                 item_id=action.get('id'),
-                item=json.dumps(action),
+                item=action,
                 is_checked=action.get('checked')
             )
             session.add(new_action)
@@ -193,7 +193,7 @@ def create_report():
             new_indicator = Report_indicator(
                 report_id=new_report.report_id,
                 item_id=indicator.get('id'),
-                item=json.dumps(indicator),
+                item=indicator,
                 value=indicator.get('value')
             )
             session.add(new_indicator)
@@ -204,7 +204,7 @@ def create_report():
                 report_id=new_report.report_id,
                 milestone_number=project.get('number'),
                 repo_name=project.get('repo'),
-                milestone=json.dumps(project),
+                milestone=project,
                 comment=project.get('comment')
             )
             session.add(new_project)
@@ -214,7 +214,7 @@ def create_report():
             new_ticket = Report_agenda(
                 report_id=new_report.report_id,
                 ticket_id=ticket.get('ticket_id'),
-                ticket=json.dumps(ticket),
+                ticket=ticket,
                 comment=ticket.get('meeting_comment')
             )
             session.add(new_ticket)
