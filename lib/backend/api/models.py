@@ -142,11 +142,16 @@ class Report(Base):
     modified_at = Column(DateTime, onupdate=datetime.datetime.utcnow)
     modified_by = Column(Integer)
     circle = relationship(Circle, backref='reports')
-    attendees = relationship("Report_attendee", backref='report')
-    actions = relationship("Report_checklist", backref='report')
-    indicators = relationship("Report_indicator", backref='report')
-    projects = relationship("Report_milestone", backref='report')
-    agenda = relationship("Report_agenda", backref='report')
+    attendees = relationship(
+        "Report_attendee", cascade='all,delete', backref='report')
+    actions = relationship(
+        "Report_checklist", cascade='all,delete',  backref='report')
+    indicators = relationship(
+        "Report_indicator", cascade='all,delete', backref='report')
+    projects = relationship(
+        "Report_milestone", cascade='all,delete', backref='report')
+    agenda = relationship(
+        "Report_agenda", cascade='all,delete', backref='report')
 
 
 class Milestone_circle(Base):
