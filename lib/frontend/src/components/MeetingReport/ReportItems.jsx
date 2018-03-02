@@ -24,7 +24,7 @@ function ReportItems(props) {
       {actions.length > 0 ? (
         <ul>
           {actions.map(action => (
-            <li key={action.id}>
+            <li key={action.item_id}>
               <input
                 checked={action.checked}
                 disabled={isEditionDisabled}
@@ -44,7 +44,7 @@ function ReportItems(props) {
       {indicators.length > 0 ? (
         <ul>
           {indicators.map(indicator => (
-            <li key={indicator.id}>
+            <li key={indicator.item_id}>
               <span className={b('bullet')} />
               {indicator.content}
               :{' '}

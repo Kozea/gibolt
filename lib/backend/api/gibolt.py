@@ -1,5 +1,3 @@
-import json
-
 from flask import jsonify, request
 from sqlalchemy import exc
 from unrest import UnRest
@@ -173,8 +171,8 @@ def create_report():
             new_attendee = Report_attendee(
                 report_id=new_report.report_id,
                 user_id=attendee.get('user_id'),
-                user=attendee,
-                is_present=attendee.get('checked')
+                user=attendee.get('user'),
+                checked=attendee.get('checked')
             )
             session.add(new_attendee)
             session.flush()
@@ -182,9 +180,9 @@ def create_report():
         for action in actions:
             new_action = Report_checklist(
                 report_id=new_report.report_id,
-                item_id=action.get('id'),
-                item=action,
-                is_checked=action.get('checked')
+                item_id=action.get('item_id'),
+                content=action.get('content'),
+                checked=action.get('checked')
             )
             session.add(new_action)
             session.flush()
@@ -192,8 +190,8 @@ def create_report():
         for indicator in indicators:
             new_indicator = Report_indicator(
                 report_id=new_report.report_id,
-                item_id=indicator.get('id'),
-                item=indicator,
+                item_id=indicator.get('item_id'),
+                content=indicator.get('content'),
                 value=indicator.get('value')
             )
             session.add(new_indicator)
@@ -204,8 +202,7 @@ def create_report():
                 report_id=new_report.report_id,
                 milestone_number=project.get('number'),
                 repo_name=project.get('repo'),
-                milestone=project,
-                comment=project.get('comment')
+                milestone=project
             )
             session.add(new_project)
             session.flush()
@@ -214,8 +211,7 @@ def create_report():
             new_ticket = Report_agenda(
                 report_id=new_report.report_id,
                 ticket_id=ticket.get('ticket_id'),
-                ticket=ticket,
-                comment=ticket.get('meeting_comment')
+                ticket=ticket
             )
             session.add(new_ticket)
             session.flush()
@@ -276,8 +272,8 @@ def update_report(report_id):
                 Report_attendee.user_id == attendee.get('user_id'),
                 ).first()
             if report_attendee:
-                report_attendee.user = json.dumps(attendee)
-                report_attendee.is_present = attendee.get('checked')
+                report_attendee.user = attendee.get('user')
+                report_attendee.checked = attendee.get('checked')
             session.flush()
 
         for action in actions:
@@ -286,8 +282,8 @@ def update_report(report_id):
                 Report_checklist.item_id == action.get('id'),
                 ).first()
             if report_checklist:
-                report_checklist.item = json.dumps(action)
-                report_checklist.is_checked = action.get('checked')
+                report_checklist.content = action.get('content'),
+                report_checklist.checked = action.get('checked')
             session.flush()
 
         for indicator in indicators:
@@ -296,7 +292,7 @@ def update_report(report_id):
                 Report_indicator.item_id == indicator.get('id'),
                 ).first()
             if report_indicator:
-                report_indicator.item = json.dumps(indicator)
+                report_indicator.content = indicator.get('content')
                 report_indicator.value = indicator.get('value')
             session.flush()
 
@@ -307,8 +303,7 @@ def update_report(report_id):
                 Report_milestone.repo_name == project.get('repo'),
                 ).first()
             if report_milestone:
-                report_milestone.milestone = json.dumps(project)
-                report_milestone.comment = project.get('comment')
+                report_milestone.milestone = project
             session.flush()
 
         for ticket in tickets:
@@ -317,8 +312,7 @@ def update_report(report_id):
                 Report_agenda.ticket_id == ticket.get('ticket_id'),
                 ).first()
             if report_agenda:
-                report_agenda.ticket = json.dumps(ticket)
-                report_agenda.comment = ticket.get('meeting_comment')
+                report_agenda.ticket = ticket
 
         session.commit()
     except (exc.IntegrityError) as e:

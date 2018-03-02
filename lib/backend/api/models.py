@@ -179,7 +179,7 @@ class Report_attendee(Base):
         Integer,
         primary_key=True)
     user = Column(SQLiteJson)
-    is_present = Column(Boolean, default=True, nullable=False)
+    checked = Column(Boolean, default=True, nullable=False)
 
 
 class Report_checklist(Base):
@@ -192,8 +192,8 @@ class Report_checklist(Base):
         Integer,
         ForeignKey('item.item_id'),
         primary_key=True)
-    item = Column(SQLiteJson)
-    is_checked = Column(Boolean, default=False, nullable=False)
+    content = Column(String)
+    checked = Column(Boolean, default=False, nullable=False)
 
 
 class Report_indicator(Base):
@@ -206,7 +206,7 @@ class Report_indicator(Base):
         Integer,
         ForeignKey('item.item_id'),
         primary_key=True)
-    item = Column(SQLiteJson)
+    content = Column(String)
     value = Column(String)
 
 
@@ -223,7 +223,6 @@ class Report_milestone(Base):
         String,
         primary_key=True)
     milestone = Column(SQLiteJson)
-    comment = Column(String)
 
 
 class Report_agenda(Base):
@@ -236,4 +235,3 @@ class Report_agenda(Base):
         Integer,
         primary_key=True)
     ticket = Column(SQLiteJson)
-    comment = Column(String)

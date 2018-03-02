@@ -228,7 +228,7 @@ class MeetingsReportCreation extends React.Component {
                       {attendees.length > 0 ? (
                         <ul>
                           {attendees.map(user => (
-                            <li key={user.user_id}>
+                            <li key={user.user_name}>
                               <input
                                 checked={user.checked}
                                 disabled={isEditionDisabled}
