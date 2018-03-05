@@ -62,7 +62,7 @@ class CreateCircle extends React.Component {
             onLabelSubmit={event => onLabelSubmit(event, 'circle', 'creation')}
           />
         )}
-        <form onSubmit={e => e.preventDefault()}>
+        <form onSubmit={e => onSubmit(e, history)}>
           <label>
             Name :
             <input name="circle_name" required />
@@ -74,7 +74,9 @@ class CreateCircle extends React.Component {
               name="label_id"
               onChange={event => this.displayAddLabels(event.target.value)}
               value={selectedLabel}
+              required
             >
+              <option value="" />
               {unusedLabels.map(label => (
                 <option key={label.label_id} value={label.label_id}>
                   {label.text}
@@ -113,10 +115,8 @@ class CreateCircle extends React.Component {
             <MarkdownEditor />
           </label>
           <br />
-          <button type="submit" onClick={e => onSubmit(e, history)}>
-            Create circle
-          </button>
-          <button type="submit" onClick={() => onGoBack(history)}>
+          <button type="submit">Create circle</button>
+          <button type="button" onClick={() => onGoBack(history)}>
             Cancel
           </button>
         </form>

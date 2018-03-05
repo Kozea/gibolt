@@ -88,7 +88,7 @@ class MeetingsReportCreation extends React.Component {
       users,
     } = this.props
     const attendees = sortAttendees(meeting.attendees)
-    const oldReport = meeting.attendees.length === 0
+    const oldReport = meeting.attendees.length === 0 && !isCreation
     return (
       <section className={b()}>
         <Helmet>
@@ -300,6 +300,7 @@ class MeetingsReportCreation extends React.Component {
                 <article className={b('action')}>
                   <button
                     type="submit"
+                    disabled={attendees.length === 0}
                     onClick={() => onSubmit(history, isCreation)}
                   >
                     Submit
