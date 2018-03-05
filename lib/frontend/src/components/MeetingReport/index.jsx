@@ -308,7 +308,7 @@ class MeetingsReportCreation extends React.Component {
                     type="submit"
                     onClick={() =>
                       isCreation
-                        ? onGoBack(meeting.circle_id, history)
+                        ? onGoBack(params.circle_id, history)
                         : sync(params, isCreation)
                     }
                   >
@@ -350,15 +350,6 @@ export default withRouter(
     dispatch => ({
       onAttendeesChange: target =>
         dispatch(updateMeetingAttendees(target.name, target.checked)),
-      // onCancel: (circleId, history, isCreation, reportId) => {
-      //   if (isCreation) {
-      //     dispatch(updateMarkdown(''))
-      //     history.push(`/circle?circle_id=${circleId}`)
-      //   } else {
-      //     dispatch(disableEdition(true))
-      //     history.push(`/meeting?report_id=${reportId}`)
-      //   }
-      // },
       onEditClick: content => {
         dispatch(updateMarkdown(content))
         dispatch(disableEdition(false))

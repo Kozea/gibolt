@@ -5,7 +5,7 @@ import React from 'react'
 
 import Progress from './../Progress'
 import { setModal, updateIssueParams } from '../../actions/issues'
-import { updateMeetingProjects } from '../../actions/meetings'
+import { sortProjects, updateMeetingProjects } from '../../actions/meetings'
 import { block, connect } from '../../utils'
 
 const b = block('MeetingReport')
@@ -18,13 +18,13 @@ function ReportProjects(props) {
     onProjectsChange,
     projects,
   } = props
-
+  const sortedProjects = sortProjects(projects)
   return (
     <span>
       <h3>Projects:</h3>
-      {projects.length > 0 ? (
+      {sortedProjects.length > 0 ? (
         <ul>
-          {projects.map(milestone => (
+          {sortedProjects.map(milestone => (
             <li key={milestone.id} title={milestone.description}>
               <a
                 className={b('unlink')}
