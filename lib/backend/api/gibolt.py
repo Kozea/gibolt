@@ -49,7 +49,7 @@ rest(
     auth=needlogin
 )
 
-rest(
+report_unrest = rest(
     Report,
     methods=['GET'],
     relationships={
@@ -79,84 +79,22 @@ rest(
     auth=needlogin
 )
 
-rest(
-    Report_attendee,
-    methods=['GET', 'PATCH'],
-    name='report_attendees',
-    query=lambda query: query.filter(
-        Report_attendee.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
 
-rest(
-    Report_checklist,
-    methods=['GET', 'PATCH'],
-    name='report_checklists',
-    query=lambda query: query.filter(
-        Report_checklist.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
-
-rest(
-    Report_indicator,
-    methods=['GET', 'PATCH'],
-    name='report_indicators',
-    query=lambda query: query.filter(
-        Report_indicator.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
-
-rest(
-    Report_milestone,
-    methods=['GET', 'PATCH'],
-    name='report_milestones',
-    query=lambda query: query.filter(
-        Report_milestone.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
-
-rest(
-    Report_agenda,
-    methods=['GET', 'PUT'],
-    name='report_agenda',
-    query=lambda query: query.filter(
-        Report_agenda.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
-
-
-@app.route('/api/reports', methods=['POST'])
-@needlogin
-def create_report():
+@report_unrest.declare('POST', True)
+def post_report(payload, report_id=None):
     response_object = {
         'status': 'error',
         'message': 'Invalid payload.'
     }
-    data = request.get_json()
-    circle_id = data.get('circle_id')
-    report_type = data.get('report_type')
-    author_id = data.get('author_id')
-    content = data.get('content')
-    attendees = data.get('attendees')
-    actions = data.get('actions')
-    indicators = data.get('indicators')
-    projects = data.get('projects')
-    tickets = data.get('agenda')
+    circle_id = payload.get('circle_id')
+    report_type = payload.get('report_type')
+    author_id = payload.get('author_id')
+    content = payload.get('content')
+    attendees = payload.get('attendees')
+    actions = payload.get('actions')
+    indicators = payload.get('indicators')
+    projects = payload.get('projects')
+    tickets = payload.get('agenda')
     try:
         new_report = Report(
             circle_id=circle_id,
@@ -218,123 +156,155 @@ def create_report():
 
         session.commit()
     except (exc.IntegrityError) as e:
-        print(e)
         session.rollback()
         return jsonify(response_object), 400
-
-    response_object = {
-        'objects': [{
-            'report_id': new_report.report_id,
-            'circle_id': new_report.circle_id,
-            'report_type': new_report.report_type,
-            'created_at': new_report.created_at,
-            'author_id': new_report.author_id,
-            'content': new_report.content,
-            'modified_at': new_report.modified_at,
-            'modified_by': new_report.modified_by
-        }],
-        'occurences': 1 if new_report else 0,
-        'primary_keys': ['report_id']}
-    return jsonify(response_object)
+    return report_unrest.get({}, report_id=new_report.report_id)
 
 
-@app.route('/api/reports/<int:report_id>', methods=['PUT'])
-@needlogin
-def update_report(report_id):
+def report_tables(payload, report_id):
+    attendees = payload.get('attendees')
+    actions = payload.get('actions')
+    indicators = payload.get('indicators')
+    projects = payload.get('projects')
+    tickets = payload.get('agenda')
+
+    for attendee in attendees:
+        report_attendee = session.query(Report_attendee).filter(
+            Report_attendee.report_id == report_id,
+            Report_attendee.user_id == attendee.get('user_id'),
+            ).first()
+        if report_attendee:
+            report_attendee.user = attendee.get('user')
+            report_attendee.checked = attendee.get('checked')
+        session.flush()
+
+    for action in actions:
+        report_checklist = session.query(Report_checklist).filter(
+            Report_checklist.report_id == report_id,
+            Report_checklist.item_id == action.get('item_id'),
+            ).first()
+        if report_checklist:
+            report_checklist.content = action.get('content')
+            report_checklist.checked = action.get('checked')
+        session.flush()
+
+    for indicator in indicators:
+        report_indicator = session.query(Report_indicator).filter(
+            Report_indicator.report_id == report_id,
+            Report_indicator.item_id == indicator.get('item_id'),
+            ).first()
+        if report_indicator:
+            report_indicator.content = indicator.get('content')
+            report_indicator.value = indicator.get('value')
+        session.flush()
+
+    for project in projects:
+        report_milestone = session.query(Report_milestone).filter(
+            Report_milestone.report_id == report_id,
+            Report_milestone.milestone_number == project.get('number'),
+            Report_milestone.repo_name == project.get('repo'),
+            ).first()
+        if report_milestone:
+            report_milestone.milestone = project
+        session.flush()
+
+    for ticket in tickets:
+        report_agenda = session.query(Report_agenda).filter(
+            Report_agenda.report_id == report_id,
+            Report_agenda.ticket_id == ticket.get('ticket_id'),
+            ).first()
+        if report_agenda:
+            report_agenda.ticket = ticket
+        session.flush()
+    return None
+
+
+@report_unrest.declare('PUT', True)
+def update_report(payload, report_id):
     response_object = {
         'status': 'error',
         'message': 'Invalid payload.'
     }
-    data = request.get_json()
+    if not report_id:
+        return jsonify(response_object), 400
+
     report = session.query(Report).filter(
         Report.report_id == report_id).first()
     if not report:
         return jsonify(response_object), 400
 
     try:
-        report.modified_by = data.get('modified_by')
-        report.content = data.get('content')
+        report.modified_by = payload.get('modified_by')
+        report.content = payload.get('content')
         session.flush()
-    except (exc.IntegrityError) as e:
-        print(e)
-        session.rollback()
-        return jsonify(response_object), 400
-
-    attendees = data.get('attendees')
-    actions = data.get('actions')
-    indicators = data.get('indicators')
-    projects = data.get('projects')
-    tickets = data.get('agenda')
-    try:
-        for attendee in attendees:
-            report_attendee = session.query(Report_attendee).filter(
-                Report_attendee.report_id == report_id,
-                Report_attendee.user_id == attendee.get('user_id'),
-                ).first()
-            if report_attendee:
-                report_attendee.user = attendee.get('user')
-                report_attendee.checked = attendee.get('checked')
-            session.flush()
-
-        for action in actions:
-            report_checklist = session.query(Report_checklist).filter(
-                Report_checklist.report_id == report_id,
-                Report_checklist.item_id == action.get('id'),
-                ).first()
-            if report_checklist:
-                report_checklist.content = action.get('content'),
-                report_checklist.checked = action.get('checked')
-            session.flush()
-
-        for indicator in indicators:
-            report_indicator = session.query(Report_indicator).filter(
-                Report_indicator.report_id == report_id,
-                Report_indicator.item_id == indicator.get('id'),
-                ).first()
-            if report_indicator:
-                report_indicator.content = indicator.get('content')
-                report_indicator.value = indicator.get('value')
-            session.flush()
-
-        for project in projects:
-            report_milestone = session.query(Report_milestone).filter(
-                Report_milestone.report_id == report_id,
-                Report_milestone.milestone_number == project.get('number'),
-                Report_milestone.repo_name == project.get('repo'),
-                ).first()
-            if report_milestone:
-                report_milestone.milestone = project
-            session.flush()
-
-        for ticket in tickets:
-            report_agenda = session.query(Report_agenda).filter(
-                Report_agenda.report_id == report_id,
-                Report_agenda.ticket_id == ticket.get('ticket_id'),
-                ).first()
-            if report_agenda:
-                report_agenda.ticket = ticket
-
+        report_tables(payload, report_id)
         session.commit()
     except (exc.IntegrityError) as e:
-        print(e)
         session.rollback()
         return jsonify(response_object), 400
 
-    response_object = {
-        'objects': [{
-            'report_id': report.report_id,
-            'circle_id': report.circle_id,
-            'report_type': report.report_type,
-            'created_at': report.created_at,
-            'author_id': report.author_id,
-            'content': report.content,
-            'modified_at': report.modified_at,
-            'modified_by': report.modified_by
-        }],
-        'occurences': 1 if report else 0,
-        'primary_keys': ['report_id']}
-    return jsonify(response_object)
+    return report_unrest.get({}, report_id=report.report_id)
 
+
+rest(
+    Report_attendee,
+    methods=['GET', 'PATCH'],
+    name='report_attendees',
+    query=lambda query: query.filter(
+        Report_attendee.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+rest(
+    Report_checklist,
+    methods=['GET', 'PATCH'],
+    name='report_checklists',
+    query=lambda query: query.filter(
+        Report_checklist.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+rest(
+    Report_indicator,
+    methods=['GET', 'PATCH'],
+    name='report_indicators',
+    query=lambda query: query.filter(
+        Report_indicator.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+rest(
+    Report_milestone,
+    methods=['GET', 'PATCH'],
+    name='report_milestones',
+    query=lambda query: query.filter(
+        Report_milestone.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+rest(
+    Report_agenda,
+    methods=['GET', 'PUT'],
+    name='report_agenda',
+    query=lambda query: query.filter(
+        Report_agenda.report_id == (request.values.get('report_id'))
+        if request.values.get('report_id')
+        else True,
+    ),
+    auth=needlogin
+)
 
 rest(
     Item,
