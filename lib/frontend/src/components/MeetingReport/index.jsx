@@ -8,20 +8,22 @@ import ReactModal from 'react-modal'
 import { withRouter } from 'react-router-dom'
 
 import {
-  updateMarkdown,
   fetchResults,
   setLoading,
   setParams,
+  updateMarkdown,
 } from '../../actions'
 import { setModal } from '../../actions/issues'
 import {
-  fetchReport,
+  disableEdition,
+  emptyMeeting,
   expandMilestone,
   fetchMeetingData,
+  fetchReport,
   getLastReport,
+  setTimer,
   sortAttendees,
   submitOrUpdateReport,
-  disableEdition,
   updateMeetingAttendees,
 } from '../../actions/meetings'
 import { block, connect } from '../../utils'
@@ -146,7 +148,7 @@ class MeetingsReportCreation extends React.Component {
                       .filter(user => user.user_id === meeting.author_id)
                       .map(user => user.user_name)}{' '}
                     <span className={b('date')}>
-                      <i className="fa fa-clock-o" aria-hidden="true" />{' '}
+                      <i className="fa fa-clock-o" aria-hidden="true" />
                       {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
                     </span>
                     {oldReport ? (
@@ -195,9 +197,13 @@ class MeetingsReportCreation extends React.Component {
                                 disabled={isEditionDisabled}
                                 id="attendees"
                                 name={user.user_name}
-                                onChange={event =>
-                                  onAttendeesChange(event.target)
-                                }
+                                onChange={event => {
+                                  onAttendeesChange(
+                                    event.target,
+                                    history,
+                                    isCreation
+                                  )
+                                }}
                                 type="checkbox"
                               />
                               {user.user_name}
@@ -307,8 +313,12 @@ export default withRouter(
       users: state.users.results,
     }),
     dispatch => ({
-      onAttendeesChange: target =>
-        dispatch(updateMeetingAttendees(target.name, target.checked)),
+      onAttendeesChange: (target, history, isCreation) =>
+        Promise.resolve(
+          dispatch(updateMeetingAttendees(target.name, target.checked))
+        ).then(() => {
+          setTimer(dispatch(submitOrUpdateReport(history, isCreation, false)))
+        }),
       onEditClick: content => {
         dispatch(updateMarkdown(content))
         dispatch(disableEdition(false))
@@ -335,7 +345,7 @@ export default withRouter(
         if (isCreation) {
           dispatch(updateMarkdown(''))
         }
-        dispatch(submitOrUpdateReport(history, isCreation))
+        dispatch(submitOrUpdateReport(history, isCreation, true))
       },
       sync: (locationSearch, isCreation) => {
         dispatch(setParams(locationSearch))
@@ -343,6 +353,7 @@ export default withRouter(
         dispatch(setLoading('circles'))
         dispatch(setLoading('labels'))
         Promise.all([
+          dispatch(emptyMeeting()),
           dispatch(fetchResults('users')),
           dispatch(fetchResults('circles')),
           dispatch(fetchResults('labels')),
