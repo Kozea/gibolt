@@ -21,7 +21,6 @@ import {
   fetchMeetingData,
   fetchReport,
   getLastReport,
-  setTimer,
   sortAttendees,
   submitOrUpdateReport,
   updateMeetingAttendees,
@@ -37,11 +36,16 @@ import ReportProjects from './ReportProjects'
 const b = block('MeetingReport')
 var ReactMarkdown = require('react-markdown')
 
-class MeetingsReportCreation extends React.Component {
+function clearTimer(meetingReport) {
+  meetingReport.setState({ timer: null })
+}
+
+class MeetingsReport extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
       selectedCircle: {},
+      timer: null,
     }
   }
 
@@ -63,6 +67,19 @@ class MeetingsReportCreation extends React.Component {
       nextProps.params.meeting_name !== this.props.params.meeting_name
     ) {
       this.props.onParamsChange(nextProps.params)
+    }
+  }
+
+  setTimer() {
+    if (!this.state.timer) {
+      this.setState({
+        timer: setTimeout(
+          this.props.onSave,
+          10000,
+          this.props.isCreation,
+          this
+        ),
+      })
     }
   }
 
@@ -94,7 +111,7 @@ class MeetingsReportCreation extends React.Component {
       <section className={b()}>
         <Helmet>
           <title>{`Gibolt - ${
-            isCreation ? 'Create a report' : 'Meeting'
+            meeting.report_id ? 'Create a report' : 'Meeting'
           }`}</title>
         </Helmet>
         <ReactModal
@@ -139,9 +156,10 @@ class MeetingsReportCreation extends React.Component {
                   .filter(circle => circle.circle_id === circleId)
                   .map(circle => circle.circle_name)}{' '}
                 - {meetingType}
+                {meeting.report_id && ` - #${meeting.report_id}`}
               </span>
-              {isEditionDisabled &&
-                !errors.meeting && (
+              <div className={b('meetingInfos')}>
+                {meeting.report_id && (
                   <span>
                     created by:{' '}
                     {users
@@ -151,24 +169,27 @@ class MeetingsReportCreation extends React.Component {
                       <i className="fa fa-clock-o" aria-hidden="true" />
                       {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
                     </span>
-                    {oldReport ? (
-                      ' (Old version, not editable)'
-                    ) : (
-                      <span
-                        className={b('unlink')}
-                        title="Edit report"
-                        onClick={() => onEditClick(meeting.content)}
-                      >
-                        <i
-                          className="fa fa-edit editMeeting"
-                          aria-hidden="true"
-                        />
+                    {!isCreation && (
+                      <span>
+                        {oldReport ? (
+                          ' (Old version, not editable)'
+                        ) : (
+                          <span
+                            className={b('unlink')}
+                            title="Edit report"
+                            onClick={() => onEditClick(meeting.content)}
+                          >
+                            <i
+                              className="fa fa-edit editMeeting"
+                              aria-hidden="true"
+                            />
+                          </span>
+                        )}
                       </span>
                     )}
                     {meeting.modified_at && (
                       <span>
-                        <br />
-                        modified by:{' '}
+                        <br />modified by:{' '}
                         {users
                           .filter(user => user.user_id === meeting.modified_by)
                           .map(user => user.user_name)}{' '}
@@ -183,6 +204,7 @@ class MeetingsReportCreation extends React.Component {
                     )}
                   </span>
                 )}
+              </div>
               <div className={b('content')}>
                 {!oldReport && (
                   <span>
@@ -198,11 +220,8 @@ class MeetingsReportCreation extends React.Component {
                                 id="attendees"
                                 name={user.user_name}
                                 onChange={event => {
-                                  onAttendeesChange(
-                                    event.target,
-                                    history,
-                                    isCreation
-                                  )
+                                  this.setTimer()
+                                  onAttendeesChange(event.target)
                                 }}
                                 type="checkbox"
                               />
@@ -274,11 +293,11 @@ class MeetingsReportCreation extends React.Component {
                   </button>
                   <button
                     type="submit"
-                    onClick={() =>
+                    onClick={() => {
                       isCreation
                         ? onGoBack(circleId, history)
                         : sync(params, isCreation)
-                    }
+                    }}
                   >
                     Cancel
                   </button>
@@ -313,12 +332,9 @@ export default withRouter(
       users: state.users.results,
     }),
     dispatch => ({
-      onAttendeesChange: (target, history, isCreation) =>
-        Promise.resolve(
-          dispatch(updateMeetingAttendees(target.name, target.checked))
-        ).then(() => {
-          setTimer(dispatch(submitOrUpdateReport(history, isCreation, false)))
-        }),
+      onAttendeesChange: target => {
+        dispatch(updateMeetingAttendees(target.name, target.checked))
+      },
       onEditClick: content => {
         dispatch(updateMarkdown(content))
         dispatch(disableEdition(false))
@@ -341,11 +357,18 @@ export default withRouter(
         dispatch(setLoading('meeting'))
         dispatch(fetchMeetingData(locationSearch))
       },
+      onSave: (isCreation, meetingReport) => {
+        Promise.resolve(dispatch(submitOrUpdateReport(isCreation, false))).then(
+          () => {
+            clearTimer(meetingReport)
+          }
+        )
+      },
       onSubmit: (history, isCreation) => {
         if (isCreation) {
           dispatch(updateMarkdown(''))
         }
-        dispatch(submitOrUpdateReport(history, isCreation, true))
+        dispatch(submitOrUpdateReport(isCreation, true, history))
       },
       sync: (locationSearch, isCreation) => {
         dispatch(setParams(locationSearch))
@@ -378,5 +401,5 @@ export default withRouter(
         dispatch(updateMarkdown(''))
       },
     })
-  )(MeetingsReportCreation)
+  )(MeetingsReport)
 )
