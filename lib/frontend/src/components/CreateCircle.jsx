@@ -149,7 +149,7 @@ export default withRouter(
       onSubmit: (e, history) => {
         e.preventDefault()
         const formCircle = [].slice
-          .call(e.target.form.elements)
+          .call(e.target.elements)
           .reduce(function(map, obj) {
             if (obj.name === 'body') {
               map.circle_accountabilities = obj.value

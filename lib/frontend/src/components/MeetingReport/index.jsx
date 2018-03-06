@@ -221,7 +221,7 @@ class MeetingsReportCreation extends React.Component {
               )}
               <br />
               <div className={b('content')}>
-                {oldReport === false && (
+                {!oldReport && (
                   <span>
                     <span>
                       <h3>Presents:</h3>
@@ -248,7 +248,7 @@ class MeetingsReportCreation extends React.Component {
                       )}
                     </span>
                     {(params.meeting_name === 'Triage' ||
-                      meeting.report_type === 'Triage') && (
+                      (!isCreation && meeting.report_type === 'Triage')) && (
                       <span>
                         <ReportItems
                           actions={meeting.actions}
@@ -291,7 +291,14 @@ class MeetingsReportCreation extends React.Component {
                 <article className={b('action')}>
                   <button
                     type="submit"
-                    onClick={() => onGoBack(meeting.circle_id, history)}
+                    onClick={() =>
+                      onGoBack(
+                        meeting.circle_id
+                          ? meeting.circle_id
+                          : params.circle_id,
+                        history
+                      )
+                    }
                   >
                     Back to Circle
                   </button>
