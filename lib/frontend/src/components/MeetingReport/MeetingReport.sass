@@ -28,17 +28,25 @@
     margin-top: 1em
     width: 49em
 
-  &__date
-    color: #50595f
-    margin-left: .75em
-
   &__editor
     margin-top: 1em
     width: 49em
 
+  &__date
+    color: #50595f
+    margin-left: .75em
+
   &__due-date
     font-size: .8em
     margin-left: .5em
+
+  &__head
+    align-items: center
+    display: flex
+    font-size: 1.2em
+    font-weight: 500
+    margin: 0
+    text-transform: uppercase
 
   &__lab
     font-weight: bold
@@ -120,11 +128,14 @@
         font-size: inherit
         width: auto
 
-.createIssue
-  margin-left: .5em
+  .createIssue
+    margin-left: .5em
 
-.open
-  background-color: $open-issue
+  .open
+    background-color: $open-issue
 
-.closed
-  background-color: $close-issue
+  .closed
+    background-color: $close-issue
+
+  .editMeeting
+    padding-left: 0.5em

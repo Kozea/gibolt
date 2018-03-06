@@ -23,7 +23,6 @@ import {
   submitOrUpdateReport,
   disableEdition,
   updateMeetingAttendees,
-  updateReportsList,
 } from '../../actions/meetings'
 import { block, connect } from '../../utils'
 import IssueCreationDetail from './../IssueCreationDetail'
@@ -74,14 +73,12 @@ class MeetingsReportCreation extends React.Component {
       isEditionDisabled,
       loading,
       meeting,
-      meetingsTypes,
       modal,
       onEditClick,
       onGoBack,
       onMilestoneClick,
       onModalClose,
       onAttendeesChange,
-      onSelectChange,
       onSubmit,
       params,
       sync,
@@ -89,6 +86,8 @@ class MeetingsReportCreation extends React.Component {
     } = this.props
     const attendees = sortAttendees(meeting.attendees)
     const oldReport = meeting.attendees.length === 0 && !isCreation
+    const circleId = isCreation ? params.circle_id : meeting.circle_id
+    const meetingType = isCreation ? params.meeting_name : meeting.report_type
     return (
       <section className={b()}>
         <Helmet>
@@ -108,10 +107,7 @@ class MeetingsReportCreation extends React.Component {
         {loading !== 0 && <Loading />}
         <article className={b('meetings')}>
           <h2>{isCreation ? 'Create a report' : 'Meeting'}</h2>
-          {errors.circles ||
-          errors.labels ||
-          errors.meetingsTypes ||
-          errors.users ? (
+          {errors.circles || errors.labels || errors.users ? (
             <article className={b('group', { error: true })}>
               <h2>Error during fetch</h2>
               <code>
@@ -130,55 +126,30 @@ class MeetingsReportCreation extends React.Component {
             <span>
               {errors.meeting && (
                 <article className={b('group', { error: true })}>
+                  <h3>Error during fetch</h3>
                   <code>{`Error: ${errors.meeting}`}</code>
+                  <br />
                   <br />
                 </article>
               )}
-              {isCreation ? (
-                <span>
-                  <label>
-                    Circle:
-                    <select
-                      id="circles"
-                      name="circles"
-                      value={isCreation ? params.circle_id : meeting.circle_id}
-                      disabled={params.circle_id !== ''}
-                      onChange={event => onSelectChange(event)}
-                    >
-                      <option value="" />
-                      {circles.results.map(circle => (
-                        <option key={circle.circle_id} value={circle.circle_id}>
-                          {circle.circle_name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    Meetings:
-                    <select
-                      id="meetingType"
-                      name="meetingType"
-                      value={
-                        isCreation ? params.meeting_name : meeting.report_type
-                      }
-                      disabled={params.meeting_name !== ''}
-                      onChange={event => onSelectChange(event)}
-                    >
-                      <option value="" />
-                      {meetingsTypes.results.map(type => (
-                        <option key={type.type_id} value={type.type_name}>
-                          {type.type_name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </span>
-              ) : (
-                <span>
-                  {meeting.circle ? meeting.circle[0].circle_name : ''} -{' '}
-                  {meeting.report_type}{' '}
-                  {isEditionDisabled &&
-                    (oldReport ? (
+              <span className={b('head')}>
+                {circles
+                  .filter(circle => circle.circle_id === circleId)
+                  .map(circle => circle.circle_name)}{' '}
+                - {meetingType}
+              </span>
+              {isEditionDisabled &&
+                !errors.meeting && (
+                  <span>
+                    created by:{' '}
+                    {users
+                      .filter(user => user.user_id === meeting.author_id)
+                      .map(user => user.user_name)}{' '}
+                    <span className={b('date')}>
+                      <i className="fa fa-clock-o" aria-hidden="true" />{' '}
+                      {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
+                    </span>
+                    {oldReport ? (
                       ' (Old version, not editable)'
                     ) : (
                       <span
@@ -191,35 +162,25 @@ class MeetingsReportCreation extends React.Component {
                           aria-hidden="true"
                         />
                       </span>
-                    ))}{' '}
-                  <br />
-                  created by:{' '}
-                  {users
-                    .filter(user => user.user_id === meeting.author_id)
-                    .map(user => user.user_name)}{' '}
-                  <span className={b('date')}>
-                    <i className="fa fa-clock-o" aria-hidden="true" />{' '}
-                    {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
-                  </span>
-                  {meeting.modified_at && (
-                    <span>
-                      <br />
-                      modified by:{' '}
-                      {users
-                        .filter(user => user.user_id === meeting.modified_by)
-                        .map(user => user.user_name)}{' '}
-                      <span className={b('date')}>
-                        <i className="fa fa-clock-o" aria-hidden="true" />{' '}
-                        {format(
-                          new Date(meeting.modified_at),
-                          'DD/MM/YYYY HH:mm'
-                        )}
+                    )}
+                    {meeting.modified_at && (
+                      <span>
+                        <br />
+                        modified by:{' '}
+                        {users
+                          .filter(user => user.user_id === meeting.modified_by)
+                          .map(user => user.user_name)}{' '}
+                        <span className={b('date')}>
+                          <i className="fa fa-clock-o" aria-hidden="true" />
+                          {format(
+                            new Date(meeting.modified_at),
+                            'DD/MM/YYYY HH:mm'
+                          )}
+                        </span>
                       </span>
-                    </span>
-                  )}
-                </span>
-              )}
-              <br />
+                    )}
+                  </span>
+                )}
               <div className={b('content')}>
                 {!oldReport && (
                   <span>
@@ -291,14 +252,7 @@ class MeetingsReportCreation extends React.Component {
                 <article className={b('action')}>
                   <button
                     type="submit"
-                    onClick={() =>
-                      onGoBack(
-                        meeting.circle_id
-                          ? meeting.circle_id
-                          : params.circle_id,
-                        history
-                      )
-                    }
+                    onClick={() => onGoBack(circleId, history)}
                   >
                     Back to Circle
                   </button>
@@ -316,7 +270,7 @@ class MeetingsReportCreation extends React.Component {
                     type="submit"
                     onClick={() =>
                       isCreation
-                        ? onGoBack(params.circle_id, history)
+                        ? onGoBack(circleId, history)
                         : sync(params, isCreation)
                     }
                   >
@@ -334,12 +288,11 @@ class MeetingsReportCreation extends React.Component {
 export default withRouter(
   connect(
     state => ({
-      circles: state.circles,
+      circles: state.circles.results,
       errors: {
         circles: state.circles.error,
         labels: state.labels.error,
         meeting: state.meeting.error,
-        meetingsTypes: state.meetingsTypes.error,
         users: state.users.error,
       },
       isEditionDisabled: state.meeting.isEditionDisabled,
@@ -347,10 +300,8 @@ export default withRouter(
         (state.circles.loading ? 1 : 0) +
         (state.labels.loading ? 1 : 0) +
         (state.meeting.loading ? 1 : 0) +
-        (state.meetingsTypes.loading ? 1 : 0) +
         (state.users.loading ? 1 : 0),
       meeting: state.meeting.results,
-      meetingsTypes: state.meetingsTypes,
       modal: state.modal,
       params: state.params,
       users: state.users.results,
@@ -364,7 +315,11 @@ export default withRouter(
       },
       onGoBack: (circleId, history) => {
         dispatch(updateMarkdown(''))
-        history.push(`/circle?circle_id=${circleId}`)
+        if (circleId) {
+          history.push(`/circle?circle_id=${circleId}`)
+        } else {
+          history.push('/circles')
+        }
       },
       onMilestoneClick: milestoneId => {
         dispatch(expandMilestone(milestoneId))
@@ -376,9 +331,6 @@ export default withRouter(
         dispatch(setLoading('meeting'))
         dispatch(fetchMeetingData(locationSearch))
       },
-      onSelectChange: event => {
-        dispatch(updateReportsList(event))
-      },
       onSubmit: (history, isCreation) => {
         if (isCreation) {
           dispatch(updateMarkdown(''))
@@ -389,12 +341,10 @@ export default withRouter(
         dispatch(setParams(locationSearch))
         dispatch(setLoading('users'))
         dispatch(setLoading('circles'))
-        dispatch(setLoading('meetingsTypes'))
         dispatch(setLoading('labels'))
         Promise.all([
           dispatch(fetchResults('users')),
           dispatch(fetchResults('circles')),
-          dispatch(fetchResults('meetingsTypes')),
           dispatch(fetchResults('labels')),
           dispatch(getLastReport(locationSearch)),
         ]).then(() => {
@@ -403,6 +353,7 @@ export default withRouter(
             locationSearch.circle_id !== '' &&
             locationSearch.meeting_name !== ''
           ) {
+            dispatch(disableEdition(false))
             dispatch(setLoading('meeting'))
             dispatch(fetchMeetingData(locationSearch))
           }
