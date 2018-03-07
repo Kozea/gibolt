@@ -20,7 +20,7 @@ import {
   expandMilestone,
   fetchMeetingData,
   fetchReport,
-  getLastReport,
+  getLastReports,
   sortAttendees,
   submitOrUpdateReport,
   updateMeetingAttendees,
@@ -92,6 +92,7 @@ class MeetingsReport extends React.Component {
       isEditionDisabled,
       loading,
       meeting,
+      meetings, // previous meetings
       modal,
       onEditClick,
       onGoBack,
@@ -240,6 +241,11 @@ class MeetingsReport extends React.Component {
                           actions={meeting.actions}
                           isEditionDisabled={isEditionDisabled}
                           indicators={meeting.indicators}
+                          meetings={meetings}
+                          currentMeeting={{
+                            report_id: meeting.report_id,
+                            created_at: meeting.created_at,
+                          }}
                           setTimer={() => this.setTimer()}
                         />
                         <ReportProjects
@@ -326,6 +332,7 @@ export default withRouter(
         users: state.users.error,
       },
       isEditionDisabled: state.meeting.isEditionDisabled,
+      meetings: state.meetings.results,
       loading:
         (state.circles.loading ? 1 : 0) +
         (state.labels.loading ? 1 : 0) +
@@ -388,7 +395,7 @@ export default withRouter(
           dispatch(fetchResults('users')),
           dispatch(fetchResults('circles')),
           dispatch(fetchResults('labels')),
-          dispatch(getLastReport(locationSearch)),
+          dispatch(getLastReports(locationSearch)),
         ]).then(() => {
           if (
             isCreation &&

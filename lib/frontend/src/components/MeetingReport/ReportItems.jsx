@@ -1,5 +1,6 @@
 import './MeetingReport.sass'
 
+import { format } from 'date-fns'
 import React from 'react'
 
 import {
@@ -13,8 +14,10 @@ const b = block('MeetingReport')
 function ReportItems(props) {
   const {
     actions,
+    currentMeeting,
     indicators,
     isEditionDisabled,
+    meetings,
     onActionsChange,
     onIndicatorsChange,
     setTimer,
@@ -46,27 +49,74 @@ function ReportItems(props) {
       )}
       <h3>Indicators:</h3>
       {indicators.length > 0 ? (
-        <ul>
-          {indicators.map(indicator => (
-            <li key={indicator.item_id}>
-              <span className={b('bullet')} />
-              {indicator.content}
-              :{' '}
-              <input
-                className={`smallInput${isEditionDisabled ? '__disabled' : ''}`}
-                disabled={isEditionDisabled}
-                id="indicateurs"
-                name={indicator.content}
-                onChange={event => {
-                  setTimer()
-                  onIndicatorsChange(event.target)
-                }}
-                type="text"
-                value={indicator.value}
-              />
-            </li>
-          ))}
-        </ul>
+        <div className={b('itemTable')}>
+          <table>
+            <thead>
+              <tr>
+                <th />
+                <th>
+                  {meetings[1]
+                    ? `#${meetings[1].report_id} - ${format(
+                        new Date(meetings[1].created_at),
+                        'DD/MM/YYYY'
+                      )}`
+                    : ''}
+                </th>
+                <th>
+                  {meetings[0]
+                    ? `#${meetings[0].report_id} - ${format(
+                        new Date(meetings[0].created_at),
+                        'DD/MM/YYYY'
+                      )}`
+                    : ''}
+                </th>
+                <th>
+                  {currentMeeting.report_id
+                    ? `#${currentMeeting.report_id} - ${format(
+                        new Date(currentMeeting.created_at),
+                        'DD/MM/YYYY'
+                      )}`
+                    : 'Today'}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {indicators.map(indicator => (
+                <tr key={indicator.item_id}>
+                  <td className={b('itemContent')}>{indicator.content}</td>
+                  <td>
+                    {meetings[1] &&
+                      meetings[1].indicators
+                        .filter(ind => ind.item_id === indicator.item_id)
+                        .map(ind => ind.value)}
+                  </td>
+                  <td>
+                    {meetings[0] &&
+                      meetings[0].indicators
+                        .filter(ind => ind.item_id === indicator.item_id)
+                        .map(ind => ind.value)}
+                  </td>
+                  <td>
+                    <input
+                      className={`smallInput${
+                        isEditionDisabled ? '__disabled' : ''
+                      }`}
+                      disabled={isEditionDisabled}
+                      id="indicateurs"
+                      name={indicator.content}
+                      onChange={event => {
+                        setTimer()
+                        onIndicatorsChange(event.target)
+                      }}
+                      type="text"
+                      value={indicator.value}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
         'No indicators defined.'
       )}

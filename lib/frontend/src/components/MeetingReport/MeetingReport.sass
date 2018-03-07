@@ -48,6 +48,10 @@
     margin: 0
     text-transform: uppercase
 
+  &__itemTable
+    overflow-x: auto
+    // width: 50em
+
   &__lab
     font-weight: bold
 
@@ -116,6 +120,20 @@
 
   select
     width: 15em
+
+  table
+    border-collapse: collapse
+    max-width: 100%
+
+  table, th, td
+    border: .5px solid #D8DCE0
+    padding: .5em 1em
+
+  th, td
+    text-align: left
+
+  th + th, td + td
+    text-align: center
 
   .largeInput
       width: 53em
