@@ -17,6 +17,7 @@ function ReportProjects(props) {
     onModalCreation,
     onProjectsChange,
     projects,
+    setTimer,
   } = props
   const sortedProjects = sortProjects(projects)
   return (
@@ -122,9 +123,10 @@ function ReportProjects(props) {
                 className={`largeInput${isEditionDisabled ? '__disabled' : ''}`}
                 disabled={isEditionDisabled}
                 id="milestones"
-                onChange={event =>
+                onChange={event => {
+                  setTimer()
                   onProjectsChange(milestone.id, event.target.value)
-                }
+                }}
                 value={milestone.comment}
               />
             </li>

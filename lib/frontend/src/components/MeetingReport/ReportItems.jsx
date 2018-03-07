@@ -17,6 +17,7 @@ function ReportItems(props) {
     isEditionDisabled,
     onActionsChange,
     onIndicatorsChange,
+    setTimer,
   } = props
   return (
     <span>
@@ -30,7 +31,10 @@ function ReportItems(props) {
                 disabled={isEditionDisabled}
                 id="actions"
                 name={action.content}
-                onChange={event => onActionsChange(event.target)}
+                onChange={event => {
+                  setTimer()
+                  onActionsChange(event.target)
+                }}
                 type="checkbox"
               />
               {action.content}
@@ -53,7 +57,10 @@ function ReportItems(props) {
                 disabled={isEditionDisabled}
                 id="indicateurs"
                 name={indicator.content}
-                onChange={event => onIndicatorsChange(event.target)}
+                onChange={event => {
+                  setTimer()
+                  onIndicatorsChange(event.target)
+                }}
                 type="text"
                 value={indicator.value}
               />

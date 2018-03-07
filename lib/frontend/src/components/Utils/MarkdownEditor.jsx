@@ -39,6 +39,11 @@ class MarkdownEditor extends React.Component {
         draftjsToMd(convertToRaw(editorState.getCurrentContent()), myMdDict)
       )
     }
+    if (this.props.setTimer) {
+      // for meeting report creation/edition only
+      // in other cases, setTimer is not defined
+      this.props.setTimer()
+    }
   }
 
   render() {

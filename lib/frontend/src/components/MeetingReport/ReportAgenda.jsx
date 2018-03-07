@@ -9,7 +9,7 @@ import { block, connect } from '../../utils'
 const b = block('MeetingReport')
 
 function ReportAgenda(props) {
-  const { isEditionDisabled, issues, onAgendaChange } = props
+  const { isEditionDisabled, issues, onAgendaChange, setTimer } = props
   return (
     <span>
       <h3>Agenda:</h3>
@@ -47,9 +47,10 @@ function ReportAgenda(props) {
                 className={`largeInput${isEditionDisabled ? '__disabled' : ''}`}
                 disabled={isEditionDisabled}
                 id="agenda"
-                onChange={event =>
+                onChange={event => {
+                  setTimer()
                   onAgendaChange(issue.ticket_id, event.target.value)
-                }
+                }}
                 value={issue.meeting_comment}
               />
             </li>

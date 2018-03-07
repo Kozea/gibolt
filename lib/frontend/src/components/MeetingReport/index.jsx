@@ -75,7 +75,7 @@ class MeetingsReport extends React.Component {
       this.setState({
         timer: setTimeout(
           this.props.onSave,
-          10000,
+          60000,
           this.props.isCreation,
           this
         ),
@@ -240,11 +240,13 @@ class MeetingsReport extends React.Component {
                           actions={meeting.actions}
                           isEditionDisabled={isEditionDisabled}
                           indicators={meeting.indicators}
+                          setTimer={() => this.setTimer()}
                         />
                         <ReportProjects
                           isEditionDisabled={isEditionDisabled}
                           projects={meeting.projects}
                           onMilestoneClick={onMilestoneClick}
+                          setTimer={() => this.setTimer()}
                         />
                       </span>
                     )}
@@ -256,6 +258,7 @@ class MeetingsReport extends React.Component {
                         <ReportAgenda
                           isEditionDisabled={isEditionDisabled}
                           issues={meeting.agenda}
+                          setTimer={() => this.setTimer()}
                         />
                       </span>
                     )}
@@ -270,7 +273,7 @@ class MeetingsReport extends React.Component {
                     source={meeting.content === '' ? 'RAS' : meeting.content}
                   />
                 ) : (
-                  <MarkdownEditor useStore />
+                  <MarkdownEditor useStore setTimer={() => this.setTimer()} />
                 )}
               </div>
               {isEditionDisabled ? (
@@ -287,7 +290,9 @@ class MeetingsReport extends React.Component {
                   <button
                     type="submit"
                     disabled={attendees.length === 0}
-                    onClick={() => onSubmit(history, isCreation)}
+                    onClick={() =>
+                      onSubmit(history, isCreation, this.state.timer)
+                    }
                   >
                     Submit
                   </button>
@@ -364,11 +369,14 @@ export default withRouter(
           }
         )
       },
-      onSubmit: (history, isCreation) => {
+      onSubmit: (history, isCreation, timerId) => {
         if (isCreation) {
           dispatch(updateMarkdown(''))
         }
         dispatch(submitOrUpdateReport(isCreation, true, history))
+        if (timerId) {
+          clearTimeout(timerId)
+        }
       },
       sync: (locationSearch, isCreation) => {
         dispatch(setParams(locationSearch))
