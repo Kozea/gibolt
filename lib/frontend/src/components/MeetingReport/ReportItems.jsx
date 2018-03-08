@@ -92,7 +92,7 @@ function ReportItems(props) {
                         new Date(meetings[1].created_at),
                         'DD/MM/YYYY'
                       )}`
-                    : ''}
+                    : 'No meeting'}
                 </th>
                 <th>
                   {meetings[0]
@@ -100,7 +100,7 @@ function ReportItems(props) {
                         new Date(meetings[0].created_at),
                         'DD/MM/YYYY'
                       )}`
-                    : ''}
+                    : 'No meeting'}
                 </th>
                 <th>
                   {`${
