@@ -75,7 +75,7 @@ class MeetingsReport extends React.Component {
       this.setState({
         timer: setTimeout(
           this.props.onSave,
-          60000,
+          30000,
           this.props.isCreation,
           this
         ),
@@ -395,7 +395,7 @@ export default withRouter(
           dispatch(fetchResults('users')),
           dispatch(fetchResults('circles')),
           dispatch(fetchResults('labels')),
-          dispatch(getLastReports(locationSearch)),
+          dispatch(getLastReports(locationSearch, isCreation)),
         ]).then(() => {
           if (
             isCreation &&

@@ -108,7 +108,7 @@ function ReportItems(props) {
                         setTimer()
                         onIndicatorsChange(event.target)
                       }}
-                      type="text"
+                      type="number"
                       value={indicator.value}
                     />
                   </td>
