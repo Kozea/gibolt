@@ -157,6 +157,7 @@ class MeetingsReport extends React.Component {
                   .filter(circle => circle.circle_id === circleId)
                   .map(circle => circle.circle_name)}{' '}
                 - {meetingType}
+                {!meeting.is_submitted && ' (DRAFT)'}
                 {meeting.report_id && ` - #${meeting.report_id}`}
               </span>
               <div className={b('meetingInfos')}>
@@ -380,7 +381,7 @@ export default withRouter(
         if (isCreation) {
           dispatch(updateMarkdown(''))
         }
-        dispatch(submitOrUpdateReport(isCreation, true, history))
+        dispatch(submitOrUpdateReport(isCreation, true, history, true))
         if (timerId) {
           clearTimeout(timerId)
         }

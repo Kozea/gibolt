@@ -141,6 +141,7 @@ class Report(Base):
     content = Column(Text)
     modified_at = Column(DateTime, onupdate=datetime.datetime.utcnow)
     modified_by = Column(Integer)
+    is_submitted = Column(Boolean, default=False, nullable=False)
     circle = relationship(Circle, backref='reports')
     attendees = relationship(
         "Report_attendee", cascade='all,delete', backref='report')

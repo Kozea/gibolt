@@ -95,12 +95,14 @@ def post_report(payload, report_id=None):
     indicators = payload.get('indicators')
     projects = payload.get('projects')
     tickets = payload.get('agenda')
+    is_submitted = payload.get('is_submitted')
     try:
         new_report = Report(
             circle_id=circle_id,
             report_type=report_type,
             author_id=author_id,
-            content=content
+            content=content,
+            is_submitted=is_submitted
         )
         session.add(new_report)
         session.flush()
@@ -236,6 +238,7 @@ def update_report(payload, report_id):
     try:
         report.modified_by = payload.get('modified_by')
         report.content = payload.get('content')
+        report.is_submitted = payload.get('is_submitted')
         session.flush()
         report_tables(payload, report_id)
         session.commit()
