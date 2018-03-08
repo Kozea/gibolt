@@ -149,7 +149,9 @@ function ReportItems(props) {
                       data={getDataForSparkLines(indicator, meetings)}
                       svgHeight={25}
                     >
-                      <SparklinesLine color="#01080d" />
+                      <SparklinesLine
+                        style={{ stroke: '#01080d', fill: 'none' }}
+                      />
                     </Sparklines>
                   </td>
                 </tr>

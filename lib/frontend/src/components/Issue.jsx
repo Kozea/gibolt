@@ -28,7 +28,7 @@ export default function Issue(props) {
           title={user.user_name}
         />
       ))}
-      <a className={b('link')} href={props.url}>
+      <span className={b('link')} onClick={props.onModalDisplay}>
         <span className={b('title')}>{props.title}</span>
         <span className={b('id')}>#{props.id}</span>
         <span className={b('project')}>{props.project}</span>
@@ -41,11 +41,11 @@ export default function Issue(props) {
             {label.label_name}
           </span>
         ))}
-      </a>
+      </span>
       <div>
-        <span className={b('view')} onClick={props.onModalDisplay}>
-          view issue details
-        </span>
+        <a className={b('view')} href={props.url} target="_blank">
+          view on GitHub
+        </a>
       </div>
     </li>
   )

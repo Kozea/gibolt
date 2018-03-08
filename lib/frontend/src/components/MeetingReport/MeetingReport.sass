@@ -5,6 +5,9 @@
   overflow: auto
   position: relative
 
+  &__attendees
+    display: flex
+
   &__avatar
     border-radius: 10px
     margin-left: 5px
@@ -99,11 +102,15 @@
   &__unlink
     color: #000000
 
+  h3
+    margin-top: 1.8em
+
   label
     margin: .10em
     max-width: 100%
 
   input
+    border: 1px solid #c9d1d8
     margin: 0 0.5em
 
   input[type=checkbox]:disabled
@@ -122,6 +129,9 @@
   select
     width: 15em
 
+  li
+    margin: 1em 0
+
   table
     border-collapse: collapse
     max-width: 100%
@@ -137,18 +147,24 @@
     text-align: center
 
   .largeInput
-      width: 58.3em
+    margin-top: .8em
+    min-height: 2em
+    width: 58.3em
 
   .smallInput
-      text-align: center
-      width: 5em
+    text-align: center
+    width: 5em
 
   .largeInput, .smallInput, &__markdownContent
       &__disabled
-        background-color: #F0F5F9
         color: inherit
         display: inline
         font-size: inherit
+        opacity: .7
+
+  .largeInput
+      &__disabled
+        width: 58.3em
 
   .smallInput
       &__disabled
@@ -169,3 +185,9 @@
 
   .fa-clock-o
     padding-right: .3em
+
+  .MarkdownEditor
+    width: 48.7em
+
+    &__editor
+      border: 1px solid #c9d1d8

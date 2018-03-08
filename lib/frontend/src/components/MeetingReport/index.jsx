@@ -213,7 +213,7 @@ class MeetingsReport extends React.Component {
                     <span>
                       <h3>Presents:</h3>
                       {attendees.length > 0 ? (
-                        <ul>
+                        <ul className={b('attendees')}>
                           {attendees.map(user => (
                             <li key={user.user_name}>
                               <input
