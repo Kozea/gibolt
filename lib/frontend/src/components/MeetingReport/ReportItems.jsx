@@ -14,7 +14,7 @@ const b = block('MeetingReport')
 
 function getDataForSparkLines(indicator, meetings) {
   const sparklinesValues = []
-  for (let i = 0; i < 9; i++) {
+  for (let i = 8; i >= 0; i--) {
     if (meetings[i] && meetings[i].indicators) {
       const value = meetings[i].indicators
         .filter(ind => ind.item_id === indicator.item_id)
@@ -24,7 +24,20 @@ function getDataForSparkLines(indicator, meetings) {
       sparklinesValues.push(0)
     }
   }
+  sparklinesValues.push(+indicator.value)
   return sparklinesValues
+}
+
+function sortItems(items) {
+  return items.sort((a, c) => {
+    if (a.content.toLowerCase() < c.content.toLowerCase()) {
+      return -1
+    }
+    if (a.content.toLowerCase() > c.content.toLowerCase()) {
+      return 1
+    }
+    return 0
+  })
 }
 
 function ReportItems(props) {
@@ -38,6 +51,9 @@ function ReportItems(props) {
     onIndicatorsChange,
     setTimer,
   } = props
+  sortItems(actions)
+  sortItems(indicators)
+
   return (
     <span>
       <h3>Recurrent actions:</h3>
@@ -87,12 +103,11 @@ function ReportItems(props) {
                     : ''}
                 </th>
                 <th>
-                  {currentMeeting.report_id
-                    ? `#${currentMeeting.report_id} - ${format(
-                        new Date(currentMeeting.created_at),
-                        'DD/MM/YYYY'
-                      )}`
-                    : 'Today'}
+                  {`${
+                    currentMeeting.report_id
+                      ? `#${currentMeeting.report_id} - `
+                      : ''
+                  }${format(new Date(), 'DD/MM/YYYY')}`}
                 </th>
                 <th>Trend</th>
               </tr>
@@ -130,13 +145,12 @@ function ReportItems(props) {
                     />
                   </td>
                   <td>
-                    <span className={b('sparklines')}>
-                      <Sparklines
-                        data={getDataForSparkLines(indicator, meetings)}
-                      >
-                        <SparklinesLine color="#020E16" />
-                      </Sparklines>
-                    </span>
+                    <Sparklines
+                      data={getDataForSparkLines(indicator, meetings)}
+                      svgHeight={25}
+                    >
+                      <SparklinesLine color="#01080d" />
+                    </Sparklines>
                   </td>
                 </tr>
               ))}

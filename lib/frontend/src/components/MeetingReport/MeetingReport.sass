@@ -26,7 +26,6 @@
 
   &__content
     margin-top: 1em
-    width: 49em
 
   &__editor
     margin-top: 1em
@@ -50,7 +49,6 @@
 
   &__itemTable
     overflow-x: auto
-    // width: 50em
 
   &__lab
     font-weight: bold
@@ -92,8 +90,8 @@
     right: 0
     top: 0
 
-  // &__sparklines
-  //   height: 10em
+  &__reportContent
+    width: 49em
 
   &__tickets
     margin-left: 1em
@@ -130,7 +128,7 @@
 
   table, th, td
     border: .5px solid #D8DCE0
-    padding: 1em 1.2em
+    padding: .5em 1em
 
   th, td
     text-align: left
@@ -139,7 +137,7 @@
     text-align: center
 
   .largeInput
-      width: 53em
+      width: 58.3em
 
   .smallInput
       text-align: center
@@ -151,7 +149,11 @@
         color: inherit
         display: inline
         font-size: inherit
-        // width: auto
+
+  .smallInput
+      &__disabled
+        text-align: center
+        width: 5em
 
   .createIssue
     margin-left: .5em

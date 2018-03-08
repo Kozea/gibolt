@@ -272,16 +272,18 @@ class MeetingsReport extends React.Component {
                   </span>
                 )}
                 <h3>Report content:</h3>
-                {isEditionDisabled ? (
-                  <ReactMarkdown
-                    className={`${b('markdownContent').toString()}${
-                      isEditionDisabled ? '__disabled' : ''
-                    }`}
-                    source={meeting.content === '' ? 'RAS' : meeting.content}
-                  />
-                ) : (
-                  <MarkdownEditor useStore setTimer={() => this.setTimer()} />
-                )}
+                <div className={b('reportContent')}>
+                  {isEditionDisabled ? (
+                    <ReactMarkdown
+                      className={`${b('markdownContent').toString()}${
+                        isEditionDisabled ? '__disabled' : ''
+                      }`}
+                      source={meeting.content === '' ? 'RAS' : meeting.content}
+                    />
+                  ) : (
+                    <MarkdownEditor useStore setTimer={() => this.setTimer()} />
+                  )}
+                </div>
               </div>
               {isEditionDisabled ? (
                 <article className={b('action')}>
