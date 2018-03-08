@@ -7,6 +7,7 @@ import { fetchResults, setLoading } from '../actions'
 import {
   changeMilestoneSelect,
   changeRolesSelect,
+  emptyForm,
   fetchRepositoryWithoutLabels,
   submitIssue,
   updateCircle,
@@ -68,6 +69,7 @@ class IssueCreationDetail extends React.Component {
       issueForm,
       labels,
       loading,
+      onCancel,
       onCircleChange,
       onModalClose,
       onProjectChange,
@@ -200,7 +202,13 @@ class IssueCreationDetail extends React.Component {
             >
               Create
             </button>
-            <button type="button" onClick={() => onModalClose()}>
+            <button
+              type="button"
+              onClick={() => {
+                onCancel()
+                onModalClose()
+              }}
+            >
               Cancel
             </button>
           </article>
@@ -222,6 +230,9 @@ export default connect(
     repositories: state.repositories.results.repositories,
   }),
   dispatch => ({
+    onCancel: () => {
+      dispatch(emptyForm())
+    },
     onCircleChange: circleId => {
       dispatch(updateCircle(circleId.toString()))
       dispatch(changeRolesSelect(circleId))
@@ -233,6 +244,7 @@ export default connect(
     onSubmit: event => {
       event.preventDefault()
       dispatch(submitIssue(event))
+      dispatch(emptyForm())
     },
     onTitleChange: event => {
       dispatch(updateTitle(event.target.value))

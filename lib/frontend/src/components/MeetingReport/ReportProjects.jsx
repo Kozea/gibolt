@@ -58,7 +58,7 @@ function ReportProjects(props) {
                   onClick={() =>
                     onModalCreation(
                       'milestone',
-                      `${milestone.repo_name} ⦔ ${milestone.number}`
+                      `${milestone.repo} ⦔ ${milestone.number}`
                     )
                   }
                 >

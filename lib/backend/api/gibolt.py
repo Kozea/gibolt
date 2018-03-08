@@ -311,7 +311,7 @@ rest(
 
 rest(
     Item,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
     name='items',
     query=lambda query: query.filter(
         Item.role_id == (request.values.get('role_id'))

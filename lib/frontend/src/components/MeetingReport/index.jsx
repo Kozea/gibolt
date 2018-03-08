@@ -70,6 +70,12 @@ class MeetingsReport extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this.state.timer) {
+      clearTimeout(this.state.timer)
+    }
+  }
+
   setTimer() {
     if (!this.state.timer) {
       this.setState({
