@@ -3,13 +3,23 @@
   "version": "1.0.0",
   "description": "Test of react 4th edition",
   "jest": {
-    "moduleFileExtensions": ["js", "jsx", "json"],
-    "modulePaths": ["<rootDir>/lib/frontend/src"],
-    "moduleDirectories": ["node_modules"],
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json"
+    ],
+    "modulePaths": [
+      "<rootDir>/lib/frontend/src"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ],
     "moduleNameMapper": {
       "\\.(css|sass)$": "<rootDir>/lib/tests/styleMock.js"
     },
-    "setupFiles": ["<rootDir>/lib/tests/setup.js"]
+    "setupFiles": [
+      "<rootDir>/lib/tests/setup.js"
+    ]
   },
   "importSort": {
     ".js, .jsx": {
@@ -21,15 +31,13 @@
   "scripts": {
     "serve": "NODE_ENV=production node dist/server.js",
     "serve-server": "WEBPACK_ENV=server NODE_ENV=development webpack",
-    "serve-client":
-      "WEBPACK_ENV=browser NODE_ENV=development webpack-dev-server",
+    "serve-client": "WEBPACK_ENV=browser NODE_ENV=development webpack-dev-server",
     "build-client": "WEBPACK_ENV=browser NODE_ENV=production webpack",
     "build-server": "WEBPACK_ENV=server NODE_ENV=production webpack",
     "lint": "eslint --cache --ext .jsx --ext .js lib/",
     "fix": "prettier --write '{,lib/tests/**/,lib/frontend/src/**/}*.js?(x)'",
     "test": "node ./node_modules/jest-cli/bin/jest.js --no-cache",
-    "test-debug":
-      "inspect ./node_modules/jest-cli/bin/jest.js --runInBand --env jest-environment-node-debug",
+    "test-debug": "inspect ./node_modules/jest-cli/bin/jest.js --runInBand --env jest-environment-node-debug",
     "lint-all": "make fix lint"
   },
   "pre-commit": "lint-all",
@@ -60,6 +68,7 @@
     "react-router-dom": "4.2.2",
     "react-router-redux": "5.0.0-alpha.8",
     "react-select": "^1.2.1",
+    "react-sparklines": "^1.7.0",
     "redbox-react": "1.5.0",
     "redux": "3.7.2",
     "redux-http-status": "^0.0.8",

@@ -116,8 +116,8 @@ class Meetings extends React.Component {
                   params.circle_id === '' ||
                   params.meeting_name === '' ||
                   !circles.results
-                    .filter(circle => circle.circle_id === params.circle_id)
-                    .map(circle => circle.is_active)[0]
+                  .filter(circle => circle.circle_id === params.circle_id)
+                  .map(circle => circle.is_active)[0]
                 }
               >
                 Add a report
@@ -155,7 +155,7 @@ class Meetings extends React.Component {
                     <span className={b('unlink')}>
                       {meeting.attendees.length > 0 &&
                         !meeting.is_submitted &&
-                        ' (Draft)'}
+                      ' (Draft)'}
                     </span>
                   </Link>
                 </li>

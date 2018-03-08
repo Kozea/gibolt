@@ -2,6 +2,7 @@ import './MeetingReport.sass'
 
 import { format } from 'date-fns'
 import React from 'react'
+import { Sparklines, SparklinesLine } from 'react-sparklines'
 
 import {
   updateMeetingActions,
@@ -10,6 +11,21 @@ import {
 import { block, connect } from '../../utils'
 
 const b = block('MeetingReport')
+
+function getDataForSparkLines(indicator, meetings) {
+  const sparklinesValues = []
+  for (let i = 0; i < 9; i++) {
+    if (meetings[i] && meetings[i].indicators) {
+      const value = meetings[i].indicators
+        .filter(ind => ind.item_id === indicator.item_id)
+        .map(ind => ind.value)
+      sparklinesValues.push(+value)
+    } else {
+      sparklinesValues.push(0)
+    }
+  }
+  return sparklinesValues
+}
 
 function ReportItems(props) {
   const {
@@ -78,6 +94,7 @@ function ReportItems(props) {
                       )}`
                     : 'Today'}
                 </th>
+                <th>Trend</th>
               </tr>
             </thead>
             <tbody>
@@ -111,6 +128,15 @@ function ReportItems(props) {
                       type="number"
                       value={indicator.value}
                     />
+                  </td>
+                  <td>
+                    <span className={b('sparklines')}>
+                      <Sparklines
+                        data={getDataForSparkLines(indicator, meetings)}
+                      >
+                        <SparklinesLine color="#020E16" />
+                      </Sparklines>
+                    </span>
                   </td>
                 </tr>
               ))}
