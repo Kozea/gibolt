@@ -19,7 +19,7 @@ function getDataForSparkLines(indicator, meetings) {
       const value = meetings[i].indicators
         .filter(ind => ind.item_id === indicator.item_id)
         .map(ind => ind.value)
-      sparklinesValues.push(value ? 0 : value)
+      sparklinesValues.push(value ? value : 0)
     } else {
       sparklinesValues.push(0)
     }

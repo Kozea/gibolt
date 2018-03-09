@@ -68,6 +68,9 @@ report_unrest = rest(
         Report.report_type == request.values.get('meeting_name')
         if request.values.get('meeting_name')
         else True,
+        Report.report_id <= int(request.values.get('from_id'))
+        if request.values.get('from_id')
+        else True,
     ).order_by(
         Report.created_at.desc(),
         Report.report_id.desc()
