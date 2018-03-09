@@ -1,7 +1,7 @@
 import datetime
 
 from sqlalchemy import (
-    Boolean, Column, DateTime, ForeignKey, Integer, String, Text,
+    Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String, Text,
     UniqueConstraint
 )
 from sqlalchemy.event import listens_for
@@ -144,15 +144,15 @@ class Report(Base):
     is_submitted = Column(Boolean, default=False, nullable=False)
     circle = relationship(Circle, backref='reports')
     attendees = relationship(
-        "Report_attendee", cascade='all,delete', backref='report')
+        'Report_attendee', cascade='all,delete', backref='report')
     actions = relationship(
-        "Report_checklist", cascade='all,delete',  backref='report')
+        'Report_checklist', cascade='all,delete',  backref='report')
     indicators = relationship(
-        "Report_indicator", cascade='all,delete', backref='report')
+        'Report_indicator', cascade='all,delete', backref='report')
     projects = relationship(
-        "Report_milestone", cascade='all,delete', backref='report')
+        'Report_milestone', cascade='all,delete', backref='report')
     agenda = relationship(
-        "Report_agenda", cascade='all,delete', backref='report')
+        'Report_agenda', cascade='all,delete', backref='report')
 
 
 class Milestone_circle(Base):
@@ -208,7 +208,7 @@ class Report_indicator(Base):
         ForeignKey('item.item_id'),
         primary_key=True)
     content = Column(String)
-    value = Column(String)
+    value = Column(Numeric)
 
 
 class Report_milestone(Base):

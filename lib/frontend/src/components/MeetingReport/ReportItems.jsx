@@ -19,12 +19,12 @@ function getDataForSparkLines(indicator, meetings) {
       const value = meetings[i].indicators
         .filter(ind => ind.item_id === indicator.item_id)
         .map(ind => ind.value)
-      sparklinesValues.push(+value)
+      sparklinesValues.push(value ? value : 0)
     } else {
       sparklinesValues.push(0)
     }
   }
-  sparklinesValues.push(+indicator.value)
+  sparklinesValues.push(isNaN(indicator.value) ? 0 : +indicator.value)
   return sparklinesValues
 }
 
@@ -87,27 +87,51 @@ function ReportItems(props) {
               <tr>
                 <th />
                 <th>
-                  {meetings[1]
-                    ? `#${meetings[1].report_id} - ${format(
+                  {meetings[1] ? (
+                    <span>
+                      <a
+                        href={`/meeting?report_id=${meetings[1].report_id}`}
+                        target="_blank"
+                      >
+                        {`#${meetings[1].report_id}`}
+                      </a>
+                      <br />
+                      {`${format(
                         new Date(meetings[1].created_at),
                         'DD/MM/YYYY'
-                      )}`
-                    : 'No meeting'}
+                      )}`}
+                    </span>
+                  ) : (
+                    'No meeting'
+                  )}
                 </th>
                 <th>
-                  {meetings[0]
-                    ? `#${meetings[0].report_id} - ${format(
+                  {meetings[0] ? (
+                    <span>
+                      <a
+                        href={`/meeting?report_id=${meetings[0].report_id}`}
+                        target="_blank"
+                      >
+                        {`#${meetings[0].report_id}`}
+                      </a>
+                      <br />
+                      {`${format(
                         new Date(meetings[0].created_at),
                         'DD/MM/YYYY'
-                      )}`
-                    : 'No meeting'}
+                      )}`}
+                    </span>
+                  ) : (
+                    'No meeting'
+                  )}
                 </th>
                 <th>
-                  {`${
-                    currentMeeting.report_id
-                      ? `#${currentMeeting.report_id} - `
-                      : ''
-                  }${format(new Date(), 'DD/MM/YYYY')}`}
+                  {currentMeeting.report_id && (
+                    <span>
+                      {`#${currentMeeting.report_id}`}
+                      <br />
+                    </span>
+                  )}
+                  {`${format(new Date(), 'DD/MM/YYYY')}`}
                 </th>
                 <th>Trend</th>
               </tr>
@@ -141,7 +165,7 @@ function ReportItems(props) {
                         onIndicatorsChange(event.target)
                       }}
                       type="number"
-                      value={indicator.value}
+                      value={indicator.value ? indicator.value : ''}
                     />
                   </td>
                   <td>
