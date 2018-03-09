@@ -1,22 +1,31 @@
-import './MeetingsReportCreation.sass'
+import './MeetingReport.sass'
 
 import { format } from 'date-fns'
 import React from 'react'
 
 import Progress from './../Progress'
 import { setModal, updateIssueParams } from '../../actions/issues'
+import { sortProjects, updateMeetingProjects } from '../../actions/meetings'
 import { block, connect } from '../../utils'
 
-const b = block('MeetingsReportCreation')
+const b = block('MeetingReport')
 
 function ReportProjects(props) {
-  const { circleMilestones, issues, onMilestoneClick, onModalCreation } = props
+  const {
+    isEditionDisabled,
+    onMilestoneClick,
+    onModalCreation,
+    onProjectsChange,
+    projects,
+    setTimer,
+  } = props
+  const sortedProjects = sortProjects(projects)
   return (
     <span>
       <h3>Projects:</h3>
-      <ul>
-        {circleMilestones.length > 0 &&
-          circleMilestones.map(milestone => (
+      {sortedProjects.length > 0 ? (
+        <ul>
+          {sortedProjects.map(milestone => (
             <li key={milestone.id} title={milestone.description}>
               <a
                 className={b('unlink')}
@@ -24,7 +33,7 @@ function ReportProjects(props) {
                 target="_blank"
               >
                 <span className={b(`bullet ${milestone.state}`)} />
-                {milestone.repo_name}
+                {milestone.repo}
                 {' - '}
                 <span className={b('lab')}>{milestone.title}</span>
               </a>
@@ -49,20 +58,18 @@ function ReportProjects(props) {
                   onClick={() =>
                     onModalCreation(
                       'milestone',
-                      `${milestone.repo_name} ⦔ ${milestone.number}`
+                      `${milestone.repo} ⦔ ${milestone.number}`
                     )
                   }
                 >
                   <i
-                    className="fa fa-plus-circle addCircle"
+                    className="fa fa-plus-circle createIssue"
                     aria-hidden="true"
                   />
                 </span>
               )}
-              {issues.filter(
-                issue =>
-                  issue.milestone_id === milestone.id && !issue.pull_request
-              ).length > 0 && (
+              {milestone.issues.filter(issue => !issue.pull_request).length >
+                0 && (
                 <span>
                   <span
                     className={b('lighter')}
@@ -73,14 +80,9 @@ function ReportProjects(props) {
                   {milestone.is_expanded && (
                     <span>
                       <br />
-
                       <ul className={b('tickets')}>
-                        {issues
-                          .filter(
-                            issue =>
-                              issue.milestone_number === milestone.number &&
-                              !issue.pull_request
-                          )
+                        {milestone.issues
+                          .filter(issue => !issue.pull_request)
                           .map(issue => (
                             <li key={issue.ticket_id} title={issue.body}>
                               <span className={b('bullet')} />
@@ -118,13 +120,21 @@ function ReportProjects(props) {
               )}
               <br />
               <input
-                className="largeInput"
+                className={`largeInput${isEditionDisabled ? '__disabled' : ''}`}
+                disabled={isEditionDisabled}
                 id="milestones"
-                name={`${milestone.repo_name} - ${milestone.title}`}
+                onChange={event => {
+                  setTimer()
+                  onProjectsChange(milestone.id, event.target.value)
+                }}
+                value={milestone.comment}
               />
             </li>
           ))}
-      </ul>
+        </ul>
+      ) : (
+        'No associated milestones.'
+      )}
     </span>
   )
 }
@@ -135,5 +145,7 @@ export default connect(
       dispatch(updateIssueParams({ grouper, group }))
       dispatch(setModal(true, true, null))
     },
+    onProjectsChange: (milestoneId, value) =>
+      dispatch(updateMeetingProjects(milestoneId, value)),
   })
 )(ReportProjects)

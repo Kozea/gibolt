@@ -47,7 +47,7 @@ class Meetings extends React.Component {
       params,
     } = this.props
     const sortedMeetings = meetings.results.sort(
-      (a, c) => a.created_at - c.created_at
+      (a, c) => c.report_id - a.report_id
     )
     return (
       <section className={b()}>
@@ -152,6 +152,11 @@ class Meetings extends React.Component {
                       {meeting.circle[0].circle_name} -{' '}
                     </span>
                     {meeting.report_type}
+                    <span className={b('unlink')}>
+                      {meeting.attendees.length > 0 &&
+                        !meeting.is_submitted &&
+                        ' (Draft)'}
+                    </span>
                   </Link>
                 </li>
               ))}

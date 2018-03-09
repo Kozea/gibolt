@@ -8,6 +8,7 @@ import { mdToDraftjs, draftjsToMd } from 'draftjs-md-converter'
 import React from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 
+import { updateMeetingContent } from '../../actions/meetings'
 import { block, connect } from '../../utils'
 
 const b = block('MarkdownEditor')
@@ -31,6 +32,18 @@ class MarkdownEditor extends React.Component {
     this.setState({
       editorState,
     })
+    if (this.props.useStore) {
+      // for meeting report creation/edition only
+      // in other cases, useStore is not defined
+      this.props.onContentChange(
+        draftjsToMd(convertToRaw(editorState.getCurrentContent()), myMdDict)
+      )
+    }
+    if (this.props.setTimer) {
+      // for meeting report creation/edition only
+      // in other cases, setTimer is not defined
+      this.props.setTimer()
+    }
   }
 
   render() {
@@ -77,6 +90,13 @@ class MarkdownEditor extends React.Component {
   }
 }
 
-export default connect(state => ({
-  markvalue: state.markvalue,
-}))(MarkdownEditor)
+export default connect(
+  state => ({
+    markvalue: state.markvalue,
+  }),
+  dispatch => ({
+    onContentChange: value => {
+      dispatch(updateMeetingContent(value))
+    },
+  })
+)(MarkdownEditor)

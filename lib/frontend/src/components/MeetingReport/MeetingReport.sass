@@ -1,0 +1,194 @@
+@import ../vars
+
+.MeetingReport
+  flex: 1
+  overflow: auto
+  position: relative
+
+  &__attendees
+    display: flex
+
+  &__avatar
+    border-radius: 10px
+    margin-left: 5px
+    max-height: 20px
+    order: 0
+    vertical-align: middle
+    width: 20px
+
+  &__bullet
+    background-color: #000
+    border-radius: 0.25em
+    border-width: 0.25em
+    display: inline-block
+    height: 0.5em
+    font-size: 0.9em
+    margin: 0 0.5em
+    vertical-align: middle
+    width: 0.5em
+
+  &__content
+    margin-top: 1em
+
+  &__editor
+    margin-top: 1em
+    width: 49em
+
+  &__date
+    color: #50595f
+    margin-left: .75em
+
+  &__due-date
+    font-size: .8em
+    margin-left: .5em
+
+  &__head
+    align-items: center
+    display: flex
+    font-size: 1.2em
+    font-weight: 500
+    margin: 0
+    text-transform: uppercase
+
+  &__itemTable
+    overflow-x: auto
+
+  &__lab
+    font-weight: bold
+
+  &__lighter
+    color: #323232
+    font-size: .8em
+    margin-left: .5em
+
+  &__markdownContent
+    background: #e0e9f0
+    border: none
+    box-sizing: border-box
+    padding: .5em
+    outline: none
+    width: 44.5em
+
+  &__meetingInfos
+    height: 2.5em
+
+  &__meetings
+    margin-left: 1em
+    margin-right: .5em
+
+  &__modal
+    background-color: #f0f5f9
+    height: 84vh
+    left: 5rem
+    overflow-y: auto
+    position: absolute
+    right: 5rem
+    top: 8vh
+
+  &__modal-overlay
+    background-color: rgba(0, 0, 0, 0.3)
+    bottom: 0
+    left: 0
+    position: fixed
+    right: 0
+    top: 0
+
+  &__reportContent
+    width: 49em
+
+  &__tickets
+    margin-left: 1em
+
+  &__unlink
+    color: #000000
+
+  h3
+    margin-top: 1.8em
+
+  label
+    margin: .10em
+    max-width: 100%
+
+  input
+    border: 1px solid #c9d1d8
+    margin: 0 0.5em
+
+  input[type=checkbox]:disabled
+   background: content-box #d3d3d3
+   border-color: #d3d3d3
+
+  select, textarea
+    background: #e0e9f0
+    border: none
+    box-sizing: border-box
+    font-family: Lato, sans-serif
+    height: 2.5em
+    margin: .5em
+    outline: none
+
+  select
+    width: 15em
+
+  li
+    margin: 1em 0
+
+  table
+    border-collapse: collapse
+    max-width: 100%
+
+  table, th, td
+    border: .5px solid #D8DCE0
+    padding: .5em 1em
+
+  th, td
+    text-align: left
+
+  th + th, td + td
+    text-align: center
+
+  .largeInput
+    margin-top: .8em
+    min-height: 2em
+    width: 58.3em
+
+  .smallInput
+    text-align: center
+    width: 5em
+
+  .largeInput, .smallInput, &__markdownContent
+      &__disabled
+        color: inherit
+        display: inline
+        font-size: inherit
+        opacity: .7
+
+  .largeInput
+      &__disabled
+        margin-top: .8em
+        width: 58.3em
+
+  .smallInput
+      &__disabled
+        text-align: center
+        width: 5em
+
+  .createIssue
+    margin-left: .5em
+
+  .open
+    background-color: $open-issue
+
+  .closed
+    background-color: $close-issue
+
+  .editMeeting
+    padding-left: .5em
+
+  .fa-clock-o
+    padding-right: .3em
+
+  .MarkdownEditor
+    width: 48.7em
+
+    &__editor
+      border: 1px solid #c9d1d8

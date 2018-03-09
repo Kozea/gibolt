@@ -10,6 +10,7 @@ from sqlalchemy.orm import backref, relationship
 from sqlalchemy.types import Enum
 
 from .. import app
+from ..utils.customSQLAlchemy.types import SQLiteJson
 
 Base = declarative_base()
 item_types = ['checklist', 'indicator']
@@ -102,6 +103,7 @@ class Role(Base):
     role_purpose = Column(String)
     role_domain = Column(String)
     role_accountabilities = Column(String)
+    is_active = Column(Boolean, default=True, nullable=False)
     circle = relationship(Circle, backref='roles')
 
 
@@ -118,7 +120,8 @@ class Item(Base):
         nullable=False)
     item_type = Column(Enum(*item_types))
     content = Column(Text)
-    role = relationship(Role, backref='items')
+    value_type = Column(String)
+    is_active = Column(Boolean, default=True, nullable=False)
 
 
 class Report(Base):
@@ -133,12 +136,23 @@ class Report(Base):
         ForeignKey('circle.circle_id'),
         nullable=False)
     report_type = Column(Enum(*meeting_types))
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.datetime.now)
     author_id = Column(Integer)
     content = Column(Text)
-    modified_at = Column(DateTime, onupdate=datetime.datetime.utcnow)
+    modified_at = Column(DateTime, onupdate=datetime.datetime.now)
     modified_by = Column(Integer)
+    is_submitted = Column(Boolean, default=False, nullable=False)
     circle = relationship(Circle, backref='reports')
+    attendees = relationship(
+        "Report_attendee", cascade='all,delete', backref='report')
+    actions = relationship(
+        "Report_checklist", cascade='all,delete',  backref='report')
+    indicators = relationship(
+        "Report_indicator", cascade='all,delete', backref='report')
+    projects = relationship(
+        "Report_milestone", cascade='all,delete', backref='report')
+    agenda = relationship(
+        "Report_agenda", cascade='all,delete', backref='report')
 
 
 class Milestone_circle(Base):
@@ -153,3 +167,72 @@ class Milestone_circle(Base):
     repo_name = Column(
         String,
         primary_key=True)
+    is_active = Column(Boolean, default=True, nullable=False)
+
+
+class Report_attendee(Base):
+    __tablename__ = 'report_attendee'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    user_id = Column(
+        Integer,
+        primary_key=True)
+    user = Column(SQLiteJson)
+    checked = Column(Boolean, default=True, nullable=False)
+
+
+class Report_checklist(Base):
+    __tablename__ = 'report_checklist'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    item_id = Column(
+        Integer,
+        ForeignKey('item.item_id'),
+        primary_key=True)
+    content = Column(String)
+    checked = Column(Boolean, default=False, nullable=False)
+
+
+class Report_indicator(Base):
+    __tablename__ = 'report_indicator'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    item_id = Column(
+        Integer,
+        ForeignKey('item.item_id'),
+        primary_key=True)
+    content = Column(String)
+    value = Column(String)
+
+
+class Report_milestone(Base):
+    __tablename__ = 'report_milestone'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    milestone_number = Column(
+        Integer,
+        primary_key=True)
+    repo_name = Column(
+        String,
+        primary_key=True)
+    milestone = Column(SQLiteJson)
+
+
+class Report_agenda(Base):
+    __tablename__ = 'report_agenda'
+    report_id = Column(
+        Integer,
+        ForeignKey('report.report_id'),
+        primary_key=True)
+    ticket_id = Column(
+        Integer,
+        primary_key=True)
+    ticket = Column(SQLiteJson)

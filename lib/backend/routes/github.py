@@ -75,11 +75,11 @@ def format_ticket_response(ticket_request, repo_name):
 def update_milestone(milestone, repo_name):
     if milestone['due_on'] is not None:
         milestone['due_on'] = date_from_iso(milestone['due_on'])
-        milestone['repo'] = repo_name
-        total = milestone['closed_issues'] + milestone['open_issues']
-        milestone['progress'] = (
-            milestone['closed_issues'] / (total or float('inf'))
-        )
+    milestone['repo'] = repo_name
+    total = milestone['closed_issues'] + milestone['open_issues']
+    milestone['progress'] = (
+        milestone['closed_issues'] / (total or float('inf'))
+    )
     return milestone
 
 

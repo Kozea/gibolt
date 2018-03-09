@@ -1,20 +1,21 @@
-import './MeetingsReportCreation.sass'
+import './MeetingReport.sass'
 
 import { format } from 'date-fns'
 import React from 'react'
 
-import { block } from '../../utils'
+import { updateMeetingAgenda } from '../../actions/meetings'
+import { block, connect } from '../../utils'
 
-const b = block('MeetingsReportCreation')
+const b = block('MeetingReport')
 
-export default function ReportAgenda(props) {
-  const { issues } = props
+function ReportAgenda(props) {
+  const { isEditionDisabled, issues, onAgendaChange, setTimer } = props
   return (
     <span>
       <h3>Agenda:</h3>
-      <ul>
-        {issues &&
-          issues.map(issue => (
+      {issues.length > 0 ? (
+        <ul>
+          {issues.map(issue => (
             <li key={issue.ticket_id} title={issue.body}>
               <span className={b(`bullet ${issue.state}`)} />
               <a href={issue.html_url} target="_blank">
@@ -43,15 +44,28 @@ export default function ReportAgenda(props) {
               ))}
               <br />
               <input
-                className="largeInput"
+                className={`largeInput${isEditionDisabled ? '__disabled' : ''}`}
+                disabled={isEditionDisabled}
                 id="agenda"
-                name={`${issue.repo_name} - #${issue.ticket_number} ${
-                  issue.ticket_title
-                }`}
+                onChange={event => {
+                  setTimer()
+                  onAgendaChange(issue.ticket_id, event.target.value)
+                }}
+                value={issue.meeting_comment}
               />
             </li>
           ))}
-      </ul>
+        </ul>
+      ) : (
+        'No selected issues.'
+      )}
     </span>
   )
 }
+export default connect(
+  () => ({}),
+  dispatch => ({
+    onAgendaChange: (ticketId, value) =>
+      dispatch(updateMeetingAgenda(ticketId, value)),
+  })
+)(ReportAgenda)
