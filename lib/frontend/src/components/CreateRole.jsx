@@ -33,58 +33,59 @@ class CreateRole extends React.Component {
         <Helmet>
           <title>Gibolt - Create a role</title>
         </Helmet>
-
-        {loading && <Loading />}
-        <h2>Create a new role :</h2>
-        {error && (
-          <article className={b('group', { error: true })}>
-            <h3>Error during role creation:</h3>
-            <code>{error}</code>
-          </article>
-        )}
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            onSubmit(circle.circle_id, e, history)
-          }}
-        >
-          <label>
-            Name :
-            <input name="role_name" required />
-          </label>
-          <br />
-          <label>
-            User :
-            <select name="user_id" defaultValue="">
-              {users.map(user => (
-                <option key={user.user_id} value={user.user_id}>
-                  {user.user_name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <br />
-          <label>
-            Purpose :
-            <input name="role_purpose" required />
-          </label>
-          <br />
-          <label>
-            Domain :
-            <input name="role_domain" required />
-          </label>
-          <br />
-          <label>
-            Accountabilities :
+        <div className={b('createRole')}>
+          {loading && <Loading />}
+          <h2>Create a new role :</h2>
+          {error && (
+            <article className={b('group', { error: true })}>
+              <h3>Error during role creation:</h3>
+              <code>{error}</code>
+            </article>
+          )}
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              onSubmit(circle.circle_id, e, history)
+            }}
+          >
+            <label>
+              Name :
+              <input name="role_name" required />
+            </label>
             <br />
-            <MarkdownEditor />
-          </label>
-          <br />
-          <button type="submit">Create role</button>
-          <button type="submit" onClick={() => onGoBack(history)}>
-            Cancel
-          </button>
-        </form>
+            <label>
+              User :
+              <select name="user_id" defaultValue="">
+                {users.map(user => (
+                  <option key={user.user_id} value={user.user_id}>
+                    {user.user_name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <br />
+            <label>
+              Purpose :
+              <input name="role_purpose" required />
+            </label>
+            <br />
+            <label>
+              Domain :
+              <input name="role_domain" required />
+            </label>
+            <br />
+            <label>
+              Accountabilities :
+              <br />
+              <MarkdownEditor />
+            </label>
+            <br />
+            <button type="submit">Create role</button>
+            <button type="submit" onClick={() => onGoBack(history)}>
+              Cancel
+            </button>
+          </form>
+        </div>
       </article>
     )
   }
