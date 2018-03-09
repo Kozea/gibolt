@@ -163,7 +163,9 @@ class MeetingsReport extends React.Component {
                   .filter(circle => circle.circle_id === circleId)
                   .map(circle => circle.circle_name)}{' '}
                 - {meetingType}
-                {!meeting.is_submitted && ' (DRAFT)'}
+                {!meeting.is_submitted &&
+                  meeting.attendees.length > 0 &&
+                  ' (DRAFT)'}
                 {meeting.report_id && ` - #${meeting.report_id}`}
               </span>
               <div className={b('meetingInfos')}>
