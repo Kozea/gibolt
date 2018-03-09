@@ -1,7 +1,7 @@
 import datetime
 
 from sqlalchemy import (
-    Boolean, Column, DateTime, ForeignKey, Integer, String, Text,
+    Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String, Text,
     UniqueConstraint
 )
 from sqlalchemy.event import listens_for
@@ -208,7 +208,7 @@ class Report_indicator(Base):
         ForeignKey('item.item_id'),
         primary_key=True)
     content = Column(String)
-    value = Column(String)
+    value = Column(Numeric)
 
 
 class Report_milestone(Base):

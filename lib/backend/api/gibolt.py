@@ -250,66 +250,6 @@ def update_report(payload, report_id):
 
 
 rest(
-    Report_attendee,
-    methods=['GET', 'PATCH'],
-    name='report_attendees',
-    query=lambda query: query.filter(
-        Report_attendee.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
-
-rest(
-    Report_checklist,
-    methods=['GET', 'PATCH'],
-    name='report_checklists',
-    query=lambda query: query.filter(
-        Report_checklist.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
-
-rest(
-    Report_indicator,
-    methods=['GET', 'PATCH'],
-    name='report_indicators',
-    query=lambda query: query.filter(
-        Report_indicator.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
-
-rest(
-    Report_milestone,
-    methods=['GET', 'PATCH'],
-    name='report_milestones',
-    query=lambda query: query.filter(
-        Report_milestone.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
-
-rest(
-    Report_agenda,
-    methods=['GET', 'PUT'],
-    name='report_agenda',
-    query=lambda query: query.filter(
-        Report_agenda.report_id == (request.values.get('report_id'))
-        if request.values.get('report_id')
-        else True,
-    ),
-    auth=needlogin
-)
-
-rest(
     Item,
     methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
     name='items',
