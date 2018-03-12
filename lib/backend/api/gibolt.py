@@ -39,7 +39,7 @@ rest(
 
 rest(
     Role,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    methods=['GET', 'PATCH', 'POST', 'PUT', 'DELETE'],
     name='roles',
     query=lambda query: query.filter(
         Role.circle_id == (request.values.get('circle_id'))
