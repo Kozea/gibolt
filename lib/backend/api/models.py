@@ -87,6 +87,41 @@ def receive_attribute_change(target, value, oldvalue, initiator):
             child.is_active = value
 
 
+class Tmp_role(Base):
+    __tablename__ = 'tmp_role'
+    role_id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        nullable=False)
+    circle_id = Column(
+        Integer,
+        ForeignKey('circle.circle_id', name='fk_role_circle'),
+        nullable=False)
+    role_name = Column(String)
+    role_purpose = Column(String)
+    role_domain = Column(String)
+    role_accountabilities = Column(String)
+    is_active = Column(Boolean, default=True, nullable=False)
+    circle = relationship(Circle, backref='roles')
+
+
+class Focus(Base):
+    __tablename__ = 'focus'
+    focus_id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        nullable=False)
+    role_id = Column(
+        Integer,
+        ForeignKey('tmp_role.role_id', name='fk_focus_role'),
+        nullable=False)
+    user_id = Column(Integer)
+    focus_name = Column(String)
+    role = relationship(Tmp_role, backref='focuses')
+
+
 class Role(Base):
     __tablename__ = 'role'
     role_id = Column(
