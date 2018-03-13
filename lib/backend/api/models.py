@@ -149,14 +149,13 @@ class Item(Base):
         primary_key=True,
         autoincrement=True,
         nullable=False)
-    role_id = Column(
+    role_focus_id = Column(
         Integer,
-        ForeignKey('role.role_id'),
+        ForeignKey('role_focus.role_focus_id', name='fk_item_rolefocus'),
         nullable=False)
     item_type = Column(Enum(*item_types))
     content = Column(Text)
-    value_type = Column(String)
-    is_active = Column(Boolean, default=True, nullable=False)
+    role_focus = relationship(Role_focus, backref='items')
 
 
 class Report(Base):
