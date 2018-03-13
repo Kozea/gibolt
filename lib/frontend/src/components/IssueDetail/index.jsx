@@ -11,17 +11,17 @@ import {
   changeRolesSelect,
 } from '../../actions/issueForm'
 import {
+  addOrUpdateComment,
   getAndToggleCommentsExpanded,
   getOptionsLabels,
   updateATicket,
-  addOrUpdateComment,
   updateLabelsList,
 } from '../../actions/issues'
 import { block, connect } from '../../utils'
-import IssueForm from './IssueForm'
 import IssueStatusIcon from './../Utils/IssueStatusIcon'
 import LabelMultiSelect from './../Utils/LabelMultiSelect'
 import MarkdownEditor from './../Utils/MarkdownEditor'
+import IssueForm from './IssueForm'
 
 const b = block('IssueDetail')
 var ReactMarkdown = require('react-markdown')
@@ -366,12 +366,13 @@ class IssueDetail extends React.Component {
             )}
             <button
               type="submit"
-              onClick={() =>
-                onUpdateIssue(
+              onClick={async () => {
+                await onUpdateIssue(
                   { state: issue.state === 'open' ? 'closed' : 'open' },
                   issue
                 )
-              }
+                onModalClose()
+              }}
             >
               {issue.state === 'open' ? 'close issue' : 'reopen issue'}
             </button>
