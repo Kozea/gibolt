@@ -88,7 +88,8 @@ def refresh_repo_milestones(repo_name, repo, access_token):
         app.config['ORGANISATION'], repo_name
     )
     try:
-        repo['milestones'] = github.get(url, access_token=access_token)
+        repo['milestones'] = github.get(
+            url, access_token=access_token, all_pages=True)
     except GitHubError as e:
         return e.response.content, e.response.status_code
     for milestone in repo['milestones']:
