@@ -48,6 +48,7 @@ class MarkdownEditor extends React.Component {
 
   render() {
     const { editorState } = this.state
+    const editorName = this.props.editorName ? this.props.editorName : 'body'
     return (
       <div className={b()}>
         <Editor
@@ -76,8 +77,8 @@ class MarkdownEditor extends React.Component {
           }}
         />
         <textarea
-          id="body"
-          name="body"
+          id={editorName}
+          name={editorName}
           hidden
           disabled
           value={

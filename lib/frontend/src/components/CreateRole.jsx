@@ -18,15 +18,7 @@ class CreateRole extends React.Component {
     this.props.sync()
   }
   render() {
-    const {
-      circle,
-      error,
-      history,
-      loading,
-      onGoBack,
-      onSubmit,
-      users,
-    } = this.props
+    const { circle, error, history, loading, onGoBack, onSubmit } = this.props
 
     return (
       <article className={b()}>
@@ -42,6 +34,11 @@ class CreateRole extends React.Component {
               <code>{error}</code>
             </article>
           )}
+          <label>
+            Circle :
+            <input name="circle_name" disabled value={circle.circle_name} />
+          </label>
+          <br />
           <form
             onSubmit={e => {
               e.preventDefault()
@@ -54,30 +51,18 @@ class CreateRole extends React.Component {
             </label>
             <br />
             <label>
-              User :
-              <select name="user_id" defaultValue="">
-                {users.map(user => (
-                  <option key={user.user_id} value={user.user_id}>
-                    {user.user_name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <br />
-            <label>
               Purpose :
               <input name="role_purpose" required />
             </label>
             <br />
             <label>
               Domain :
-              <input name="role_domain" required />
+              <MarkdownEditor editorName="role_domain" />
             </label>
             <br />
             <label>
               Accountabilities :
-              <br />
-              <MarkdownEditor />
+              <MarkdownEditor editorName="role_accountabilities" />
             </label>
             <br />
             <button type="submit">Create role</button>
@@ -97,7 +82,6 @@ export default withRouter(
       circle: state.circle.results,
       error: state.role.error,
       loading: state.circle.loading,
-      users: state.users.results,
     }),
     dispatch => ({
       onGoBack: history => {
@@ -106,12 +90,9 @@ export default withRouter(
       onSubmit: (circleId, e, history) => {
         const formRole = [].slice.call(e.target.elements).reduce(
           function(map, obj) {
-            if (obj.name === 'body') {
-              map.role_accountabilities = obj.value
-            } else if (obj.name && obj.value) {
+            if (obj.name && obj.value) {
               map[obj.name] = obj.value
             }
-
             return map
           },
           { circle_id: circleId }

@@ -110,12 +110,12 @@ class CreateCircle extends React.Component {
             <br />
             <label>
               Domain :
-              <input name="circle_domain" required />
+              <MarkdownEditor editorName="circle_domain" />
             </label>
             <br />
             <label>
               Accountabilities :
-              <MarkdownEditor />
+              <MarkdownEditor editorName="circle_accountabilities" />
             </label>
             <br />
             <button type="submit">Create circle</button>
@@ -155,12 +155,9 @@ export default withRouter(
         const formCircle = [].slice
           .call(e.target.elements)
           .reduce(function(map, obj) {
-            if (obj.name === 'body') {
-              map.circle_accountabilities = obj.value
-            } else if (obj.name && obj.value) {
+            if (obj.name && obj.value) {
               map[obj.name] = obj.value
             }
-
             return map
           }, {})
         dispatch(createCircle(formCircle, history))
