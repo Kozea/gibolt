@@ -103,12 +103,12 @@ class Tmp_role(Base):
     role_domain = Column(String)
     role_accountabilities = Column(String)
     is_active = Column(Boolean, default=True, nullable=False)
-    circle = relationship(Circle, backref='roles')
+    tmp_circle = relationship(Circle, backref='tmp_roles')
 
 
-class Focus(Base):
-    __tablename__ = 'focus'
-    focus_id = Column(
+class Role_focus(Base):
+    __tablename__ = 'role_focus'
+    role_focus_id = Column(
         Integer,
         primary_key=True,
         autoincrement=True,
@@ -119,7 +119,7 @@ class Focus(Base):
         nullable=False)
     user_id = Column(Integer)
     focus_name = Column(String)
-    role = relationship(Tmp_role, backref='focuses')
+    role = relationship(Tmp_role, backref='role_focuses')
 
 
 class Role(Base):
