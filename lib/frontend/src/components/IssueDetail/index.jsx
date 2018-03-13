@@ -367,11 +367,13 @@ class IssueDetail extends React.Component {
             <button
               type="submit"
               onClick={async () => {
-                await onUpdateIssue(
+                const isSuccess = await onUpdateIssue(
                   { state: issue.state === 'open' ? 'closed' : 'open' },
                   issue
                 )
-                onModalClose()
+                if (isSuccess && issue.state === 'open') {
+                  onModalClose()
+                }
               }}
             >
               {issue.state === 'open' ? 'close issue' : 'reopen issue'}
@@ -407,9 +409,8 @@ export default connect(
     onUpdateComment: (values, issue, commentId) => {
       dispatch(addOrUpdateComment(Object.assign({}, issue), values, commentId))
     },
-    onUpdateIssue: (values, issue) => {
-      dispatch(updateATicket(Object.assign({}, issue), values))
-    },
+    onUpdateIssue: (values, issue) =>
+      dispatch(updateATicket(Object.assign({}, issue), values)),
     onUpdateIssueLabels: (event, issue, labels) => {
       let selectedLabels = []
       if (event.target.labelMultiSelect) {
