@@ -165,7 +165,11 @@ function ReportItems(props) {
                         onIndicatorsChange(event.target)
                       }}
                       type="number"
-                      value={indicator.value === null ? '' : indicator.value}
+                      value={
+                        indicator.value === null || isNaN(indicator.value)
+                          ? ''
+                          : indicator.value
+                      }
                     />
                   </td>
                   <td>
