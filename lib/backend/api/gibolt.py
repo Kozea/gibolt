@@ -257,7 +257,7 @@ rest(
     methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
     name='items',
     query=lambda query: query.filter(
-        Item.role_id == (request.values.get('role_id'))
+        Item.role_focus_id == (request.values.get('role_focus_id'))
         if request.values.get('role_id')
         else True,
     ),

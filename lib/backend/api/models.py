@@ -87,8 +87,8 @@ def receive_attribute_change(target, value, oldvalue, initiator):
             child.is_active = value
 
 
-class Tmp_role(Base):
-    __tablename__ = 'tmp_role'
+class Role(Base):
+    __tablename__ = 'role'
     role_id = Column(
         Integer,
         primary_key=True,
@@ -103,7 +103,7 @@ class Tmp_role(Base):
     role_domain = Column(String)
     role_accountabilities = Column(String)
     is_active = Column(Boolean, default=True, nullable=False)
-    tmp_circle = relationship(Circle, backref='tmp_roles')
+    circle = relationship(Circle, backref='roles')
 
 
 class Role_focus(Base):
@@ -115,31 +115,11 @@ class Role_focus(Base):
         nullable=False)
     role_id = Column(
         Integer,
-        ForeignKey('tmp_role.role_id', name='fk_focus_role'),
+        ForeignKey('role.role_id', name='fk_focus_role'),
         nullable=False)
     user_id = Column(Integer)
     focus_name = Column(String)
-    role = relationship(Tmp_role, backref='role_focuses')
-
-
-class Role(Base):
-    __tablename__ = 'role'
-    role_id = Column(
-        Integer,
-        primary_key=True,
-        autoincrement=True,
-        nullable=False)
-    circle_id = Column(
-        Integer,
-        ForeignKey('circle.circle_id'),
-        nullable=False)
-    user_id = Column(Integer)
-    role_name = Column(String)
-    role_purpose = Column(String)
-    role_domain = Column(String)
-    role_accountabilities = Column(String)
-    is_active = Column(Boolean, default=True, nullable=False)
-    circle = relationship(Circle, backref='roles')
+    role = relationship(Role, backref='role_focuses')
 
 
 class Item(Base):
