@@ -15,16 +15,51 @@ down_revision = 'd681d95ed44b'
 branch_labels = None
 depends_on = None
 
+connection = op.get_bind()
+
+focus_helper = sa.Table(
+    'tmp_role_focus',
+    sa.MetaData(),
+    sa.Column('role_focus_id', sa.Integer(), nullable=False),
+    sa.Column('role_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('focus_name', sa.String(), nullable=True),
+)
+
 
 def upgrade():
     op.drop_table('role')
     op.rename_table('tmp_role', 'role')
+    op.rename_table('role_focus', 'tmp_role_focus')
+
+    role_focus = op.create_table('role_focus',
+        sa.Column('role_focus_id', sa.Integer(), nullable=False),
+        sa.Column('role_id', sa.Integer(), nullable=False),
+        sa.Column('user_id', sa.Integer(), nullable=True),
+        sa.Column('focus_name', sa.String(), nullable=True),
+        sa.ForeignKeyConstraint(['role_id'], ['role.role_id'], name='fk_focus_role'),
+        sa.PrimaryKeyConstraint('role_focus_id')
+    )
+
+    for focus in connection.execute(focus_helper.select()):
+        op.bulk_insert(
+            role_focus,
+            [
+                {
+                    'role_focus_id': focus.role_id,
+                    'role_id' : focus.role_id,
+                    'user_id' : focus.user_id,
+                    'focus_name' : focus.focus_name,
+                },
+            ]
+        )
+
+    op.drop_table('tmp_role_focus')
 
 
 def downgrade():
-    connection = op.get_bind()
-
     op.rename_table('role', 'tmp_role')
+    op.rename_table('role_focus', 'tmp_role_focus')
 
     role_helper = sa.Table(
         'tmp_role',
@@ -38,11 +73,13 @@ def downgrade():
         sa.Column('is_active', sa.Boolean(), server_default='1', nullable=False)
     )
 
-    focus_helper = sa.Table(
-        'role_focus',
-        sa.MetaData(),
-        sa.Column('role_id', sa.Integer(), nullable=False),
-        sa.Column('user_id', sa.Integer(), nullable=True),
+    role_focus = op.create_table('role_focus',
+    sa.Column('role_focus_id', sa.Integer(), nullable=False),
+    sa.Column('role_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('focus_name', sa.String(), nullable=True),
+    sa.ForeignKeyConstraint(['role_id'], ['tmp_role.role_id'], name='fk_focus_role'),
+    sa.PrimaryKeyConstraint('role_focus_id')
     )
 
     role_table = op.create_table('role',
@@ -77,3 +114,16 @@ def downgrade():
                     },
                 ]
             )
+        op.bulk_insert(
+            role_focus,
+            [
+                {
+                    'role_focus_id': focus.role_id,
+                    'role_id' : focus.role_id,
+                    'user_id' : focus.user_id,
+                    'focus_name' : focus.focus_name,
+                },
+            ]
+        )
+
+    op.drop_table('tmp_role_focus')
