@@ -68,9 +68,9 @@ class Circle extends React.Component {
           </article>
         )}
         <article className={b('circle')}>
+          {loading && <Loading />}
           {circle.circle_name && (
             <div>
-              {loading && <Loading />}
               <CircleDetails />
               {!isCircleInEdition && (
                 <div>

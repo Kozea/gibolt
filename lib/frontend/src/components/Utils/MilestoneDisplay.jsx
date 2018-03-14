@@ -9,7 +9,7 @@ import { block } from '../../utils'
 const b = block('MilestoneDisplay')
 
 export default function MilestoneDisplay(props) {
-  const { milestone } = props
+  const { milestone, displayProgress } = props
   return (
     <span>
       <a className={b('unlink')} href={milestone.html_url} target="_blank">
@@ -18,11 +18,16 @@ export default function MilestoneDisplay(props) {
         {' - '}
         <span className={b('lab')}>{milestone.title}</span>
       </a>
-      {' -'}
-      <Progress
-        val={milestone.closed_issues}
-        total={milestone.open_issues + milestone.closed_issues}
-      />
+
+      {displayProgress && (
+        <span>
+          {' -'}
+          <Progress
+            val={milestone.closed_issues}
+            total={milestone.open_issues + milestone.closed_issues}
+          />
+        </span>
+      )}
       <span className={b('due-date')}>
         {' ('}
         {milestone.due_on

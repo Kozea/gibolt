@@ -27,7 +27,7 @@ function ReportProjects(props) {
         <ul>
           {sortedProjects.map(milestone => (
             <li key={milestone.id} title={milestone.description}>
-              <MilestoneDisplay milestone={milestone} />
+              <MilestoneDisplay milestone={milestone} displayProgress />
               {milestone.state === 'open' && (
                 <span
                   className={b('newTicket')}
