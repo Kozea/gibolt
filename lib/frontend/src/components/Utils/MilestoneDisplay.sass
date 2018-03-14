@@ -1,0 +1,33 @@
+@import ../vars
+
+.MilestoneDisplay
+  flex: 1
+  overflow: auto
+  position: relative
+
+  &__bullet
+    background-color: #000
+    border-radius: 0.25em
+    border-width: 0.25em
+    display: inline-block
+    font-size: 0.9em
+    height: 0.5em
+    margin: 0 0.5em
+    vertical-align: middle
+    width: 0.5em
+
+  &__due-date
+    font-size: .8em
+    margin-left: .5em
+
+  &__lab
+    font-weight: bold
+
+  &__unlink
+    color: #000000
+
+  .open
+    background-color: $open-issue
+
+  .closed
+    background-color: $close-issue

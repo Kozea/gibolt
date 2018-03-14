@@ -9,6 +9,7 @@ import { fetchCircle } from '../../actions/circle'
 import { block, connect } from '../../utils'
 import CircleDetails from './CircleDetails'
 import CircleMeetings from './CircleMeetings'
+import CircleMilestones from './CircleMilestones'
 import CircleRoles from './CircleRoles'
 import CircleSubCircles from './CircleSubCircles'
 import Loading from './../Loading'
@@ -74,6 +75,7 @@ class Circle extends React.Component {
               {!isCircleInEdition && (
                 <div>
                   <CircleMeetings circle={circle} />
+                  <CircleMilestones circle={circle} />
                   <CircleRoles circle={circle} />
                   {circle.children_circles &&
                   circle.children_circles.length > 0 ? (

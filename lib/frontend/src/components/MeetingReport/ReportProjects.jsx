@@ -3,7 +3,7 @@ import './MeetingReport.sass'
 import { format } from 'date-fns'
 import React from 'react'
 
-import Progress from './../Progress'
+import MilestoneDisplay from './../Utils/MilestoneDisplay'
 import { setModal, updateIssueParams } from '../../actions/issues'
 import { sortProjects, updateMeetingProjects } from '../../actions/meetings'
 import { block, connect } from '../../utils'
@@ -27,31 +27,7 @@ function ReportProjects(props) {
         <ul>
           {sortedProjects.map(milestone => (
             <li key={milestone.id} title={milestone.description}>
-              <a
-                className={b('unlink')}
-                href={milestone.html_url}
-                target="_blank"
-              >
-                <span className={b(`bullet ${milestone.state}`)} />
-                {milestone.repo}
-                {' - '}
-                <span className={b('lab')}>{milestone.title}</span>
-              </a>
-              {' -'}
-              <Progress
-                val={milestone.closed_issues}
-                total={milestone.open_issues + milestone.closed_issues}
-              />
-              <span className={b('due-date')}>
-                {' ('}
-                {milestone.due_on
-                  ? `due on: ${format(
-                      new Date(milestone.due_on),
-                      'DD/MM/YYYY'
-                    )}`
-                  : 'no due date'}
-                {')'}
-              </span>
+              <MilestoneDisplay milestone={milestone} />
               {milestone.state === 'open' && (
                 <span
                   className={b('newTicket')}
