@@ -4,6 +4,7 @@ import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import RoleFocusUser from '../Role/RoleFocusUser'
 import { fetchResults, setLoading } from '../../actions'
 import { block, connect, sortRoles } from '../../utils'
 
@@ -59,24 +60,23 @@ class CircleRoles extends React.Component {
                   {role.role_name}
                 </Link>{' '}
                 :{' '}
-                <img
-                  key={role.user_id}
-                  className={b('avatar')}
-                  src={users
-                    .filter(user => getUserInfo(role.user_id, user))
-                    .map(user => user.avatar_url)
-                    .toString()}
-                  alt="avatar"
-                  title={users
-                    .filter(user => getUserInfo(role.user_id, user))
-                    .map(user => user.user_name)
-                    .toString()}
-                />
-                {'  '}
-                {users
-                  .filter(user => getUserInfo(role.user_id, user))
-                  .map(user => user.user_name)
-                  .toString()}
+                {role.role_focuses[0] &&
+                  role.role_focuses[0].role_focus_users[0] && (
+                    <RoleFocusUser
+                      duration={role.duration}
+                      focusUser={role.role_focuses[0].role_focus_users[0]}
+                      user={
+                        users
+                          .filter(user =>
+                            getUserInfo(
+                              role.role_focuses[0].role_focus_users[0].user_id,
+                              user
+                            )
+                          )
+                          .map(user => user)[0]
+                      }
+                    />
+                  )}
               </li>
             ))}
           </ul>

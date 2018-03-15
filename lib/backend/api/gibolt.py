@@ -17,25 +17,6 @@ session = Session()
 # Declare rest endpoints for gibolt Database
 rest = UnRest(app, session_unrest)
 
-rest(
-    Circle,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
-    relationships={
-        'roles': rest(Role, only=['role_id', 'role_name', 'user_id']),
-        'circle_milestones': rest(Milestone_circle),
-        'label': rest(Label)
-    },
-    name='circles',
-    query=lambda query: query.filter(
-        Circle.parent_circle_id == (request.values.get('parent_circle_id'))
-        if request.values.get('parent_circle_id')
-        else True,
-        Circle.label_id == (request.values.get('label_id'))
-        if request.values.get('label_id')
-        else True,
-    ),
-    auth=needlogin
-)
 
 current_role_focus_user = rest(
     Role_focus_user,
@@ -65,7 +46,7 @@ current_role_focuses = rest(
     auth=needlogin
 )
 
-rest(
+roles = rest(
     Role,
     methods=['GET', 'PATCH', 'POST', 'PUT', 'DELETE'],
     name='roles',
@@ -79,6 +60,28 @@ rest(
     ),
     auth=needlogin
 )
+
+
+rest(
+    Circle,
+    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    relationships={
+        'roles': roles,
+        'circle_milestones': rest(Milestone_circle),
+        'label': rest(Label)
+    },
+    name='circles',
+    query=lambda query: query.filter(
+        Circle.parent_circle_id == (request.values.get('parent_circle_id'))
+        if request.values.get('parent_circle_id')
+        else True,
+        Circle.label_id == (request.values.get('label_id'))
+        if request.values.get('label_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
 
 report_unrest = rest(
     Report,

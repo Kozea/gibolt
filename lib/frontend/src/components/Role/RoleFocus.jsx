@@ -1,6 +1,6 @@
-import { addDays, format } from 'date-fns'
 import React from 'react'
 
+import RoleFocusUser from './RoleFocusUser'
 import { block, connect } from '../../utils'
 
 const b = block('Role')
@@ -28,29 +28,16 @@ function RoleFocus(props) {
               <span className={b('bullet')} />
               {focus.focus_name}
               {focus.role_focus_users.map(focusUser => (
-                <span key={focusUser.role_focus_user_id}>
-                  <img
-                    className={b('avatar')}
-                    src={users
+                <RoleFocusUser
+                  key={focusUser.user_id}
+                  duration={duration}
+                  focusUser={focusUser}
+                  user={
+                    users
                       .filter(user => getUserInfo(focusUser.user_id, user))
-                      .map(user => user.avatar_url)
-                      .toString()}
-                    alt="avatar"
-                    title={users
-                      .filter(user => getUserInfo(focusUser.user_id, user))
-                      .map(user => user.user_name)
-                      .toString()}
-                  />
-                  {duration &&
-                    focusUser.start_date && (
-                      <span className={b('lighter')}>
-                        {` until: ${format(
-                          addDays(new Date(focusUser.start_date), duration),
-                          'DD/MM/YYYY'
-                        )}`}
-                      </span>
-                    )}
-                </span>
+                      .map(user => user)[0]
+                  }
+                />
               ))}
             </li>
           ))}
