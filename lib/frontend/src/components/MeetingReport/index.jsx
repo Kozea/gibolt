@@ -224,18 +224,20 @@ class MeetingsReport extends React.Component {
                         <ul className={b('attendees')}>
                           {attendees.map(user => (
                             <li key={user.user_name}>
-                              <input
-                                checked={user.checked}
-                                disabled={isEditionDisabled}
-                                id="attendees"
-                                name={user.user_name}
-                                onChange={event => {
-                                  this.setTimer()
-                                  onAttendeesChange(event.target)
-                                }}
-                                type="checkbox"
-                              />
-                              {user.user_name}
+                              <label>
+                                <input
+                                  checked={user.checked}
+                                  disabled={isEditionDisabled}
+                                  id="attendees"
+                                  name={user.user_name}
+                                  onChange={event => {
+                                    this.setTimer()
+                                    onAttendeesChange(event.target)
+                                  }}
+                                  type="checkbox"
+                                />
+                                {user.user_name}
+                              </label>
                             </li>
                           ))}
                         </ul>

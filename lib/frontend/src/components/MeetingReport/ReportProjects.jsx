@@ -69,7 +69,7 @@ function ReportProjects(props) {
                           .filter(issue => !issue.pull_request)
                           .map(issue => (
                             <li key={issue.ticket_id} title={issue.body}>
-                              <span className={b('bullet')} />
+                              <span className={b(`bullet ${issue.state}`)} />
                               <a href={issue.html_url} target="_blank">
                                 #{issue.ticket_number}
                               </a>{' '}
