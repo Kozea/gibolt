@@ -203,7 +203,7 @@ class Role extends React.Component {
               <div>
                 <ReactMarkdown source={role.role_accountabilities} />
               </div>
-              <RoleFocus focuses={role.role_focuses} />
+              <RoleFocus duration={role.duration} focuses={role.role_focuses} />
               <Items
                 formType={items.form_checklist}
                 items={items}
