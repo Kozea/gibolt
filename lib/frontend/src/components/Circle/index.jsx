@@ -52,7 +52,7 @@ class Circle extends React.Component {
         </Helmet>
         {error && (
           <article className={b('group', { error: true })}>
-            <h2>Error during circle fetch</h2>
+            <h2>Error during circle fetch/update</h2>
             {typeof error === 'object' ? (
               <ul>
                 {error.map(err => (

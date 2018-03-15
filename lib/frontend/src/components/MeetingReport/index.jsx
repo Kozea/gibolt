@@ -258,6 +258,7 @@ class MeetingsReport extends React.Component {
                           setTimer={() => this.setTimer()}
                         />
                         <ReportProjects
+                          circleId={circleId}
                           isEditionDisabled={isEditionDisabled}
                           projects={meeting.projects}
                           onMilestoneClick={onMilestoneClick}

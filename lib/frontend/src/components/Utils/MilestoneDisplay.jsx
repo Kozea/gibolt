@@ -4,12 +4,19 @@ import { format } from 'date-fns'
 import React from 'react'
 
 import Progress from './../Progress'
-import { block } from '../../utils'
+import { deleteMilestoneCircles } from '../../actions/milestones'
+import { block, connect } from '../../utils'
 
 const b = block('MilestoneDisplay')
 
-export default function MilestoneDisplay(props) {
-  const { milestone, displayProgress } = props
+function MilestoneDisplay(props) {
+  const {
+    circleId,
+    displayProgress,
+    milestone,
+    onMilestoneUnlink,
+    target,
+  } = props
   return (
     <span>
       <a className={b('unlink')} href={milestone.html_url} target="_blank">
@@ -18,7 +25,6 @@ export default function MilestoneDisplay(props) {
         {' - '}
         <span className={b('lab')}>{milestone.title}</span>
       </a>
-
       {displayProgress && (
         <span>
           {' -'}
@@ -35,6 +41,29 @@ export default function MilestoneDisplay(props) {
           : 'no due date'}
         {')'}
       </span>
+      <span
+        className={b('unlinkMilestone')}
+        title="Unlink the milestone"
+        onClick={() => onMilestoneUnlink(milestone, circleId, target)}
+      >
+        <i className="fa fa-chain-broken" aria-hidden="true" />
+      </span>
     </span>
   )
 }
+
+export default connect(
+  () => ({}),
+  dispatch => ({
+    onMilestoneUnlink: (milestone, circleId, target) => {
+      dispatch(
+        deleteMilestoneCircles(
+          circleId,
+          milestone.number,
+          milestone.repo,
+          target // to display error
+        )
+      )
+    },
+  })
+)(MilestoneDisplay)

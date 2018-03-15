@@ -38,8 +38,10 @@ class CircleMilestones extends React.Component {
                   >
                     {milestone.milestone && (
                       <MilestoneDisplay
-                        milestone={milestone.milestone}
+                        circleId={circle.circle_id}
                         displayProgress={false}
+                        milestone={milestone.milestone}
+                        target="circle"
                       />
                     )}
                   </li>

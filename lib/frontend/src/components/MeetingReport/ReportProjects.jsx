@@ -12,6 +12,7 @@ const b = block('MeetingReport')
 
 function ReportProjects(props) {
   const {
+    circleId,
     isEditionDisabled,
     onMilestoneClick,
     onModalCreation,
@@ -27,7 +28,12 @@ function ReportProjects(props) {
         <ul>
           {sortedProjects.map(milestone => (
             <li key={milestone.id} title={milestone.description}>
-              <MilestoneDisplay milestone={milestone} displayProgress />
+              <MilestoneDisplay
+                circleId={circleId}
+                displayProgress
+                milestone={milestone}
+                target="meeting"
+              />
               {milestone.state === 'open' && (
                 <span
                   className={b('newTicket')}
@@ -37,6 +43,7 @@ function ReportProjects(props) {
                       `${milestone.repo} ⦔ ${milestone.number}`
                     )
                   }
+                  title="Open an issue"
                 >
                   <i
                     className="fa fa-plus-circle createIssue"
