@@ -15,6 +15,7 @@ import {
 } from '../../actions/roles'
 import { block, connect } from '../../utils'
 import Items from './Items'
+import RoleFocus from './RoleFocus'
 import Loading from './../Loading'
 import MarkdownEditor from './../Utils/MarkdownEditor'
 
@@ -202,6 +203,7 @@ class Role extends React.Component {
               <div>
                 <ReactMarkdown source={role.role_accountabilities} />
               </div>
+              <RoleFocus focuses={role.role_focuses} />
               <Items
                 formType={items.form_checklist}
                 items={items}

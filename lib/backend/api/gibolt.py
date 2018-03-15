@@ -8,7 +8,7 @@ from ..routes.github import get_a_milestone
 from .models import (
     Circle, Item, Label, Milestone_circle, Priority, Report, Report_agenda,
     Report_attendee, Report_checklist, Report_indicator, Report_milestone,
-    Role, label_types
+    Role, Role_focus, Role_focus_user, label_types
 )
 
 session = Session()
@@ -37,10 +37,41 @@ rest(
     auth=needlogin
 )
 
+current_role_focus_user = rest(
+    Role_focus_user,
+    methods=['GET'],
+    name='role_focus_users',
+    query=lambda query: query.filter(
+        Role_focus_user.end_date == None,
+        Role_focus_user.role_focus_id == (request.values.get('role_focus_id'))
+        if request.values.get('role_focus_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+current_role_focuses = rest(
+    Role_focus,
+    methods=['GET'],
+    name='role_focuses',
+    relationships={
+        'role_focus_users': current_role_focus_user,
+    },
+    query=lambda query: query.filter(
+        Role.role_id == (request.values.get('role_id'))
+        if request.values.get('role_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
 rest(
     Role,
     methods=['GET', 'PATCH', 'POST', 'PUT', 'DELETE'],
     name='roles',
+    relationships={
+        'role_focuses': current_role_focuses,
+    },
     query=lambda query: query.filter(
         Role.circle_id == (request.values.get('circle_id'))
         if request.values.get('circle_id')
