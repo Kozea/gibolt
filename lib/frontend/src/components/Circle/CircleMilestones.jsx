@@ -40,6 +40,7 @@ class CircleMilestones extends React.Component {
                       <MilestoneDisplay
                         circleId={circle.circle_id}
                         displayProgress={false}
+                        isInEdition
                         milestone={milestone.milestone}
                         target="circle"
                       />

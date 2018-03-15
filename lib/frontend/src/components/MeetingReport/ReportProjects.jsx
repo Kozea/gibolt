@@ -31,6 +31,7 @@ function ReportProjects(props) {
               <MilestoneDisplay
                 circleId={circleId}
                 displayProgress
+                isInEdition={!isEditionDisabled}
                 milestone={milestone}
                 target="meeting"
               />

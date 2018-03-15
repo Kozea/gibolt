@@ -13,6 +13,7 @@ function MilestoneDisplay(props) {
   const {
     circleId,
     displayProgress,
+    isInEdition,
     milestone,
     onMilestoneUnlink,
     target,
@@ -41,13 +42,15 @@ function MilestoneDisplay(props) {
           : 'no due date'}
         {')'}
       </span>
-      <span
-        className={b('unlinkMilestone')}
-        title="Unlink the milestone"
-        onClick={() => onMilestoneUnlink(milestone, circleId, target)}
-      >
-        <i className="fa fa-chain-broken" aria-hidden="true" />
-      </span>
+      {isInEdition && (
+        <span
+          className={b('unlinkMilestone')}
+          title="Unlink the milestone"
+          onClick={() => onMilestoneUnlink(milestone, circleId, target)}
+        >
+          <i className="fa fa-chain-broken" aria-hidden="true" />
+        </span>
+      )}
     </span>
   )
 }

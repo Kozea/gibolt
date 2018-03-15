@@ -426,6 +426,14 @@ rest(
 )
 
 
+rest(
+    Report_milestone,
+    methods=['DELETE'],
+    name='report_milestones',
+    auth=needlogin
+)
+
+
 @app.route('/api/meetingsTypes', methods=['GET'])
 @needlogin
 def get_meetings_types():
