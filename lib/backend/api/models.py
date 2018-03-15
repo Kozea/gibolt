@@ -17,6 +17,7 @@ item_types = ['checklist', 'indicator']
 meeting_types = [
     type_name for type_id, type_name in app.config['MEETINGS_TYPES']]
 label_types = ['ack', 'circle', 'priority', 'qualifier']
+role_types = ['leadlink', 'elected', 'assigned']
 
 
 class Label(Base):
@@ -103,6 +104,8 @@ class Role(Base):
     role_domain = Column(String)
     role_accountabilities = Column(String)
     is_active = Column(Boolean, default=True, nullable=False)
+    role_type = Column(Enum(*role_types))
+    duration = Column(Integer)
     circle = relationship(Circle, backref='roles')
 
 
@@ -117,9 +120,25 @@ class Role_focus(Base):
         Integer,
         ForeignKey('role.role_id', name='fk_focus_role'),
         nullable=False)
-    user_id = Column(Integer)
     focus_name = Column(String)
     role = relationship(Role, backref='role_focuses')
+
+
+class Role_focus_user(Base):
+    __tablename__ = 'role_focus_user'
+    role_focus_user_id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        nullable=False)
+    role_focus_id = Column(
+        Integer,
+        ForeignKey('role_focus.role_focus_id', name='fk_user_focus'),
+        nullable=False)
+    user_id = Column(Integer)
+    start_date = Column(DateTime, default=datetime.datetime.now)
+    end_date = Column(DateTime)
+    role_focus = relationship(Role_focus, backref='role_focus_users')
 
 
 class Item(Base):
