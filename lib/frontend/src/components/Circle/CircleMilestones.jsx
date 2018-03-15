@@ -7,6 +7,9 @@ import { connect } from '../../utils'
 
 const sortMilestones = milestones => {
   milestones.sort(function(a, b) {
+    if (!a.milestone || !b.milestone) {
+      return
+    }
     return `${a.milestone.repo.toLowerCase()}-${a.milestone.due_on}` >
       `${b.milestone.repo.toLowerCase()}-${b.milestone.due_on}`
       ? 1
