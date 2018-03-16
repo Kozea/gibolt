@@ -26,14 +26,12 @@ stages:
 image: paradoxxxzero/python-node-yarn-postgresql:latest
 
 install_latest:
-  <<: *image_latest
   stage: install
   script:
     - make install
   <<: *artifacts_install
 
 build_latest:
-  <<: *image_latest
   stage: build
   script: make build
   <<: *artifacts_build
@@ -41,14 +39,12 @@ build_latest:
     - install_latest
 
 lint_latest:
-  <<: *image_latest
   stage: test
   script: make lint
   dependencies:
     - build_latest
 
 test_latest:
-  <<: *image_latest
   stage: test
   script: make check
   dependencies:
