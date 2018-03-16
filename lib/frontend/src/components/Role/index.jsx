@@ -1,5 +1,6 @@
 import './Role.sass'
 
+import { addDays, format } from 'date-fns'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
@@ -19,13 +20,27 @@ import RoleFocus from './RoleFocus'
 import Loading from './../Loading'
 import MarkdownEditor from './../Utils/MarkdownEditor'
 
-const b = block('Role')
 var ReactMarkdown = require('react-markdown')
 
+const b = block('Role')
+const roleTypes = [
+  { value: 'leadlink', name: 'Premier lien' },
+  { value: 'elected', name: 'Rôle élu' },
+  { value: 'assigned', name: 'Rôle désigné' },
+]
+
 class Role extends React.Component {
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      endDate: null,
+    }
+  }
+
   componentDidMount() {
     this.props.sync()
   }
+
   componentWillReceiveProps(nextProps) {
     if (
       (nextProps.location.pathname !== this.props.location.pathname &&
@@ -35,6 +50,15 @@ class Role extends React.Component {
     ) {
       this.props.sync()
     }
+  }
+
+  calculateEndDate(duration) {
+    this.setState({
+      endDate:
+        duration || duration !== 0
+          ? format(addDays(new Date(), duration), 'DD/MM/YYYY (dddd)')
+          : null,
+    })
   }
 
   render() {
@@ -50,8 +74,8 @@ class Role extends React.Component {
       onGoBack,
       role,
       roles,
-      users,
     } = this.props
+    const { endDate } = this.state
     return (
       <section className={b()}>
         <Helmet>
@@ -129,20 +153,6 @@ class Role extends React.Component {
                   </select>
                 </label>
                 <label>
-                  User :
-                  <select
-                    name="user_id"
-                    defaultValue={role.user_id}
-                    className={b('long')}
-                  >
-                    {users.map(user => (
-                      <option key={user.user_id} value={user.user_id}>
-                        {user.user_name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
                   Name :
                   <input
                     name="role_name"
@@ -150,6 +160,36 @@ class Role extends React.Component {
                     defaultValue={role.role_name}
                     required
                   />
+                </label>
+                <label>
+                  Type :
+                  <select
+                    name="role_type"
+                    defaultValue={role.role_type ? role.role_type : ''}
+                    required
+                    className={b('long')}
+                  >
+                    <option value="" />
+                    {roleTypes.map(roleType => (
+                      <option key={roleType.value} value={roleType.value}>
+                        {roleType.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Duration (in days) :
+                  <span className={b('duration')}>
+                    <input
+                      defaultValue={role.duration ? role.duration : ''}
+                      onChange={e => this.calculateEndDate(+e.target.value)}
+                      name="duration"
+                      type="number"
+                    />
+                    <span className={b('endDate')}>
+                      {endDate && `until ${endDate}`}
+                    </span>
+                  </span>
                 </label>
                 <label>
                   Purpose :
@@ -182,27 +222,32 @@ class Role extends React.Component {
           ) : (
             <article>
               <h3>Circle</h3>
-              <div>
-                <p>
-                  {circles.find(
-                    circle => circle.circle_id === role.circle_id
-                  ) &&
-                    circles.find(circle => circle.circle_id === role.circle_id)
-                      .circle_name}
-                </p>
-              </div>
+              <p>
+                {circles.find(circle => circle.circle_id === role.circle_id) &&
+                  circles.find(circle => circle.circle_id === role.circle_id)
+                    .circle_name}
+              </p>
+              <h3>Role Type</h3>
+              <p>
+                {role.role_type
+                  ? roleTypes
+                      .filter(roleType => roleType.value === role.role_type)
+                      .map(roleType => roleType.name)
+                      .toString()
+                  : 'Type not defined'}
+              </p>
+              <h3>Duration</h3>
+              <p>
+                {role.duration
+                  ? `${role.duration} day(s)`
+                  : 'Duration not defined'}
+              </p>
               <h3>Purpose</h3>
-              <div>
-                <p>{role.role_purpose}</p>
-              </div>
+              <p>{role.role_purpose}</p>
               <h3>Domain</h3>
-              <div>
-                <p>{role.role_domain}</p>
-              </div>
+              <p>{role.role_domain}</p>
               <h3>Accountabilities</h3>
-              <div>
-                <ReactMarkdown source={role.role_accountabilities} />
-              </div>
+              <ReactMarkdown source={role.role_accountabilities} />
               <RoleFocus duration={role.duration} focuses={role.role_focuses} />
               <Items
                 formType={items.form_checklist}
@@ -244,7 +289,6 @@ export default withRouter(
       location: state.router.location,
       role: state.role.results,
       roles: state.roles.results,
-      users: state.users.results,
     }),
     dispatch => ({
       btnClick: (roleId, circleId, history) => {
@@ -278,14 +322,17 @@ export default withRouter(
         dispatch(fetchItems())
       },
       sync: () => {
-        dispatch(setLoading('circles'))
-        dispatch(fetchResults('circles'))
-        dispatch(setLoading('users'))
-        dispatch(fetchResults('users'))
-        dispatch(setLoading('role'))
-        dispatch(fetchRole())
-        dispatch(setLoading('roles'))
-        dispatch(fetchRoles())
+        Promise.all([
+          dispatch(setLoading('users')),
+          dispatch(fetchResults('users')),
+        ]).then(() => {
+          dispatch(setLoading('circles'))
+          dispatch(fetchResults('circles'))
+          dispatch(setLoading('role'))
+          dispatch(fetchRole())
+          dispatch(setLoading('roles'))
+          dispatch(fetchRoles())
+        })
       },
     })
   )(Role)

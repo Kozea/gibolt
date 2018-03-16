@@ -6,14 +6,14 @@ import { block } from '../../utils'
 const b = block('Role')
 
 export default function RoleFocusUser(props) {
-  const { duration, focusUser, user } = props
+  const { duration, focusUser } = props
   return (
     <span key={focusUser.role_focus_user_id}>
       <img
         className={b('avatar')}
-        src={user.avatar_url}
+        src={focusUser.avatar_url}
         alt="avatar"
-        title={user.user_name}
+        title={focusUser.user_name}
       />
       {duration &&
         focusUser.start_date && (

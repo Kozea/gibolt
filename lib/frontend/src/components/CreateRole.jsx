@@ -1,10 +1,11 @@
 import './CreateRole.sass'
 
+import { addDays, format } from 'date-fns'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { fetchResults, goBack, setLoading } from '../actions'
+import { fetchResults, goBack, setLoading, updateMarkdown } from '../actions'
 import { fetchCircle } from '../actions/circle'
 import { createRole } from '../actions/roles'
 import { block, connect } from '../utils'
@@ -13,18 +14,51 @@ import MarkdownEditor from './Utils/MarkdownEditor'
 
 const b = block('CreateRole')
 
+const roleTypes = [
+  { value: 'leadlink', name: 'Premier lien' },
+  { value: 'elected', name: 'Rôle élu' },
+  { value: 'assigned', name: 'Rôle désigné' },
+]
+
 class CreateRole extends React.Component {
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      endDate: null,
+    }
+  }
+
   componentDidMount() {
     this.props.sync()
   }
+
+  calculateEndDate(duration) {
+    this.setState({
+      endDate:
+        duration || duration !== 0
+          ? format(addDays(new Date(), duration), 'DD/MM/YYYY (dddd)')
+          : null,
+    })
+  }
+
   render() {
-    const { circle, error, history, loading, onGoBack, onSubmit } = this.props
+    const {
+      circle,
+      error,
+      history,
+      loading,
+      onGoBack,
+      onSubmit,
+      users,
+    } = this.props
+    const { endDate } = this.state
 
     return (
       <article className={b()}>
         <Helmet>
           <title>Gibolt - Create a role</title>
         </Helmet>
+        {loading && <Loading />}
         <div className={b('createRole')}>
           {loading && <Loading />}
           <h2>Create a new role :</h2>
@@ -38,7 +72,6 @@ class CreateRole extends React.Component {
             Circle :
             <input name="circle_name" disabled value={circle.circle_name} />
           </label>
-          <br />
           <form
             onSubmit={e => {
               e.preventDefault()
@@ -46,27 +79,62 @@ class CreateRole extends React.Component {
             }}
           >
             <label>
+              Type :
+              <select name="role_type" defaultValue="" required>
+                <option value="" />
+                {roleTypes.map(roleType => (
+                  <option key={roleType.value} value={roleType.value}>
+                    {roleType.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
               Name :
               <input name="role_name" required />
             </label>
-            <br />
+            <label>
+              Focus :
+              <input name="role_name" required />
+            </label>
+            <label>
+              User :
+              <select name="user_id" defaultValue="">
+                <option value="" />
+                {users.map(user => (
+                  <option key={user.user_id} value={user.user_id}>
+                    {user.user_name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Duration (in days) :
+              <span className={b('duration')}>
+                <input
+                  onChange={e => this.calculateEndDate(+e.target.value)}
+                  name="duration"
+                  type="number"
+                />
+                <span className={b('endDate')}>
+                  {endDate && `until ${endDate}`}
+                </span>
+              </span>
+            </label>
             <label>
               Purpose :
               <input name="role_purpose" required />
             </label>
-            <br />
             <label>
               Domain :
               <MarkdownEditor editorName="role_domain" />
             </label>
-            <br />
             <label>
               Accountabilities :
               <MarkdownEditor editorName="role_accountabilities" />
             </label>
-            <br />
             <button type="submit">Create role</button>
-            <button type="submit" onClick={() => onGoBack(history)}>
+            <button type="button" onClick={() => onGoBack(history)}>
               Cancel
             </button>
           </form>
@@ -82,6 +150,7 @@ export default withRouter(
       circle: state.circle.results,
       error: state.role.error,
       loading: state.circle.loading,
+      users: state.users.results,
     }),
     dispatch => ({
       onGoBack: history => {
@@ -100,6 +169,7 @@ export default withRouter(
         dispatch(createRole(formRole, history))
       },
       sync: () => {
+        dispatch(updateMarkdown(''))
         dispatch(setLoading('users'))
         dispatch(fetchResults('users'))
         dispatch(setLoading('circle'))

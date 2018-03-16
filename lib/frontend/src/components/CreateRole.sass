@@ -24,14 +24,27 @@
 
   label
     display: block
-    margin: .10em 0
+    margin: .7em 0
     max-width: 100%
     width: 50em
 
-  [type=submit]
+  [type=submit], [type=button]
     background: #bac9d5
     border: none
     font-family: $text-font
     margin: .5em 0 .5em 1em
     padding: 1em
     transition: background 0.2s
+
+  &__duration
+    align-items: center
+    display: flex
+
+    input
+      width: 5em
+
+  &__endDate
+    color: #323232
+    font-size: .9em
+    font-style: italic
+    margin-left: 1em
