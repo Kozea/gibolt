@@ -418,6 +418,22 @@ def update_milestones_circles(repo_name, milestone_number):
     return jsonify(response_object), code
 
 
+rest(
+    Milestone_circle,
+    methods=['DELETE'],
+    name='milestone_circles',
+    auth=needlogin
+)
+
+
+rest(
+    Report_milestone,
+    methods=['DELETE'],
+    name='report_milestones',
+    auth=needlogin
+)
+
+
 @app.route('/api/meetingsTypes', methods=['GET'])
 @needlogin
 def get_meetings_types():

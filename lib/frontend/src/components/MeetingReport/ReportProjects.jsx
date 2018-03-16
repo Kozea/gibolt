@@ -3,7 +3,7 @@ import './MeetingReport.sass'
 import { format } from 'date-fns'
 import React from 'react'
 
-import Progress from './../Progress'
+import MilestoneDisplay from './../Utils/MilestoneDisplay'
 import { setModal, updateIssueParams } from '../../actions/issues'
 import { sortProjects, updateMeetingProjects } from '../../actions/meetings'
 import { block, connect } from '../../utils'
@@ -12,6 +12,7 @@ const b = block('MeetingReport')
 
 function ReportProjects(props) {
   const {
+    circleId,
     isEditionDisabled,
     onMilestoneClick,
     onModalCreation,
@@ -27,31 +28,13 @@ function ReportProjects(props) {
         <ul>
           {sortedProjects.map(milestone => (
             <li key={milestone.id} title={milestone.description}>
-              <a
-                className={b('unlink')}
-                href={milestone.html_url}
-                target="_blank"
-              >
-                <span className={b(`bullet ${milestone.state}`)} />
-                {milestone.repo}
-                {' - '}
-                <span className={b('lab')}>{milestone.title}</span>
-              </a>
-              {' -'}
-              <Progress
-                val={milestone.closed_issues}
-                total={milestone.open_issues + milestone.closed_issues}
+              <MilestoneDisplay
+                circleId={circleId}
+                displayProgress
+                isInEdition={!isEditionDisabled}
+                milestone={milestone}
+                target="meeting"
               />
-              <span className={b('due-date')}>
-                {' ('}
-                {milestone.due_on
-                  ? `due on: ${format(
-                      new Date(milestone.due_on),
-                      'DD/MM/YYYY'
-                    )}`
-                  : 'no due date'}
-                {')'}
-              </span>
               {milestone.state === 'open' && (
                 <span
                   className={b('newTicket')}
@@ -61,6 +44,7 @@ function ReportProjects(props) {
                       `${milestone.repo} ⦔ ${milestone.number}`
                     )
                   }
+                  title="Open an issue"
                 >
                   <i
                     className="fa fa-plus-circle createIssue"
@@ -85,7 +69,7 @@ function ReportProjects(props) {
                           .filter(issue => !issue.pull_request)
                           .map(issue => (
                             <li key={issue.ticket_id} title={issue.body}>
-                              <span className={b('bullet')} />
+                              <span className={b(`bullet ${issue.state}`)} />
                               <a href={issue.html_url} target="_blank">
                                 #{issue.ticket_number}
                               </a>{' '}

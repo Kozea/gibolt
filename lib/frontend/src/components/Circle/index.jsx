@@ -9,6 +9,7 @@ import { fetchCircle } from '../../actions/circle'
 import { block, connect } from '../../utils'
 import CircleDetails from './CircleDetails'
 import CircleMeetings from './CircleMeetings'
+import CircleMilestones from './CircleMilestones'
 import CircleRoles from './CircleRoles'
 import CircleSubCircles from './CircleSubCircles'
 import Loading from './../Loading'
@@ -51,7 +52,7 @@ class Circle extends React.Component {
         </Helmet>
         {error && (
           <article className={b('group', { error: true })}>
-            <h2>Error during circle fetch</h2>
+            <h2>Error during circle fetch/update</h2>
             {typeof error === 'object' ? (
               <ul>
                 {error.map(err => (
@@ -67,13 +68,14 @@ class Circle extends React.Component {
           </article>
         )}
         <article className={b('circle')}>
+          {loading && <Loading />}
           {circle.circle_name && (
             <div>
-              {loading && <Loading />}
               <CircleDetails />
               {!isCircleInEdition && (
                 <div>
                   <CircleMeetings circle={circle} />
+                  <CircleMilestones circle={circle} />
                   <CircleRoles circle={circle} />
                   {circle.children_circles &&
                   circle.children_circles.length > 0 ? (
