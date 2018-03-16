@@ -23,36 +23,7 @@ stages:
       - .env/
 
 
-image: paradoxxxzero/python-node-yarn-postgresql:3.5-8.6-10
-
-install3.5:
-  stage: install
-  script:
-    - make install
-  <<: *artifacts_install
-
-build3.5:
-  stage: build
-  script: make build
-  <<: *artifacts_build
-  dependencies:
-    - install3.5
-
-lint3.5:
-  stage: test
-  script: make lint
-  dependencies:
-    - build3.5
-
-test3.5:
-  stage: test
-  script: make check
-  dependencies:
-    - build3.5
-
-
-.image: &image_latest
-  image: paradoxxxzero/python-node-yarn-postgresql:3.6-8.6-9.6
+image: paradoxxxzero/python-node-yarn-postgresql:latest
 
 install_latest:
   <<: *image_latest
