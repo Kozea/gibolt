@@ -23,46 +23,15 @@ stages:
       - .env/
 
 
-image: paradoxxxzero/python-node-yarn-postgresql:3.5-8.6-10
-
-install3.5:
-  stage: install
-  script:
-    - make install
-  <<: *artifacts_install
-
-build3.5:
-  stage: build
-  script: make build
-  <<: *artifacts_build
-  dependencies:
-    - install3.5
-
-lint3.5:
-  stage: test
-  script: make lint
-  dependencies:
-    - build3.5
-
-test3.5:
-  stage: test
-  script: make check
-  dependencies:
-    - build3.5
-
-
-.image: &image_latest
-  image: paradoxxxzero/python-node-yarn-postgresql:3.6-8.6-9.6
+image: paradoxxxzero/python-node-yarn-postgresql:latest
 
 install_latest:
-  <<: *image_latest
   stage: install
   script:
     - make install
   <<: *artifacts_install
 
 build_latest:
-  <<: *image_latest
   stage: build
   script: make build
   <<: *artifacts_build
@@ -70,14 +39,12 @@ build_latest:
     - install_latest
 
 lint_latest:
-  <<: *image_latest
   stage: test
   script: make lint
   dependencies:
     - build_latest
 
 test_latest:
-  <<: *image_latest
   stage: test
   script: make check
   dependencies:
@@ -91,27 +58,30 @@ deploy_test:
   <<: *image_deploy_jobs
   stage: deploy_test
   before_script:
-    - "apt-get update && apt-get install -y jq curl"
+    - 'apt-get update && apt-get install -y wget'
   script:
-    - "branch_name=`echo $CI_COMMIT_REF_NAME | tr -cd '[[:alnum:]]'`"
-    - "url_test=https://test-$CI_PROJECT_NAME-$branch_name.kozea.fr"
-    - "res_curl=`curl --http1.1 -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"job_id\":\"'\"$CI_JOB_ID\"'\", \"token\":\"\'\"$TOKEN\"\'\", \"url\":\"\'\"$CI_REPOSITORY_URL\"\'\", \"build_stage\":\"\'\"$CI_JOB_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\", \"branch\":\"\'\"$CI_COMMIT_REF_NAME\"\'\", \"password\":\"\'\"$PASSWD\"\'\", \"commit_sha\":\"\'\"$CI_COMMIT_SHA\"\'\", \"url_test\":\"\'\"$url_test\"\'\"}' $JUNKRAT | jq -r \'.success\'`"
-    - "if [[ $res_curl = 1 ]]; then exit $res_curl;fi"
-    - "get=`curl -u $CI_PROJECT_NAME:$PASSWD -s -o -I -w \"%{http_code}\" $url_test`"
-    - "([[ $get = 302 || $get = 200 ]] && [[ $res_curl = 0 ]]) && exit_val=0 || exit_val=1 && exit $exit_val"
+    - 'set -e'
+    - 'branch_name=`echo $CI_COMMIT_REF_NAME | tr -cd "[[:alnum:]]"`'
+    - 'url_test=https://test-$CI_PROJECT_NAME-$branch_name.kozea.fr'
+    - 'output_file=/tmp/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.log'
+    - 'parameters="{\"job_id\":\"$CI_JOB_ID\", \"token\":\"$TOKEN\", \"url\":\"$CI_REPOSITORY_URL\", \"build_stage\":\"$CI_JOB_STAGE\", \"project_name\":\"$CI_PROJECT_NAME\", \"branch\":\"$CI_COMMIT_REF_NAME\", \"commit_sha\":\"$CI_COMMIT_SHA\", \"url_test\":\"$url_test\"}"'
+    - 'swget="wget --no-verbose --content-on-error -O-"'
+    - '$swget --header="Content-Type:application/json" --post-data="""$parameters""" $JUNKRAT | tee $output_file && [[ $(tail -n1 $output_file) == "Success" ]]'
+    - '$swget $url_test'
   dependencies: []
-
 
 deploy_prod:
   <<: *image_deploy_jobs
   stage: deploy_prod
   before_script:
-    - "apt-get update && apt-get install -y jq curl"
+    - 'apt-get update && apt-get install -y wget'
   script:
-    - "res_curl=`curl --http1.1 -m 3600 -H 'Content-Type: application/json' -X POST -d '{\"job_id\":\"'\"$CI_JOB_ID\"'\", \"token\":\"\'\"$TOKEN\"\'\", \"build_stage\":\"\'\"$CI_JOB_STAGE\"\'\", \"project_name\":\"\'\"$CI_PROJECT_NAME\"\'\", \"branch\":\"\'\"$CI_COMMIT_REF_NAME\"\'\"}' $JUNKRAT | jq -r \'.success\'`"
-    - "if [[ $res_curl = 1 ]]; then exit $res_curl;fi"
-    - "get=`curl -s -o -I -w \"%{http_code}\" https://gibolt.kozea.fr`"
-    - "([[ $get = 302 || $get = 200 ]] && [[ $res_curl = 0 ]]) && exit_val=0 || exit_val=1 && exit $exit_val"
+    - 'set -e'
+    - 'output_file=/tmp/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.log'
+    - 'parameters="{\"job_id\":\"$CI_JOB_ID\", \"token\":\"$TOKEN\", \"build_stage\":\"$CI_JOB_STAGE\", \"project_name\":\"$CI_PROJECT_NAME\", \"branch\":\"$CI_COMMIT_REF_NAME\"}"'
+    - 'swget="wget --no-verbose --content-on-error -O-"'
+    - '$swget --header="Content-Type:application/json" --post-data="""$parameters""" $JUNKRAT | tee $output_file && [[ $(tail -n1 $output_file) == "Success" ]]'
+    - '$swget https://gibolt.kozea.fr'
   dependencies: []
   only:
     - master
