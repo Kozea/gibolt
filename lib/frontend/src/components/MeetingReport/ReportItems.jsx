@@ -61,18 +61,21 @@ function ReportItems(props) {
         <ul>
           {actions.map(action => (
             <li key={action.item_id}>
-              <input
-                checked={action.checked}
-                disabled={isEditionDisabled}
-                id="actions"
-                name={action.content}
-                onChange={event => {
-                  setTimer()
-                  onActionsChange(event.target)
-                }}
-                type="checkbox"
-              />
-              {action.content}
+              <label>
+                <input
+                  checked={action.checked}
+                  disabled={isEditionDisabled}
+                  id="actions"
+                  name={action.content}
+                  onChange={event => {
+                    setTimer()
+                    onActionsChange(event.target)
+                  }}
+                  type="checkbox"
+                />
+
+                {action.content}
+              </label>
             </li>
           ))}
         </ul>
