@@ -103,7 +103,7 @@ export default withRouter(
         dispatch(setLoading('users'))
         dispatch(fetchResults('users'))
         dispatch(setLoading('circle'))
-        dispatch(fetchCircle())
+        dispatch(fetchCircle(null, true))
       },
     })
   )(CreateRole)
