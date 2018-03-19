@@ -48,7 +48,7 @@ current_role_focuses = rest(
 
 roles = rest(
     Role,
-    methods=['GET', 'PATCH', 'POST', 'PUT', 'DELETE'],
+    methods=['GET', 'PATCH', 'PUT', 'DELETE'],
     name='roles',
     relationships={
         'role_focuses': current_role_focuses,
@@ -60,6 +60,44 @@ roles = rest(
     ),
     auth=needlogin
 )
+
+
+@roles.declare('POST', True)
+def post_roles(payload, role_id=None):
+    try:
+        new_role = Role(
+            circle_id=payload.get('circle_id'),
+            role_name=payload.get('role_name'),
+            role_purpose=payload.get('role_purpose'),
+            role_domain=payload.get('role_domain'),
+            role_accountabilities=payload.get('role_accountabilities'),
+            role_type=payload.get('role_type'),
+            duration=payload.get('duration')
+        )
+        session.add(new_role)
+        session.flush()
+
+        new_focus = Role_focus(
+            role_id=new_role.role_id,
+            focus_name=payload.get('focus_name'),
+        )
+        session.add(new_focus)
+        session.flush()
+
+        new_role_focus = Role_focus_user(
+            role_focus_id=new_focus.role_focus_id,
+            user_id=payload.get('user_id'),
+        )
+        session.add(new_role_focus)
+        session.commit()
+
+    except (exc.IntegrityError) as e:
+        session.rollback()
+        return jsonify({
+            'status': 'error',
+            'message': 'Invalid payload.'
+        }), 400
+    return roles.get({}, role_id=new_role.role_id)
 
 
 rest(

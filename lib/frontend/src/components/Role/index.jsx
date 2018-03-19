@@ -121,7 +121,7 @@ class Role extends React.Component {
             <RoleForm
               circle={{}}
               circles={circles}
-              isCreation
+              isCreation={false}
               role={role}
               users={users}
             />

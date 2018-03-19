@@ -102,7 +102,7 @@ class RoleForm extends React.Component {
                 <input
                   className={b('long')}
                   defaultValue=""
-                  name="role_focus"
+                  name="focus_name"
                 />
               </label>
               <label>
