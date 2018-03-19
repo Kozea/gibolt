@@ -79,7 +79,7 @@ class Circle(Base):
         'Milestone_circle', backref=backref(
             'milestone_circle', remote_side=[circle_id]))
     circle_parent = relationship(
-        'Circle', backref='circle', remote_side=[circle_id])
+        'Circle', backref='circle', remote_side=[circle_id], lazy='subquery')
     label = relationship(Label, backref='circle')
 
 

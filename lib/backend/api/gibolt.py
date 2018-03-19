@@ -102,7 +102,7 @@ def post_roles(payload, role_id=None):
 
 rest(
     Circle,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    methods=['GET', 'PATCH', 'POST', 'DELETE'],
     relationships={
         'circle_parent': rest(Circle),
         'circle_children': rest(Circle),

@@ -1,8 +1,7 @@
 import './Circle.sass'
 
-import { stringify } from 'query-string'
 import React from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import { updateMarkdown } from '../../actions'
 import {
@@ -87,9 +86,9 @@ class CircleDetails extends React.Component {
             <label>
               Parent :
               <select name="parent_circle_id">
-                {circle.parent_circle_id !== null && (
-                  <option value={circle.parent_circle_id}>
-                    {circle.parent_circle_name}
+                {circle.circle_parent.length > 0 && (
+                  <option value={circle.circle_parent[0].circle_id}>
+                    {circle.circle_parent[0].circle_name}
                   </option>
                 )}
                 <option value=""> Aucun </option>
@@ -97,8 +96,11 @@ class CircleDetails extends React.Component {
                   .filter(
                     cercle =>
                       cercle.circle_id !== circle.circle_id &&
-                      cercle.parent_circle_id !== circle.circle_id &&
-                      cercle.circle_id !== circle.parent_circle_id
+                      (cercle.circle_parent[0] &&
+                        cercle.circle_parent[0].circle_id !==
+                          circle.circle_id) &&
+                      (circle.circle_parent[0] &&
+                        cercle.circle_id !== circle.circle_parent[0].circle_id)
                   )
                   .map(cercle => (
                     <option key={cercle.circle_id} value={cercle.circle_id}>
@@ -172,9 +174,9 @@ class CircleDetails extends React.Component {
                     onDisableCircle(circle)
                   }}
                   disabled={
-                    circle.parent_circle_id === null
+                    circle.circle_parent.length === 0
                       ? false
-                      : !circle.parent_circle_is_active
+                      : !circle.circle_parent[0].is_active
                   }
                   title={circle.is_active ? 'Disable circle' : 'Enable circle'}
                 >
@@ -202,24 +204,6 @@ class CircleDetails extends React.Component {
                 </span>
               )}
             </h1>
-            {circle.parent_circle_name && (
-              <span>
-                {circle.parent_circle_name ? (
-                  <Link
-                    to={{
-                      pathname: '/circle',
-                      search: stringify({
-                        circle_id: circle.parent_circle_id,
-                      }),
-                    }}
-                  >
-                    {`(sous-cercle de "${circle.parent_circle_name}")`}
-                  </Link>
-                ) : (
-                  ''
-                )}
-              </span>
-            )}{' '}
             {circle.nb_reports === 0 &&
               (circle.roles.length > 0 ||
                 circle.circle_milestones.length > 0) && (
@@ -341,7 +325,9 @@ export default withRouter(
       },
       onDisableCircle: circle => {
         const circleData = {}
-        circleData.parent_circle_id = circle.parent_circle_id
+        circleData.parent_circle_id = circle.circle_parent[0]
+          ? circle.circle_parent[0].circle_id
+          : null
         circleData.circle_name = circle.circle_name
         circleData.circle_purpose = circle.circle_purpose
         circleData.circle_domain = circle.circle_domain
