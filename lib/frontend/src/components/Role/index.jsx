@@ -71,7 +71,7 @@ class Role extends React.Component {
         </Helmet>
         <article className={b('role')}>
           <h1>
-            {role.role_name}{' '}
+            {role.role_name} {role.is_active ? '' : ' (disabled)'}
             <span
               onClick={() => editClick(role.role_accountabilities)}
               title="Edit role"

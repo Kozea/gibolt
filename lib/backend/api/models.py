@@ -121,7 +121,10 @@ class Role_focus(Base):
         ForeignKey('role.role_id', name='fk_focus_role'),
         nullable=False)
     focus_name = Column(String)
-    role = relationship(Role, backref='role_focuses')
+    role = relationship(
+        Role,
+        backref=backref("role_focuses", cascade="all, delete-orphan")
+    )
 
 
 class Role_focus_user(Base):
@@ -138,7 +141,10 @@ class Role_focus_user(Base):
     user_id = Column(Integer)
     start_date = Column(DateTime, default=datetime.datetime.now)
     end_date = Column(DateTime)
-    role_focus = relationship(Role_focus, backref='role_focus_users')
+    role_focus = relationship(
+        Role_focus,
+        backref=backref("role_focus_users", cascade="all, delete-orphan")
+    )
 
 
 class Item(Base):
