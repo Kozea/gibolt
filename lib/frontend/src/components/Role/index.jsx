@@ -13,7 +13,6 @@ import {
   fetchRoles,
 } from '../../actions/roles'
 import { block, connect } from '../../utils'
-import Items from './Items'
 import RoleFocus from './RoleFocus'
 import Loading from './../Loading'
 import RoleForm from './../Utils/RoleForm'
@@ -61,7 +60,6 @@ class Role extends React.Component {
       loading,
       onGoBack,
       role,
-      roles,
       users,
     } = this.props
     return (
@@ -155,22 +153,6 @@ class Role extends React.Component {
               <h3>Accountabilities</h3>
               <ReactMarkdown source={role.role_accountabilities} />
               <RoleFocus duration={role.duration} focuses={role.role_focuses} />
-              <Items
-                formType={items.form_checklist}
-                items={items}
-                itemType="checklist"
-                title="Recurrent actions"
-                role={role}
-                roles={roles}
-              />
-              <Items
-                formType={items.form_indicator}
-                items={items}
-                itemType="indicator"
-                title="Indicators"
-                role={role}
-                roles={roles}
-              />
               <button
                 type="submit"
                 onClick={() => onGoBack(role.circle_id, history)}

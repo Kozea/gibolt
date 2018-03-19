@@ -1,4 +1,6 @@
+import { stringify } from 'query-string'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import RoleFocusUser from './RoleFocusUser'
 import { block } from '../../utils'
@@ -20,7 +22,14 @@ export default function RoleFocus(props) {
           {focuses.map(focus => (
             <li key={focus.role_focus_id}>
               <span className={b('bullet')} />
-              {focus.focus_name}
+              <Link
+                to={{
+                  pathname: '/role_focus',
+                  search: stringify({ role_focus_id: focus.role_id }),
+                }}
+              >
+                {focus.focus_name}
+              </Link>
               {focus.role_focus_users.map(focusUser => (
                 <RoleFocusUser
                   key={focusUser.user_id}
