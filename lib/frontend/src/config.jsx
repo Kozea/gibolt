@@ -17,6 +17,7 @@ export const publicPath = '/assets/'
 export const dirs = {
   assets: path.resolve(cwd, 'lib', 'frontend', 'assets'),
   src: path.resolve(cwd, 'lib', 'frontend', 'src'),
+  static: process.env.STATIC || path.resolve(cwd, 'lib', 'frontend', 'static'),
   styles: path.resolve(cwd, 'lib', 'frontend', 'src', 'styles'),
   dist: path.resolve(cwd, 'dist'),
   modules: path.resolve(cwd, 'node_modules'),

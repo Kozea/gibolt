@@ -23,7 +23,9 @@ app.config.from_envvar('FLASK_CONFIG')
 
 engine = create_engine(
     app.config['SQLALCHEMY_DATABASE_URI'],
-    connect_args={'check_same_thread': False}
+    connect_args={
+        'check_same_thread': False
+    }
 )
 
 github = GitHub(app)
