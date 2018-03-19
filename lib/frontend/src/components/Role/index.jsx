@@ -15,6 +15,7 @@ import {
 import { block, connect } from '../../utils'
 import RoleFocus from './RoleFocus'
 import Loading from './../Loading'
+import BreadCrumbs from './../Utils/BreadCrumbs'
 import RoleForm from './../Utils/RoleForm'
 
 var ReactMarkdown = require('react-markdown')
@@ -67,7 +68,12 @@ class Role extends React.Component {
         <Helmet>
           <title>Gibolt - Role</title>
         </Helmet>
+
         <article className={b('role')}>
+          <BreadCrumbs
+            circle={circles.find(circle => circle.circle_id === role.circle_id)}
+            role={role}
+          />
           <h1>
             {role.role_name} {role.is_active ? '' : ' (disabled)'}
             <span

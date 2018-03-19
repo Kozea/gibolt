@@ -15,6 +15,7 @@ import {
 import { getUnusedCircleLabels } from '../../actions/labels'
 import { block, connect } from '../../utils'
 import MarkdownEditor from './../Utils/MarkdownEditor'
+import BreadCrumbs from './../Utils/BreadCrumbs'
 
 var ReactMarkdown = require('react-markdown')
 
@@ -43,6 +44,7 @@ class CircleDetails extends React.Component {
 
     return (
       <div>
+        <BreadCrumbs circle={circle} />
         {isCircleInEdition ? (
           <form
             onSubmit={e => {
