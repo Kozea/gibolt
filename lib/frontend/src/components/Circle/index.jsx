@@ -77,8 +77,7 @@ class Circle extends React.Component {
                   <CircleMeetings circle={circle} />
                   <CircleMilestones circle={circle} />
                   <CircleRoles circle={circle} />
-                  {circle.children_circles &&
-                  circle.children_circles.length > 0 ? (
+                  {circle.circle_children.length > 0 ? (
                     <CircleSubCircles circle={circle} />
                   ) : (
                     ''

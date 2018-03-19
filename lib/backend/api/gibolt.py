@@ -104,15 +104,14 @@ rest(
     Circle,
     methods=['GET', 'PUT', 'POST', 'DELETE'],
     relationships={
+        'circle_parent': rest(Circle),
+        'circle_children': rest(Circle),
         'roles': roles,
         'circle_milestones': rest(Milestone_circle),
         'label': rest(Label)
     },
     name='circles',
     query=lambda query: query.filter(
-        Circle.parent_circle_id == (request.values.get('parent_circle_id'))
-        if request.values.get('parent_circle_id')
-        else True,
         Circle.label_id == (request.values.get('label_id'))
         if request.values.get('label_id')
         else True,

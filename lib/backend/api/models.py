@@ -78,6 +78,8 @@ class Circle(Base):
     circle_milestones = relationship(
         'Milestone_circle', backref=backref(
             'milestone_circle', remote_side=[circle_id]))
+    circle_parent = relationship(
+        'Circle', backref='circle', remote_side=[circle_id])
     label = relationship(Label, backref='circle')
 
 

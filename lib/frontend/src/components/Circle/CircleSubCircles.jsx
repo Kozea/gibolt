@@ -11,7 +11,7 @@ export default function CircleSubCircles(props) {
     <article>
       <h3>Sub-circles</h3>
       <ul>
-        {props.circle.children_circles.map(child => (
+        {props.circle.circle_children.map(child => (
           <li key={child.circle_id}>
             <span className={b('bullet')} />
             <Link
