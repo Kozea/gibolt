@@ -6,9 +6,8 @@ import { withRouter } from 'react-router-dom'
 
 import { updateMarkdown, fetchResults, setLoading } from '../../actions'
 import {
-  deleteRole,
+  // deleteRole,
   editRole,
-  fetchItems,
   fetchRole,
   fetchRoles,
 } from '../../actions/roles'
@@ -52,12 +51,10 @@ class Role extends React.Component {
 
   render() {
     const {
-      btnClick,
       circles,
       editClick,
       error,
       history,
-      items,
       loading,
       onGoBack,
       role,
@@ -82,27 +79,7 @@ class Role extends React.Component {
             >
               <i className="fa fa-pencil-square-o" aria-hidden="true" />
             </span>{' '}
-            {items.results.filter(item => item.role_id === role.role_id)
-              .length > 0 ? (
-              ''
-            ) : (
-              <span
-                onClick={() => btnClick(role.role_id, role.circle_id, history)} // eslint-disable-line max-len
-                title="Delete role"
-              >
-                <i className="fa fa-trash" aria-hidden="true" />
-              </span>
-            )}
           </h1>
-          {items.results.filter(item => item.role_id === role.role_id).length >
-          0 ? (
-            <code>
-              {'You cannot delete this role, '}
-              {'please first delete the items.'}
-            </code>
-          ) : (
-            ' '
-          )}
           {error && (
             <article className={b('date', { error: true })}>
               <h2>Error during issue fetch</h2>
@@ -186,19 +163,12 @@ export default withRouter(
       users: state.users.results,
     }),
     dispatch => ({
-      btnClick: (roleId, circleId, history) => {
-        dispatch(deleteRole(roleId, circleId, history))
-      },
       editClick: content => {
         dispatch(editRole())
         dispatch(updateMarkdown(content))
       },
       onGoBack: (circleId, history) => {
         history.push(`/circle?circle_id=${circleId}`)
-      },
-      loadItems: () => {
-        dispatch(setLoading('items'))
-        dispatch(fetchItems())
       },
       sync: () => {
         Promise.all([

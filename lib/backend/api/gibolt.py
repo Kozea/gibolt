@@ -34,15 +34,45 @@ current_role_focus_user = rest(
 current_role_focuses = rest(
     Role_focus,
     methods=['GET'],
-    name='role_focuses',
+    name='current_role_focuses',
     relationships={
         'role_focus_users': current_role_focus_user,
+        'items': rest(Item),
     },
     query=lambda query: query.filter(
         Role.role_id == (request.values.get('role_id'))
         if request.values.get('role_id')
         else True,
     ),
+    auth=needlogin
+)
+
+current_role_focuses = rest(
+    Role_focus,
+    methods=['GET'],
+    name='role_focuses',
+    relationships={
+        'role_focus_users': current_role_focus_user,
+        'items': rest(Item),
+    },
+    query=lambda query: query.filter(
+        Role.role_id == (request.values.get('role_id'))
+        if request.values.get('role_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+role_focuses = rest(
+    Role_focus,
+    methods=['GET'],
+    name='role_focuses',
+    relationships={
+        'role_focus_users': current_role_focus_user,
+        'items': rest(Item),
+        'role': rest(Role, relationships={'circle': rest(
+            Circle, relationships={'circle_parent': rest(Circle)})}),
+    },
     auth=needlogin
 )
 
@@ -329,7 +359,7 @@ rest(
     name='items',
     query=lambda query: query.filter(
         Item.role_focus_id == (request.values.get('role_focus_id'))
-        if request.values.get('role_id')
+        if request.values.get('role_focus_id')
         else True,
     ),
     auth=needlogin
