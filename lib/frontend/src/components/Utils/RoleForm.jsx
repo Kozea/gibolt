@@ -20,17 +20,9 @@ class RoleForm extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
-      endDate: null,
+      duration: null,
+      startDate: null,
     }
-  }
-
-  calculateEndDate(duration) {
-    this.setState({
-      endDate:
-        duration || duration !== 0
-          ? format(addDays(new Date(), duration), 'DD/MM/YYYY (dddd)')
-          : null,
-    })
   }
 
   render() {
@@ -44,7 +36,13 @@ class RoleForm extends React.Component {
       role,
       users,
     } = this.props
-    const { endDate } = this.state
+    const endDate =
+      this.state.duration > 0 && this.state.startDate
+        ? format(
+            addDays(new Date(this.state.startDate), this.state.duration),
+            'DD/MM/YYYY (dddd)'
+          )
+        : null
     return (
       <article className={b()}>
         <form
@@ -95,6 +93,20 @@ class RoleForm extends React.Component {
               required
             />
           </label>
+          <label>
+            Duration (in days) :
+            <span className={b('duration')}>
+              <input
+                defaultValue={role.duration ? role.duration : ''}
+                min="0"
+                name="duration"
+                onChange={e => {
+                  this.setState({ duration: +e.target.value })
+                }}
+                type="number"
+              />
+            </span>
+          </label>
           {isCreation && (
             <span>
               <label>
@@ -121,22 +133,24 @@ class RoleForm extends React.Component {
                   ))}
                 </select>
               </label>
+              <label>
+                Start date:
+                <span className={b('duration')}>
+                  <input
+                    defaultValue=""
+                    name="start_date"
+                    onChange={e => {
+                      this.setState({ startDate: e.target.value })
+                    }}
+                    type="date"
+                  />
+                  <span className={b('endDate')}>
+                    {endDate && `until ${endDate}`}
+                  </span>
+                </span>
+              </label>
             </span>
           )}
-          <label>
-            Duration (in days) :
-            <span className={b('duration')}>
-              <input
-                defaultValue={role.duration ? role.duration : ''}
-                name="duration"
-                onChange={e => this.calculateEndDate(+e.target.value)}
-                type="number"
-              />
-              <span className={b('endDate')}>
-                {endDate && `until ${endDate}`}
-              </span>
-            </span>
-          </label>
           <label>
             Purpose :
             <input

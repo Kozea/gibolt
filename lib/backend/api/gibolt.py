@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import jsonify, request
 from sqlalchemy import exc
 from unrest import UnRest
@@ -116,6 +118,8 @@ def post_roles(payload, role_id=None):
 
         new_role_focus = Role_focus_user(
             role_focus_id=new_focus.role_focus_id,
+            start_date=datetime.strptime(
+                payload.get('start_date'), '%Y-%m-%d'),
             user_id=payload.get('user_id'),
         )
         session.add(new_role_focus)

@@ -141,7 +141,7 @@ class Role_focus_user(Base):
         ForeignKey('role_focus.role_focus_id', name='fk_user_focus'),
         nullable=False)
     user_id = Column(Integer)
-    start_date = Column(DateTime, default=datetime.datetime.now)
+    start_date = Column(DateTime)
     end_date = Column(DateTime)
     role_focus = relationship(
         Role_focus,
