@@ -10,10 +10,10 @@ import { withRouter } from 'react-router-dom'
 import {
   fetchResults,
   setLoading,
+  setModal,
   setParams,
   updateMarkdown,
 } from '../../actions'
-import { setModal } from '../../actions/issues'
 import {
   disableEdition,
   emptyMeeting,
@@ -377,7 +377,7 @@ export default withRouter(
         dispatch(expandMilestone(milestoneId))
       },
       onModalClose: () => {
-        dispatch(setModal(false, false, null))
+        dispatch(setModal(false, false, {}))
       },
       onParamsChange: locationSearch => {
         dispatch(setLoading('meeting'))

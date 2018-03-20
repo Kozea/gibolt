@@ -8,12 +8,12 @@ import {
   fetchResults,
   setError,
   setLoading,
+  setModal,
   setParams,
 } from '../actions'
 import {
   fetchIssues,
   setIssuesSelectness,
-  setModal,
   updateCurrentIssue,
   updateIssues,
   toggleIssue,
@@ -122,7 +122,9 @@ class Issues extends React.Component {
           ) : (
             <span>
               <IssueDetail
-                issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
+                issue={
+                  issues.filter(iss => iss.ticket_id === modal.data.issueId)[0]
+                }
                 onModalClose={onModalClose}
               />
             </span>
@@ -251,7 +253,7 @@ export default connect(
   },
   dispatch => ({
     onModalClose: () => {
-      dispatch(setModal(false, false, null))
+      dispatch(setModal(false, false, {}))
       dispatch(updateCurrentIssue({}))
       dispatch(updateMarkdown(''))
       dispatch(setError(null, 'issueForm'))
@@ -269,10 +271,10 @@ export default connect(
             }
           : { grouper, group }
       dispatch(setParams(params))
-      dispatch(setModal(true, true, null))
+      dispatch(setModal(true, true, {}))
     },
     onModalDisplay: issue => {
-      dispatch(setModal(true, false, issue.ticket_id))
+      dispatch(setModal(true, false, { issueId: issue.ticket_id }))
       dispatch(updateCurrentIssue(issue))
     },
     onToggleSelected: issueId => {
