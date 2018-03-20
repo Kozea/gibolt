@@ -48,6 +48,10 @@ class Role extends React.Component {
               <span>
                 <h1>{roleFocus.focus_name}</h1>
                 <p>
+                  <span className={b('focusLabel')}>Role: </span>
+                  {role.role_name}
+                </p>
+                <p>
                   <span className={b('focusLabel')}>Filled by: </span>
                   {focusUser.user_name}{' '}
                   <img
@@ -75,7 +79,7 @@ class Role extends React.Component {
                           ),
                           'DD/MM/YYYY'
                         )
-                      : 'No end date defined'}
+                      : '∞'}
                 </p>
                 <br />
                 <RoleFocusItems

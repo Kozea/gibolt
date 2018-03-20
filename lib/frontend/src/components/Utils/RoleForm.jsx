@@ -200,7 +200,6 @@ export default withRouter(
         } else {
           dispatch(updateRole(roleId, formRole, history))
         }
-
         dispatch(updateMarkdown(''))
       },
     })

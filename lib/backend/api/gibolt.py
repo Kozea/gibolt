@@ -36,7 +36,7 @@ current_role_focus_user = rest(
 current_role_focuses = rest(
     Role_focus,
     methods=['GET'],
-    name='current_role_focuses',
+    name='only_role_focuses',
     relationships={
         'role_focus_users': current_role_focus_user,
         'items': rest(Item),
@@ -49,21 +49,43 @@ current_role_focuses = rest(
     auth=needlogin
 )
 
-current_role_focuses = rest(
-    Role_focus,
-    methods=['GET'],
-    name='role_focuses',
-    relationships={
-        'role_focus_users': current_role_focus_user,
-        'items': rest(Item),
-    },
-    query=lambda query: query.filter(
-        Role.role_id == (request.values.get('role_id'))
-        if request.values.get('role_id')
-        else True,
-    ),
-    auth=needlogin
-)
+
+@current_role_focuses.declare('POST', True)
+def post_role_focus(payload, role_focus_id=None):
+    print(payload)
+    try:
+        new_role_focus = Role_focus(
+            role_id=payload.get('role_id'),
+            focus_name=payload.get('focus_name'),
+        )
+        session.add(new_role_focus)
+        session.flush()
+        print('new_role_focus')
+        print(new_role_focus.focus_name)
+
+        start_date = payload.get('start_date')
+        print(start_date)
+        new_focus_user = Role_focus_user(
+            role_focus_id=new_role_focus.role_focus_id,
+            start_date=datetime.strptime(
+                start_date, '%Y-%m-%d') if start_date else None,
+            user_id=payload.get('user_id'),
+        )
+        session.add(new_focus_user)
+        session.commit()
+        print('new_focus_user')
+        print(new_focus_user.user_id)
+
+    except (exc.IntegrityError, AttributeError) as e:
+        print(e)
+        session.rollback()
+        return jsonify({
+            'status': 'error',
+            'message': 'Invalid payload.'
+        }), 400
+    return current_role_focuses.get(
+        {}, role_focus_id=new_role_focus.role_focus_id)
+
 
 role_focuses = rest(
     Role_focus,

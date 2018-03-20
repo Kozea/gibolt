@@ -27,13 +27,6 @@ const roleTypes = [
 ]
 
 class Role extends React.Component {
-  constructor(props, context) {
-    super(props, context)
-    this.state = {
-      endDate: null,
-    }
-  }
-
   componentDidMount() {
     this.props.sync()
   }
@@ -135,7 +128,12 @@ class Role extends React.Component {
               <p>{role.role_domain}</p>
               <h3>Accountabilities</h3>
               <ReactMarkdown source={role.role_accountabilities} />
-              <RoleFocus duration={role.duration} focuses={role.role_focuses} />
+              <RoleFocus
+                duration={role.duration}
+                focuses={role.role_focuses}
+                roleId={role.role_id}
+                users={users}
+              />
               <button
                 type="submit"
                 onClick={() => onGoBack(role.circle_id, history)}
