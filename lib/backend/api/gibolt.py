@@ -97,7 +97,7 @@ def post_role_focus(payload, role_focus_id=None):
 
 role_focuses = rest(
     Role_focus,
-    methods=['GET', 'PATCH'],
+    methods=['GET', 'PATCH', 'DELETE'],
     name='role_focuses',
     relationships={
         'role_focus_users': current_role_focus_user,

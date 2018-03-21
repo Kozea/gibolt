@@ -6,7 +6,11 @@ import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
-import { editRoleFocus, fetchRoleFocus } from '../../actions/rolefocus'
+import {
+  deleteFocus,
+  editRoleFocus,
+  fetchRoleFocus,
+} from '../../actions/rolefocus'
 import { block, connect } from '../../utils'
 import Loading from './../Loading'
 import BreadCrumbs from './../Utils/BreadCrumbs'
@@ -21,7 +25,15 @@ class Role extends React.Component {
   }
 
   render() {
-    const { error, isInEdition, loading, onEdition, roleFocus } = this.props
+    const {
+      error,
+      history,
+      isInEdition,
+      loading,
+      onDelete,
+      onEdition,
+      roleFocus,
+    } = this.props
     const role = roleFocus.role ? roleFocus.role[0] : null
     const circle =
       roleFocus.role && roleFocus.role[0].circle
@@ -48,6 +60,15 @@ class Role extends React.Component {
             {roleFocus.focus_name ? roleFocus.focus_name : 'No focus name'}{' '}
             <span onClick={() => onEdition()} title="Edit role focus">
               <i className="fa fa-pencil-square-o" aria-hidden="true" />
+            </span>
+            <span
+              onClick={e => {
+                e.preventDefault()
+                onDelete(roleFocus, history)
+              }}
+              title="Delete Focus"
+            >
+              <i className="fa fa-trash" aria-hidden="true" />
             </span>
           </h1>
           {isInEdition && role ? (
@@ -128,6 +149,9 @@ export default withRouter(
       roleFocus: state.roleFocus.results,
     }),
     dispatch => ({
+      onDelete: (roleFocus, history) => {
+        dispatch(deleteFocus(roleFocus, history))
+      },
       onEdition: () => {
         dispatch(editRoleFocus(true))
       },

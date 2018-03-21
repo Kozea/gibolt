@@ -162,7 +162,10 @@ class Item(Base):
         nullable=False)
     item_type = Column(Enum(*item_types))
     content = Column(Text)
-    role_focus = relationship(Role_focus, backref='items')
+    role_focus = relationship(
+        Role_focus,
+        backref=backref("items", cascade="all, delete-orphan")
+    )
 
 
 class Report(Base):
