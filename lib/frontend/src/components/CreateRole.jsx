@@ -33,13 +33,16 @@ class CreateRole extends React.Component {
               <code>{error}</code>
             </article>
           )}
-          <RoleForm
-            circleId={circle.circle_id}
-            circles={circles}
-            isCreation
-            role={{}}
-            users={users}
-          />
+          {circle.circle_id &&
+            circles.length > 0 && (
+              <RoleForm
+                circleId={circle.circle_id}
+                circles={circles}
+                isCreation
+                role={{}}
+                users={users}
+              />
+            )}
         </div>
       </article>
     )
@@ -56,13 +59,13 @@ export default connect(
   }),
   dispatch => ({
     sync: () => {
-      dispatch(updateMarkdown(''))
+      dispatch(setLoading('circle'))
+      dispatch(fetchCircle(null, true))
       dispatch(setLoading('users'))
+      dispatch(updateMarkdown(''))
       dispatch(fetchResults('users'))
       dispatch(setLoading('circles'))
       dispatch(fetchResults('circles'))
-      dispatch(setLoading('circle'))
-      dispatch(fetchCircle(null, true))
     },
   })
 )(CreateRole)

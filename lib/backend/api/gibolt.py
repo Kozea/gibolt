@@ -139,21 +139,22 @@ def post_roles(payload, role_id=None):
         session.add(new_role)
         session.flush()
 
-        new_focus = Role_focus(
-            role_id=new_role.role_id,
-            focus_name=payload.get('focus_name'),
-        )
-        session.add(new_focus)
-        session.flush()
+        if payload.get('user_id'):
+            new_focus = Role_focus(
+                role_id=new_role.role_id,
+                focus_name=payload.get('focus_name'),
+            )
+            session.add(new_focus)
+            session.flush()
 
-        start_date = payload.get('start_date')
-        new_role_focus = Role_focus_user(
-            role_focus_id=new_focus.role_focus_id,
-            start_date=datetime.strptime(
-                start_date, '%Y-%m-%d') if start_date else None,
-            user_id=payload.get('user_id'),
-        )
-        session.add(new_role_focus)
+            start_date = payload.get('start_date')
+            new_role_focus = Role_focus_user(
+                role_focus_id=new_focus.role_focus_id,
+                start_date=datetime.strptime(
+                    start_date, '%Y-%m-%d') if start_date else None,
+                user_id=payload.get('user_id'),
+            )
+            session.add(new_role_focus)
         session.commit()
 
     except (exc.IntegrityError) as e:

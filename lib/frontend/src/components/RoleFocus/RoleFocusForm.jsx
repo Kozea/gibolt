@@ -21,7 +21,15 @@ class RoleFocusForm extends React.Component {
   }
 
   render() {
-    const { onCancel, onSubmit, role, roleFocus, roleFocusUser } = this.props
+    const {
+      onCancel,
+      onSubmit,
+      role,
+      roleFocus,
+      roleFocusUser,
+      roles,
+      users,
+    } = this.props
     const endDate =
       role.duration > 0 && this.state.startDate
         ? format(
@@ -31,24 +39,6 @@ class RoleFocusForm extends React.Component {
         : null
     return (
       <article className={b()}>
-        <label>
-          Role name :
-          <input
-            name="role_name"
-            className={b('long')}
-            defaultValue={role.role_name}
-            disabled
-          />
-        </label>
-        <label>
-          Filled by:
-          <input
-            name="role_name"
-            className={b('long')}
-            defaultValue={roleFocusUser.user_name}
-            disabled
-          />
-        </label>
         <form
           onSubmit={e => {
             e.preventDefault()
@@ -59,6 +49,38 @@ class RoleFocusForm extends React.Component {
             )
           }}
         >
+          <label>
+            Role name :
+            <select
+              className={b('long')}
+              defaultValue={role.role_id}
+              name="role_id"
+              required
+            >
+              <option value="" />
+              {roles.filter(rol => rol.is_active).map(rol => (
+                <option key={rol.role_id} value={rol.role_id}>
+                  {rol.role_name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Filled by:
+            <select
+              className={b('long')}
+              defaultValue={roleFocusUser.user_id}
+              name="user_id"
+              required
+            >
+              <option value="" />
+              {users.map(user => (
+                <option key={user.user_id} value={user.user_id}>
+                  {user.user_name}
+                </option>
+              ))}
+            </select>
+          </label>
           <label>
             Focus name:
             <input
@@ -125,8 +147,11 @@ export default withRouter(
           function(map, obj) {
             if (obj.name === 'start_date' || obj.name === 'end_date') {
               map[obj.name] = obj.value ? format(new Date(obj.value)) : null
-            } else if (obj.name === 'focus_name' && obj.value) {
-              formRoleFocus.focus_name = obj.value
+            } else if (
+              (obj.name === 'focus_name' || obj.name === 'role_id') &&
+              obj.value
+            ) {
+              formRoleFocus[obj.name] = obj.value
             } else if (obj.name && obj.value) {
               map[obj.name] = obj.value
             }

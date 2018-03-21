@@ -20,7 +20,7 @@ class RoleFocus extends React.Component {
     }
   }
   render() {
-    const { duration, focuses, onSubmit, roleId, users } = this.props
+    const { duration, focuses, isActive, onSubmit, roleId, users } = this.props
     const { displayForm, startDate } = this.state
     const endDate =
       duration > 0 && startDate
@@ -31,13 +31,15 @@ class RoleFocus extends React.Component {
       <article>
         <h3>
           Focus{' '}
-          <span
-            className={b('unlink')}
-            onClick={() => this.setState({ displayForm: true })}
-            title="Add focus"
-          >
-            <i className="fa fa-plus-circle" aria-hidden="true" />
-          </span>
+          {isActive && (
+            <span
+              className={b('unlink')}
+              onClick={() => this.setState({ displayForm: true })}
+              title="Add focus"
+            >
+              <i className="fa fa-plus-circle" aria-hidden="true" />
+            </span>
+          )}
         </h3>
         {focuses && focuses.length > 0 ? (
           <ul>

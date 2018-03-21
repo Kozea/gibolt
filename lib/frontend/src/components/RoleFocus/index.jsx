@@ -33,6 +33,8 @@ class Role extends React.Component {
       onDelete,
       onEdition,
       roleFocus,
+      roles,
+      users,
     } = this.props
     const role = roleFocus.role ? roleFocus.role[0] : null
     const circle =
@@ -58,24 +60,30 @@ class Role extends React.Component {
           <BreadCrumbs circle={circle} role={role} focus={roleFocus} />
           <h1>
             {roleFocus.focus_name ? roleFocus.focus_name : 'No focus name'}{' '}
-            <span onClick={() => onEdition()} title="Edit role focus">
-              <i className="fa fa-pencil-square-o" aria-hidden="true" />
-            </span>
-            <span
-              onClick={e => {
-                e.preventDefault()
-                onDelete(roleFocus, history)
-              }}
-              title="Delete Focus"
-            >
-              <i className="fa fa-trash" aria-hidden="true" />
-            </span>
+            {role.is_active && (
+              <span>
+                <span onClick={() => onEdition()} title="Edit role focus">
+                  <i className="fa fa-pencil-square-o" aria-hidden="true" />
+                </span>
+                <span
+                  onClick={e => {
+                    e.preventDefault()
+                    onDelete(roleFocus, history)
+                  }}
+                  title="Delete Focus"
+                >
+                  <i className="fa fa-trash" aria-hidden="true" />
+                </span>
+              </span>
+            )}
           </h1>
           {isInEdition && role ? (
             <RoleFocusForm
               role={role}
               roleFocus={roleFocus}
               roleFocusUser={focusUser}
+              roles={roles}
+              users={users}
             />
           ) : (
             <span>
@@ -147,6 +155,8 @@ export default withRouter(
       isInEdition: state.roleFocus.is_in_edition,
       loading: state.roleFocus.loading,
       roleFocus: state.roleFocus.results,
+      roles: state.roles.results,
+      users: state.users.results,
     }),
     dispatch => ({
       onDelete: (roleFocus, history) => {
@@ -161,7 +171,7 @@ export default withRouter(
           dispatch(fetchResults('users')),
         ]).then(() => {
           dispatch(setLoading('roleFocus'))
-          dispatch(fetchRoleFocus())
+          dispatch(fetchRoleFocus(true))
         })
       },
     })

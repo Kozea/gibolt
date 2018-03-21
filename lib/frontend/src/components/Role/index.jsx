@@ -5,11 +5,7 @@ import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { updateMarkdown, fetchResults, setLoading } from '../../actions'
-import {
-  // deleteRole,
-  editRole,
-  fetchRole,
-} from '../../actions/roles'
+import { disableRole, editRole, fetchRole } from '../../actions/roles'
 import { block, connect } from '../../utils'
 import RoleFocus from './RoleFocus'
 import Loading from './../Loading'
@@ -48,6 +44,7 @@ class Role extends React.Component {
       error,
       history,
       loading,
+      onDisableRole,
       onGoBack,
       role,
       users,
@@ -71,6 +68,19 @@ class Role extends React.Component {
             >
               <i className="fa fa-pencil-square-o" aria-hidden="true" />
             </span>{' '}
+            <span
+              onClick={e => {
+                e.preventDefault()
+                onDisableRole(role)
+              }}
+              title={role.is_active ? 'Disable role' : 'Enable role'}
+            >
+              {role.is_active ? (
+                <i className="fa fa-ban" aria-hidden="true" />
+              ) : (
+                <i className="fa fa-unlock" aria-hidden="true" />
+              )}
+            </span>
           </h1>
           {error && (
             <article className={b('date', { error: true })}>
@@ -130,6 +140,7 @@ class Role extends React.Component {
               <RoleFocus
                 duration={role.duration}
                 focuses={role.role_focuses}
+                isActive={role.is_active}
                 roleId={role.role_id}
                 users={users}
               />
@@ -162,6 +173,9 @@ export default withRouter(
       editClick: content => {
         dispatch(editRole())
         dispatch(updateMarkdown(content))
+      },
+      onDisableRole: role => {
+        dispatch(disableRole(role))
       },
       onGoBack: (circleId, history) => {
         history.push(`/circle?circle_id=${circleId}`)

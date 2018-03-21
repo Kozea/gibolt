@@ -5,7 +5,7 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 
 import { goBack, updateMarkdown } from '../../actions'
-import { createRole, updateRole } from '../../actions/roles'
+import { createRole, fetchRole, updateRole } from '../../actions/roles'
 import { block, connect } from '../../utils'
 import MarkdownEditor from '../Utils/MarkdownEditor'
 
@@ -33,6 +33,7 @@ class RoleForm extends React.Component {
       circles,
       history,
       isCreation,
+      onCancel,
       onGoBack,
       onSubmit,
       role,
@@ -177,8 +178,11 @@ class RoleForm extends React.Component {
             Accountabilities :
             <MarkdownEditor editorName="role_accountabilities" />
           </label>
-          <button type="submit">Create role</button>
-          <button type="button" onClick={() => onGoBack(history)}>
+          <button type="submit">{isCreation ? 'Create role' : 'Submit'}</button>
+          <button
+            type="button"
+            onClick={() => (isCreation ? onGoBack(history) : onCancel())}
+          >
             Cancel
           </button>
         </form>
@@ -191,6 +195,10 @@ export default withRouter(
   connect(
     () => ({}),
     dispatch => ({
+      onCancel: () => {
+        dispatch(fetchRole())
+        dispatch(updateMarkdown(''))
+      },
       onGoBack: history => {
         dispatch(goBack(history))
       },
