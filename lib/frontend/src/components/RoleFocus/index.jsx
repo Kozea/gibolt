@@ -6,10 +6,11 @@ import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
-import { fetchRoleFocus } from '../../actions/rolefocus'
+import { editRoleFocus, fetchRoleFocus } from '../../actions/rolefocus'
 import { block, connect } from '../../utils'
 import Loading from './../Loading'
 import BreadCrumbs from './../Utils/BreadCrumbs'
+import RoleFocusForm from './RoleFocusForm'
 import RoleFocusItems from './RoleFocusItems'
 
 const b = block('RoleFocus')
@@ -20,7 +21,7 @@ class Role extends React.Component {
   }
 
   render() {
-    const { error, loading, roleFocus } = this.props
+    const { error, isInEdition, loading, onEdition, roleFocus } = this.props
     const role = roleFocus.role ? roleFocus.role[0] : null
     const circle =
       roleFocus.role && roleFocus.role[0].circle
@@ -43,60 +44,75 @@ class Role extends React.Component {
             </article>
           )}
           <BreadCrumbs circle={circle} role={role} focus={roleFocus} />
-          {roleFocus &&
-            focusUser && (
-              <span>
-                <h1>{roleFocus.focus_name}</h1>
-                <p>
-                  <span className={b('focusLabel')}>Role: </span>
-                  {role.role_name}
-                </p>
-                <p>
-                  <span className={b('focusLabel')}>Filled by: </span>
-                  {focusUser.user_name}{' '}
-                  <img
-                    className={b('avatar')}
-                    src={focusUser.avatar_url}
-                    alt="avatar"
-                    title={focusUser.user_name}
-                  />
-                </p>
-                <p>
-                  <span className={b('focusLabel')}>From: </span>
-                  {focusUser.start_date
-                    ? format(new Date(focusUser.start_date), 'DD/MM/YYYY')
-                    : 'No start date defined'}
-                </p>
-                <p>
-                  <span className={b('focusLabel')}>Until: </span>
-                  {focusUser.end_date
-                    ? format(new Date(focusUser.end), 'DD/MM/YYYY')
-                    : focusUser.start_date && role.duration
-                      ? format(
-                          addDays(
-                            new Date(focusUser.start_date),
-                            role.duration
-                          ),
-                          'DD/MM/YYYY'
-                        )
-                      : '∞'}
-                </p>
-                <br />
-                <RoleFocusItems
-                  items={roleFocus.actions}
-                  itemType="checklist"
-                  title="Recurrent actions"
-                  roleFocus={roleFocus}
-                />
-                <br />
-                <RoleFocusItems
-                  items={roleFocus.indicators}
-                  itemType="indicator"
-                  title="Indicators"
-                  roleFocus={roleFocus}
-                />
-              </span>
-            )}
+          <h1>
+            {roleFocus.focus_name ? roleFocus.focus_name : 'No focus name'}{' '}
+            <span onClick={() => onEdition()} title="Edit role focus">
+              <i className="fa fa-pencil-square-o" aria-hidden="true" />
+            </span>
+          </h1>
+          {isInEdition && role ? (
+            <RoleFocusForm
+              role={role}
+              roleFocus={roleFocus}
+              roleFocusUser={focusUser}
+            />
+          ) : (
+            <span>
+              {roleFocus &&
+                focusUser && (
+                  <span>
+                    <p>
+                      <span className={b('focusLabel')}>Role: </span>
+                      {role.role_name}
+                    </p>
+                    <p>
+                      <span className={b('focusLabel')}>Filled by: </span>
+                      {focusUser.user_name}{' '}
+                      <img
+                        className={b('avatar')}
+                        src={focusUser.avatar_url}
+                        alt="avatar"
+                        title={focusUser.user_name}
+                      />
+                    </p>
+                    <p>
+                      <span className={b('focusLabel')}>From: </span>
+                      {focusUser.start_date
+                        ? format(new Date(focusUser.start_date), 'DD/MM/YYYY')
+                        : 'No start date defined'}
+                    </p>
+                    <p>
+                      <span className={b('focusLabel')}>Until: </span>
+                      {focusUser.end_date
+                        ? format(new Date(focusUser.end_date), 'DD/MM/YYYY')
+                        : focusUser.start_date && role.duration
+                          ? `${format(
+                              addDays(
+                                new Date(focusUser.start_date),
+                                role.duration
+                              ),
+                              'DD/MM/YYYY'
+                            )}  (calculated)`
+                          : '∞'}
+                    </p>
+                    <br />
+                    <RoleFocusItems
+                      items={roleFocus.actions}
+                      itemType="checklist"
+                      title="Recurrent actions"
+                      roleFocus={roleFocus}
+                    />
+                    <br />
+                    <RoleFocusItems
+                      items={roleFocus.indicators}
+                      itemType="indicator"
+                      title="Indicators"
+                      roleFocus={roleFocus}
+                    />
+                  </span>
+                )}
+            </span>
+          )}
         </article>
       </section>
     )
@@ -107,10 +123,14 @@ export default withRouter(
   connect(
     state => ({
       error: state.roleFocus.error,
+      isInEdition: state.roleFocus.is_in_edition,
       loading: state.roleFocus.loading,
       roleFocus: state.roleFocus.results,
     }),
     dispatch => ({
+      onEdition: () => {
+        dispatch(editRoleFocus(true))
+      },
       sync: () => {
         Promise.all([
           dispatch(setLoading('users')),

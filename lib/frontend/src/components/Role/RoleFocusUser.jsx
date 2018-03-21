@@ -6,7 +6,7 @@ import { block } from '../../utils'
 const b = block('Role')
 
 export default function RoleFocusUser(props) {
-  const { duration, focusUser } = props
+  const { duration, focusName, focusUser } = props
   return (
     <span key={focusUser.role_focus_user_id}>
       <img
@@ -14,11 +14,12 @@ export default function RoleFocusUser(props) {
         src={focusUser.avatar_url}
         alt="avatar"
         title={focusUser.user_name}
-      />
+      />{' '}
+      {focusName}
       {duration &&
         focusUser.start_date && (
           <span className={b('lighter')}>
-            {` until: ${format(
+            {`until: ${format(
               addDays(new Date(focusUser.start_date), duration),
               'DD/MM/YYYY'
             )}`}

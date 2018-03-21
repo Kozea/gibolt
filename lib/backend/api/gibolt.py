@@ -19,6 +19,18 @@ session = Session()
 # Declare rest endpoints for gibolt Database
 rest = UnRest(app, session_unrest)
 
+rest(
+    Role_focus_user,
+    methods=['GET', 'PATCH'],
+    name='role_focus_users',
+    query=lambda query: query.filter(
+        Role_focus_user.role_focus_id == (request.values.get('role_focus_id'))
+        if request.values.get('role_focus_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
 
 current_role_focus_user = rest(
     Role_focus_user,
@@ -32,6 +44,7 @@ current_role_focus_user = rest(
     ),
     auth=needlogin
 )
+
 
 current_role_focuses = rest(
     Role_focus,
@@ -84,7 +97,7 @@ def post_role_focus(payload, role_focus_id=None):
 
 role_focuses = rest(
     Role_focus,
-    methods=['GET'],
+    methods=['GET', 'PATCH'],
     name='role_focuses',
     relationships={
         'role_focus_users': current_role_focus_user,

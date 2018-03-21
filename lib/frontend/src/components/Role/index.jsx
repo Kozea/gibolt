@@ -9,7 +9,6 @@ import {
   // deleteRole,
   editRole,
   fetchRole,
-  fetchRoles,
 } from '../../actions/roles'
 import { block, connect } from '../../utils'
 import RoleFocus from './RoleFocus'
@@ -157,7 +156,6 @@ export default withRouter(
       loading: state.role.loading,
       location: state.router.location,
       role: state.role.results,
-      roles: state.roles.results,
       users: state.users.results,
     }),
     dispatch => ({
@@ -177,8 +175,6 @@ export default withRouter(
           dispatch(fetchResults('circles'))
           dispatch(setLoading('role'))
           dispatch(fetchRole())
-          dispatch(setLoading('roles'))
-          dispatch(fetchRoles())
         })
       },
     })

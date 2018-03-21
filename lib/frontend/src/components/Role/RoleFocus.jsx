@@ -53,11 +53,11 @@ class RoleFocus extends React.Component {
                   {focus.role_focus_users.map(focusUser => (
                     <RoleFocusUser
                       key={focusUser.user_id}
+                      focusName={focus.focus_name}
                       duration={duration}
                       focusUser={focusUser}
                     />
-                  ))}{' '}
-                  {focus.focus_name}
+                  ))}
                 </Link>
               </li>
             ))}
