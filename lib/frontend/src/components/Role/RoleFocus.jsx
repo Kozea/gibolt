@@ -47,18 +47,18 @@ class RoleFocus extends React.Component {
                 <Link
                   to={{
                     pathname: '/role_focus',
-                    search: stringify({ role_focus_id: focus.role_id }),
+                    search: stringify({ role_focus_id: focus.role_focus_id }),
                   }}
                 >
+                  {focus.role_focus_users.map(focusUser => (
+                    <RoleFocusUser
+                      key={focusUser.user_id}
+                      duration={duration}
+                      focusUser={focusUser}
+                    />
+                  ))}{' '}
                   {focus.focus_name}
                 </Link>
-                {focus.role_focus_users.map(focusUser => (
-                  <RoleFocusUser
-                    key={focusUser.user_id}
-                    duration={duration}
-                    focusUser={focusUser}
-                  />
-                ))}
               </li>
             ))}
           </ul>

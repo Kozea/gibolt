@@ -21,13 +21,15 @@ class RoleForm extends React.Component {
     super(props, context)
     this.state = {
       duration: null,
+      focus: '',
       startDate: null,
+      user: '',
     }
   }
 
   render() {
     const {
-      circle,
+      circleId,
       circles,
       history,
       isCreation,
@@ -48,7 +50,7 @@ class RoleForm extends React.Component {
         <form
           onSubmit={e => {
             e.preventDefault()
-            onSubmit(isCreation, circle.circle_id, e, history, role.role_id)
+            onSubmit(isCreation, circleId, e, history, role.role_id)
           }}
         >
           <label>
@@ -56,7 +58,7 @@ class RoleForm extends React.Component {
             <select
               className={b('long')}
               disabled={isCreation}
-              defaultValue={role.circle_id ? role.circle_id : circle.circle_id}
+              defaultValue={circleId}
               name="circle_id"
               required
             >
@@ -115,6 +117,9 @@ class RoleForm extends React.Component {
                   className={b('long')}
                   defaultValue=""
                   name="focus_name"
+                  onChange={e => {
+                    this.setState({ focus: e.target.value })
+                  }}
                 />
               </label>
               <label>
@@ -123,7 +128,10 @@ class RoleForm extends React.Component {
                   className={b('long')}
                   defaultValue=""
                   name="user_id"
-                  required
+                  onChange={e => {
+                    this.setState({ user: e.target.value })
+                  }}
+                  required={this.state.focus !== ''}
                 >
                   <option value="" />
                   {users.map(user => (
@@ -138,6 +146,7 @@ class RoleForm extends React.Component {
                 <span className={b('duration')}>
                   <input
                     defaultValue=""
+                    disabled={this.state.user === ''}
                     name="start_date"
                     onChange={e => {
                       this.setState({ startDate: e.target.value })

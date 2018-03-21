@@ -47,14 +47,15 @@ export default function CircleRoles(props) {
               >
                 {role.role_name}
               </Link>{' '}
-              {role.role_focuses[0] ? (
+              {role.role_focuses.length > 0 ? (
                 <span>
-                  {role.role_focuses[0].role_focus_users[0] && (
+                  {role.role_focuses.map(roleFocus => (
                     <RoleFocusUser
+                      key={roleFocus.role_focus_id}
                       duration={role.duration}
-                      focusUser={role.role_focuses[0].role_focus_users[0]}
+                      focusUser={roleFocus.role_focus_users[0]}
                     />
-                  )}
+                  ))}
                 </span>
               ) : (
                 ' : No focus defined'

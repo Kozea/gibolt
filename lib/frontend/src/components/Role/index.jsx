@@ -93,7 +93,7 @@ class Role extends React.Component {
           {loading && <Loading />}
           {role.is_in_edition ? (
             <RoleForm
-              circle={{}}
+              circleId={role.circle_id}
               circles={circles}
               isCreation={false}
               role={role}

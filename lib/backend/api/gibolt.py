@@ -60,11 +60,8 @@ def post_role_focus(payload, role_focus_id=None):
         )
         session.add(new_role_focus)
         session.flush()
-        print('new_role_focus')
-        print(new_role_focus.focus_name)
 
         start_date = payload.get('start_date')
-        print(start_date)
         new_focus_user = Role_focus_user(
             role_focus_id=new_role_focus.role_focus_id,
             start_date=datetime.strptime(
@@ -73,8 +70,6 @@ def post_role_focus(payload, role_focus_id=None):
         )
         session.add(new_focus_user)
         session.commit()
-        print('new_focus_user')
-        print(new_focus_user.user_id)
 
     except (exc.IntegrityError, AttributeError) as e:
         print(e)
@@ -138,10 +133,11 @@ def post_roles(payload, role_id=None):
         session.add(new_focus)
         session.flush()
 
+        start_date = payload.get('start_date')
         new_role_focus = Role_focus_user(
             role_focus_id=new_focus.role_focus_id,
             start_date=datetime.strptime(
-                payload.get('start_date'), '%Y-%m-%d'),
+                start_date, '%Y-%m-%d') if start_date else None,
             user_id=payload.get('user_id'),
         )
         session.add(new_role_focus)
