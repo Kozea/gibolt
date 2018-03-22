@@ -26,6 +26,7 @@ class Items extends React.Component {
       items,
       itemType,
       roleFocus,
+      roles,
       title,
       submitItem,
       cancelEditItem,
@@ -60,14 +61,39 @@ class Items extends React.Component {
                           editItem(item, e, roleFocus.role_focus_id)
                         }}
                       >
-                        <label>
-                          <input
-                            name="content"
-                            className={b('item')}
-                            defaultValue={item.content}
-                            required
-                          />
-                        </label>
+                        <span>
+                          <label>
+                            item :{' '}
+                            <input
+                              name="content"
+                              className={b('item')}
+                              defaultValue={item.content}
+                              required
+                            />
+                          </label>
+                          <label>
+                            role :{' '}
+                            <select
+                              name="role_focus_id"
+                              className={b('item')}
+                              defaultValue={item.role_focus_id}
+                            >
+                              {roles.map(role =>
+                                role.role_focuses.map(focus => (
+                                  <option
+                                    key={focus.role_focus_id}
+                                    value={focus.role_focus_id}
+                                  >
+                                    {role.role_name}
+                                    {focus.focus_name !== '' &&
+                                      ` - ${focus.focus_name}`}
+                                  </option>
+                                ))
+                              )}
+                            </select>
+                          </label>
+                        </span>
+
                         <button type="submit">Send</button>
                         <button
                           type="button"

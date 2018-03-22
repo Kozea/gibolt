@@ -131,6 +131,7 @@ class Role extends React.Component {
                       itemType="checklist"
                       title="Recurrent actions"
                       roleFocus={roleFocus}
+                      roles={roles}
                     />
                     <br />
                     <RoleFocusItems
@@ -138,6 +139,7 @@ class Role extends React.Component {
                       itemType="indicator"
                       title="Indicators"
                       roleFocus={roleFocus}
+                      roles={roles}
                     />
                   </span>
                 )}
