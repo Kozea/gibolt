@@ -6,15 +6,10 @@ import { withRouter } from 'react-router-dom'
 
 import { goBack } from '../../actions'
 import { createRole, fetchRole, updateRole } from '../../actions/roles'
-import { block, connect } from '../../utils'
+import { block, connect, roleTypes } from '../../utils'
 import MarkdownEditor from '../Utils/MarkdownEditor'
 
 const b = block('RoleForm')
-const roleTypes = [
-  { value: 'leadlink', name: 'Premier lien' },
-  { value: 'elected', name: 'Rôle élu' },
-  { value: 'assigned', name: 'Rôle désigné' },
-]
 
 class RoleForm extends React.Component {
   constructor(props, context) {

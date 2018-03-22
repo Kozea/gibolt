@@ -4,8 +4,8 @@ import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import RoleFocusUser from '../Role/RoleFocusUser'
-import { block, sortRoles } from '../../utils'
+import CircleRolesType from './CircleRolesType'
+import { block, sortRoles, roleTypes } from '../../utils'
 
 const b = block('Circle')
 
@@ -54,39 +54,23 @@ export default class CircleRoles extends React.Component {
                 <input type="checkbox" /> display inactive roles
               </label>
             </span>
-            <ul>
-              {sortedRoles
-                .filter(role => (displayInactive ? true : role.is_active))
-                .map(role => (
-                  <span key={role.role_id}>
-                    <li className={b('role')}>
-                      <span className={b('bullet')} />
-                      <Link
-                        to={{
-                          pathname: '/role',
-                          search: stringify({ role_id: role.role_id }),
-                        }}
-                      >
-                        {role.role_name} {!role.is_active && ' (disabled)'}
-                      </Link>{' '}
-                      {role.role_focuses.length > 0 ? (
-                        <span>
-                          {role.role_focuses.map(roleFocus => (
-                            <RoleFocusUser
-                              key={roleFocus.role_focus_id}
-                              focusName={null}
-                              duration={role.duration}
-                              focusUser={roleFocus.role_focus_users[0]}
-                            />
-                          ))}
-                        </span>
-                      ) : (
-                        ' : No focus defined'
-                      )}
-                    </li>
-                  </span>
-                ))}
-            </ul>
+            {roleTypes.map(roleType => (
+              <CircleRolesType
+                key={roleType.value}
+                displayInactive={displayInactive}
+                roleType={roleType.value}
+                roleTypeName={roleType.name}
+                sortedRoles={sortedRoles}
+              />
+            ))}
+            {sortedRoles.filter(role => !role.role_type).length > 0 && (
+              <CircleRolesType
+                displayInactive={displayInactive}
+                roleType={null}
+                roleTypeName={'Pas de type défini'}
+                sortedRoles={sortedRoles}
+              />
+            )}
           </span>
         ) : (
           <span>No roles defined</span>

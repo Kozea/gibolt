@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
 import { disableRole, editRole, fetchRole } from '../../actions/roles'
-import { block, connect } from '../../utils'
+import { block, connect, roleTypes } from '../../utils'
 import RoleFocus from './RoleFocus'
 import Loading from './../Loading'
 import BreadCrumbs from './../Utils/BreadCrumbs'
@@ -15,11 +15,6 @@ import RoleForm from './../Utils/RoleForm'
 var ReactMarkdown = require('react-markdown')
 
 const b = block('Role')
-const roleTypes = [
-  { value: 'leadlink', name: 'Premier lien' },
-  { value: 'elected', name: 'Rôle élu' },
-  { value: 'assigned', name: 'Rôle désigné' },
-]
 
 class Role extends React.Component {
   componentDidMount() {
