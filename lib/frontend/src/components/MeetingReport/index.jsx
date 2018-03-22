@@ -27,6 +27,7 @@ import MarkdownEditor from './../Utils/MarkdownEditor'
 import ReportAgenda from './ReportAgenda'
 import ReportItems from './ReportItems'
 import ReportProjects from './ReportProjects'
+import RoleFocusUser from './../Role/RoleFocusUser'
 
 const b = block('MeetingReport')
 var ReactMarkdown = require('react-markdown')
@@ -264,6 +265,38 @@ class MeetingsReport extends React.Component {
                           onMilestoneClick={onMilestoneClick}
                           setTimer={() => this.setTimer()}
                         />
+                      </span>
+                    )}
+                    {(params.meeting_name === 'Gouvernance' ||
+                      meeting.report_type === 'Gouvernance') && (
+                      <span>
+                        {meeting.elections &&
+                          meeting.elections.length > 0 && (
+                            <span>
+                              <h3>Elections:</h3>
+                              <ul className={b('elections')}>
+                                {meeting.elections.map(role =>
+                                  role.role_focuses.map(focus => (
+                                    <li key={focus.role_focus_id}>
+                                      <span className={b('bullet')} />
+                                      {role.role_name}
+                                      {focus.role_focus_users.map(focusUser => (
+                                        <span key={focusUser.user_id}>
+                                          <RoleFocusUser
+                                            key={focusUser.user_id}
+                                            focusName={focus.focus_name}
+                                            focusId={focus.role_focus_id}
+                                            duration={role.duration}
+                                            focusUser={focusUser}
+                                          />
+                                        </span>
+                                      ))}
+                                    </li>
+                                  ))
+                                )}
+                              </ul>
+                            </span>
+                          )}
                       </span>
                     )}
                     {(params.meeting_name === 'Triage' ||
