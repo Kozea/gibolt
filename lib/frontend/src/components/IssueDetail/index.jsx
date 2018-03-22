@@ -5,10 +5,7 @@ import React from 'react'
 import Octicon from 'react-component-octicons'
 
 import { fetchCircle } from '../../actions/circle'
-import {
-  changeMilestoneSelect,
-  changeRolesSelect,
-} from '../../actions/issueForm'
+import { changeMilestoneSelect } from '../../actions/issueForm'
 import {
   addOrUpdateComment,
   getAndToggleCommentsExpanded,
@@ -389,9 +386,7 @@ export default connect(
   dispatch => ({
     getCircle: labelId => {
       const param = labelId === '' ? '' : `?label_id=${labelId}`
-      dispatch(fetchCircle(param, true)).then(circle => {
-        dispatch(changeRolesSelect(null, circle.roles))
-      })
+      dispatch(fetchCircle(param, true, true))
     },
     getMilestones: repoName => {
       dispatch(changeMilestoneSelect(repoName))

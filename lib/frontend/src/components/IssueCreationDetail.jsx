@@ -161,11 +161,18 @@ class IssueCreationDetail extends React.Component {
             Role assignment:
             <select id="roles" name="roles">
               <option value="" />
-              {issueForm.rolesSelect.map(role => (
-                <option key={role.role_id} value={role.user_id}>
-                  {role.role_name} ({role.user_name})
-                </option>
-              ))}
+              {issueForm.rolesSelect.map(role =>
+                role.role_focuses.map(focus => (
+                  <option
+                    key={focus.role_focus_id}
+                    value={focus.role_focus_users[0].user_name}
+                  >
+                    {role.role_name}
+                    {focus.focus_name !== '' && ` - ${focus.focus_name}`}
+                    {` (${focus.role_focus_users[0].user_name})`}
+                  </option>
+                ))
+              )}
             </select>
           </label>
           <br />

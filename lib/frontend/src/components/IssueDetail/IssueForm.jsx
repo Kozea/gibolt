@@ -26,11 +26,21 @@ class IssueForm extends React.Component {
             name="data"
           >
             <option value="" />
-            {roles.map(role => (
-              <option key={role.role_id} value={role.user_name}>
-                {role.role_name} ({role.user_name})
-              </option>
-            ))}
+            {roles.map(role =>
+              role.role_focuses.map(
+                focus =>
+                  focus.role_focus_users.length > 0 && (
+                    <option
+                      key={focus.role_focus_id}
+                      value={focus.role_focus_users[0].user_name}
+                    >
+                      {role.role_name}
+                      {focus.focus_name !== '' && ` - ${focus.focus_name}`}
+                      {` (${focus.role_focus_users[0].user_name})`}
+                    </option>
+                  )
+              )
+            )}
           </select>
         )
       case 'milestone':
