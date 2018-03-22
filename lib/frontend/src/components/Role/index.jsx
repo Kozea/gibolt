@@ -4,7 +4,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { updateMarkdown, fetchResults, setLoading } from '../../actions'
+import { fetchResults, setLoading } from '../../actions'
 import { disableRole, editRole, fetchRole } from '../../actions/roles'
 import { block, connect } from '../../utils'
 import RoleFocus from './RoleFocus'
@@ -62,10 +62,7 @@ class Role extends React.Component {
           />
           <h1>
             {role.role_name} {role.is_active ? '' : ' (disabled)'}
-            <span
-              onClick={() => editClick(role.role_accountabilities)}
-              title="Edit role"
-            >
+            <span onClick={() => editClick()} title="Edit role">
               <i className="fa fa-pencil-square-o" aria-hidden="true" />
             </span>{' '}
             <span
@@ -134,7 +131,7 @@ class Role extends React.Component {
               <h3>Purpose</h3>
               <p>{role.role_purpose}</p>
               <h3>Domain</h3>
-              <p>{role.role_domain}</p>
+              <ReactMarkdown source={role.role_domain} />
               <h3>Accountabilities</h3>
               <ReactMarkdown source={role.role_accountabilities} />
               <RoleFocus
@@ -170,9 +167,8 @@ export default withRouter(
       users: state.users.results,
     }),
     dispatch => ({
-      editClick: content => {
+      editClick: () => {
         dispatch(editRole())
-        dispatch(updateMarkdown(content))
       },
       onDisableRole: role => {
         dispatch(disableRole(role))

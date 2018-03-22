@@ -22,9 +22,10 @@ class MarkdownEditor extends React.Component {
     super(props, context)
     this.state = {
       editorState: EditorState.createWithContent(
-        convertFromRaw(mdToDraftjs(this.props.markvalue))
+        convertFromRaw(
+          mdToDraftjs(this.props.initValue ? this.props.initValue : '')
+        )
       ),
-      markvalue: this.props.markvalue,
     }
   }
 
@@ -92,9 +93,7 @@ class MarkdownEditor extends React.Component {
 }
 
 export default connect(
-  state => ({
-    markvalue: state.markvalue,
-  }),
+  () => ({}),
   dispatch => ({
     onContentChange: value => {
       dispatch(updateMeetingContent(value))

@@ -110,12 +110,15 @@ class CreateCircle extends React.Component {
             <br />
             <label>
               Domain :
-              <MarkdownEditor editorName="circle_domain" />
+              <MarkdownEditor editorName="circle_domain" initValue="" />
             </label>
             <br />
             <label>
               Accountabilities :
-              <MarkdownEditor editorName="circle_accountabilities" />
+              <MarkdownEditor
+                editorName="circle_accountabilities"
+                initValue=""
+              />
             </label>
             <br />
             <button type="submit">Create circle</button>

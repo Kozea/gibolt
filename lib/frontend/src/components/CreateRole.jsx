@@ -3,7 +3,7 @@ import './CreateRole.sass'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
-import { fetchResults, setLoading, updateMarkdown } from '../actions'
+import { fetchResults, setLoading } from '../actions'
 import { fetchCircle } from '../actions/circle'
 import { block, connect } from '../utils'
 import Loading from './Loading'
@@ -62,7 +62,6 @@ export default connect(
       dispatch(setLoading('circle'))
       dispatch(fetchCircle(null, true))
       dispatch(setLoading('users'))
-      dispatch(updateMarkdown(''))
       dispatch(fetchResults('users'))
       dispatch(setLoading('circles'))
       dispatch(fetchResults('circles'))

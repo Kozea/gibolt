@@ -60,22 +60,23 @@ class Role extends React.Component {
           <BreadCrumbs circle={circle} role={role} focus={roleFocus} />
           <h1>
             {roleFocus.focus_name ? roleFocus.focus_name : 'No focus name'}{' '}
-            {role.is_active && (
-              <span>
-                <span onClick={() => onEdition()} title="Edit role focus">
-                  <i className="fa fa-pencil-square-o" aria-hidden="true" />
+            {role &&
+              role.is_active && (
+                <span>
+                  <span onClick={() => onEdition()} title="Edit role focus">
+                    <i className="fa fa-pencil-square-o" aria-hidden="true" />
+                  </span>
+                  <span
+                    onClick={e => {
+                      e.preventDefault()
+                      onDelete(roleFocus, history)
+                    }}
+                    title="Delete Focus"
+                  >
+                    <i className="fa fa-trash" aria-hidden="true" />
+                  </span>
                 </span>
-                <span
-                  onClick={e => {
-                    e.preventDefault()
-                    onDelete(roleFocus, history)
-                  }}
-                  title="Delete Focus"
-                >
-                  <i className="fa fa-trash" aria-hidden="true" />
-                </span>
-              </span>
-            )}
+              )}
           </h1>
           {isInEdition && role ? (
             <RoleFocusForm

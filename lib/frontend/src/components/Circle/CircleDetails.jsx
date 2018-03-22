@@ -3,7 +3,6 @@ import './Circle.sass'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 
-import { updateMarkdown } from '../../actions'
 import {
   deleteCircle,
   editCircle,
@@ -123,16 +122,18 @@ class CircleDetails extends React.Component {
             <br />
             <label>
               Domain :
-              <input
-                name="circle_domain"
-                defaultValue={circle.circle_domain}
-                required
+              <MarkdownEditor
+                editorName="circle_domain"
+                initValue={circle.circle_domain}
               />
             </label>
             <br />
             <label>
               Accountabilities :
-              <MarkdownEditor />
+              <MarkdownEditor
+                editorName="circle_accountabilities"
+                initValue={circle.circle_accountabilities}
+              />
             </label>
             <br />
             <button type="submit" onClick={e => onEdit(circle.circle_id, e)}>
@@ -162,7 +163,7 @@ class CircleDetails extends React.Component {
                     </span>
                   ))}
               <span
-                onClick={() => editClick(circle.circle_accountabilities)}
+                onClick={() => editClick()}
                 disabled={!circle.is_active}
                 title="Edit circle"
               >
@@ -240,7 +241,7 @@ class CircleDetails extends React.Component {
               <h4>Domains</h4>
               <div onClick={() => onClickDomain(circle.domain_expanded)}>
                 {circle.domain_expanded ? (
-                  <p>{circle.circle_domain}</p>
+                  <ReactMarkdown source={circle.circle_domain} />
                 ) : (
                   <span>show domain</span>
                 )}
@@ -272,9 +273,8 @@ export default withRouter(
       isCircleInEdition: state.circle.is_in_edition,
     }),
     dispatch => ({
-      editClick: content => {
+      editClick: () => {
         dispatch(editCircle())
-        dispatch(updateMarkdown(content))
       },
       onClickAccount: circleAccount => {
         dispatch(toggleAccountExpanded(circleAccount))
@@ -289,41 +289,16 @@ export default withRouter(
         dispatch(deleteCircle(data, history))
       },
       onEdit: (id, e) => {
-        let formCircle = []
-        if (e.target.form.elements[1].value === '') {
-          formCircle = [
-            e.target.elements[0],
-            e.target.elements[2],
-            e.target.elements[3],
-            e.target.elements[4],
-            e.target.elements[5],
-          ].reduce(function(map, obj) {
-            if (obj.name === 'body') {
-              map.circle_accountabilities = obj.value
-            } else if (obj.name === 'parent_circle_id') {
-              map[obj.name] = +obj.value
-            } else if (obj.name) {
+        const formCircle = [].slice
+          .call(e.target.form.elements)
+          .reduce(function(map, obj) {
+            if (obj.name && obj.value) {
               map[obj.name] = obj.value
             }
             return map
           }, {})
-        } else {
-          formCircle = [].slice
-            .call(e.target.form.elements)
-            .reduce(function(map, obj) {
-              if (obj.name === 'body') {
-                map.circle_accountabilities = obj.value
-              } else if (obj.name === 'parent_circle_id') {
-                map[obj.name] = obj.value === '' ? null : +obj.value
-              } else if (obj.name) {
-                map[obj.name] = obj.value
-              }
-              return map
-            }, {})
-        }
         formCircle.is_active = true
         dispatch(updateCircle(id, formCircle))
-        dispatch(updateMarkdown(''))
       },
       onDisableCircle: circle => {
         const circleData = {}
@@ -339,7 +314,6 @@ export default withRouter(
       },
       cancelClick: () => {
         dispatch(editCircle())
-        dispatch(updateMarkdown(''))
       },
     })
   )(CircleDetails)

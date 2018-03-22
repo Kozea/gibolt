@@ -191,7 +191,7 @@ class IssueCreationDetail extends React.Component {
           <br />
           <label>
             Description:
-            <MarkdownEditor />
+            <MarkdownEditor initValue="" />
           </label>
           <br />
           <article className={b('action')}>

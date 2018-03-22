@@ -7,13 +7,7 @@ import { Helmet } from 'react-helmet'
 import ReactModal from 'react-modal'
 import { withRouter } from 'react-router-dom'
 
-import {
-  fetchResults,
-  setLoading,
-  setModal,
-  setParams,
-  updateMarkdown,
-} from '../../actions'
+import { fetchResults, setLoading, setModal, setParams } from '../../actions'
 import {
   disableEdition,
   emptyMeeting,
@@ -187,7 +181,7 @@ class MeetingsReport extends React.Component {
                           <span
                             className={b('unlink')}
                             title="Edit report"
-                            onClick={() => onEditClick(meeting.content)}
+                            onClick={() => onEditClick()}
                           >
                             <i
                               className="fa fa-edit editMeeting"
@@ -292,7 +286,11 @@ class MeetingsReport extends React.Component {
                       source={meeting.content === '' ? 'RAS' : meeting.content}
                     />
                   ) : (
-                    <MarkdownEditor useStore setTimer={() => this.setTimer()} />
+                    <MarkdownEditor
+                      initValue={meeting.content}
+                      setTimer={() => this.setTimer()}
+                      useStore
+                    />
                   )}
                 </div>
               </div>
@@ -361,12 +359,10 @@ export default withRouter(
       onAttendeesChange: target => {
         dispatch(updateMeetingAttendees(target.name, target.checked))
       },
-      onEditClick: content => {
-        dispatch(updateMarkdown(content))
+      onEditClick: () => {
         dispatch(disableEdition(false))
       },
       onGoBack: (circleId, history) => {
-        dispatch(updateMarkdown(''))
         if (circleId) {
           history.push(`/circle?circle_id=${circleId}`)
         } else {
@@ -391,9 +387,6 @@ export default withRouter(
         )
       },
       onSubmit: (history, isCreation, timerId) => {
-        if (isCreation) {
-          dispatch(updateMarkdown(''))
-        }
         dispatch(submitOrUpdateReport(isCreation, true, history, true))
         if (timerId) {
           clearTimeout(timerId)
@@ -425,9 +418,6 @@ export default withRouter(
             dispatch(fetchReport(locationSearch))
           }
         })
-      },
-      onUpdateMarkdown: () => {
-        dispatch(updateMarkdown(''))
       },
     })
   )(MeetingsReport)

@@ -4,7 +4,7 @@ import { addDays, format } from 'date-fns'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 
-import { goBack, updateMarkdown } from '../../actions'
+import { goBack } from '../../actions'
 import { createRole, fetchRole, updateRole } from '../../actions/roles'
 import { block, connect } from '../../utils'
 import MarkdownEditor from '../Utils/MarkdownEditor'
@@ -172,11 +172,17 @@ class RoleForm extends React.Component {
           </label>
           <label>
             Domain :
-            <MarkdownEditor editorName="role_domain" />
+            <MarkdownEditor
+              editorName="role_domain"
+              initValue={role.role_domain}
+            />
           </label>
           <label>
             Accountabilities :
-            <MarkdownEditor editorName="role_accountabilities" />
+            <MarkdownEditor
+              editorName="role_accountabilities"
+              initValue={role.role_accountabilities}
+            />
           </label>
           <button type="submit">{isCreation ? 'Create role' : 'Submit'}</button>
           <button
@@ -197,7 +203,6 @@ export default withRouter(
     dispatch => ({
       onCancel: () => {
         dispatch(fetchRole())
-        dispatch(updateMarkdown(''))
       },
       onGoBack: history => {
         dispatch(goBack(history))
@@ -217,7 +222,6 @@ export default withRouter(
         } else {
           dispatch(updateRole(roleId, formRole, history))
         }
-        dispatch(updateMarkdown(''))
       },
     })
   )(RoleForm)

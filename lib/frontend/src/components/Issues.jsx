@@ -4,7 +4,6 @@ import React from 'react'
 import ReactModal from 'react-modal'
 
 import {
-  updateMarkdown,
   fetchResults,
   setError,
   setLoading,
@@ -255,7 +254,6 @@ export default connect(
     onModalClose: () => {
       dispatch(setModal(false, false, {}))
       dispatch(updateCurrentIssue({}))
-      dispatch(updateMarkdown(''))
       dispatch(setError(null, 'issueForm'))
       dispatch(setLoading('issues'))
       dispatch(fetchIssues())
