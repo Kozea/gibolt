@@ -44,6 +44,7 @@ export default function CircleRolesType(props) {
                       {role.role_focuses.map(roleFocus => (
                         <RoleFocusUser
                           key={roleFocus.role_focus_id}
+                          focusId={roleFocus.role_focus_id}
                           focusName={roleFocus.focus_name}
                           duration={role.duration}
                           focusUser={roleFocus.role_focus_users[0]}

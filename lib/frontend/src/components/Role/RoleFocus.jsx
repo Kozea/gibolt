@@ -1,9 +1,7 @@
 import './Role.sass'
 
 import { addDays, format } from 'date-fns'
-import { stringify } from 'query-string'
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import { addFocus } from '../../actions/roles'
 import { block, connect } from '../../utils'
@@ -46,21 +44,15 @@ class RoleFocus extends React.Component {
             {focuses.map(focus => (
               <li key={focus.role_focus_id}>
                 <span className={b('bullet')} />
-                <Link
-                  to={{
-                    pathname: '/role_focus',
-                    search: stringify({ role_focus_id: focus.role_focus_id }),
-                  }}
-                >
-                  {focus.role_focus_users.map(focusUser => (
-                    <RoleFocusUser
-                      key={focusUser.user_id}
-                      focusName={focus.focus_name}
-                      duration={duration}
-                      focusUser={focusUser}
-                    />
-                  ))}
-                </Link>
+                {focus.role_focus_users.map(focusUser => (
+                  <RoleFocusUser
+                    key={focusUser.user_id}
+                    focusName={focus.focus_name}
+                    focusId={focus.role_focus_id}
+                    duration={duration}
+                    focusUser={focusUser}
+                  />
+                ))}
               </li>
             ))}
           </ul>
