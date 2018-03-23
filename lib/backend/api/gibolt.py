@@ -171,7 +171,7 @@ rest(
     methods=['GET', 'PATCH', 'POST', 'DELETE'],
     relationships={
         'circle_parent': rest(Circle),
-        'circle_children': rest(Circle),
+        'circle_children': rest(Circle, relationships={'roles': roles}),
         'roles': roles,
         'circle_milestones': rest(Milestone_circle),
         'label': rest(Label)

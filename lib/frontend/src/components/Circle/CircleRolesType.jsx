@@ -25,7 +25,8 @@ export default function CircleRolesType(props) {
             .filter(
               role =>
                 role.role_type === roleType &&
-                (displayInactive ? true : role.is_active)
+                (displayInactive ? true : role.is_active) &&
+                !role.displayInElection
             )
             .map(role => (
               <span key={role.role_id}>
