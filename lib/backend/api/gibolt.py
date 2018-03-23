@@ -312,7 +312,7 @@ def report_tables(payload, report_id):
         report_attendee = session.query(Report_attendee).filter(
             Report_attendee.report_id == report_id,
             Report_attendee.user_id == attendee.get('user_id'),
-            ).first()
+        ).first()
         if report_attendee:
             report_attendee.user = attendee.get('user')
             report_attendee.checked = attendee.get('checked')
@@ -322,7 +322,7 @@ def report_tables(payload, report_id):
         report_checklist = session.query(Report_checklist).filter(
             Report_checklist.report_id == report_id,
             Report_checklist.item_id == action.get('item_id'),
-            ).first()
+        ).first()
         if report_checklist:
             report_checklist.content = action.get('content')
             report_checklist.checked = action.get('checked')
@@ -332,7 +332,7 @@ def report_tables(payload, report_id):
         report_indicator = session.query(Report_indicator).filter(
             Report_indicator.report_id == report_id,
             Report_indicator.item_id == indicator.get('item_id'),
-            ).first()
+        ).first()
         if report_indicator:
             report_indicator.content = indicator.get('content')
             report_indicator.value = indicator.get('value')
@@ -343,7 +343,7 @@ def report_tables(payload, report_id):
             Report_milestone.report_id == report_id,
             Report_milestone.milestone_number == project.get('number'),
             Report_milestone.repo_name == project.get('repo'),
-            ).first()
+        ).first()
         if report_milestone:
             report_milestone.milestone = project
         session.flush()
@@ -352,7 +352,7 @@ def report_tables(payload, report_id):
         report_agenda = session.query(Report_agenda).filter(
             Report_agenda.report_id == report_id,
             Report_agenda.ticket_id == ticket.get('ticket_id'),
-            ).first()
+        ).first()
         if report_agenda:
             report_agenda.ticket = ticket
         session.flush()
@@ -511,7 +511,7 @@ def update_milestones_circles(repo_name, milestone_number):
     existing_milestones_circles = session.query(Milestone_circle).filter(
         Milestone_circle.milestone_number == milestone_number,
         Milestone_circle.repo_name == repo_name
-        ).all()
+    ).all()
 
     try:
         # deletion

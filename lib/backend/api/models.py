@@ -190,7 +190,7 @@ class Report(Base):
     attendees = relationship(
         'Report_attendee', cascade='all,delete', backref='report')
     actions = relationship(
-        'Report_checklist', cascade='all,delete',  backref='report')
+        'Report_checklist', cascade='all,delete', backref='report')
     indicators = relationship(
         'Report_indicator', cascade='all,delete', backref='report')
     projects = relationship(

@@ -919,8 +919,8 @@ def timeline():
     def super_if(milestone):
         return (
             (milestone.get('due_on')
-             and date_from_iso(start) <= milestone['due_on'] < date_from_iso(stop))  # noqa
-            or (without_due_date
+             and date_from_iso(start) <= milestone['due_on'] < date_from_iso(stop))  or # noqa
+            (without_due_date
                 and not milestone.get('due_on')  # noqa
                 and not milestone.get('closed_at')))  # noqa
 
@@ -956,10 +956,8 @@ def report():
     ok_issues = []
     # assignees = []
     for issue in issues:
-        if (issue.get('assignee')
-                and start < date_from_iso(issue['closed_at']) < stop):
+        if (issue.get('assignee') and start < date_from_iso(issue['closed_at']) < stop): # noqa
             ok_issues.append(issue)
-            # assignees.append(issue['assignee']['login'])
     return jsonify({
         'params': request.get_json(),
         'results': {
