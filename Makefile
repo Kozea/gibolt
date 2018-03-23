@@ -9,29 +9,58 @@ make-p:
 	set -m; (for p in $(P); do ($(MAKE) $$p || kill 0)& done; wait)
 
 env:
-	# Run $RUN with Makefile environ
+	# Run ${RUN} with Makefile environ
 	$(RUN)
 
 fix-node-install:
 	# Rebuild node-sass on updates
 	test -d $(NODE_MODULES)/node-sass/vendor/ || npm rebuild node-sass
 
-install-node:
+check-node-binary:
+ifeq (, $(NPM))
+	echo 'You must have yarn installed'
+	exit 4
+endif
+
+check-python-binary:
+ifeq (, $(PIPENV))
+	echo 'You must have pipenv installed'
+	exit 4
+endif
+
+check-python-environ:
+	test -d $(PWD)/.venv || (echo "Python virtual environment not found. Creating with $(PYTHON_VERSION)..." && $(PIPENV) --python $(PYTHON_VERSION))
+
+install-node: check-node-binary
 	$(NPM) install
 	$(MAKE) fix-node-install
 
-install-python:
-	test -d $(VENV) || virtualenv $(VENV) -p $(PYTHON_VERSION)
-	# Deps
-	$(PIP) install --trusted-host github.com --upgrade --no-cache pip setuptools -e .[test]
+install-node-prod: check-node-binary
+	$(NPM) install --prod
+	$(MAKE) fix-node-install
+
+install-python: check-python-binary check-python-environ
+	$(PIPENV) install --dev
+
+install-python-prod: check-python-binary check-python-environ
+	$(PIPENV) install --deploy
 
 install:
 	$(MAKE) P="install-node install-python" make-p
 
-install-dev:
-	$(PIP) install --upgrade devcore
+install-prod:
+	$(MAKE) P="install-node-prod install-python-prod" make-p
 
-full-install: clean-install install install-dev
+full-install: clean-install install
+
+upgrade-python:
+	$(PIPENV) update
+	$(PIPENV) lock  # Maybe remove this later
+
+upgrade-node:
+	$(NPM) upgrade-interactive --latest
+
+upgrade: upgrade-python upgrade-node
 
 clean-client:
 	rm -fr $(PWD)/lib/frontend/assets/*
@@ -47,12 +76,14 @@ clean-install: clean
 	rm -fr *.egg-info
 
 lint-python:
-	$(PYTEST) --flake8 --isort -m "flake8 or isort" lib --ignore=lib/frontend/static
+	$(PIPENV) run py.test --flake8 --isort -m "flake8 or isort" lib --ignore=lib/frontend/static
 
 lint-node:
 	$(NPM) run lint
 
 lint:
+	test -s $(PWD)/Pipfile.lock || (echo 'Missing Pipfile.lock file' && exit 5)
+	test -s $(PWD)/yarn.lock || (echo 'Missing yarn.lock file' && exit 6)
 	$(MAKE) P="lint-python lint-node" make-p
 
 fix-python:
@@ -65,7 +96,7 @@ fix:
 	$(MAKE) P="fix-python fix-node" make-p
 
 check-python:
-	FLASK_CONFIG=$(FLASK_TEST_CONFIG) $(PYTEST) lib $(PYTEST_ARGS)
+	FLASK_CONFIG=$(FLASK_TEST_CONFIG) $(PIPENV) run py.test lib $(PYTEST_ARGS)
 
 check-node-debug:
 	$(NPM) run test-debug
@@ -75,7 +106,7 @@ check-node:
 
 check-outdated:
 	$(NPM) outdated ||:
-	$(PIP) list --outdated --format=columns ||:
+	$(PIPENV) update --outdated ||:
 
 check: check-python check-node check-outdated
 
@@ -85,11 +116,11 @@ build-client: clean-client
 build-server: clean-server
 	$(NPM) run build-server
 
-build: clean lint-node
+build: clean
 	$(MAKE) P="build-server build-client" make-p
 
 serve-python:
-	$(FLASK) run --with-threads -h $(HOST) -p $(API_PORT)
+	$(PIPENV) run flask run --with-threads -h $(HOST) -p $(API_PORT)
 
 serve-node:
 	$(NPM) run serve
@@ -110,7 +141,7 @@ serve: env-check clean
 	$(MAKE) P="serve-node-client serve-node-server serve-python" make-p
 
 initdb:
-	$(FLASK) dropdb
+	$(PIPENV) run flask dropdb
 	$(VENV)/bin/alembic upgrade head
 
 upgradedb:

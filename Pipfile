@@ -1,0 +1,32 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+alembic = "*"
+cachecontrol = "*"
+flask = "*"
+github-flask = "*"
+lockfile = "*"
+python-dateutil = "*"
+pytz = "*"
+sqlalchemy = "*"
+unrest = "*"
+
+
+[dev-packages]
+
+pytest-cov = "*"
+"pytest-flake8" = "*"
+pytest-isort = "*"
+pytest = "*"
+devcore = "*"
+
+
+[requires]
+
+python_version = "3.6"

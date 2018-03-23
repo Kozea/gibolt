@@ -10,30 +10,31 @@ import Html from './components/Html.jsx'
 import * as config from './config'
 
 const assets = {}
-const getAssets = () => {
-  if (Object.keys(assets).length === 0) {
-    if (config.debug) {
-      assets.links = []
-      assets.scripts = [
-        'https://polyfill.kozea.fr/polyfill.min.js',
-        ...['manifest.js', 'vendor.js', 'client.js'].map(
-          file => `${config.publicPath}${file}`
-        ),
-      ]
-    } else {
-      const manifest = JSON.parse(
+const manifest = {}
+const getManifest = () => {
+  if (!Object.keys(manifest).length) {
+    Object.assign(
+      manifest,
+      JSON.parse(
         readFileSync(path.resolve(config.dirs.assets, 'manifest.json'), 'utf8')
       )
-      assets.links = ['client.css'].map(
-        file => `${config.publicPath}${manifest[file]}`
-      )
-      assets.scripts = [
-        'https://polyfill.kozea.fr/polyfill.min.js',
-        ...['manifest.js', 'vendor.js', 'client.js'].map(
-          file => `${config.publicPath}${manifest[file]}`
-        ),
-      ]
-    }
+    )
+  }
+  return manifest
+}
+
+const getAssets = () => {
+  if (!Object.keys(assets).length) {
+    assets.links = []
+    assets.scripts = ['https://polyfill.kozea.fr/polyfill.min.js']
+    const scripts = ['runtime~client.js', 'vendors~client.js', 'client.js']
+    const links = config.debug ? [] : ['client.css']
+    const transform = config.debug
+      ? f => `${config.publicPath}${f}`
+      : f => `${getManifest()[f]}`
+
+    assets.links = [...assets.links, ...links.map(transform)]
+    assets.scripts = [...assets.scripts, ...scripts.map(transform)]
   }
   return assets
 }

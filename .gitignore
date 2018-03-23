@@ -18,3 +18,5 @@ node_modules/
 .ropeproject/
 database.db
 *.old
+.pytest_cache/
+.venv/
