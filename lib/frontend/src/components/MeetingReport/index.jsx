@@ -256,25 +256,23 @@ class MeetingsReport extends React.Component {
                                 <h5>Following roles are/will be expired:</h5>
                               )}
                               <ul className={b('elections')}>
-                                {meeting.expiredRoles.map(role =>
-                                  role.role_focuses.map(focus => (
-                                    <li key={focus.role_focus_id}>
-                                      <span className={b('bullet')} />
-                                      {role.role_name}
-                                      {focus.role_focus_users.map(focusUser => (
-                                        <span key={focusUser.user_id}>
-                                          <RoleFocusUser
-                                            key={focusUser.user_id}
-                                            focusName={focus.focus_name}
-                                            focusId={focus.role_focus_id}
-                                            duration={role.duration}
-                                            focusUser={focusUser}
-                                          />
-                                        </span>
-                                      ))}
-                                    </li>
-                                  ))
-                                )}
+                                {meeting.expiredRoles.map(focus => (
+                                  <li key={focus.role_focus_id}>
+                                    <span className={b('bullet')} />
+                                    {focus.role_name}
+                                    {focus.role_focus_users.map(focusUser => (
+                                      <span key={focusUser.user_id}>
+                                        <RoleFocusUser
+                                          key={focusUser.user_id}
+                                          focusName={focus.focus_name}
+                                          focusId={focus.role_focus_id}
+                                          duration={focus.duration}
+                                          focusUser={focusUser}
+                                        />
+                                      </span>
+                                    ))}
+                                  </li>
+                                ))}
                               </ul>
                             </span>
                           )}
