@@ -6,8 +6,8 @@ import React from 'react'
 import MilestoneDisplay from './../Utils/MilestoneDisplay'
 import { setModal } from '../../actions'
 import { updateIssueParams } from '../../actions/issues'
-import { sortProjects, updateMeetingProjects } from '../../actions/meetings'
-import { block, connect } from '../../utils'
+import { updateMeetingProjects } from '../../actions/meetings'
+import { block, connect, sortProjects } from '../../utils'
 
 const b = block('MeetingReport')
 
