@@ -23,12 +23,14 @@ export default function RoleFocusUser(props) {
           search: stringify({ role_focus_id: focusId }),
         }}
       >
-        <img
-          className={b('avatar')}
-          src={focusUser.avatar_url}
-          alt="avatar"
-          title={focusUser.user_name}
-        />{' '}
+        {focusUser.avatar_url && (
+          <img
+            className={b('avatar')}
+            src={focusUser.avatar_url}
+            alt="avatar"
+            title={focusUser.user_name}
+          />
+        )}{' '}
         {focusName}
         {endDate && (
           <span className={b('lighter')}>

@@ -24,10 +24,10 @@ import { block, connect } from '../../utils'
 import IssueCreationDetail from './../IssueCreationDetail'
 import Loading from './../Loading'
 import MarkdownEditor from './../Utils/MarkdownEditor'
+import MeetingRolesExpiration from './MeetingRolesExpiration'
 import ReportAgenda from './ReportAgenda'
 import ReportItems from './ReportItems'
 import ReportProjects from './ReportProjects'
-import RoleFocusUser from './../Role/RoleFocusUser'
 
 const b = block('MeetingReport')
 var ReactMarkdown = require('react-markdown')
@@ -236,37 +236,10 @@ class MeetingsReport extends React.Component {
                     </span>
                     {(meetingType === 'Triage' ||
                       meetingType === 'Gouvernance') && (
-                      <span>
-                        {meeting.expiredRoles &&
-                          meeting.expiredRoles.length > 0 && (
-                            <span>
-                              {meetingType === 'Gouvernance' ? (
-                                <h3>Elections:</h3>
-                              ) : (
-                                <h5>Following roles are/will be expired:</h5>
-                              )}
-                              <ul className={b('elections')}>
-                                {meeting.expiredRoles.map(focus => (
-                                  <li key={focus.role_focus_id}>
-                                    <span className={b('bullet')} />
-                                    {focus.role_name}
-                                    {focus.role_focus_users.map(focusUser => (
-                                      <span key={focusUser.user_id}>
-                                        <RoleFocusUser
-                                          key={focusUser.user_id}
-                                          focusName={focus.focus_name}
-                                          focusId={focus.role_focus_id}
-                                          duration={focus.duration}
-                                          focusUser={focusUser}
-                                        />
-                                      </span>
-                                    ))}
-                                  </li>
-                                ))}
-                              </ul>
-                            </span>
-                          )}
-                      </span>
+                      <MeetingRolesExpiration
+                        meeting={meeting}
+                        meetingType={meetingType}
+                      />
                     )}
                     {meetingType === 'Triage' && (
                       <span>
