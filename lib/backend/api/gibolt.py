@@ -65,7 +65,6 @@ current_role_focuses = rest(
 
 @current_role_focuses.declare('POST', True)
 def post_role_focus(payload, role_focus_id=None):
-    print(payload)
     try:
         new_role_focus = Role_focus(
             role_id=payload.get('role_id'),
@@ -85,7 +84,6 @@ def post_role_focus(payload, role_focus_id=None):
         session.commit()
 
     except (exc.IntegrityError, AttributeError) as e:
-        print(e)
         session.rollback()
         return jsonify({
             'status': 'error',

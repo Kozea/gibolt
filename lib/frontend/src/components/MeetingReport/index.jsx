@@ -57,16 +57,6 @@ class MeetingsReport extends React.Component {
     ReactModal.setAppElement('#root')
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (
-      (nextProps.params.circle_id !== this.props.params.circle_id ||
-        nextProps.params.meeting_name !== this.props.params.meeting_name) &&
-      this.props.isCreation
-    ) {
-      this.props.onParamsChange(nextProps.params)
-    }
-  }
-
   componentWillUnmount() {
     if (this.state.timer) {
       clearTimeout(this.state.timer)
@@ -411,10 +401,6 @@ export default withRouter(
       },
       onModalClose: () => {
         dispatch(setModal(false, false, {}))
-      },
-      onParamsChange: locationSearch => {
-        dispatch(setLoading('meeting'))
-        dispatch(fetchMeetingData(locationSearch))
       },
       onSave: (isCreation, meetingReport) => {
         Promise.resolve(dispatch(submitOrUpdateReport(isCreation, false))).then(
