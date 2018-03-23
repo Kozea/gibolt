@@ -34,9 +34,7 @@ export default function RoleFocusUser(props) {
           <span className={b('lighter')}>
             {`until: ${format(endDate, 'DD/MM/YYYY')}`}
             {distance < 0 ? (
-              <span className={b('inactive')}>
-                {' (this focus must be inactive)'}
-              </span>
+              <span className={b('inactive')}>{' (this focus expired)'}</span>
             ) : distance < 10 ? (
               <span className={b('end')}>
                 {' (this focus will end in 10 days)'}

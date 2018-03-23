@@ -244,38 +244,19 @@ class MeetingsReport extends React.Component {
                         'No roles defined.'
                       )}
                     </span>
-                    {(params.meeting_name === 'Triage' ||
-                      (!isCreation && meeting.report_type === 'Triage')) && (
+                    {(meetingType === 'Triage' ||
+                      meetingType === 'Gouvernance') && (
                       <span>
-                        <ReportItems
-                          actions={meeting.actions}
-                          isEditionDisabled={isEditionDisabled}
-                          indicators={meeting.indicators}
-                          meetings={meetings}
-                          currentMeeting={{
-                            report_id: meeting.report_id,
-                            created_at: meeting.created_at,
-                          }}
-                          setTimer={() => this.setTimer()}
-                        />
-                        <ReportProjects
-                          circleId={circleId}
-                          isEditionDisabled={isEditionDisabled}
-                          projects={meeting.projects}
-                          onMilestoneClick={onMilestoneClick}
-                          setTimer={() => this.setTimer()}
-                        />
-                      </span>
-                    )}
-                    {(params.meeting_name === 'Gouvernance' ||
-                      meeting.report_type === 'Gouvernance') && (
-                      <span>
-                        {meeting.elections &&
-                          meeting.elections.length > 0 && (
+                        {meeting.expiredRoles &&
+                          meeting.expiredRoles.length > 0 && (
                             <span>
-                              <h3>Elections:</h3>
+                              {meetingType === 'Gouvernance' ? (
+                                <h3>Elections:</h3>
+                              ) : (
+                                <h5>Following roles are/will be expired:</h5>
+                              )}
                               <ul className={b('elections')}>
-                                {meeting.elections.map(role =>
+                                {meeting.expiredRoles.map(role =>
                                   role.role_focuses.map(focus => (
                                     <li key={focus.role_focus_id}>
                                       <span className={b('bullet')} />
@@ -299,10 +280,31 @@ class MeetingsReport extends React.Component {
                           )}
                       </span>
                     )}
-                    {(params.meeting_name === 'Triage' ||
-                      meeting.report_type === 'Triage' ||
-                      params.meeting_name === 'Gouvernance' ||
-                      meeting.report_type === 'Gouvernance') && (
+                    {meetingType === 'Triage' && (
+                      <span>
+                        <ReportItems
+                          actions={meeting.actions}
+                          isEditionDisabled={isEditionDisabled}
+                          indicators={meeting.indicators}
+                          meetings={meetings}
+                          currentMeeting={{
+                            report_id: meeting.report_id,
+                            created_at: meeting.created_at,
+                          }}
+                          setTimer={() => this.setTimer()}
+                        />
+                        <ReportProjects
+                          circleId={circleId}
+                          isEditionDisabled={isEditionDisabled}
+                          projects={meeting.projects}
+                          onMilestoneClick={onMilestoneClick}
+                          setTimer={() => this.setTimer()}
+                        />
+                      </span>
+                    )}
+
+                    {(meetingType === 'Triage' ||
+                      meetingType === 'Gouvernance') && (
                       <span>
                         <ReportAgenda
                           isEditionDisabled={isEditionDisabled}
