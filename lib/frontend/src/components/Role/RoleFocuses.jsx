@@ -44,15 +44,12 @@ class RoleFocuses extends React.Component {
             {focuses.map(focus => (
               <li key={focus.role_focus_id}>
                 <span className={b('bullet')} />
-                {focus.role_focus_users.map(focusUser => (
-                  <RoleFocusUser
-                    key={focusUser.user_id}
-                    focusName={focus.focus_name}
-                    focusId={focus.role_focus_id}
-                    duration={duration}
-                    focusUser={focusUser}
-                  />
-                ))}
+                <RoleFocusUser
+                  duration={duration}
+                  focusName={focus.focus_name}
+                  focusId={focus.role_focus_id}
+                  focusUser={focus.role_focus_users[0]}
+                />
               </li>
             ))}
           </ul>
