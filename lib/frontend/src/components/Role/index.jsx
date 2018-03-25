@@ -49,15 +49,15 @@ class Role extends React.Component {
         <Helmet>
           <title>Gibolt - Role</title>
         </Helmet>
-
+        {loading && <Loading />}
         <article className={b('role')}>
           <BreadCrumbs
             circle={circles.find(circle => circle.circle_id === role.circle_id)}
             role={role}
           />
-          {error && (
+          {error ? (
             <article className={b('date', { error: true })}>
-              <h2>Error during issue fetch</h2>
+              <h2>Error during role fetch</h2>
               {typeof error === 'object' ? (
                 <ul>
                   {error.map(err => (
@@ -71,9 +71,7 @@ class Role extends React.Component {
                 <code>{error}</code>
               )}
             </article>
-          )}
-          {loading && <Loading />}
-          {role.is_in_edition ? (
+          ) : role.is_in_edition ? (
             <span>
               <h1>
                 {role.role_name} {role.is_active ? '' : ' (disabled)'}

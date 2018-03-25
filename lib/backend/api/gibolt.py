@@ -44,17 +44,22 @@ role_focus_users = rest(
 
 @role_focus_users.declare('POST', True)
 def post_role_focus_user(payload, role_focus_user_id=None):
+    role_focus_id = payload.get('role_focus_id')
+
+    future_focus_user = session.query(Role_focus_user).filter(
+        Role_focus_user.role_focus_id == role_focus_id,
+        func.DATE(Role_focus_user.start_date) > date.today(),
+    ).first()
+    if future_focus_user:
+        rest.raise_error(400, 'A valid focus user alredy exists.')
+
     try:
-        role_focus_id = payload.get('role_focus_id')
         existing_focus_users = session.query(Role_focus_user).filter(
             Role_focus_user.role_focus_id == role_focus_id,
             or_(func.DATE(Role_focus_user.end_date) == None,
                 func.DATE(Role_focus_user.end_date) >= date.today()),
         ).all()
-        print(existing_focus_users)
         for user in existing_focus_users:
-            print(user)
-            print(user.end_date)
             user.end_date = date.today()
             session.flush()
 
@@ -70,10 +75,8 @@ def post_role_focus_user(payload, role_focus_user_id=None):
 
     except (exc.IntegrityError) as e:
         session.rollback()
-        return jsonify({
-            'status': 'error',
-            'message': 'Invalid payload.'
-        }), 400
+        rest.raise_error(400, 'Invalid payload.')
+
     return role_focus_users.get(
         {}, role_focus_user_id=new_focus_user.role_focus_user_id)
 
@@ -132,10 +135,7 @@ def post_role_focus(payload, role_focus_id=None):
 
     except (exc.IntegrityError, AttributeError) as e:
         session.rollback()
-        return jsonify({
-            'status': 'error',
-            'message': 'Invalid payload.'
-        }), 400
+        rest.raise_error(400, 'Invalid payload.')
     return role_focuses.get(
         {}, role_focus_id=new_role_focus.role_focus_id)
 
@@ -211,10 +211,7 @@ def post_roles(payload, role_id=None):
 
     except (exc.IntegrityError) as e:
         session.rollback()
-        return jsonify({
-            'status': 'error',
-            'message': 'Invalid payload.'
-        }), 400
+        rest.raise_error(400, 'Invalid payload.')
     return roles.get({}, role_id=new_role.role_id)
 
 
@@ -274,10 +271,6 @@ report_unrest = rest(
 
 @report_unrest.declare('POST', True)
 def post_report(payload, report_id=None):
-    response_object = {
-        'status': 'error',
-        'message': 'Invalid payload.'
-    }
     circle_id = payload.get('circle_id')
     report_type = payload.get('report_type')
     author_id = payload.get('author_id')
@@ -351,7 +344,7 @@ def post_report(payload, report_id=None):
         session.commit()
     except (exc.IntegrityError) as e:
         session.rollback()
-        return jsonify(response_object), 400
+        rest.raise_error(400, 'Invalid payload.')
     return report_unrest.get({}, report_id=new_report.report_id)
 
 
@@ -415,17 +408,13 @@ def report_tables(payload, report_id):
 
 @report_unrest.declare('PUT', True)
 def update_report(payload, report_id):
-    response_object = {
-        'status': 'error',
-        'message': 'Invalid payload.'
-    }
     if not report_id:
-        return jsonify(response_object), 400
+        rest.raise_error(400, 'Invalid payload.')
 
     report = session.query(Report).filter(
         Report.report_id == report_id).first()
     if not report:
-        return jsonify(response_object), 400
+        rest.raise_error(400, 'Invalid payload.')
 
     try:
         report.modified_by = payload.get('modified_by')
@@ -436,7 +425,7 @@ def update_report(payload, report_id):
         session.commit()
     except (exc.IntegrityError) as e:
         session.rollback()
-        return jsonify(response_object), 400
+        rest.raise_error(400, 'Invalid payload.')
 
     return report_unrest.get({}, report_id=report.report_id)
 

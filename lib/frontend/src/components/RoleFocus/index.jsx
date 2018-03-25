@@ -1,6 +1,6 @@
 import './RoleFocus.sass'
 
-import { addDays, format } from 'date-fns'
+import { addDays, format, isFuture } from 'date-fns'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
@@ -60,16 +60,15 @@ class Role extends React.Component {
         <Helmet>
           <title>Gibolt - Role Focus</title>
         </Helmet>
+        {loading && <Loading />}
         <article className={b('roleFocus')}>
-          {loading && <Loading />}
-          {error && (
+          <BreadCrumbs circle={circle} role={role} focus={roleFocus} />
+          {error ? (
             <article className={b('date', { error: true })}>
-              <h2>Error during issue fetch</h2>
+              <h2>Error during role focus fetch</h2>
               <code>{error}</code>
             </article>
-          )}
-          <BreadCrumbs circle={circle} role={role} focus={roleFocus} />
-          {isInEdition && role ? (
+          ) : isInEdition && role ? (
             <span>
               <h1>
                 {roleFocus.focus_name ? roleFocus.focus_name : 'No focus name'}
@@ -104,14 +103,16 @@ class Role extends React.Component {
                       >
                         <i className="fa fa-trash" aria-hidden="true" />
                       </span>
-                      <span
-                        onClick={() => {
-                          this.setState({ displayForm: true })
-                        }}
-                        title="Add user"
-                      >
-                        <i className="fa fa-plus-circle" aria-hidden="true" />
-                      </span>
+                      {!isFuture(new Date(focusUser.start_date)) && (
+                        <span
+                          onClick={() => {
+                            this.setState({ displayForm: true })
+                          }}
+                          title="Add user"
+                        >
+                          <i className="fa fa-plus-circle" aria-hidden="true" />
+                        </span>
+                      )}
                     </span>
                   )}
               </h1>
