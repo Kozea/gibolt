@@ -63,7 +63,7 @@ function ReportItems(props) {
             <li key={action.item_id}>
               <label>
                 <input
-                  checked={action.checked}
+                  defaultChecked={action.checked}
                   disabled={isEditionDisabled}
                   id="actions"
                   name={action.content}
