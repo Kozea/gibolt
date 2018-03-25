@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
 import {
+  addFocusUser,
   deleteFocus,
   editRoleFocus,
   fetchRoleFocus,
@@ -14,12 +15,20 @@ import {
 import { block, connect } from '../../utils'
 import Loading from './../Loading'
 import BreadCrumbs from './../Utils/BreadCrumbs'
+import RoleFocusEndDate from './../Utils/RoleFocusEndDate'
 import RoleFocusForm from './RoleFocusForm'
 import RoleFocusItems from './RoleFocusItems'
+import RoleFocusUsersList from './RoleFocusUsersList'
 
 const b = block('RoleFocus')
 
 class Role extends React.Component {
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      displayForm: null,
+    }
+  }
   componentDidMount() {
     this.props.sync()
   }
@@ -30,12 +39,14 @@ class Role extends React.Component {
       history,
       isInEdition,
       loading,
+      onAddUser,
       onDelete,
       onEdition,
       roleFocus,
       roles,
       users,
     } = this.props
+    const { displayForm } = this.state
     const role = roleFocus.role ? roleFocus.role[0] : null
     const circle =
       roleFocus.role && roleFocus.role[0].circle
@@ -58,36 +69,52 @@ class Role extends React.Component {
             </article>
           )}
           <BreadCrumbs circle={circle} role={role} focus={roleFocus} />
-          <h1>
-            {roleFocus.focus_name ? roleFocus.focus_name : 'No focus name'}{' '}
-            {role &&
-              role.is_active && (
-                <span>
-                  <span onClick={() => onEdition()} title="Edit role focus">
-                    <i className="fa fa-pencil-square-o" aria-hidden="true" />
-                  </span>
-                  <span
-                    onClick={e => {
-                      e.preventDefault()
-                      onDelete(roleFocus, history)
-                    }}
-                    title="Delete Focus"
-                  >
-                    <i className="fa fa-trash" aria-hidden="true" />
-                  </span>
-                </span>
-              )}
-          </h1>
           {isInEdition && role ? (
-            <RoleFocusForm
-              role={role}
-              roleFocus={roleFocus}
-              roleFocusUser={focusUser}
-              roles={roles}
-              users={users}
-            />
+            <span>
+              <h1>
+                {roleFocus.focus_name ? roleFocus.focus_name : 'No focus name'}
+              </h1>
+              <RoleFocusForm
+                role={role}
+                roleFocus={roleFocus}
+                roleFocusUser={focusUser}
+                roles={roles}
+                users={users}
+              />
+            </span>
           ) : (
             <span>
+              <h1>
+                {roleFocus.focus_name ? roleFocus.focus_name : 'No focus name'}
+                {role &&
+                  role.is_active && (
+                    <span>
+                      <span onClick={() => onEdition()} title="Edit role focus">
+                        <i
+                          className="fa fa-pencil-square-o"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span
+                        onClick={e => {
+                          e.preventDefault()
+                          onDelete(roleFocus, history)
+                        }}
+                        title="Delete Focus"
+                      >
+                        <i className="fa fa-trash" aria-hidden="true" />
+                      </span>
+                      <span
+                        onClick={() => {
+                          this.setState({ displayForm: true })
+                        }}
+                        title="Add user"
+                      >
+                        <i className="fa fa-plus-circle" aria-hidden="true" />
+                      </span>
+                    </span>
+                  )}
+              </h1>
               {roleFocus &&
                 focusUser && (
                   <span>
@@ -124,6 +151,11 @@ class Role extends React.Component {
                               'DD/MM/YYYY'
                             )}  (calculated)`
                           : '∞'}
+                      <RoleFocusEndDate
+                        displayDate={false}
+                        duration={role.duration}
+                        focusUser={focusUser}
+                      />
                     </p>
                     <br />
                     <RoleFocusItems
@@ -141,6 +173,63 @@ class Role extends React.Component {
                       roleFocus={roleFocus}
                       roles={roles}
                     />
+                    <br />
+                    <RoleFocusUsersList
+                      currentUserId={focusUser.role_focus_user_id}
+                      roleFocusUsers={roleFocus.role_focus_users}
+                    />
+                    <br />
+                    {displayForm && (
+                      <span>
+                        <h4>Add a user</h4>
+                        <form
+                          onSubmit={e => {
+                            e.preventDefault()
+                            onAddUser(e, roleFocus.role_focus_id)
+                            this.setState({ displayForm: false })
+                          }}
+                        >
+                          <label>
+                            User :
+                            <select
+                              className={b('long')}
+                              defaultValue=""
+                              name="user_id"
+                              required
+                            >
+                              <option value="" />
+                              {users.map(user => (
+                                <option key={user.user_id} value={user.user_id}>
+                                  {user.user_name}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
+                          <label>
+                            Start date:
+                            <span className={b('duration')}>
+                              <input
+                                defaultValue=""
+                                name="start_date"
+                                onChange={e => {
+                                  this.setState({ startDate: e.target.value })
+                                }}
+                                type="date"
+                              />
+                            </span>
+                          </label>
+                          <button type="submit">Create</button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              this.setState({ displayForm: false })
+                            }
+                          >
+                            Cancel
+                          </button>
+                        </form>
+                      </span>
+                    )}
                   </span>
                 )}
             </span>
@@ -162,6 +251,18 @@ export default withRouter(
       users: state.users.results,
     }),
     dispatch => ({
+      onAddUser: (e, roleFocusId) => {
+        const formFocusUser = [].slice.call(e.target.elements).reduce(
+          function(map, obj) {
+            if (obj.name && obj.value) {
+              map[obj.name] = obj.value
+            }
+            return map
+          },
+          { role_focus_id: roleFocusId }
+        )
+        dispatch(addFocusUser(formFocusUser))
+      },
       onDelete: (roleFocus, history) => {
         dispatch(deleteFocus(roleFocus, history))
       },

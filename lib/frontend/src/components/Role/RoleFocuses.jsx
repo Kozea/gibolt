@@ -9,7 +9,7 @@ import RoleFocusUser from './RoleFocusUser'
 
 const b = block('Role')
 
-class RoleFocus extends React.Component {
+class RoleFocuses extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
@@ -61,12 +61,13 @@ class RoleFocus extends React.Component {
         )}
         {displayForm && (
           <span>
-            <h4>Create a focus</h4>
+            <h4>Add a focus</h4>
             <form
               className={b('createFocusForm')}
               onSubmit={e => {
                 e.preventDefault()
                 onSubmit(e, roleId)
+                this.setState({ displayForm: false })
               }}
             >
               <label>
@@ -146,4 +147,4 @@ export default connect(
       dispatch(addFocus(formRoleFocus))
     },
   })
-)(RoleFocus)
+)(RoleFocuses)

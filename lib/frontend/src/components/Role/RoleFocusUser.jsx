@@ -1,20 +1,16 @@
-import { addDays, differenceInDays, format } from 'date-fns'
+import './Role.sass'
+
 import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { block } from '../../utils'
+import RoleFocusEndDate from './../Utils/RoleFocusEndDate'
 
 const b = block('Role')
 
 export default function RoleFocusUser(props) {
   const { duration, focusId, focusName, focusUser } = props
-  const endDate = focusUser.end_date
-    ? focusUser.end_date
-    : duration && focusUser.start_date
-      ? addDays(new Date(focusUser.start_date), duration)
-      : null
-  const distance = differenceInDays(new Date(endDate), new Date())
   return (
     <span key={focusUser.role_focus_user_id}>
       <Link
@@ -32,20 +28,11 @@ export default function RoleFocusUser(props) {
           />
         )}{' '}
         {focusName}
-        {endDate && (
-          <span className={b('lighter')}>
-            {`until: ${format(endDate, 'DD/MM/YYYY')}`}
-            {distance < 0 ? (
-              <span className={b('inactive')}>{' (this focus expired)'}</span>
-            ) : distance < 10 ? (
-              <span className={b('end')}>
-                {' (this focus will end in 10 days)'}
-              </span>
-            ) : (
-              ''
-            )}
-          </span>
-        )}
+        <RoleFocusEndDate
+          displayDate
+          duration={duration}
+          focusUser={focusUser}
+        />
       </Link>
     </span>
   )

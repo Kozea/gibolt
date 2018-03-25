@@ -1,10 +1,10 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from flask import jsonify, request
-from sqlalchemy import exc
+from sqlalchemy import and_, exc, func, or_
 from unrest import UnRest
 
-from .. import Session, app, session_unrest
+from .. import app, session_unrest
 from ..routes.auth import needlogin
 from ..routes.github import get_a_milestone
 from .models import (
@@ -13,13 +13,12 @@ from .models import (
     Role, Role_focus, Role_focus_user, label_types
 )
 
-session = Session()
-
-
 # Declare rest endpoints for gibolt Database
 rest = UnRest(app, session_unrest)
+session = session_unrest
 
-rest(
+
+role_focus_users = rest(
     Role_focus_user,
     methods=['GET', 'PATCH'],
     name='role_focus_users',
@@ -27,18 +26,64 @@ rest(
         Role_focus_user.role_focus_id == (request.values.get('role_focus_id'))
         if request.values.get('role_focus_id')
         else True,
+        and_(
+            request.values.get('active_focus_user') == True,
+            or_(func.DATE(Role_focus_user.end_date) == None,
+                func.DATE(Role_focus_user.end_date) >= date.today()),
+        )
+        if request.values.get('active_focus_user')
+        else True
+    ).order_by(
+        Role_focus_user.end_date.desc(),
+        Role_focus_user.start_date.desc(),
+        Role_focus_user.role_focus_user_id.desc(),
     ),
     auth=needlogin
 )
 
 
-current_role_focus_user = rest(
-    Role_focus_user,
-    methods=['GET'],
-    name='role_focus_users',
+@role_focus_users.declare('POST', True)
+def post_role_focus_user(payload, role_focus_user_id=None):
+    try:
+        role_focus_id = payload.get('role_focus_id')
+        existing_focus_users = session.query(Role_focus_user).filter(
+            Role_focus_user.role_focus_id == role_focus_id,
+            or_(func.DATE(Role_focus_user.end_date) == None,
+                func.DATE(Role_focus_user.end_date) >= date.today()),
+        ).all()
+        print(existing_focus_users)
+        for user in existing_focus_users:
+            print(user)
+            print(user.end_date)
+            user.end_date = date.today()
+            session.flush()
+
+        start_date = payload.get('start_date')
+        new_focus_user = Role_focus_user(
+            role_focus_id=role_focus_id,
+            start_date=datetime.strptime(
+                start_date, '%Y-%m-%d') if start_date else None,
+            user_id=payload.get('user_id'),
+        )
+        session.add(new_focus_user)
+        session.commit()
+
+    except (exc.IntegrityError) as e:
+        session.rollback()
+        return jsonify({
+            'status': 'error',
+            'message': 'Invalid payload.'
+        }), 400
+    return role_focus_users.get(
+        {}, role_focus_user_id=new_focus_user.role_focus_user_id)
+
+
+rest(
+    Item,
+    methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
+    name='items',
     query=lambda query: query.filter(
-        Role_focus_user.end_date == None,
-        Role_focus_user.role_focus_id == (request.values.get('role_focus_id'))
+        Item.role_focus_id == (request.values.get('role_focus_id'))
         if request.values.get('role_focus_id')
         else True,
     ),
@@ -46,16 +91,18 @@ current_role_focus_user = rest(
 )
 
 
-current_role_focuses = rest(
+role_focuses = rest(
     Role_focus,
-    methods=['GET'],
-    name='only_role_focuses',
+    methods=['GET', 'PATCH', 'DELETE'],
+    name='role_focuses',
     relationships={
-        'role_focus_users': current_role_focus_user,
+        'role_focus_users': role_focus_users,
         'items': rest(Item),
+        'role': rest(Role, relationships={'circle': rest(
+            Circle, relationships={'circle_parent': rest(Circle)})}),
     },
     query=lambda query: query.filter(
-        Role.role_id == (request.values.get('role_id'))
+        Role_focus.role_id == (request.values.get('role_id'))
         if request.values.get('role_id')
         else True,
     ),
@@ -63,7 +110,7 @@ current_role_focuses = rest(
 )
 
 
-@current_role_focuses.declare('POST', True)
+@role_focuses.declare('POST', True)
 def post_role_focus(payload, role_focus_id=None):
     try:
         new_role_focus = Role_focus(
@@ -89,33 +136,40 @@ def post_role_focus(payload, role_focus_id=None):
             'status': 'error',
             'message': 'Invalid payload.'
         }), 400
-    return current_role_focuses.get(
+    return role_focuses.get(
         {}, role_focus_id=new_role_focus.role_focus_id)
 
 
-role_focuses = rest(
+only_role_focuses = rest(
     Role_focus,
-    methods=['GET', 'PATCH', 'DELETE'],
-    name='role_focuses',
+    methods=['GET'],
+    name='only_role_focuses',
     relationships={
-        'role_focus_users': current_role_focus_user,
+        'role_focus_users': role_focus_users,
         'items': rest(Item),
-        'role': rest(Role, relationships={'circle': rest(
-            Circle, relationships={'circle_parent': rest(Circle)})}),
     },
+    query=lambda query: query.filter(
+        Role_focus.role_id == (request.values.get('role_id'))
+        if request.values.get('role_id')
+        else True,
+    ),
     auth=needlogin
 )
+
 
 roles = rest(
     Role,
     methods=['GET', 'PATCH', 'PUT', 'DELETE'],
     name='roles',
     relationships={
-        'role_focuses': current_role_focuses,
+        'role_focuses': only_role_focuses,
     },
     query=lambda query: query.filter(
         Role.circle_id == (request.values.get('circle_id'))
         if request.values.get('circle_id')
+        else True,
+        Role.is_active == (request.values.get('is_active'))
+        if request.values.get('is_active')
         else True,
     ),
     auth=needlogin
@@ -385,19 +439,6 @@ def update_report(payload, report_id):
         return jsonify(response_object), 400
 
     return report_unrest.get({}, report_id=report.report_id)
-
-
-rest(
-    Item,
-    methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
-    name='items',
-    query=lambda query: query.filter(
-        Item.role_focus_id == (request.values.get('role_focus_id'))
-        if request.values.get('role_focus_id')
-        else True,
-    ),
-    auth=needlogin
-)
 
 
 @app.route('/api/labels', methods=['GET'])

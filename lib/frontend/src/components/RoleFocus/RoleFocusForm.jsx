@@ -66,6 +66,14 @@ class RoleFocusForm extends React.Component {
             </select>
           </label>
           <label>
+            Focus name:
+            <input
+              name="focus_name"
+              className={b('long')}
+              defaultValue={roleFocus.focus_name}
+            />
+          </label>
+          <label>
             Filled by:
             <select
               className={b('long')}
@@ -80,14 +88,6 @@ class RoleFocusForm extends React.Component {
                 </option>
               ))}
             </select>
-          </label>
-          <label>
-            Focus name:
-            <input
-              name="focus_name"
-              className={b('long')}
-              defaultValue={roleFocus.focus_name}
-            />
           </label>
           <label>
             Start date:

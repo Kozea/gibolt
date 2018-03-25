@@ -53,7 +53,7 @@ export default function CircleRolesType(props) {
                       ))}
                     </span>
                   ) : (
-                    ' : No focus defined'
+                    ' : No active focus'
                   )}
                 </li>
               </span>

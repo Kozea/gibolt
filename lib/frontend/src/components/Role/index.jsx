@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom'
 import { fetchResults, setLoading } from '../../actions'
 import { disableRole, editRole, fetchRole } from '../../actions/roles'
 import { block, connect, roleTypes } from '../../utils'
-import RoleFocus from './RoleFocus'
+import RoleFocuses from './RoleFocuses'
 import Loading from './../Loading'
 import BreadCrumbs from './../Utils/BreadCrumbs'
 import RoleForm from './../Utils/RoleForm'
@@ -55,25 +55,6 @@ class Role extends React.Component {
             circle={circles.find(circle => circle.circle_id === role.circle_id)}
             role={role}
           />
-          <h1>
-            {role.role_name} {role.is_active ? '' : ' (disabled)'}
-            <span onClick={() => editClick()} title="Edit role">
-              <i className="fa fa-pencil-square-o" aria-hidden="true" />
-            </span>{' '}
-            <span
-              onClick={e => {
-                e.preventDefault()
-                onDisableRole(role)
-              }}
-              title={role.is_active ? 'Disable role' : 'Enable role'}
-            >
-              {role.is_active ? (
-                <i className="fa fa-ban" aria-hidden="true" />
-              ) : (
-                <i className="fa fa-unlock" aria-hidden="true" />
-              )}
-            </span>
-          </h1>
           {error && (
             <article className={b('date', { error: true })}>
               <h2>Error during issue fetch</h2>
@@ -93,15 +74,39 @@ class Role extends React.Component {
           )}
           {loading && <Loading />}
           {role.is_in_edition ? (
-            <RoleForm
-              circleId={role.circle_id}
-              circles={circles}
-              isCreation={false}
-              role={role}
-              users={users}
-            />
+            <span>
+              <h1>
+                {role.role_name} {role.is_active ? '' : ' (disabled)'}
+              </h1>
+              <RoleForm
+                circleId={role.circle_id}
+                circles={circles}
+                isCreation={false}
+                role={role}
+                users={users}
+              />
+            </span>
           ) : (
-            <article>
+            <span>
+              <h1>
+                {role.role_name} {role.is_active ? '' : ' (disabled)'}
+                <span onClick={() => editClick()} title="Edit role">
+                  <i className="fa fa-pencil-square-o" aria-hidden="true" />
+                </span>{' '}
+                <span
+                  onClick={e => {
+                    e.preventDefault()
+                    onDisableRole(role)
+                  }}
+                  title={role.is_active ? 'Disable role' : 'Enable role'}
+                >
+                  {role.is_active ? (
+                    <i className="fa fa-ban" aria-hidden="true" />
+                  ) : (
+                    <i className="fa fa-unlock" aria-hidden="true" />
+                  )}
+                </span>
+              </h1>
               <h3>Circle</h3>
               <p>
                 {circles.find(circle => circle.circle_id === role.circle_id) &&
@@ -129,7 +134,7 @@ class Role extends React.Component {
               <ReactMarkdown source={role.role_domain} />
               <h3>Accountabilities</h3>
               <ReactMarkdown source={role.role_accountabilities} />
-              <RoleFocus
+              <RoleFocuses
                 duration={role.duration}
                 focuses={role.role_focuses}
                 isActive={role.is_active}
@@ -142,7 +147,7 @@ class Role extends React.Component {
               >
                 Back to circle
               </button>
-            </article>
+            </span>
           )}
         </article>
       </section>
