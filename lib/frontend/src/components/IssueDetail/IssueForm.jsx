@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { setRefresh } from '../../actions'
 import { updateATicket } from '../../actions/issues'
 import { block, connect } from '../../utils'
 import MarkdownEditor from './../Utils/MarkdownEditor'
@@ -26,11 +27,21 @@ class IssueForm extends React.Component {
             name="data"
           >
             <option value="" />
-            {roles.map(role => (
-              <option key={role.role_id} value={role.user_name}>
-                {role.role_name} ({role.user_name})
-              </option>
-            ))}
+            {roles.map(role =>
+              role.role_focuses.map(
+                focus =>
+                  focus.role_focus_users.length > 0 && (
+                    <option
+                      key={focus.role_focus_id}
+                      value={focus.role_focus_users[0].user_name}
+                    >
+                      {role.role_name}
+                      {focus.focus_name !== '' && ` - ${focus.focus_name}`}
+                      {` (${focus.role_focus_users[0].user_name})`}
+                    </option>
+                  )
+              )
+            )}
           </select>
         )
       case 'milestone':
@@ -53,7 +64,7 @@ class IssueForm extends React.Component {
           </select>
         )
       case 'body':
-        return <MarkdownEditor />
+        return <MarkdownEditor initValue={issue.body} />
     }
   }
 
@@ -105,6 +116,9 @@ export default connect(
           values = { [type]: targetValue }
       }
       dispatch(updateATicket(Object.assign({}, issue), values))
+      if (type !== 'body') {
+        dispatch(setRefresh(true))
+      }
     },
   })
 )(IssueForm)

@@ -22,9 +22,10 @@ class MarkdownEditor extends React.Component {
     super(props, context)
     this.state = {
       editorState: EditorState.createWithContent(
-        convertFromRaw(mdToDraftjs(this.props.markvalue))
+        convertFromRaw(
+          mdToDraftjs(this.props.initValue ? this.props.initValue : '')
+        )
       ),
-      markvalue: this.props.markvalue,
     }
   }
 
@@ -48,6 +49,7 @@ class MarkdownEditor extends React.Component {
 
   render() {
     const { editorState } = this.state
+    const editorName = this.props.editorName ? this.props.editorName : 'body'
     return (
       <div className={b()}>
         <Editor
@@ -76,8 +78,8 @@ class MarkdownEditor extends React.Component {
           }}
         />
         <textarea
-          id="body"
-          name="body"
+          id={editorName}
+          name={editorName}
           hidden
           disabled
           value={
@@ -91,9 +93,7 @@ class MarkdownEditor extends React.Component {
 }
 
 export default connect(
-  state => ({
-    markvalue: state.markvalue,
-  }),
+  () => ({}),
   dispatch => ({
     onContentChange: value => {
       dispatch(updateMeetingContent(value))

@@ -4,9 +4,10 @@ import { format } from 'date-fns'
 import React from 'react'
 
 import MilestoneDisplay from './../Utils/MilestoneDisplay'
-import { setModal, updateIssueParams } from '../../actions/issues'
-import { sortProjects, updateMeetingProjects } from '../../actions/meetings'
-import { block, connect } from '../../utils'
+import { setModal } from '../../actions'
+import { updateIssueParams } from '../../actions/issues'
+import { updateMeetingProjects } from '../../actions/meetings'
+import { block, connect, sortProjects } from '../../utils'
 
 const b = block('MeetingReport')
 
@@ -127,7 +128,7 @@ export default connect(
   dispatch => ({
     onModalCreation: (grouper, group) => {
       dispatch(updateIssueParams({ grouper, group }))
-      dispatch(setModal(true, true, null))
+      dispatch(setModal(true, true, {}))
     },
     onProjectsChange: (milestoneId, value) =>
       dispatch(updateMeetingProjects(milestoneId, value)),

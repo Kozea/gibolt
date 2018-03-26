@@ -50,6 +50,7 @@ class Circle extends React.Component {
             Gibolt - {circle.circle_name ? circle.circle_name : 'Circle'}
           </title>
         </Helmet>
+        {loading && <Loading />}
         {error && (
           <article className={b('group', { error: true })}>
             <h2>Error during circle fetch/update</h2>
@@ -68,7 +69,6 @@ class Circle extends React.Component {
           </article>
         )}
         <article className={b('circle')}>
-          {loading && <Loading />}
           {circle.circle_name && (
             <div>
               <CircleDetails />
@@ -77,8 +77,7 @@ class Circle extends React.Component {
                   <CircleMeetings circle={circle} />
                   <CircleMilestones circle={circle} />
                   <CircleRoles circle={circle} />
-                  {circle.children_circles &&
-                  circle.children_circles.length > 0 ? (
+                  {circle.circle_children.length > 0 ? (
                     <CircleSubCircles circle={circle} />
                   ) : (
                     ''

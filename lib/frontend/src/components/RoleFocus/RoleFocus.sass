@@ -1,6 +1,6 @@
 @import ../vars
 
-.Role
+.RoleFocus
   flex: 1
   overflow: auto
   position: relative
@@ -8,7 +8,6 @@
   &__avatar
     border-radius: 20px
     margin-left: 5px
-    margin-right: 5px
     max-height: 40px
     order: 0
     vertical-align: middle
@@ -19,23 +18,34 @@
     border-radius: 0.25em
     border-width: 0.25em
     display: inline-block
-    height: 0.5em
     font-size: 0.9em
+    height: 0.5em
     margin: 0 0.5em
     vertical-align: middle
     width: 0.5em
 
-  &__createFocusForm
-    align-items: center
-    display: flex
-    width: 60em
+  &__focusLabel
+    font-weight: bold
 
-  &__role
+  &__roleFocus
     margin-left: 1em
     margin-right: .5em
 
+  &__item
+    font-size: 1em
+    height: 2.5em
+    width: 30em
+
+  &__long
+    width: 60em
+
   h1
-    font-size: 1.5em
+    font-size: 1.3em
+
+  li
+    align-items: center
+    display: flex
+    margin: 1em 0
 
   label
     display: block
@@ -62,3 +72,7 @@
     margin: .5em 0 .5em 1em
     padding: 1em
     transition: background 0.2s
+
+  .fa
+    font-size: .9em
+    margin-left: .3em

@@ -1,10 +1,8 @@
 import './Circle.sass'
 
-import { stringify } from 'query-string'
 import React from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
-import { updateMarkdown } from '../../actions'
 import {
   deleteCircle,
   editCircle,
@@ -16,6 +14,7 @@ import {
 import { getUnusedCircleLabels } from '../../actions/labels'
 import { block, connect } from '../../utils'
 import MarkdownEditor from './../Utils/MarkdownEditor'
+import BreadCrumbs from './../Utils/BreadCrumbs'
 
 var ReactMarkdown = require('react-markdown')
 
@@ -44,6 +43,7 @@ class CircleDetails extends React.Component {
 
     return (
       <div>
+        <BreadCrumbs circle={circle} />
         {isCircleInEdition ? (
           <form
             onSubmit={e => {
@@ -87,9 +87,9 @@ class CircleDetails extends React.Component {
             <label>
               Parent :
               <select name="parent_circle_id">
-                {circle.parent_circle_id !== null && (
-                  <option value={circle.parent_circle_id}>
-                    {circle.parent_circle_name}
+                {circle.circle_parent.length > 0 && (
+                  <option value={circle.circle_parent[0].circle_id}>
+                    {circle.circle_parent[0].circle_name}
                   </option>
                 )}
                 <option value=""> Aucun </option>
@@ -97,8 +97,11 @@ class CircleDetails extends React.Component {
                   .filter(
                     cercle =>
                       cercle.circle_id !== circle.circle_id &&
-                      cercle.parent_circle_id !== circle.circle_id &&
-                      cercle.circle_id !== circle.parent_circle_id
+                      (cercle.circle_parent[0] &&
+                        cercle.circle_parent[0].circle_id !==
+                          circle.circle_id) &&
+                      (circle.circle_parent[0] &&
+                        cercle.circle_id !== circle.circle_parent[0].circle_id)
                   )
                   .map(cercle => (
                     <option key={cercle.circle_id} value={cercle.circle_id}>
@@ -119,16 +122,18 @@ class CircleDetails extends React.Component {
             <br />
             <label>
               Domain :
-              <input
-                name="circle_domain"
-                defaultValue={circle.circle_domain}
-                required
+              <MarkdownEditor
+                editorName="circle_domain"
+                initValue={circle.circle_domain}
               />
             </label>
             <br />
             <label>
               Accountabilities :
-              <MarkdownEditor />
+              <MarkdownEditor
+                editorName="circle_accountabilities"
+                initValue={circle.circle_accountabilities}
+              />
             </label>
             <br />
             <button type="submit" onClick={e => onEdit(circle.circle_id, e)}>
@@ -158,7 +163,7 @@ class CircleDetails extends React.Component {
                     </span>
                   ))}
               <span
-                onClick={() => editClick(circle.circle_accountabilities)}
+                onClick={() => editClick()}
                 disabled={!circle.is_active}
                 title="Edit circle"
               >
@@ -172,9 +177,9 @@ class CircleDetails extends React.Component {
                     onDisableCircle(circle)
                   }}
                   disabled={
-                    circle.parent_circle_id === null
+                    circle.circle_parent.length === 0
                       ? false
-                      : !circle.parent_circle_is_active
+                      : !circle.circle_parent[0].is_active
                   }
                   title={circle.is_active ? 'Disable circle' : 'Enable circle'}
                 >
@@ -202,24 +207,6 @@ class CircleDetails extends React.Component {
                 </span>
               )}
             </h1>
-            {circle.parent_circle_name && (
-              <span>
-                {circle.parent_circle_name ? (
-                  <Link
-                    to={{
-                      pathname: '/circle',
-                      search: stringify({
-                        circle_id: circle.parent_circle_id,
-                      }),
-                    }}
-                  >
-                    {`(sous-cercle de "${circle.parent_circle_name}")`}
-                  </Link>
-                ) : (
-                  ''
-                )}
-              </span>
-            )}{' '}
             {circle.nb_reports === 0 &&
               (circle.roles.length > 0 ||
                 circle.circle_milestones.length > 0) && (
@@ -254,7 +241,7 @@ class CircleDetails extends React.Component {
               <h4>Domains</h4>
               <div onClick={() => onClickDomain(circle.domain_expanded)}>
                 {circle.domain_expanded ? (
-                  <p>{circle.circle_domain}</p>
+                  <ReactMarkdown source={circle.circle_domain} />
                 ) : (
                   <span>show domain</span>
                 )}
@@ -286,9 +273,8 @@ export default withRouter(
       isCircleInEdition: state.circle.is_in_edition,
     }),
     dispatch => ({
-      editClick: content => {
+      editClick: () => {
         dispatch(editCircle())
-        dispatch(updateMarkdown(content))
       },
       onClickAccount: circleAccount => {
         dispatch(toggleAccountExpanded(circleAccount))
@@ -303,45 +289,22 @@ export default withRouter(
         dispatch(deleteCircle(data, history))
       },
       onEdit: (id, e) => {
-        let formCircle = []
-        if (e.target.form.elements[1].value === '') {
-          formCircle = [
-            e.target.elements[0],
-            e.target.elements[2],
-            e.target.elements[3],
-            e.target.elements[4],
-            e.target.elements[5],
-          ].reduce(function(map, obj) {
-            if (obj.name === 'body') {
-              map.circle_accountabilities = obj.value
-            } else if (obj.name === 'parent_circle_id') {
-              map[obj.name] = +obj.value
-            } else if (obj.name) {
+        const formCircle = [].slice
+          .call(e.target.form.elements)
+          .reduce(function(map, obj) {
+            if (obj.name && obj.value) {
               map[obj.name] = obj.value
             }
             return map
           }, {})
-        } else {
-          formCircle = [].slice
-            .call(e.target.form.elements)
-            .reduce(function(map, obj) {
-              if (obj.name === 'body') {
-                map.circle_accountabilities = obj.value
-              } else if (obj.name === 'parent_circle_id') {
-                map[obj.name] = obj.value === '' ? null : +obj.value
-              } else if (obj.name) {
-                map[obj.name] = obj.value
-              }
-              return map
-            }, {})
-        }
         formCircle.is_active = true
         dispatch(updateCircle(id, formCircle))
-        dispatch(updateMarkdown(''))
       },
       onDisableCircle: circle => {
         const circleData = {}
-        circleData.parent_circle_id = circle.parent_circle_id
+        circleData.parent_circle_id = circle.circle_parent[0]
+          ? circle.circle_parent[0].circle_id
+          : null
         circleData.circle_name = circle.circle_name
         circleData.circle_purpose = circle.circle_purpose
         circleData.circle_domain = circle.circle_domain
@@ -351,7 +314,6 @@ export default withRouter(
       },
       cancelClick: () => {
         dispatch(editCircle())
-        dispatch(updateMarkdown(''))
       },
     })
   )(CircleDetails)

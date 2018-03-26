@@ -1,13 +1,9 @@
 @import ../vars
 
-.CreateCircle
+.RoleForm
   flex: 1
   overflow: auto
   position: relative
-
-  &__createCircle
-    margin-left: 1em
-    margin-right: .5em
 
   input, select
     height: 2.5em
@@ -24,7 +20,7 @@
 
   label
     display: block
-    margin: .10em 0
+    margin: .7em 0
     max-width: 100%
     width: 50em
 
@@ -36,5 +32,23 @@
     padding: 1em
     transition: background 0.2s
 
-    &:hover, &:focus
-      background: lighten(#bac9d5, 5%)
+  &__duration
+    align-items: center
+    display: flex
+
+    [type=number]
+      width: 5em
+    [type=date]
+      width: 10em
+
+  &__endDate
+    color: #323232
+    font-size: .9em
+    font-style: italic
+    margin-left: 1em
+
+  &__long
+    width: 60em
+
+  &__short
+    width: 15em

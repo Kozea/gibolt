@@ -53,73 +53,80 @@ class CreateCircle extends React.Component {
         <Helmet>
           <title>Gibolt - Create a circle</title>
         </Helmet>
-        {loading && <Loading />}
-        <h2>Create a new circle :</h2>
-        {selectedLabel === 'AddLabel' && (
-          <AddLabel
-            adminLabels={circleLabels}
-            selectedLabelTypeId={'circle'}
-            onLabelSubmit={event => onLabelSubmit(event, 'circle', 'creation')}
-          />
-        )}
-        <form onSubmit={e => onSubmit(e, history)}>
-          <label>
-            Name :
-            <input name="circle_name" required />
-          </label>
-          <br />
-          <label>
-            Label :
-            <select
-              name="label_id"
-              onChange={event => this.displayAddLabels(event.target.value)}
-              value={selectedLabel}
-              required
-            >
-              <option value="" />
-              {unusedLabels.map(label => (
-                <option key={label.label_id} value={label.label_id}>
-                  {label.text}
-                </option>
-              ))}
-              <option value="AddLabel">Add a label...</option>
-            </select>
-          </label>
-          <br />
-          <label>
-            Parent :
-            <select name="parent_circle_id" defaultValue="">
-              {circles
-                .filter(circle => circle.parent_circle_id === null)
-                .map(circle => (
-                  <option key={circle.circle_id} value={circle.circle_id}>
-                    {circle.circle_name}
+        <div className={b('createCircle')}>
+          {loading && <Loading />}
+          <h2>Create a new circle :</h2>
+          {selectedLabel === 'AddLabel' && (
+            <AddLabel
+              adminLabels={circleLabels}
+              selectedLabelTypeId={'circle'}
+              onLabelSubmit={event =>
+                onLabelSubmit(event, 'circle', 'creation')
+              }
+            />
+          )}
+          <form onSubmit={e => onSubmit(e, history)}>
+            <label>
+              Name :
+              <input name="circle_name" required />
+            </label>
+            <br />
+            <label>
+              Label :
+              <select
+                name="label_id"
+                onChange={event => this.displayAddLabels(event.target.value)}
+                value={selectedLabel}
+                required
+              >
+                <option value="" />
+                {unusedLabels.map(label => (
+                  <option key={label.label_id} value={label.label_id}>
+                    {label.text}
                   </option>
                 ))}
-              <option value="">Aucun</option>
-            </select>
-          </label>
-          <br />
-          <label>
-            Purpose :
-            <input name="circle_purpose" required />
-          </label>
-          <br />
-          <label>
-            Domain :
-            <input name="circle_domain" required />
-          </label>
-          <br />
-          <label>
-            Accountabilities :
-            <MarkdownEditor />
-          </label>
-          <br />
-          <button type="submit">Create circle</button>
-          <button type="button" onClick={() => onGoBack(history)}>
-            Cancel
-          </button>
-        </form>
+                <option value="AddLabel">Add a label...</option>
+              </select>
+            </label>
+            <br />
+            <label>
+              Parent :
+              <select name="parent_circle_id" defaultValue="">
+                {circles
+                  .filter(circle => circle.parent_circle_id === null)
+                  .map(circle => (
+                    <option key={circle.circle_id} value={circle.circle_id}>
+                      {circle.circle_name}
+                    </option>
+                  ))}
+                <option value="">Aucun</option>
+              </select>
+            </label>
+            <br />
+            <label>
+              Purpose :
+              <input name="circle_purpose" required />
+            </label>
+            <br />
+            <label>
+              Domain :
+              <MarkdownEditor editorName="circle_domain" initValue="" />
+            </label>
+            <br />
+            <label>
+              Accountabilities :
+              <MarkdownEditor
+                editorName="circle_accountabilities"
+                initValue=""
+              />
+            </label>
+            <br />
+            <button type="submit">Create circle</button>
+            <button type="button" onClick={() => onGoBack(history)}>
+              Cancel
+            </button>
+          </form>
+        </div>
       </article>
     )
   }
@@ -151,12 +158,9 @@ export default withRouter(
         const formCircle = [].slice
           .call(e.target.elements)
           .reduce(function(map, obj) {
-            if (obj.name === 'body') {
-              map.circle_accountabilities = obj.value
-            } else if (obj.name && obj.value) {
+            if (obj.name && obj.value) {
               map[obj.name] = obj.value
             }
-
             return map
           }, {})
         dispatch(createCircle(formCircle, history))

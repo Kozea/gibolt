@@ -4,16 +4,16 @@ import React from 'react'
 import ReactModal from 'react-modal'
 
 import {
-  updateMarkdown,
   fetchResults,
   setError,
   setLoading,
+  setModal,
   setParams,
+  setRefresh,
 } from '../actions'
 import {
   fetchIssues,
   setIssuesSelectness,
-  setModal,
   updateCurrentIssue,
   updateIssues,
   toggleIssue,
@@ -114,16 +114,21 @@ class Issues extends React.Component {
           className={b('modal')}
           overlayClassName={b('modal-overlay')}
           isOpen={!!modal.display}
-          onRequestClose={() => onModalClose()}
+          onRequestClose={() => onModalClose(modal.refresh)}
           shouldCloseOnOverlayClick
         >
           {modal.creation ? (
-            <IssueCreationDetail onModalClose={onModalClose} />
+            <IssueCreationDetail
+              circleId={null}
+              onModalClose={() => onModalClose(modal.refresh)}
+            />
           ) : (
             <span>
               <IssueDetail
-                issue={issues.filter(iss => iss.ticket_id === modal.issueId)[0]}
-                onModalClose={onModalClose}
+                issue={
+                  issues.filter(iss => iss.ticket_id === modal.data.issueId)[0]
+                }
+                onModalClose={() => onModalClose(modal.refresh)}
               />
             </span>
           )}
@@ -250,13 +255,15 @@ export default connect(
     }
   },
   dispatch => ({
-    onModalClose: () => {
-      dispatch(setModal(false, false, null))
+    onModalClose: refresh => {
+      dispatch(setModal(false, false, {}))
       dispatch(updateCurrentIssue({}))
-      dispatch(updateMarkdown(''))
       dispatch(setError(null, 'issueForm'))
-      dispatch(setLoading('issues'))
-      dispatch(fetchIssues())
+      if (refresh) {
+        dispatch(setLoading('issues'))
+        dispatch(fetchIssues())
+        dispatch(setRefresh(false))
+      }
     },
     onModalCreation: (grouper = null, group = null, id = null) => {
       const params =
@@ -269,10 +276,10 @@ export default connect(
             }
           : { grouper, group }
       dispatch(setParams(params))
-      dispatch(setModal(true, true, null))
+      dispatch(setModal(true, true, {}))
     },
     onModalDisplay: issue => {
-      dispatch(setModal(true, false, issue.ticket_id))
+      dispatch(setModal(true, false, { issueId: issue.ticket_id }))
       dispatch(updateCurrentIssue(issue))
     },
     onToggleSelected: issueId => {

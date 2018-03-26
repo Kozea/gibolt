@@ -7,13 +7,8 @@ import { Helmet } from 'react-helmet'
 import ReactModal from 'react-modal'
 import { withRouter } from 'react-router-dom'
 
-import {
-  fetchResults,
-  setLoading,
-  setParams,
-  updateMarkdown,
-} from '../../actions'
-import { setModal } from '../../actions/issues'
+import { fetchResults, setLoading, setModal, setParams } from '../../actions'
+import { fetchCircle } from '../../actions/circle'
 import {
   disableEdition,
   emptyMeeting,
@@ -29,6 +24,7 @@ import { block, connect } from '../../utils'
 import IssueCreationDetail from './../IssueCreationDetail'
 import Loading from './../Loading'
 import MarkdownEditor from './../Utils/MarkdownEditor'
+import MeetingRolesExpiration from './MeetingRolesExpiration'
 import ReportAgenda from './ReportAgenda'
 import ReportItems from './ReportItems'
 import ReportProjects from './ReportProjects'
@@ -61,15 +57,6 @@ class MeetingsReport extends React.Component {
     ReactModal.setAppElement('#root')
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.params.circle_id !== this.props.params.circle_id ||
-      nextProps.params.meeting_name !== this.props.params.meeting_name
-    ) {
-      this.props.onParamsChange(nextProps.params)
-    }
-  }
-
   componentWillUnmount() {
     if (this.state.timer) {
       clearTimeout(this.state.timer)
@@ -91,7 +78,7 @@ class MeetingsReport extends React.Component {
 
   render() {
     const {
-      circles,
+      circle,
       errors,
       history,
       isCreation,
@@ -128,12 +115,15 @@ class MeetingsReport extends React.Component {
           onRequestClose={() => onModalClose()}
           shouldCloseOnOverlayClick
         >
-          <IssueCreationDetail onModalClose={onModalClose} />
+          <IssueCreationDetail
+            circleId={circleId}
+            onModalClose={onModalClose}
+          />
         </ReactModal>
         {loading !== 0 && <Loading />}
         <article className={b('meetings')}>
           <h2>{isCreation ? 'Create a report' : 'Meeting'}</h2>
-          {errors.circles || errors.labels || errors.users ? (
+          {errors.circle || errors.labels || errors.users ? (
             <article className={b('group', { error: true })}>
               <h2>Error during fetch</h2>
               <code>
@@ -159,9 +149,11 @@ class MeetingsReport extends React.Component {
                 </article>
               )}
               <span className={b('head')}>
-                {circles
-                  .filter(circle => circle.circle_id === circleId)
-                  .map(circle => circle.circle_name)}{' '}
+                {isCreation
+                  ? circle ? circle.circle_name : ''
+                  : meeting.circle && meeting.circle.length > 0
+                    ? meeting.circle[0].circle_name
+                    : ''}{' '}
                 - {meetingType}
                 {!meeting.is_submitted &&
                   meeting.attendees.length > 0 &&
@@ -187,7 +179,7 @@ class MeetingsReport extends React.Component {
                           <span
                             className={b('unlink')}
                             title="Edit report"
-                            onClick={() => onEditClick(meeting.content)}
+                            onClick={() => onEditClick()}
                           >
                             <i
                               className="fa fa-edit editMeeting"
@@ -245,8 +237,14 @@ class MeetingsReport extends React.Component {
                         'No roles defined.'
                       )}
                     </span>
-                    {(params.meeting_name === 'Triage' ||
-                      (!isCreation && meeting.report_type === 'Triage')) && (
+                    {(meetingType === 'Triage' ||
+                      meetingType === 'Gouvernance') && (
+                      <MeetingRolesExpiration
+                        meeting={meeting}
+                        meetingType={meetingType}
+                      />
+                    )}
+                    {meetingType === 'Triage' && (
                       <span>
                         <ReportItems
                           actions={meeting.actions}
@@ -268,10 +266,9 @@ class MeetingsReport extends React.Component {
                         />
                       </span>
                     )}
-                    {(params.meeting_name === 'Triage' ||
-                      meeting.report_type === 'Triage' ||
-                      params.meeting_name === 'Gouvernance' ||
-                      meeting.report_type === 'Gouvernance') && (
+
+                    {(meetingType === 'Triage' ||
+                      meetingType === 'Gouvernance') && (
                       <span>
                         <ReportAgenda
                           isEditionDisabled={isEditionDisabled}
@@ -292,7 +289,11 @@ class MeetingsReport extends React.Component {
                       source={meeting.content === '' ? 'RAS' : meeting.content}
                     />
                   ) : (
-                    <MarkdownEditor useStore setTimer={() => this.setTimer()} />
+                    <MarkdownEditor
+                      initValue={meeting.content}
+                      setTimer={() => this.setTimer()}
+                      useStore
+                    />
                   )}
                 </div>
               </div>
@@ -338,9 +339,9 @@ class MeetingsReport extends React.Component {
 export default withRouter(
   connect(
     state => ({
-      circles: state.circles.results,
+      circle: state.circle.results,
       errors: {
-        circles: state.circles.error,
+        circle: state.circle.error,
         labels: state.labels.error,
         meeting: state.meeting.error,
         users: state.users.error,
@@ -348,7 +349,7 @@ export default withRouter(
       isEditionDisabled: state.meeting.isEditionDisabled,
       meetings: state.meetings.results,
       loading:
-        (state.circles.loading ? 1 : 0) +
+        (state.circle.loading ? 1 : 0) +
         (state.labels.loading ? 1 : 0) +
         (state.meeting.loading ? 1 : 0) +
         (state.users.loading ? 1 : 0),
@@ -361,12 +362,10 @@ export default withRouter(
       onAttendeesChange: target => {
         dispatch(updateMeetingAttendees(target.name, target.checked))
       },
-      onEditClick: content => {
-        dispatch(updateMarkdown(content))
+      onEditClick: () => {
         dispatch(disableEdition(false))
       },
       onGoBack: (circleId, history) => {
-        dispatch(updateMarkdown(''))
         if (circleId) {
           history.push(`/circle?circle_id=${circleId}`)
         } else {
@@ -377,11 +376,7 @@ export default withRouter(
         dispatch(expandMilestone(milestoneId))
       },
       onModalClose: () => {
-        dispatch(setModal(false, false, null))
-      },
-      onParamsChange: locationSearch => {
-        dispatch(setLoading('meeting'))
-        dispatch(fetchMeetingData(locationSearch))
+        dispatch(setModal(false, false, {}))
       },
       onSave: (isCreation, meetingReport) => {
         Promise.resolve(dispatch(submitOrUpdateReport(isCreation, false))).then(
@@ -391,9 +386,6 @@ export default withRouter(
         )
       },
       onSubmit: (history, isCreation, timerId) => {
-        if (isCreation) {
-          dispatch(updateMarkdown(''))
-        }
         dispatch(submitOrUpdateReport(isCreation, true, history, true))
         if (timerId) {
           clearTimeout(timerId)
@@ -402,15 +394,18 @@ export default withRouter(
       sync: (locationSearch, isCreation) => {
         dispatch(setParams(locationSearch))
         dispatch(setLoading('users'))
-        dispatch(setLoading('circles'))
         dispatch(setLoading('labels'))
-        Promise.all([
+        const promises = [
           dispatch(emptyMeeting()),
           dispatch(fetchResults('users')),
-          dispatch(fetchResults('circles')),
           dispatch(fetchResults('labels')),
           dispatch(getLastReports(locationSearch, isCreation)),
-        ]).then(() => {
+        ]
+        if (isCreation) {
+          promises.push(dispatch(setLoading('circle')))
+          promises.push(dispatch(fetchCircle()))
+        }
+        Promise.all(promises).then(() => {
           if (
             isCreation &&
             locationSearch.circle_id !== '' &&
@@ -425,9 +420,6 @@ export default withRouter(
             dispatch(fetchReport(locationSearch))
           }
         })
-      },
-      onUpdateMarkdown: () => {
-        dispatch(updateMarkdown(''))
       },
     })
   )(MeetingsReport)

@@ -17,6 +17,7 @@ item_types = ['checklist', 'indicator']
 meeting_types = [
     type_name for type_id, type_name in app.config['MEETINGS_TYPES']]
 label_types = ['ack', 'circle', 'priority', 'qualifier']
+role_types = ['leadlink', 'elected', 'assigned']
 
 
 class Label(Base):
@@ -77,6 +78,8 @@ class Circle(Base):
     circle_milestones = relationship(
         'Milestone_circle', backref=backref(
             'milestone_circle', remote_side=[circle_id]))
+    circle_parent = relationship(
+        'Circle', backref='circle', remote_side=[circle_id], lazy='subquery')
     label = relationship(Label, backref='circle')
 
 
@@ -96,15 +99,54 @@ class Role(Base):
         nullable=False)
     circle_id = Column(
         Integer,
-        ForeignKey('circle.circle_id'),
+        ForeignKey('circle.circle_id', name='fk_role_circle'),
         nullable=False)
-    user_id = Column(Integer)
     role_name = Column(String)
     role_purpose = Column(String)
     role_domain = Column(String)
     role_accountabilities = Column(String)
     is_active = Column(Boolean, default=True, nullable=False)
+    role_type = Column(Enum(*role_types))
+    duration = Column(Integer)
     circle = relationship(Circle, backref='roles')
+
+
+class Role_focus(Base):
+    __tablename__ = 'role_focus'
+    role_focus_id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        nullable=False)
+    role_id = Column(
+        Integer,
+        ForeignKey('role.role_id', name='fk_focus_role'),
+        nullable=False)
+    focus_name = Column(String, default='', nullable=False)
+    role = relationship(
+        Role,
+        backref=backref('role_focuses', cascade='all, delete-orphan')
+    )
+
+
+class Role_focus_user(Base):
+    __tablename__ = 'role_focus_user'
+    role_focus_user_id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        nullable=False)
+    role_focus_id = Column(
+        Integer,
+        ForeignKey('role_focus.role_focus_id', name='fk_user_focus'),
+        nullable=False)
+    user_id = Column(Integer)
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
+    role_focus = relationship(
+        Role_focus,
+        backref=backref('role_focus_users', cascade='all, delete-orphan')
+    )
 
 
 class Item(Base):
@@ -114,14 +156,16 @@ class Item(Base):
         primary_key=True,
         autoincrement=True,
         nullable=False)
-    role_id = Column(
+    role_focus_id = Column(
         Integer,
-        ForeignKey('role.role_id'),
+        ForeignKey('role_focus.role_focus_id', name='fk_item_rolefocus'),
         nullable=False)
     item_type = Column(Enum(*item_types))
     content = Column(Text)
-    value_type = Column(String)
-    is_active = Column(Boolean, default=True, nullable=False)
+    role_focus = relationship(
+        Role_focus,
+        backref=backref('items', cascade='all, delete-orphan')
+    )
 
 
 class Report(Base):
@@ -146,7 +190,7 @@ class Report(Base):
     attendees = relationship(
         'Report_attendee', cascade='all,delete', backref='report')
     actions = relationship(
-        'Report_checklist', cascade='all,delete',  backref='report')
+        'Report_checklist', cascade='all,delete', backref='report')
     indicators = relationship(
         'Report_indicator', cascade='all,delete', backref='report')
     projects = relationship(

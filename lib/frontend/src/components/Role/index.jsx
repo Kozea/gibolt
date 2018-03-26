@@ -4,27 +4,23 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { updateMarkdown, fetchResults, setLoading } from '../../actions'
-import {
-  deleteRole,
-  editRole,
-  fetchItems,
-  fetchRole,
-  fetchRoles,
-  updateRole,
-} from '../../actions/roles'
-import { block, connect } from '../../utils'
-import Items from './Items'
+import { fetchResults, setLoading } from '../../actions'
+import { disableRole, editRole, fetchRole } from '../../actions/roles'
+import { block, connect, roleTypes } from '../../utils'
+import RoleFocuses from './RoleFocuses'
 import Loading from './../Loading'
-import MarkdownEditor from './../Utils/MarkdownEditor'
+import BreadCrumbs from './../Utils/BreadCrumbs'
+import RoleForm from './../Utils/RoleForm'
+
+var ReactMarkdown = require('react-markdown')
 
 const b = block('Role')
-var ReactMarkdown = require('react-markdown')
 
 class Role extends React.Component {
   componentDidMount() {
     this.props.sync()
   }
+
   componentWillReceiveProps(nextProps) {
     if (
       (nextProps.location.pathname !== this.props.location.pathname &&
@@ -38,17 +34,14 @@ class Role extends React.Component {
 
   render() {
     const {
-      btnClick,
       circles,
       editClick,
       error,
       history,
-      items,
       loading,
-      onEditRole,
+      onDisableRole,
       onGoBack,
       role,
-      roles,
       users,
     } = this.props
     return (
@@ -56,39 +49,15 @@ class Role extends React.Component {
         <Helmet>
           <title>Gibolt - Role</title>
         </Helmet>
+        {loading && <Loading />}
         <article className={b('role')}>
-          <h1>
-            {role.role_name}{' '}
-            <span
-              onClick={() => editClick(role.role_accountabilities)}
-              title="Edit role"
-            >
-              <i className="fa fa-pencil-square-o" aria-hidden="true" />
-            </span>{' '}
-            {items.results.filter(item => item.role_id === role.role_id)
-              .length > 0 ? (
-              ''
-            ) : (
-              <span
-                onClick={() => btnClick(role.role_id, role.circle_id, history)} // eslint-disable-line max-len
-                title="Delete role"
-              >
-                <i className="fa fa-trash" aria-hidden="true" />
-              </span>
-            )}
-          </h1>
-          {items.results.filter(item => item.role_id === role.role_id).length >
-          0 ? (
-            <code>
-              {'You cannot delete this role, '}
-              {'please first delete the items.'}
-            </code>
-          ) : (
-            ' '
-          )}
-          {error && (
+          <BreadCrumbs
+            circle={circles.find(circle => circle.circle_id === role.circle_id)}
+            role={role}
+          />
+          {error ? (
             <article className={b('date', { error: true })}>
-              <h2>Error during issue fetch</h2>
+              <h2>Error during role fetch</h2>
               {typeof error === 'object' ? (
                 <ul>
                   {error.map(err => (
@@ -102,121 +71,73 @@ class Role extends React.Component {
                 <code>{error}</code>
               )}
             </article>
-          )}
-          {loading && <Loading />}
-          {role.is_in_edition ? (
-            <article>
-              <form
-                onSubmit={e => {
-                  e.preventDefault()
-                  onEditRole(role, e, history)
-                }}
-              >
-                <h1>Edit {role.role_name} role :</h1>
-                <label>
-                  Circle :
-                  <select
-                    name="circle_id"
-                    defaultValue={role.circle_id}
-                    className={b('long')}
-                  >
-                    {circles.map(circle => (
-                      <option key={circle.circle_id} value={circle.circle_id}>
-                        {circle.circle_name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  User :
-                  <select
-                    name="user_id"
-                    defaultValue={role.user_id}
-                    className={b('long')}
-                  >
-                    {users.map(user => (
-                      <option key={user.user_id} value={user.user_id}>
-                        {user.user_name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Name :
-                  <input
-                    name="role_name"
-                    className={b('long')}
-                    defaultValue={role.role_name}
-                    required
-                  />
-                </label>
-                <label>
-                  Purpose :
-                  <input
-                    name="role_purpose"
-                    className={b('long')}
-                    defaultValue={role.role_purpose}
-                    required
-                  />
-                </label>
-                <label>
-                  Domain :
-                  <input
-                    name="role_domain"
-                    className={b('long')}
-                    defaultValue={role.role_domain}
-                    required
-                  />
-                </label>
-                <label>
-                  Accountabilities :
-                  <MarkdownEditor />
-                </label>
-                <button type="submit">Edit role</button>
-                <button type="submit" onClick={() => editClick()}>
-                  Cancel
-                </button>
-              </form>
-            </article>
-          ) : (
-            <article>
-              <h3>Circle</h3>
-              <div>
-                <p>
-                  {circles.find(
-                    circle => circle.circle_id === role.circle_id
-                  ) &&
-                    circles.find(circle => circle.circle_id === role.circle_id)
-                      .circle_name}
-                </p>
-              </div>
-              <h3>Purpose</h3>
-              <div>
-                <p>{role.role_purpose}</p>
-              </div>
-              <h3>Domain</h3>
-              <div>
-                <p>{role.role_domain}</p>
-              </div>
-              <h3>Accountabilities</h3>
-              <div>
-                <ReactMarkdown source={role.role_accountabilities} />
-              </div>
-              <Items
-                formType={items.form_checklist}
-                items={items}
-                itemType="checklist"
-                title="Recurrent actions"
+          ) : role.is_in_edition ? (
+            <span>
+              <h1>
+                {role.role_name} {role.is_active ? '' : ' (disabled)'}
+              </h1>
+              <RoleForm
+                circleId={role.circle_id}
+                circles={circles}
+                isCreation={false}
                 role={role}
-                roles={roles}
+                users={users}
               />
-              <Items
-                formType={items.form_indicator}
-                items={items}
-                itemType="indicator"
-                title="Indicators"
-                role={role}
-                roles={roles}
+            </span>
+          ) : (
+            <span>
+              <h1>
+                {role.role_name} {role.is_active ? '' : ' (disabled)'}
+                <span onClick={() => editClick()} title="Edit role">
+                  <i className="fa fa-pencil-square-o" aria-hidden="true" />
+                </span>{' '}
+                <span
+                  onClick={e => {
+                    e.preventDefault()
+                    onDisableRole(role)
+                  }}
+                  title={role.is_active ? 'Disable role' : 'Enable role'}
+                >
+                  {role.is_active ? (
+                    <i className="fa fa-ban" aria-hidden="true" />
+                  ) : (
+                    <i className="fa fa-unlock" aria-hidden="true" />
+                  )}
+                </span>
+              </h1>
+              <h3>Circle</h3>
+              <p>
+                {circles.find(circle => circle.circle_id === role.circle_id) &&
+                  circles.find(circle => circle.circle_id === role.circle_id)
+                    .circle_name}
+              </p>
+              <h3>Role Type</h3>
+              <p>
+                {role.role_type
+                  ? roleTypes
+                      .filter(roleType => roleType.value === role.role_type)
+                      .map(roleType => roleType.name)
+                      .toString()
+                  : 'Type not defined'}
+              </p>
+              <h3>Duration</h3>
+              <p>
+                {role.duration
+                  ? `${role.duration} day(s)`
+                  : 'Duration not defined'}
+              </p>
+              <h3>Purpose</h3>
+              <p>{role.role_purpose}</p>
+              <h3>Domain</h3>
+              <ReactMarkdown source={role.role_domain} />
+              <h3>Accountabilities</h3>
+              <ReactMarkdown source={role.role_accountabilities} />
+              <RoleFocuses
+                duration={role.duration}
+                focuses={role.role_focuses}
+                isActive={role.is_active}
+                roleId={role.role_id}
+                users={users}
               />
               <button
                 type="submit"
@@ -224,7 +145,7 @@ class Role extends React.Component {
               >
                 Back to circle
               </button>
-            </article>
+            </span>
           )}
         </article>
       </section>
@@ -241,49 +162,28 @@ export default withRouter(
       loading: state.role.loading,
       location: state.router.location,
       role: state.role.results,
-      roles: state.roles.results,
       users: state.users.results,
     }),
     dispatch => ({
-      btnClick: (roleId, circleId, history) => {
-        dispatch(deleteRole(roleId, circleId, history))
-      },
-      editClick: content => {
+      editClick: () => {
         dispatch(editRole())
-        dispatch(updateMarkdown(content))
       },
-      onEditRole: (role, e, history) => {
-        const formRole = [].slice.call(e.target.elements).reduce(
-          function(map, obj) {
-            if (obj.name === 'body') {
-              map.role_accountabilities = obj.value
-            } else if (obj.name) {
-              map[obj.name] = obj.value
-            }
-            return map
-          },
-          { circle_id: role.circle_id }
-        )
-        dispatch(updateRole(role.role_id, formRole, history))
-        dispatch(updateMarkdown(''))
-        dispatch(fetchRole())
+      onDisableRole: role => {
+        dispatch(disableRole(role))
       },
       onGoBack: (circleId, history) => {
         history.push(`/circle?circle_id=${circleId}`)
       },
-      loadItems: () => {
-        dispatch(setLoading('items'))
-        dispatch(fetchItems())
-      },
       sync: () => {
-        dispatch(setLoading('circles'))
-        dispatch(fetchResults('circles'))
-        dispatch(setLoading('users'))
-        dispatch(fetchResults('users'))
-        dispatch(setLoading('role'))
-        dispatch(fetchRole())
-        dispatch(setLoading('roles'))
-        dispatch(fetchRoles())
+        Promise.all([
+          dispatch(setLoading('users')),
+          dispatch(fetchResults('users')),
+        ]).then(() => {
+          dispatch(setLoading('circles'))
+          dispatch(fetchResults('circles'))
+          dispatch(setLoading('role'))
+          dispatch(fetchRole())
+        })
       },
     })
   )(Role)

@@ -1,35 +1,232 @@
+from datetime import date, datetime
+
 from flask import jsonify, request
-from sqlalchemy import exc
+from sqlalchemy import and_, exc, func, or_
 from unrest import UnRest
 
-from .. import Session, app, session_unrest
+from .. import app, session_unrest
 from ..routes.auth import needlogin
 from ..routes.github import get_a_milestone
 from .models import (
     Circle, Item, Label, Milestone_circle, Priority, Report, Report_agenda,
     Report_attendee, Report_checklist, Report_indicator, Report_milestone,
-    Role, label_types
+    Role, Role_focus, Role_focus_user, label_types
 )
-
-session = Session()
-
 
 # Declare rest endpoints for gibolt Database
 rest = UnRest(app, session_unrest)
+session = session_unrest
+
+
+role_focus_users = rest(
+    Role_focus_user,
+    methods=['GET', 'PATCH'],
+    name='role_focus_users',
+    query=lambda query: query.filter(
+        Role_focus_user.role_focus_id == (request.values.get('role_focus_id'))
+        if request.values.get('role_focus_id')
+        else True,
+        and_(
+            request.values.get('active_focus_user') == True,
+            or_(func.DATE(Role_focus_user.end_date) == None,
+                func.DATE(Role_focus_user.end_date) >= date.today()),
+        )
+        if request.values.get('active_focus_user')
+        else True
+    ).order_by(
+        Role_focus_user.end_date.desc(),
+        Role_focus_user.start_date.desc(),
+        Role_focus_user.role_focus_user_id.desc(),
+    ),
+    auth=needlogin
+)
+
+
+@role_focus_users.declare('POST', True)
+def post_role_focus_user(payload, role_focus_user_id=None):
+    role_focus_id = payload.get('role_focus_id')
+
+    future_focus_user = session.query(Role_focus_user).filter(
+        Role_focus_user.role_focus_id == role_focus_id,
+        func.DATE(Role_focus_user.start_date) > date.today(),
+    ).first()
+    if future_focus_user:
+        rest.raise_error(400, 'A valid focus user alredy exists.')
+
+    try:
+        existing_focus_users = session.query(Role_focus_user).filter(
+            Role_focus_user.role_focus_id == role_focus_id,
+            or_(func.DATE(Role_focus_user.end_date) == None,
+                func.DATE(Role_focus_user.end_date) >= date.today()),
+        ).all()
+        for user in existing_focus_users:
+            user.end_date = date.today()
+            session.flush()
+
+        start_date = payload.get('start_date')
+        new_focus_user = Role_focus_user(
+            role_focus_id=role_focus_id,
+            start_date=datetime.strptime(
+                start_date, '%Y-%m-%d') if start_date else None,
+            user_id=payload.get('user_id'),
+        )
+        session.add(new_focus_user)
+        session.commit()
+
+    except (exc.IntegrityError) as e:
+        session.rollback()
+        rest.raise_error(400, 'Invalid payload.')
+
+    return role_focus_users.get(
+        {}, role_focus_user_id=new_focus_user.role_focus_user_id)
+
+
+rest(
+    Item,
+    methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
+    name='items',
+    query=lambda query: query.filter(
+        Item.role_focus_id == (request.values.get('role_focus_id'))
+        if request.values.get('role_focus_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+
+role_focuses = rest(
+    Role_focus,
+    methods=['GET', 'PATCH', 'DELETE'],
+    name='role_focuses',
+    relationships={
+        'role_focus_users': role_focus_users,
+        'items': rest(Item),
+        'role': rest(Role, relationships={'circle': rest(
+            Circle, relationships={'circle_parent': rest(Circle)})}),
+    },
+    query=lambda query: query.filter(
+        Role_focus.role_id == (request.values.get('role_id'))
+        if request.values.get('role_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+
+@role_focuses.declare('POST', True)
+def post_role_focus(payload, role_focus_id=None):
+    try:
+        new_role_focus = Role_focus(
+            role_id=payload.get('role_id'),
+            focus_name=payload.get('focus_name'),
+        )
+        session.add(new_role_focus)
+        session.flush()
+
+        start_date = payload.get('start_date')
+        new_focus_user = Role_focus_user(
+            role_focus_id=new_role_focus.role_focus_id,
+            start_date=datetime.strptime(
+                start_date, '%Y-%m-%d') if start_date else None,
+            user_id=payload.get('user_id'),
+        )
+        session.add(new_focus_user)
+        session.commit()
+
+    except (exc.IntegrityError, AttributeError) as e:
+        session.rollback()
+        rest.raise_error(400, 'Invalid payload.')
+    return role_focuses.get(
+        {}, role_focus_id=new_role_focus.role_focus_id)
+
+
+only_role_focuses = rest(
+    Role_focus,
+    methods=['GET'],
+    name='only_role_focuses',
+    relationships={
+        'role_focus_users': role_focus_users,
+        'items': rest(Item),
+    },
+    query=lambda query: query.filter(
+        Role_focus.role_id == (request.values.get('role_id'))
+        if request.values.get('role_id')
+        else True,
+    ),
+    auth=needlogin
+)
+
+
+roles = rest(
+    Role,
+    methods=['GET', 'PATCH', 'PUT', 'DELETE'],
+    name='roles',
+    relationships={
+        'role_focuses': only_role_focuses,
+    },
+    query=lambda query: query.filter(
+        Role.circle_id == (request.values.get('circle_id'))
+        if request.values.get('circle_id')
+        else True,
+        Role.is_active == (request.values.get('is_active'))
+        if request.values.get('is_active')
+        else True,
+    ),
+    auth=needlogin
+)
+
+
+@roles.declare('POST', True)
+def post_roles(payload, role_id=None):
+    try:
+        new_role = Role(
+            circle_id=payload.get('circle_id'),
+            role_name=payload.get('role_name'),
+            role_purpose=payload.get('role_purpose'),
+            role_domain=payload.get('role_domain'),
+            role_accountabilities=payload.get('role_accountabilities'),
+            role_type=payload.get('role_type'),
+            duration=payload.get('duration')
+        )
+        session.add(new_role)
+        session.flush()
+
+        if payload.get('user_id'):
+            new_focus = Role_focus(
+                role_id=new_role.role_id,
+                focus_name=payload.get('focus_name'),
+            )
+            session.add(new_focus)
+            session.flush()
+
+            start_date = payload.get('start_date')
+            new_role_focus = Role_focus_user(
+                role_focus_id=new_focus.role_focus_id,
+                start_date=datetime.strptime(
+                    start_date, '%Y-%m-%d') if start_date else None,
+                user_id=payload.get('user_id'),
+            )
+            session.add(new_role_focus)
+        session.commit()
+
+    except (exc.IntegrityError) as e:
+        session.rollback()
+        rest.raise_error(400, 'Invalid payload.')
+    return roles.get({}, role_id=new_role.role_id)
+
 
 rest(
     Circle,
-    methods=['GET', 'PUT', 'POST', 'DELETE'],
+    methods=['GET', 'PATCH', 'POST', 'DELETE'],
     relationships={
-        'roles': rest(Role, only=['role_id', 'role_name', 'user_id']),
+        'circle_parent': rest(Circle),
+        'circle_children': rest(Circle, relationships={'roles': roles}),
+        'roles': roles,
         'circle_milestones': rest(Milestone_circle),
         'label': rest(Label)
     },
     name='circles',
     query=lambda query: query.filter(
-        Circle.parent_circle_id == (request.values.get('parent_circle_id'))
-        if request.values.get('parent_circle_id')
-        else True,
         Circle.label_id == (request.values.get('label_id'))
         if request.values.get('label_id')
         else True,
@@ -37,17 +234,6 @@ rest(
     auth=needlogin
 )
 
-rest(
-    Role,
-    methods=['GET', 'PATCH', 'POST', 'PUT', 'DELETE'],
-    name='roles',
-    query=lambda query: query.filter(
-        Role.circle_id == (request.values.get('circle_id'))
-        if request.values.get('circle_id')
-        else True,
-    ),
-    auth=needlogin
-)
 
 report_unrest = rest(
     Report,
@@ -85,10 +271,6 @@ report_unrest = rest(
 
 @report_unrest.declare('POST', True)
 def post_report(payload, report_id=None):
-    response_object = {
-        'status': 'error',
-        'message': 'Invalid payload.'
-    }
     circle_id = payload.get('circle_id')
     report_type = payload.get('report_type')
     author_id = payload.get('author_id')
@@ -162,7 +344,7 @@ def post_report(payload, report_id=None):
         session.commit()
     except (exc.IntegrityError) as e:
         session.rollback()
-        return jsonify(response_object), 400
+        rest.raise_error(400, 'Invalid payload.')
     return report_unrest.get({}, report_id=new_report.report_id)
 
 
@@ -177,7 +359,7 @@ def report_tables(payload, report_id):
         report_attendee = session.query(Report_attendee).filter(
             Report_attendee.report_id == report_id,
             Report_attendee.user_id == attendee.get('user_id'),
-            ).first()
+        ).first()
         if report_attendee:
             report_attendee.user = attendee.get('user')
             report_attendee.checked = attendee.get('checked')
@@ -187,7 +369,7 @@ def report_tables(payload, report_id):
         report_checklist = session.query(Report_checklist).filter(
             Report_checklist.report_id == report_id,
             Report_checklist.item_id == action.get('item_id'),
-            ).first()
+        ).first()
         if report_checklist:
             report_checklist.content = action.get('content')
             report_checklist.checked = action.get('checked')
@@ -197,7 +379,7 @@ def report_tables(payload, report_id):
         report_indicator = session.query(Report_indicator).filter(
             Report_indicator.report_id == report_id,
             Report_indicator.item_id == indicator.get('item_id'),
-            ).first()
+        ).first()
         if report_indicator:
             report_indicator.content = indicator.get('content')
             report_indicator.value = indicator.get('value')
@@ -208,7 +390,7 @@ def report_tables(payload, report_id):
             Report_milestone.report_id == report_id,
             Report_milestone.milestone_number == project.get('number'),
             Report_milestone.repo_name == project.get('repo'),
-            ).first()
+        ).first()
         if report_milestone:
             report_milestone.milestone = project
         session.flush()
@@ -217,7 +399,7 @@ def report_tables(payload, report_id):
         report_agenda = session.query(Report_agenda).filter(
             Report_agenda.report_id == report_id,
             Report_agenda.ticket_id == ticket.get('ticket_id'),
-            ).first()
+        ).first()
         if report_agenda:
             report_agenda.ticket = ticket
         session.flush()
@@ -226,17 +408,13 @@ def report_tables(payload, report_id):
 
 @report_unrest.declare('PUT', True)
 def update_report(payload, report_id):
-    response_object = {
-        'status': 'error',
-        'message': 'Invalid payload.'
-    }
     if not report_id:
-        return jsonify(response_object), 400
+        rest.raise_error(400, 'Invalid payload.')
 
     report = session.query(Report).filter(
         Report.report_id == report_id).first()
     if not report:
-        return jsonify(response_object), 400
+        rest.raise_error(400, 'Invalid payload.')
 
     try:
         report.modified_by = payload.get('modified_by')
@@ -247,22 +425,9 @@ def update_report(payload, report_id):
         session.commit()
     except (exc.IntegrityError) as e:
         session.rollback()
-        return jsonify(response_object), 400
+        rest.raise_error(400, 'Invalid payload.')
 
     return report_unrest.get({}, report_id=report.report_id)
-
-
-rest(
-    Item,
-    methods=['GET', 'PATCH', 'PUT', 'POST', 'DELETE'],
-    name='items',
-    query=lambda query: query.filter(
-        Item.role_id == (request.values.get('role_id'))
-        if request.values.get('role_id')
-        else True,
-    ),
-    auth=needlogin
-)
 
 
 @app.route('/api/labels', methods=['GET'])
@@ -376,7 +541,7 @@ def update_milestones_circles(repo_name, milestone_number):
     existing_milestones_circles = session.query(Milestone_circle).filter(
         Milestone_circle.milestone_number == milestone_number,
         Milestone_circle.repo_name == repo_name
-        ).all()
+    ).all()
 
     try:
         # deletion
