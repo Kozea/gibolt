@@ -115,7 +115,10 @@ class MeetingsReport extends React.Component {
           onRequestClose={() => onModalClose()}
           shouldCloseOnOverlayClick
         >
-          <IssueCreationDetail onModalClose={onModalClose} />
+          <IssueCreationDetail
+            circleId={circleId}
+            onModalClose={onModalClose}
+          />
         </ReactModal>
         {loading !== 0 && <Loading />}
         <article className={b('meetings')}>

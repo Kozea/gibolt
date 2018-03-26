@@ -117,7 +117,7 @@ class Issues extends React.Component {
           shouldCloseOnOverlayClick
         >
           {modal.creation ? (
-            <IssueCreationDetail onModalClose={onModalClose} />
+            <IssueCreationDetail circleId={null} onModalClose={onModalClose} />
           ) : (
             <span>
               <IssueDetail

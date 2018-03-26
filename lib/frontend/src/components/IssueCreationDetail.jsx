@@ -22,7 +22,7 @@ const b = block('IssueCreationDetail')
 
 class IssueCreationDetail extends React.Component {
   componentDidMount() {
-    this.props.sync(this.props.params)
+    this.props.sync(this.props.circleId, this.props.params)
   }
 
   componentDidUpdate() {
@@ -256,11 +256,17 @@ export default connect(
     onTitleChange: event => {
       dispatch(updateTitle(event.target.value))
     },
-    sync: params => {
+    sync: (circleId, params) => {
       const repoName = params.group
         ? params.group.split(' ⦔ ')[0].toString()
         : ''
-      dispatch(updateCircle(params.circle_id))
+      if (circleId) {
+        Promise.all([
+          dispatch(updateCircle(circleId)),
+          dispatch(setLoading('circles')),
+          dispatch(fetchResults('circles')),
+        ]).then(() => dispatch(changeRolesSelect(circleId)))
+      }
       dispatch(updateProject(repoName))
       if (params.grouper === 'milestone' || params.grouper === 'project') {
         dispatch(changeMilestoneSelect(repoName))
@@ -270,7 +276,6 @@ export default connect(
         dispatch(setLoading('repositories'))
         dispatch(fetchResults('repositories'))
       }
-      dispatch(changeRolesSelect(params.circle_id))
     },
   })
 )(IssueCreationDetail)
