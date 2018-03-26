@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { setRefresh } from '../../actions'
 import { updateATicket } from '../../actions/issues'
 import { block, connect } from '../../utils'
 import MarkdownEditor from './../Utils/MarkdownEditor'
@@ -63,7 +64,7 @@ class IssueForm extends React.Component {
           </select>
         )
       case 'body':
-        return <MarkdownEditor />
+        return <MarkdownEditor initValue={issue.body} />
     }
   }
 
@@ -115,6 +116,9 @@ export default connect(
           values = { [type]: targetValue }
       }
       dispatch(updateATicket(Object.assign({}, issue), values))
+      if (type !== 'body') {
+        dispatch(setRefresh(true))
+      }
     },
   })
 )(IssueForm)

@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import React from 'react'
 import Octicon from 'react-component-octicons'
 
+import { setRefresh } from '../../actions'
 import { fetchCircle } from '../../actions/circle'
 import { changeMilestoneSelect } from '../../actions/issueForm'
 import {
@@ -419,6 +420,7 @@ export default connect(
         }
       }
       dispatch(updateATicket(issue, { labels: selectedLabels }))
+      dispatch(setRefresh(true))
     },
   })
 )(IssueDetail)

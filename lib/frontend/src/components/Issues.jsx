@@ -9,6 +9,7 @@ import {
   setLoading,
   setModal,
   setParams,
+  setRefresh,
 } from '../actions'
 import {
   fetchIssues,
@@ -113,18 +114,21 @@ class Issues extends React.Component {
           className={b('modal')}
           overlayClassName={b('modal-overlay')}
           isOpen={!!modal.display}
-          onRequestClose={() => onModalClose()}
+          onRequestClose={() => onModalClose(modal.refresh)}
           shouldCloseOnOverlayClick
         >
           {modal.creation ? (
-            <IssueCreationDetail circleId={null} onModalClose={onModalClose} />
+            <IssueCreationDetail
+              circleId={null}
+              onModalClose={() => onModalClose(modal.refresh)}
+            />
           ) : (
             <span>
               <IssueDetail
                 issue={
                   issues.filter(iss => iss.ticket_id === modal.data.issueId)[0]
                 }
-                onModalClose={onModalClose}
+                onModalClose={() => onModalClose(modal.refresh)}
               />
             </span>
           )}
@@ -251,12 +255,15 @@ export default connect(
     }
   },
   dispatch => ({
-    onModalClose: () => {
+    onModalClose: refresh => {
       dispatch(setModal(false, false, {}))
       dispatch(updateCurrentIssue({}))
       dispatch(setError(null, 'issueForm'))
-      dispatch(setLoading('issues'))
-      dispatch(fetchIssues())
+      if (refresh) {
+        dispatch(setLoading('issues'))
+        dispatch(fetchIssues())
+        dispatch(setRefresh(false))
+      }
     },
     onModalCreation: (grouper = null, group = null, id = null) => {
       const params =
