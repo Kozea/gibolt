@@ -10,7 +10,8 @@ export default function RoleFocusUsersList(props) {
   return (
     <div>
       <h3>Previous users</h3>
-      {roleFocusUsers.length > 0 ? (
+      {roleFocusUsers.filter(user => user.role_focus_user_id !== currentUserId)
+        .length > 0 ? (
         <ul>
           {roleFocusUsers
             .filter(user => user.role_focus_user_id !== currentUserId)
