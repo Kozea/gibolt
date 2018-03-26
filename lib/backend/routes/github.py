@@ -333,7 +333,7 @@ def create_milestone(repo_name):
 
 @app.route(
     '/api/repos/<string:repo_name>/milestones/<milestone_number>',
-    methods=['PUT'])
+    methods=['PATCH'])
 @needlogin
 def update_a_milestone(repo_name, milestone_number):
     data = request.get_json()
@@ -350,21 +350,9 @@ def update_a_milestone(repo_name, milestone_number):
     except GitHubError as e:
         return e.response.content, e.response.status_code
 
-    response = {
-        'milestone_number': milestone_request['number'],
-        'repo_name': repo_name,
-        'milestone_id': milestone_request['id'],
-        'milestone_title': milestone_request['title'],
-        'description': milestone_request['description'],
-        'html_url': milestone_request['html_url'],
-        'open_issues': milestone_request['open_issues'],
-        'closed_issues': milestone_request['closed_issues'],
-        'state': milestone_request['state'],
-        'updated_at': milestone_request['updated_at'],
-        'due_on': milestone_request['due_on'],
-        'closed_at': milestone_request['closed_at']}
+    response = update_milestone(milestone_request, repo_name)
     objects = {
-        'objects': response,
+        'objects': milestoneDateToIso(response),
         'occurences': 1 if response else 0,
         'primary_keys': [
             'repo_name',
