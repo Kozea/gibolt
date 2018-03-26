@@ -122,7 +122,7 @@ class Role_focus(Base):
         Integer,
         ForeignKey('role.role_id', name='fk_focus_role'),
         nullable=False)
-    focus_name = Column(String)
+    focus_name = Column(String, default='', nullable=False)
     role = relationship(
         Role,
         backref=backref("role_focuses", cascade="all, delete-orphan")
