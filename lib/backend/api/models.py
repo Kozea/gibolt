@@ -125,7 +125,7 @@ class Role_focus(Base):
     focus_name = Column(String, default='', nullable=False)
     role = relationship(
         Role,
-        backref=backref("role_focuses", cascade="all, delete-orphan")
+        backref=backref('role_focuses', cascade='all, delete-orphan')
     )
 
 
@@ -145,7 +145,7 @@ class Role_focus_user(Base):
     end_date = Column(DateTime)
     role_focus = relationship(
         Role_focus,
-        backref=backref("role_focus_users", cascade="all, delete-orphan")
+        backref=backref('role_focus_users', cascade='all, delete-orphan')
     )
 
 
@@ -164,7 +164,7 @@ class Item(Base):
     content = Column(Text)
     role_focus = relationship(
         Role_focus,
-        backref=backref("items", cascade="all, delete-orphan")
+        backref=backref('items', cascade='all, delete-orphan')
     )
 
 
