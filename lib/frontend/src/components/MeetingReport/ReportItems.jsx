@@ -14,17 +14,26 @@ const b = block('MeetingReport')
 
 function getDataForSparkLines(indicator, meetings) {
   const sparklinesValues = []
+  let lastValue = null
   for (let i = 8; i >= 0; i--) {
     if (meetings[i] && meetings[i].indicators) {
       const value = meetings[i].indicators
         .filter(ind => ind.item_id === indicator.item_id)
         .map(ind => ind.value)
       sparklinesValues.push(value[0] ? value[0] : 0)
+      if (i === 0) {
+        // eslint-disable-next-line prefer-destructuring
+        lastValue = value[0]
+      }
     } else {
       sparklinesValues.push(0)
     }
   }
-  sparklinesValues.push(isNaN(indicator.value) ? 0 : +indicator.value)
+  sparklinesValues.push(
+    isNaN(indicator.value) || indicator.value === '' || indicator.value === null
+      ? lastValue ? lastValue : 0
+      : +indicator.value
+  )
   return sparklinesValues
 }
 
