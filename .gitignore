@@ -13,7 +13,8 @@ dist/
 lib/backend/application-custom.cfg
 lib/frontend/assets/
 lib/frontend/static/
-Makefile.custom.config
+base.Makefile
+config.custom.Makefile
 node_modules/
 .ropeproject/
 database.db
