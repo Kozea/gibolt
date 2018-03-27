@@ -13,13 +13,14 @@ class RoleFocuses extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
+      duration: null,
       displayForm: null,
       startDate: null,
     }
   }
   render() {
-    const { duration, focuses, isActive, onSubmit, roleId, users } = this.props
-    const { displayForm, startDate } = this.state
+    const { focuses, isActive, onSubmit, roleId, users } = this.props
+    const { displayForm, duration, startDate } = this.state
     const endDate =
       duration > 0 && startDate
         ? format(addDays(new Date(startDate), duration), 'DD/MM/YYYY (dddd)')
@@ -45,7 +46,7 @@ class RoleFocuses extends React.Component {
               <li key={focus.role_focus_id}>
                 <span className={b('bullet')} />
                 <RoleFocusUser
-                  duration={duration}
+                  duration={focus.duration}
                   focusName={focus.focus_name}
                   focusId={focus.role_focus_id}
                   focusUser={focus.role_focus_users[0]}
@@ -76,7 +77,7 @@ class RoleFocuses extends React.Component {
                 />
               </label>
               <label>
-                User :
+                User :<br />
                 <select
                   className={b('long')}
                   defaultValue=""
@@ -90,6 +91,19 @@ class RoleFocuses extends React.Component {
                     </option>
                   ))}
                 </select>
+              </label>
+              <label>
+                Duration (in days) :
+                <input
+                  className={b('long')}
+                  defaultValue=""
+                  min="0"
+                  name="duration"
+                  onChange={e => {
+                    this.setState({ duration: +e.target.value })
+                  }}
+                  type="number"
+                />
               </label>
               <label>
                 Start date:

@@ -30,12 +30,16 @@ class RoleFocusForm extends React.Component {
       roles,
       users,
     } = this.props
+    const duration =
+      this.state.duration === null
+        ? roleFocus.duration
+        : this.state.duration === '' ? null : this.state.duration
+    const startDate = this.state.startDate
+      ? this.state.startDate
+      : roleFocus.role_focus_users[0].start_date
     const endDate =
-      role.duration > 0 && this.state.startDate
-        ? format(
-            addDays(new Date(this.state.startDate), role.duration),
-            'DD/MM/YYYY (dddd)'
-          )
+      duration > 0 && startDate
+        ? format(addDays(new Date(startDate), duration), 'DD/MM/YYYY (dddd)')
         : null
     return (
       <article className={b()}>
@@ -74,6 +78,22 @@ class RoleFocusForm extends React.Component {
             />
           </label>
           <label>
+            Duration (in days) :
+            <span className={b('duration')}>
+              <input
+                defaultValue={roleFocus.duration ? roleFocus.duration : ''}
+                min="0"
+                name="duration"
+                onChange={e => {
+                  this.setState({
+                    duration: e.target.value === '' ? '' : +e.target.value,
+                  })
+                }}
+                type="number"
+              />
+            </span>
+          </label>
+          <label>
             Filled by:
             <select
               className={b('long')}
@@ -104,9 +124,6 @@ class RoleFocusForm extends React.Component {
                 }}
                 type="date"
               />
-              <span className={b('endDate')}>
-                {endDate && `until ${endDate}`}
-              </span>
             </span>
           </label>
           <label>
@@ -121,6 +138,9 @@ class RoleFocusForm extends React.Component {
                 name="end_date"
                 type="date"
               />
+              <span className={b('endDate')}>
+                {endDate && ` calculated end date: ${endDate}`}
+              </span>
             </span>
           </label>
           <button type="submit">Submit</button>
@@ -149,6 +169,8 @@ export default withRouter(
               map[obj.name] = obj.value ? format(new Date(obj.value)) : null
             } else if (obj.name === 'focus_name' || obj.name === 'role_id') {
               formRoleFocus[obj.name] = obj.value
+            } else if (obj.name === 'duration') {
+              formRoleFocus[obj.name] = obj.value === '' ? null : +obj.value
             } else if (obj.name && obj.value) {
               map[obj.name] = obj.value
             }

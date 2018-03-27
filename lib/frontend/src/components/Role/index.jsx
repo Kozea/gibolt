@@ -120,12 +120,6 @@ class Role extends React.Component {
                       .toString()
                   : 'Type not defined'}
               </p>
-              <h3>Duration</h3>
-              <p>
-                {role.duration
-                  ? `${role.duration} day(s)`
-                  : 'Duration not defined'}
-              </p>
               <h3>Purpose</h3>
               <p>{role.role_purpose}</p>
               <h3>Domain</h3>
@@ -133,7 +127,6 @@ class Role extends React.Component {
               <h3>Accountabilities</h3>
               <ReactMarkdown source={role.role_accountabilities} />
               <RoleFocuses
-                duration={role.duration}
                 focuses={role.role_focuses}
                 isActive={role.is_active}
                 roleId={role.role_id}
