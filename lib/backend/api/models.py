@@ -107,7 +107,6 @@ class Role(Base):
     role_accountabilities = Column(String)
     is_active = Column(Boolean, default=True, nullable=False)
     role_type = Column(Enum(*role_types))
-    duration = Column(Integer)
     circle = relationship(Circle, backref='roles')
 
 
@@ -123,6 +122,7 @@ class Role_focus(Base):
         ForeignKey('role.role_id', name='fk_focus_role'),
         nullable=False)
     focus_name = Column(String, default='', nullable=False)
+    duration = Column(Integer)
     role = relationship(
         Role,
         backref=backref('role_focuses', cascade='all, delete-orphan')

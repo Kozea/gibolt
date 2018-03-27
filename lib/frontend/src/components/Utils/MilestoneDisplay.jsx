@@ -4,7 +4,10 @@ import { format } from 'date-fns'
 import React from 'react'
 
 import Progress from './../Progress'
-import { deleteMilestoneCircles } from '../../actions/milestones'
+import {
+  closeMilestone,
+  deleteMilestoneCircles,
+} from '../../actions/milestones'
 import { block, connect } from '../../utils'
 
 const b = block('MilestoneDisplay')
@@ -15,7 +18,7 @@ function MilestoneDisplay(props) {
     displayProgress,
     isInEdition,
     milestone,
-    onMilestoneUnlink,
+    onMilestoneUpdate,
     target,
   } = props
   return (
@@ -43,12 +46,27 @@ function MilestoneDisplay(props) {
         {')'}
       </span>
       {isInEdition && (
-        <span
-          className={b('unlinkMilestone')}
-          title="Unlink the milestone"
-          onClick={() => onMilestoneUnlink(milestone, circleId, target)}
-        >
-          <i className="fa fa-chain-broken" aria-hidden="true" />
+        <span>
+          <span
+            className={b('unlinkMilestone')}
+            title="Unlink the milestone"
+            onClick={() =>
+              onMilestoneUpdate(milestone, circleId, target, false)
+            }
+          >
+            <i className="fa fa-chain-broken" aria-hidden="true" />
+          </span>
+          {target === 'circle' &&
+            milestone.state === 'open' && (
+              <span
+                title="Close and dissociate Milestone"
+                onClick={() =>
+                  onMilestoneUpdate(milestone, circleId, target, true)
+                }
+              >
+                <i className="fa fa-times-circle" aria-hidden="true" />
+              </span>
+            )}
         </span>
       )}
     </span>
@@ -58,14 +76,27 @@ function MilestoneDisplay(props) {
 export default connect(
   () => ({}),
   dispatch => ({
-    onMilestoneUnlink: (milestone, circleId, target) => {
-      dispatch(
-        deleteMilestoneCircles(
-          circleId,
-          milestone.number,
-          milestone.repo,
-          target // to display error
-        )
+    onMilestoneUpdate: (milestone, circleId, target, milestoneToClose) => {
+      Promise.resolve(
+        dispatch(
+          deleteMilestoneCircles(
+            circleId,
+            milestone.number,
+            milestone.repo,
+            target // to display error
+          )
+        ).then(() => {
+          if (milestoneToClose) {
+            dispatch(
+              closeMilestone(
+                milestone.number,
+                milestone.repo,
+                { state: 'closed' },
+                target
+              )
+            )
+          }
+        })
       )
     },
   })

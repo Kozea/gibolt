@@ -47,7 +47,7 @@ export default function CircleRolesType(props) {
                           key={roleFocus.role_focus_id}
                           focusId={roleFocus.role_focus_id}
                           focusName={roleFocus.focus_name}
-                          duration={role.duration}
+                          duration={roleFocus.duration}
                           focusUser={roleFocus.role_focus_users[0]}
                         />
                       ))}
