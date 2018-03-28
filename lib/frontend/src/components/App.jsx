@@ -11,6 +11,7 @@ import Circles from './Circles'
 import CreateCircle from './CreateCircle'
 import CreateRole from './CreateRole'
 import IssuesDashboard from './IssuesDashboard'
+import IssuesPresets from './IssuesPresets'
 import Meeting from './Meeting'
 import MeetingReportCreation from './MeetingReportCreation'
 import Meetings from './Meetings'
@@ -36,6 +37,7 @@ export default class App extends Component {
           <title>Gibolt</title>
         </Helmet>
         <Presets />
+        <IssuesPresets />
         <Switch>
           <Route exact path="/" component={IssuesDashboard} />
           <Route path="/admin" component={Admin} />
