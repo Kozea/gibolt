@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import React from 'react'
 
 import {
+  closeMilestone,
   getOptionsCircleLabels,
   getSelectedCircles,
   milestoneOnEdition,
@@ -81,11 +82,22 @@ function Milestone(props) {
           ))}
           <span className={b('unlink')} title="Add to a circle">
             <i
-              className="fa fa-edit addCircle"
+              className="fa fa-edit"
               aria-hidden="true"
               onClick={() => props.onChangeMilestoneEdition(props.milestone_id)}
             />
           </span>
+          {props.state === 'open' && (
+            <span className={b('unlink')} title="Close Milestone">
+              <i
+                className="fa fa-times-circle"
+                aria-hidden="true"
+                onClick={() =>
+                  props.onCloseMilestone(props.milestone_number, props.repo)
+                }
+              />
+            </span>
+          )}
         </span>
       )}
     </li>
@@ -96,6 +108,9 @@ export default connect(
   dispatch => ({
     onChangeMilestoneEdition: milestoneId => {
       dispatch(milestoneOnEdition(milestoneId))
+    },
+    onCloseMilestone: (milestoneNumber, repoName) => {
+      dispatch(closeMilestone(milestoneNumber, repoName, { state: 'closed' }))
     },
     onSave: (milestoneNumber, repoName, e) => {
       const selectedCircles = getSelectedCircles(e.target.form.labelMultiSelect)

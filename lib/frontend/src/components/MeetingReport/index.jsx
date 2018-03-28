@@ -290,7 +290,7 @@ class MeetingsReport extends React.Component {
                     />
                   ) : (
                     <MarkdownEditor
-                      initValue={meeting.content}
+                      initValue={isCreation ? '' : meeting.content}
                       setTimer={() => this.setTimer()}
                       useStore
                     />

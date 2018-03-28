@@ -91,20 +91,7 @@ class RoleForm extends React.Component {
               required
             />
           </label>
-          <label>
-            Duration (in days) :
-            <span className={b('duration')}>
-              <input
-                defaultValue={role.duration ? role.duration : ''}
-                min="0"
-                name="duration"
-                onChange={e => {
-                  this.setState({ duration: +e.target.value })
-                }}
-                type="number"
-              />
-            </span>
-          </label>
+
           {isCreation && (
             <span>
               <label>
@@ -137,23 +124,40 @@ class RoleForm extends React.Component {
                   ))}
                 </select>
               </label>
-              <label>
-                Start date:
-                <span className={b('duration')}>
-                  <input
-                    defaultValue=""
-                    disabled={this.state.user === ''}
-                    name="start_date"
-                    onChange={e => {
-                      this.setState({ startDate: e.target.value })
-                    }}
-                    type="date"
-                  />
-                  <span className={b('endDate')}>
-                    {endDate && `until ${endDate}`}
+              <span className={b('date')}>
+                <label>
+                  Duration (in days) :
+                  <span className={b('duration')}>
+                    <input
+                      defaultValue={role.duration ? role.duration : ''}
+                      disabled={this.state.user === ''}
+                      min="0"
+                      name="duration"
+                      onChange={e => {
+                        this.setState({ duration: +e.target.value })
+                      }}
+                      type="number"
+                    />
                   </span>
-                </span>
-              </label>
+                </label>
+                <label>
+                  Start date:
+                  <span className={b('duration')}>
+                    <input
+                      defaultValue=""
+                      disabled={this.state.user === ''}
+                      name="start_date"
+                      onChange={e => {
+                        this.setState({ startDate: e.target.value })
+                      }}
+                      type="date"
+                    />
+                    <span className={b('endDate')}>
+                      {endDate && `until ${endDate}`}
+                    </span>
+                  </span>
+                </label>
+              </span>
             </span>
           )}
           <label>

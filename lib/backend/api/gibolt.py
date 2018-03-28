@@ -53,6 +53,7 @@ def post_role_focus_user(payload, role_focus_user_id=None):
     if future_focus_user:
         rest.raise_error(400, 'A valid focus user alredy exists.')
 
+    start_date = datetime.strptime(payload.get('start_date'), '%Y-%m-%d')
     try:
         existing_focus_users = session.query(Role_focus_user).filter(
             Role_focus_user.role_focus_id == role_focus_id,
@@ -60,14 +61,12 @@ def post_role_focus_user(payload, role_focus_user_id=None):
                 func.DATE(Role_focus_user.end_date) >= date.today()),
         ).all()
         for user in existing_focus_users:
-            user.end_date = date.today()
+            user.end_date = start_date if start_date else date.today()
             session.flush()
 
-        start_date = payload.get('start_date')
         new_focus_user = Role_focus_user(
             role_focus_id=role_focus_id,
-            start_date=datetime.strptime(
-                start_date, '%Y-%m-%d') if start_date else None,
+            start_date=start_date if start_date else None,
             user_id=payload.get('user_id'),
         )
         session.add(new_focus_user)
@@ -119,6 +118,7 @@ def post_role_focus(payload, role_focus_id=None):
         new_role_focus = Role_focus(
             role_id=payload.get('role_id'),
             focus_name=payload.get('focus_name'),
+            duration=payload.get('duration'),
         )
         session.add(new_role_focus)
         session.flush()
@@ -186,7 +186,6 @@ def post_roles(payload, role_id=None):
             role_domain=payload.get('role_domain'),
             role_accountabilities=payload.get('role_accountabilities'),
             role_type=payload.get('role_type'),
-            duration=payload.get('duration')
         )
         session.add(new_role)
         session.flush()
@@ -195,6 +194,7 @@ def post_roles(payload, role_id=None):
             new_focus = Role_focus(
                 role_id=new_role.role_id,
                 focus_name=payload.get('focus_name'),
+                duration=payload.get('duration'),
             )
             session.add(new_focus)
             session.flush()

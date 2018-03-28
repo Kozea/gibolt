@@ -124,6 +124,14 @@ class Role extends React.Component {
                       {role.role_name}
                     </p>
                     <p>
+                      <span className={b('focusLabel')}>
+                        Duration (in days):{' '}
+                      </span>
+                      {roleFocus.duration
+                        ? roleFocus.duration
+                        : 'No duration defined'}
+                    </p>
+                    <p>
                       <span className={b('focusLabel')}>Filled by: </span>
                       {focusUser.user_name}{' '}
                       <img
@@ -143,18 +151,18 @@ class Role extends React.Component {
                       <span className={b('focusLabel')}>Until: </span>
                       {focusUser.end_date
                         ? format(new Date(focusUser.end_date), 'DD/MM/YYYY')
-                        : focusUser.start_date && role.duration
+                        : focusUser.start_date && roleFocus.duration
                           ? `${format(
                               addDays(
                                 new Date(focusUser.start_date),
-                                role.duration
+                                roleFocus.duration
                               ),
                               'DD/MM/YYYY'
                             )}  (calculated)`
                           : '∞'}
                       <RoleFocusEndDate
                         displayDate={false}
-                        duration={role.duration}
+                        duration={roleFocus.duration}
                         focusUser={focusUser}
                       />
                     </p>
