@@ -12,6 +12,37 @@ import { block, connect } from '../../utils'
 
 const b = block('MeetingReport')
 
+function getNextValue(sparklinesValues, startPosition) {
+  let missingValuesCount = 1
+  let nextValue = null
+  for (let i = startPosition; i < sparklinesValues.length; i++) {
+    if (sparklinesValues[i] === null && sparklinesValues[i - 1] === null) {
+      missingValuesCount++
+    } else if (i === sparklinesValues.length - 1 && sparklinesValues === null) {
+      return null
+    } else {
+      nextValue = sparklinesValues[i]
+      return { nextValue, missingValuesCount }
+    }
+  }
+}
+
+function interpolateMissingValues(sparklinesValues) {
+  let nextValueAndMissingValuesCount = null
+  for (let i = 1; i < sparklinesValues.length - 1; i++) {
+    if (sparklinesValues[i] === null && sparklinesValues[i - 1] !== null) {
+      nextValueAndMissingValuesCount = getNextValue(sparklinesValues, i + 1)
+      if (nextValueAndMissingValuesCount) {
+        const previousValue = sparklinesValues[i - 1]
+        const { nextValue, missingValuesCount } = nextValueAndMissingValuesCount
+        sparklinesValues[i] =
+          previousValue - (previousValue - nextValue) / (missingValuesCount + 1)
+      }
+    }
+  }
+  return sparklinesValues
+}
+
 function getDataForSparkLines(indicator, meetings) {
   const sparklinesValues = []
   let lastValue = null
@@ -20,21 +51,21 @@ function getDataForSparkLines(indicator, meetings) {
       const value = meetings[i].indicators
         .filter(ind => ind.item_id === indicator.item_id)
         .map(ind => ind.value)
-      sparklinesValues.push(value[0] ? value[0] : 0)
+      sparklinesValues.push(value[0] ? value[0] : null)
       if (i === 0) {
         // eslint-disable-next-line prefer-destructuring
-        lastValue = value[0]
+        lastValue = value[0] ? value[0] : null
       }
     } else {
-      sparklinesValues.push(0)
+      sparklinesValues.push(null)
     }
   }
   sparklinesValues.push(
     isNaN(indicator.value) || indicator.value === '' || indicator.value === null
-      ? lastValue ? lastValue : 0
+      ? lastValue
       : +indicator.value
   )
-  return sparklinesValues
+  return interpolateMissingValues(sparklinesValues)
 }
 
 function sortItems(items) {
