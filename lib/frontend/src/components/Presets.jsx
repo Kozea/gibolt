@@ -17,7 +17,7 @@ function Presets({ location }) {
       <nav>
         <ul className={b('nav')}>
           <Preset action={{ pathname: '/' }} active={location.pathname === '/'}>
-            Issues
+            Tickets
           </Preset>
           <Preset action="/timeline" active={location.pathname === '/timeline'}>
             Timeline
