@@ -28,10 +28,6 @@
     }
   },
   "private": true,
-  "scripts": {
-    "lint-all": "make fix lint"
-  },
-  "pre-commit": "lint-all",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
