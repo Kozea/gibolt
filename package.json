@@ -29,15 +29,6 @@
   },
   "private": true,
   "scripts": {
-    "serve": "NODE_ENV=production node dist/server.js",
-    "serve-server": "WEBPACK_ENV=server NODE_ENV=development webpack",
-    "serve-client": "WEBPACK_ENV=browser NODE_ENV=development webpack-dev-server",
-    "build-client": "WEBPACK_ENV=browser NODE_ENV=production webpack",
-    "build-server": "WEBPACK_ENV=server NODE_ENV=production webpack",
-    "lint": "eslint --cache --ext .jsx --ext .js lib/",
-    "fix": "prettier --write '{,lib/tests/**/,lib/frontend/src/**/}*.js?(x)'",
-    "test": "node ./node_modules/jest-cli/bin/jest.js --no-cache",
-    "test-debug": "inspect ./node_modules/jest-cli/bin/jest.js --runInBand --env jest-environment-node-debug",
     "lint-all": "make fix lint"
   },
   "pre-commit": "lint-all",
