@@ -49,6 +49,14 @@ function checkboxState(issues) {
 const b = block('Issues')
 
 class Issues extends React.Component {
+  constructor(props, context) {
+    super(props, context)
+    this.state = {
+      hideAllGroups: false,
+      hiddenGroups: [],
+    }
+  }
+
   componentDidMount() {
     this.props.sync()
     ReactModal.setAppElement('#root')
@@ -60,7 +68,32 @@ class Issues extends React.Component {
       nextProps.location.search !== this.props.location.search
     ) {
       this.props.sync()
+      this.setState({ hiddenGroups: [], hideAllGroups: false })
     }
+  }
+
+  updateAccordion(group, issuesByGroup) {
+    const { hiddenGroups, hideAllGroups } = this.state
+    if (hideAllGroups) {
+      issuesByGroup
+        .filter(issues => issues.group !== group)
+        .map(issues => hiddenGroups.push(issues.group))
+    } else if (hiddenGroups.find(g => g === group)) {
+      hiddenGroups.splice(hiddenGroups.indexOf(group))
+    } else {
+      hiddenGroups.push(group)
+    }
+    this.setState({ hiddenGroups, hideAllGroups: false })
+  }
+
+  isHidden(group) {
+    return this.state.hideAllGroups
+      ? true
+      : this.state.hiddenGroups.find(g => g === group)
+  }
+
+  setCheckBox(checked) {
+    this.setState({ hideAllGroups: checked, hiddenGroups: [] })
   }
 
   render() {
@@ -79,7 +112,6 @@ class Issues extends React.Component {
       onToggleGrouper,
       onChangeTickets,
     } = this.props
-
     const issuesByGroup = sortGroupIssues(groupIssues(issues, grouper), grouper)
     const closedLen = labelFilteredIssues.filter(
       issue => issue.state === 'closed'
@@ -151,9 +183,26 @@ class Issues extends React.Component {
             )}
           </article>
         )}
+        <div className={b('check')}>
+          <label htmlFor="checkbox">
+            <input
+              checked={this.state.hideAllGroups}
+              id="checkbox"
+              onClick={e => this.setCheckBox(e.target.checked)}
+              type="checkbox"
+            />
+            hide all issues
+          </label>
+        </div>
         {issuesByGroup.map(({ id, group, issues }) => (
           <article key={id} className={b('group')}>
             <h2>
+              <button
+                className={b('accordion')}
+                onClick={() => this.updateAccordion(group, issuesByGroup)}
+              >
+                {this.isHidden(group) ? '+' : '-'}
+              </button>
               {group} <sup>({issues.length})</sup>{' '}
               <input
                 type="checkbox"
@@ -189,7 +238,12 @@ class Issues extends React.Component {
                   />
                 )}
             </h2>
-            <ul>
+            <ul
+              className={b(
+                'panel',
+                this.isHidden(group) ? 'hidden' : 'display'
+              )}
+            >
               {sortIssues(issues, grouper).map(issue => (
                 <Issue
                   key={issue.ticket_id}

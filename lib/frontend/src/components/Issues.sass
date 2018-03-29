@@ -5,6 +5,31 @@
   overflow: auto
   position: relative
 
+  &__accordion
+    background-color: #F0F5F9
+    border: none
+    color: #717171
+    cursor: pointer
+    font-size: .9em
+    font-weight: bold
+    height: 1em
+    margin-right: .1em
+    padding: 0
+    transition: 0.4s
+    width: 1em
+
+    &:hover
+      background-color: #ccc
+
+  &__check
+    align-items: center
+    color: #50595f
+    display: flex
+    margin: 1em
+
+    input
+      margin-right: .5em
+
   &__head
     align-items: center
     background: $issues-header
@@ -41,6 +66,13 @@
     position: fixed
     right: 0
     top: 0
+
+  &__panel
+    &__display
+      display: block
+
+    &__hidden
+      display: none
 
   &__newTicket
     background: #bac9d5
