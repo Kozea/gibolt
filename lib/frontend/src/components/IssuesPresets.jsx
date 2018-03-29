@@ -15,9 +15,25 @@ const PRESETS = ({ login }) => ({
     ack: '',
     assignee: login,
   },
-  my_tickets: {
+  my_open_tickets: {
     state: 'open',
     grouper: 'project',
+    priority: '',
+    ack: '',
+    assignee: login,
+    involves: '',
+  },
+  all_my_tickets: {
+    state: 'open',
+    grouper: 'project',
+    priority: '',
+    ack: '',
+    assignee: '',
+    involves: login,
+  },
+  my_milestones: {
+    state: 'all',
+    grouper: 'milestone',
     priority: '',
     ack: '',
     assignee: '',
@@ -49,12 +65,38 @@ function IssuesPresets({ location, user }) {
           My urgency
         </Preset>
         <Preset
-          action={{ pathname: '/', search: stringify(userPreset.my_tickets) }}
+          action={{
+            pathname: '/',
+            search: stringify(userPreset.my_open_tickets),
+          }}
           active={
-            location.pathname === '/' && equal(query, userPreset.my_tickets)
+            location.pathname === '/' &&
+            equal(query, userPreset.my_open_tickets)
           }
         >
-          My Tickets
+          My Open Tickets
+        </Preset>
+        <Preset
+          action={{
+            pathname: '/',
+            search: stringify(userPreset.all_my_tickets),
+          }}
+          active={
+            location.pathname === '/' && equal(query, userPreset.all_my_tickets)
+          }
+        >
+          All My Tickets
+        </Preset>
+        <Preset
+          action={{
+            pathname: '/',
+            search: stringify(userPreset.my_milestones),
+          }}
+          active={
+            location.pathname === '/' && equal(query, userPreset.my_milestones)
+          }
+        >
+          My Milestones
         </Preset>
         <Preset
           action={{
