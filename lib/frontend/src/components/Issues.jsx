@@ -79,7 +79,7 @@ class Issues extends React.Component {
         .filter(issues => issues.group !== group)
         .map(issues => hiddenGroups.push(issues.group))
     } else if (hiddenGroups.find(g => g === group)) {
-      hiddenGroups.splice(hiddenGroups.indexOf(group))
+      hiddenGroups.splice(hiddenGroups.indexOf(group), 1)
     } else {
       hiddenGroups.push(group)
     }
