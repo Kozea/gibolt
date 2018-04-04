@@ -38,26 +38,21 @@ def format_ticket_response(ticket_request, repo_name):
         'html_url':
             ticket_request['html_url'],
         'user': {
-            'user_id': ticket_request['user']['id']
-        },
+            'user_id': ticket_request['user']['id']},
         'state':
             ticket_request['state'],
         'milestone_id': (
             ticket_request['milestone']['id']
-            if ticket_request['milestone'] else None
-        ),
+            if ticket_request['milestone'] else None),
         'milestone_number': (
             ticket_request['milestone']['number']
-            if ticket_request['milestone'] else None
-        ),
+            if ticket_request['milestone'] else None),
         'milestone_state': (
             ticket_request['milestone']['state']
-            if ticket_request['milestone'] else None
-        ),
+            if ticket_request['milestone'] else None),
         'milestone_title': (
             ticket_request['milestone']['title']
-            if ticket_request['milestone'] else None
-        ),
+            if ticket_request['milestone'] else None),
         'pull_request':
             ticket_request.get('pull_request'),
         'nb_comments':
@@ -85,7 +80,7 @@ def format_ticket_response(ticket_request, repo_name):
         'comments_expanded':
             False,
         'comments': []
-    }
+    }  # yapf: disable
     return response
 
 
@@ -457,22 +452,17 @@ def list_tickets():
         'user': {
             'user_id': ticket['user']['id'],
             'user_name': ticket['user']['login'],
-            'avatar_url': ticket['user']['avatar_url']
-        },
+            'avatar_url': ticket['user']['avatar_url']},
         'state':
             ticket['state'],
         'milestone_id': (
-            ticket['milestone']['id'] if ticket['milestone'] else None
-        ),
+            ticket['milestone']['id'] if ticket['milestone'] else None),
         'milestone_number': (
-            ticket['milestone']['number'] if ticket['milestone'] else None
-        ),
+            ticket['milestone']['number'] if ticket['milestone'] else None),
         'milestone_state': (
-            ticket['milestone']['state'] if ticket['milestone'] else None
-        ),
+            ticket['milestone']['state'] if ticket['milestone'] else None),
         'milestone_title': (
-            ticket['milestone']['title'] if ticket['milestone'] else None
-        ),
+            ticket['milestone']['title'] if ticket['milestone'] else None),
         'pull_request':
             ticket.get('pull_request'),
         'nb_comments':
@@ -493,7 +483,7 @@ def list_tickets():
             'label_name': label['name'],
             'label_color': label['color']
         } for label in ticket.get('labels', [])]
-    } for ticket in ticket_request['items']]
+    } for ticket in ticket_request['items']]  # yapf: disable
     for ticket in response:
         ticket['selected'] = False
         ticket['expanded'] = False
