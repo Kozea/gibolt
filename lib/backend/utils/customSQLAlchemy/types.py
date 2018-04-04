@@ -14,8 +14,9 @@ class SQLiteJson(TypeDecorator):
             if isinstance(index, tuple):
                 index = "$%s" % (
                     "".join([
-                        "[%s]" % elem if isinstance(elem, int)
-                        else '."%s"' % elem for elem in index
+                        "[%s]" % elem
+                        if isinstance(elem, int) else '."%s"' % elem
+                        for elem in index
                     ])
                 )
             elif isinstance(index, int):

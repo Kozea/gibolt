@@ -27,7 +27,8 @@ const getAssets = () => {
   if (!Object.keys(assets).length) {
     assets.links = []
     assets.scripts = [
-      'https://polyfill.kozea.fr/polyfill.min.js?features=es2017,default',
+      'https://polyfill.kozea.fr/polyfill.min.js' +
+        '?features=es2016,es2017,default',
     ]
     const scripts = ['runtime~client.js', 'vendors~client.js', 'client.js']
     const links = config.debug ? [] : ['client.css']

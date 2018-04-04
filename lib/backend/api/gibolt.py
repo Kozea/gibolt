@@ -57,8 +57,10 @@ def post_role_focus_user(payload, role_focus_user_id=None):
     try:
         existing_focus_users = session.query(Role_focus_user).filter(
             Role_focus_user.role_focus_id == role_focus_id,
-            or_(func.DATE(Role_focus_user.end_date) == None,
-                func.DATE(Role_focus_user.end_date) >= date.today()),
+            or_(
+                func.DATE(Role_focus_user.end_date) == None,
+                func.DATE(Role_focus_user.end_date) >= date.today()
+            ),
         ).all()
         for user in existing_focus_users:
             user.end_date = start_date if start_date else date.today()
@@ -77,7 +79,8 @@ def post_role_focus_user(payload, role_focus_user_id=None):
         rest.raise_error(400, 'Invalid payload.')
 
     return role_focus_users.get(
-        {}, role_focus_user_id=new_focus_user.role_focus_user_id)
+        {}, role_focus_user_id=new_focus_user.role_focus_user_id
+    )
 
 
 rest(
@@ -126,8 +129,8 @@ def post_role_focus(payload, role_focus_id=None):
         start_date = payload.get('start_date')
         new_focus_user = Role_focus_user(
             role_focus_id=new_role_focus.role_focus_id,
-            start_date=datetime.strptime(
-                start_date, '%Y-%m-%d') if start_date else None,
+            start_date=datetime.strptime(start_date, '%Y-%m-%d')
+            if start_date else None,
             user_id=payload.get('user_id'),
         )
         session.add(new_focus_user)
@@ -136,8 +139,7 @@ def post_role_focus(payload, role_focus_id=None):
     except (exc.IntegrityError, AttributeError) as e:
         session.rollback()
         rest.raise_error(400, 'Invalid payload.')
-    return role_focuses.get(
-        {}, role_focus_id=new_role_focus.role_focus_id)
+    return role_focuses.get({}, role_focus_id=new_role_focus.role_focus_id)
 
 
 only_role_focuses = rest(
@@ -202,8 +204,8 @@ def post_roles(payload, role_id=None):
             start_date = payload.get('start_date')
             new_role_focus = Role_focus_user(
                 role_focus_id=new_focus.role_focus_id,
-                start_date=datetime.strptime(
-                    start_date, '%Y-%m-%d') if start_date else None,
+                start_date=datetime.strptime(start_date, '%Y-%m-%d')
+                if start_date else None,
                 user_id=payload.get('user_id'),
             )
             session.add(new_role_focus)
@@ -411,8 +413,8 @@ def update_report(payload, report_id):
     if not report_id:
         rest.raise_error(400, 'Invalid payload.')
 
-    report = session.query(Report).filter(
-        Report.report_id == report_id).first()
+    report = session.query(Report).filter(Report.report_id == report_id
+                                          ).first()
     if not report:
         rest.raise_error(400, 'Invalid payload.')
 
@@ -436,8 +438,8 @@ def labels():
     labels_list = {}
     for label_type in label_types:
         labels_list[label_type] = []
-        labels = session.query(Label).filter(
-            Label.label_type == label_type).all()
+        labels = session.query(Label).filter(Label.label_type == label_type
+                                             ).all()
 
         for label in labels:
             labels_data = {
@@ -455,9 +457,7 @@ def labels():
 rest(
     Label,
     methods=['PUT', 'POST', 'PATCH', 'DELETE'],
-    relationships={
-        'priorities': rest(Priority)
-    },
+    relationships={'priorities': rest(Priority)},
     name='labels',
     auth=needlogin
 )
@@ -481,7 +481,8 @@ def add_priority():
         objects = {
             'objects': response,
             'occurences': 1,
-            'primary_keys': ['priority_id']}
+            'primary_keys': ['priority_id']
+        }
         return jsonify(objects)
     except (exc.IntegrityError) as e:
         session.rollback()
@@ -489,10 +490,7 @@ def add_priority():
         # to ensure there are no priority labels w/o priority
         session.query(Label).filter(Label.label_id == label_id).delete()
         session.commit()
-        response_object = {
-            'status': 'error',
-            'message': 'Invalid payload.'
-        }
+        response_object = {'status': 'error', 'message': 'Invalid payload.'}
         return jsonify(response_object), 400
     except (exc.OperationalError, ValueError) as e:
         session.rollback()
@@ -510,7 +508,8 @@ def update_priority(priority_id):
     new_value = data.get('value')
     try:
         priority = session.query(Priority).filter(
-            Priority.priority_id == priority_id).first()
+            Priority.priority_id == priority_id
+        ).first()
         priority.value = new_value
         session.commit()
         response = [{
@@ -521,7 +520,8 @@ def update_priority(priority_id):
         objects = {
             'objects': response,
             'occurences': 1,
-            'primary_keys': ['priority_id']}
+            'primary_keys': ['priority_id']
+        }
         return jsonify(objects)
     except (exc.IntegrityError, exc.OperationalError, ValueError) as e:
         session.rollback()
@@ -534,7 +534,8 @@ def update_priority(priority_id):
 
 @app.route(
     '/api/milestone_circles/<string:repo_name>/<int:milestone_number>',
-    methods=['POST'])
+    methods=['POST']
+)
 @needlogin
 def update_milestones_circles(repo_name, milestone_number):
     circles_list = request.get_json()
@@ -589,7 +590,6 @@ rest(
     name='milestone_circles',
     auth=needlogin
 )
-
 
 rest(
     Report_milestone,
