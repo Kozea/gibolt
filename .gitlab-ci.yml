@@ -63,30 +63,18 @@ deploy_test:
   <<: *image_deploy_jobs
   stage: deploy_test
   before_script:
-    - 'apt-get update && apt-get install -y wget'
+    - apt-get update && apt-get install -y wget make
   script:
-    - 'set -e'
-    - 'branch_name=`echo $CI_COMMIT_REF_NAME | tr -cd "[[:alnum:]]"`'
-    - 'url_test=https://test-$CI_PROJECT_NAME-$branch_name.kozea.fr'
-    - 'output_file=/tmp/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.log'
-    - 'parameters="{\"job_id\":\"$CI_JOB_ID\", \"token\":\"$TOKEN\", \"url\":\"$CI_REPOSITORY_URL\", \"build_stage\":\"$CI_JOB_STAGE\", \"project_name\":\"$CI_PROJECT_NAME\", \"branch\":\"$CI_COMMIT_REF_NAME\", \"commit_sha\":\"$CI_COMMIT_SHA\", \"url_test\":\"$url_test\"}"'
-    - 'swget="wget --no-verbose --content-on-error -O-"'
-    - '$swget --header="Content-Type:application/json" --post-data="""$parameters""" $JUNKRAT | tee $output_file && [[ $(tail -n1 $output_file) == "Success" ]]'
-    - '$swget $url_test'
+    - make deploy-test
   dependencies: []
 
 deploy_prod:
   <<: *image_deploy_jobs
   stage: deploy_prod
   before_script:
-    - 'apt-get update && apt-get install -y wget'
+    - apt-get update && apt-get install -y wget make
   script:
-    - 'set -e'
-    - 'output_file=/tmp/$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.log'
-    - 'parameters="{\"job_id\":\"$CI_JOB_ID\", \"token\":\"$TOKEN\", \"build_stage\":\"$CI_JOB_STAGE\", \"project_name\":\"$CI_PROJECT_NAME\", \"branch\":\"$CI_COMMIT_REF_NAME\"}"'
-    - 'swget="wget --no-verbose --content-on-error -O-"'
-    - '$swget --header="Content-Type:application/json" --post-data="""$parameters""" $JUNKRAT | tee $output_file && [[ $(tail -n1 $output_file) == "Success" ]]'
-    - '$swget https://gibolt.kozea.fr'
+    - make deploy-prod
   dependencies: []
   only:
     - master
