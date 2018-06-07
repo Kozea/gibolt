@@ -61,12 +61,18 @@ test_latest:
 
 deploy_test:
   <<: *image_deploy_jobs
+  variables:
+    PROJECT_NAME: ${CI_PROJECT_NAME,,}
+    BRANCH_NAME: $(echo ${CI_COMMIT_RED_NAME} | tr -cd "[[:alnum:]]")
   stage: deploy_test
   before_script:
     - apt-get update && apt-get install -y wget make
   script:
     - make deploy-test
   dependencies: []
+  environment:
+    name: test-$CI_COMMIT_REF_NAME
+    url: https://test-${PROJECT_NAME}-${BRANCH_NAME}.kozea.fr
 
 deploy_prod:
   <<: *image_deploy_jobs
