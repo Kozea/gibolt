@@ -89,8 +89,9 @@ def update_milestone(milestone, repo_name):
         milestone['due_on'] = date_from_iso(milestone['due_on'])
     milestone['repo'] = repo_name
     total = milestone['closed_issues'] + milestone['open_issues']
-    milestone['progress'
-              ] = (milestone['closed_issues'] / (total or float('inf')))
+    milestone['progress'] = (
+        milestone['closed_issues'] / (total or float('inf'))
+    )
     return milestone
 
 
