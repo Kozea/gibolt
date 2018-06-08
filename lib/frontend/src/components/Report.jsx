@@ -108,9 +108,9 @@ class Report extends React.Component {
               <h3>{month.format('LL')}</h3>
               <ul>
                 {groupByRepository(monthIssues)
-                  .sort((a, b) => b.issues.length - a.issues.length)
-                  .map(({ id, repository, issues }) => (
-                    <li key={id} className={b('item')}>
+                  .sort((x, y) => y.issues.length - x.issues.length)
+                  .map(({ repoId, repository, issues }) => (
+                    <li key={repoId} className={b('item')}>
                       <span className={b('repo')}>
                         {repository.name} ({Math.round(
                           100 * (issues.length / monthIssues.length)
@@ -127,14 +127,14 @@ class Report extends React.Component {
           <article key={id} className={b('user')}>
             <h2>{user.login}</h2>
             {groupByMonth(userIssues).map(
-              ({ id, month, issues: monthIssues }) => (
-                <article key={id} className={b('month')}>
+              ({ monthId, month, issues: monthIssues }) => (
+                <article key={monthId} className={b('month')}>
                   <h3>{month.format('LL')}</h3>
                   <ul>
                     {groupByRepository(monthIssues)
-                      .sort((a, b) => b.issues.length - a.issues.length)
-                      .map(({ id, repository, issues }) => (
-                        <li key={id} className={b('item')}>
+                      .sort((x, y) => y.issues.length - x.issues.length)
+                      .map(({ issueId, repository, issues }) => (
+                        <li key={issueId} className={b('item')}>
                           <span className={b('repo')}>
                             {repository.name} ({Math.round(
                               100 * (issues.length / monthIssues.length)

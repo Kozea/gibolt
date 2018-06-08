@@ -134,14 +134,14 @@ class Timeline extends React.Component {
         {range.withoutDueDate === 'true' &&
           milestonesByMonth
             .filter(mil => mil.month === 'No Due Date')
-            .map(({ id, milestones }) => (
+            .map(({ id, stones }) => (
               <article key={id} className={b('date')}>
                 <h2>
                   {'Open milestones without due date'}{' '}
-                  <sup>({milestones.length})</sup>
+                  <sup>({stones.length})</sup>
                 </h2>
                 <ul>
-                  {milestones.map(milestone => (
+                  {stones.map(milestone => (
                     <Milestone
                       key={milestone.id}
                       milestone_id={milestone.id}
