@@ -3,11 +3,11 @@ import './MeetingReport.sass'
 import { format } from 'date-fns'
 import React from 'react'
 
-import MilestoneDisplay from './../Utils/MilestoneDisplay'
 import { setModal } from '../../actions'
 import { updateIssueParams } from '../../actions/issues'
 import { updateMeetingProjects } from '../../actions/meetings'
 import { block, connect, sortProjects } from '../../utils'
+import MilestoneDisplay from './../Utils/MilestoneDisplay'
 
 const b = block('MeetingReport')
 
@@ -71,7 +71,11 @@ function ReportProjects(props) {
                           .map(issue => (
                             <li key={issue.ticket_id} title={issue.body}>
                               <span className={b(`bullet ${issue.state}`)} />
-                              <a href={issue.html_url} target="_blank">
+                              <a
+                                href={issue.html_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 #{issue.ticket_number}
                               </a>{' '}
                               {issue.ticket_title},

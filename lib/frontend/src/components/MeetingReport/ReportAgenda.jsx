@@ -18,7 +18,11 @@ function ReportAgenda(props) {
           {issues.map(issue => (
             <li key={issue.ticket_id} title={issue.body}>
               <span className={b(`bullet ${issue.state}`)} />
-              <a href={issue.html_url} target="_blank">
+              <a
+                href={issue.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 #{issue.ticket_number}
               </a>{' '}
               {issue.ticket_title},

@@ -19,16 +19,20 @@ import MarkdownEditor from './Utils/MarkdownEditor'
 const b = block('CreateCircle')
 
 class CreateCircle extends React.Component {
-  componentDidMount() {
-    this.props.sync()
+  constructor(props) {
+    super(props)
+    this.state = { displayAddLabels: false, circleLabels: props.circleLabels }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.circleLabels !== this.propscircleLabels) {
-      this.setState({
-        displayAddLabels: false,
-      })
+  static getDerivedStateFromProps(props, state) {
+    if (props.circleLabels !== state.circeLabels) {
+      return { displayAddLabels: false, circleLabels: props.circleLabels }
     }
+    return null
+  }
+
+  componentDidMount() {
+    this.props.sync()
   }
 
   displayAddLabels(labelSelectValue) {

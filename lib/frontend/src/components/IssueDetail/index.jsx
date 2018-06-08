@@ -37,20 +37,21 @@ class IssueDetail extends React.Component {
     this.props.getMilestones(this.props.issue.repo_name)
   }
 
-  componentWillReceiveProps(nextProps) {
-    const issue = nextProps.currentIssue
+  static getDerivedStateFromProps(props, state) {
+    const issue = props.currentIssue
     if (issue.labels) {
-      const data = getOptionsLabels(issue, nextProps.labels)
-      if (data.circleLabelId !== this.state.circleLabelId) {
-        this.props.getCircle(data.circleLabelId)
+      const data = getOptionsLabels(issue, props.labels)
+      if (data.circleLabelId !== state.circleLabelId) {
+        props.getCircle(data.circleLabelId)
       }
-      this.setState({
+      return {
         issue,
         issuesLabels: data.issuesLabels,
         options: data.options,
         circleLabelId: data.circleLabelId,
-      })
+      }
     }
+    return null
   }
 
   updateEditionStatus(value) {
@@ -83,7 +84,7 @@ class IssueDetail extends React.Component {
             &times;
           </span>
           <span className={b('ttl')}>
-            <a href={issue.html_url} target="_blank">
+            <a href={issue.html_url} target="_blank" rel="noopener noreferrer">
               #{issue.ticket_number}
             </a>{' '}
             {isInEdition === 'title' ? (

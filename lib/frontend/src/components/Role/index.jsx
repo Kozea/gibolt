@@ -7,10 +7,10 @@ import { withRouter } from 'react-router-dom'
 import { fetchResults, setLoading } from '../../actions'
 import { disableRole, editRole, fetchRole } from '../../actions/roles'
 import { block, connect, roleTypes } from '../../utils'
-import RoleFocuses from './RoleFocuses'
 import Loading from './../Loading'
 import BreadCrumbs from './../Utils/BreadCrumbs'
 import RoleForm from './../Utils/RoleForm'
+import RoleFocuses from './RoleFocuses'
 
 var ReactMarkdown = require('react-markdown')
 
@@ -21,12 +21,12 @@ class Role extends React.Component {
     this.props.sync()
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
-      (nextProps.location.pathname !== this.props.location.pathname &&
-        nextProps.location.pathname === '/role') ||
-      (nextProps.location.pathname === this.props.location.pathname &&
-        nextProps.location.search !== this.props.location.search)
+      (this.props.location.pathname !== prevProps.location.pathname &&
+        this.props.location.pathname === '/role') ||
+      (this.props.location.pathname === prevProps.location.pathname &&
+        this.props.location.search !== prevProps.location.search)
     ) {
       this.props.sync()
     }

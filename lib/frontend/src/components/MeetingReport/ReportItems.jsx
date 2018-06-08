@@ -135,6 +135,7 @@ function ReportItems(props) {
                       <a
                         href={`/meeting?report_id=${meetings[1].report_id}`}
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {`#${meetings[1].report_id}`}
                       </a>
@@ -154,6 +155,7 @@ function ReportItems(props) {
                       <a
                         href={`/meeting?report_id=${meetings[0].report_id}`}
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {`#${meetings[0].report_id}`}
                       </a>

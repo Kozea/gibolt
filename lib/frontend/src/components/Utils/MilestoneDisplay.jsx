@@ -3,12 +3,12 @@ import './MilestoneDisplay.sass'
 import { format } from 'date-fns'
 import React from 'react'
 
-import Progress from './../Progress'
 import {
   closeMilestone,
   deleteMilestoneCircles,
 } from '../../actions/milestones'
 import { block, connect } from '../../utils'
+import Progress from './../Progress'
 
 const b = block('MilestoneDisplay')
 
@@ -23,7 +23,12 @@ function MilestoneDisplay(props) {
   } = props
   return (
     <span>
-      <a className={b('unlink')} href={milestone.html_url} target="_blank">
+      <a
+        className={b('unlink')}
+        href={milestone.html_url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <span className={b(`bullet ${milestone.state}`)} />
         {milestone.repo}
         {' - '}

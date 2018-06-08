@@ -43,7 +43,12 @@ export default function Issue(props) {
         ))}
       </span>
       <div>
-        <a className={b('view')} href={props.url} target="_blank">
+        <a
+          className={b('view')}
+          href={props.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           view on GitHub
         </a>
       </div>

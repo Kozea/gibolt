@@ -18,12 +18,12 @@ class Meetings extends React.Component {
     this.updateData(this.props.location.search, this.props.sync)
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
-      nextProps.location.pathname === this.props.location.pathname &&
-      nextProps.location.search !== this.props.location.search
+      this.props.location.pathname === prevProps.location.pathname &&
+      this.props.location.search !== prevProps.location.search
     ) {
-      this.updateData(nextProps.location.search, this.props.sync)
+      this.updateData(prevProps.location.search, this.props.sync)
     }
   }
 

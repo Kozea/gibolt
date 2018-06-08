@@ -37,7 +37,11 @@ class Repository extends React.Component {
         </Helmet>
         <h1>
           {results.repository.html_url ? (
-            <a href={results.repository.html_url} target="_blank">
+            <a
+              href={results.repository.html_url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {reponame}
             </a>
           ) : (

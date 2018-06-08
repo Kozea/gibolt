@@ -7,12 +7,12 @@ import { withRouter } from 'react-router-dom'
 import { fetchResults, setLoading } from '../../actions'
 import { fetchCircle } from '../../actions/circle'
 import { block, connect } from '../../utils'
+import Loading from './../Loading'
 import CircleDetails from './CircleDetails'
 import CircleMeetings from './CircleMeetings'
 import CircleMilestones from './CircleMilestones'
 import CircleRoles from './CircleRoles'
 import CircleSubCircles from './CircleSubCircles'
-import Loading from './../Loading'
 
 const b = block('Circle')
 
@@ -23,12 +23,12 @@ class Circle extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
-      (nextProps.location.pathname !== this.props.location.pathname &&
-        nextProps.location.pathname === '/circle') ||
-      (nextProps.location.pathname === this.props.location.pathname &&
-        nextProps.location.search !== this.props.location.search)
+      (this.props.location.pathname !== prevProps.location.pathname &&
+        this.props.location.pathname === '/circle') ||
+      (this.props.location.pathname === prevProps.location.pathname &&
+        this.props.location.search !== prevProps.location.search)
     ) {
       this.props.sync()
     }

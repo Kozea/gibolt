@@ -14,9 +14,9 @@ import {
 import {
   fetchIssues,
   setIssuesSelectness,
+  toggleIssue,
   updateCurrentIssue,
   updateIssues,
-  toggleIssue,
 } from '../actions/issues'
 import {
   block,
@@ -54,7 +54,17 @@ class Issues extends React.Component {
     this.state = {
       hideAllGroups: false,
       hiddenGroups: [],
+      location: props.location,
     }
+  }
+  static getDerivedStateFromProps(props, state) {
+    if (
+      props.location.pathname === state.location.pathname &&
+      props.location.search !== state.location.search
+    ) {
+      return { hiddenGroups: [], hideAllGroups: false }
+    }
+    return null
   }
 
   componentDidMount() {
@@ -62,13 +72,12 @@ class Issues extends React.Component {
     ReactModal.setAppElement('#root')
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
-      nextProps.location.pathname === this.props.location.pathname &&
-      nextProps.location.search !== this.props.location.search
+      this.props.location.pathname === prevProps.location.pathname &&
+      this.props.location.search !== prevProps.location.search
     ) {
       this.props.sync()
-      this.setState({ hiddenGroups: [], hideAllGroups: false })
     }
   }
 

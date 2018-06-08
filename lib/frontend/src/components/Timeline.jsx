@@ -18,8 +18,8 @@ class Timeline extends React.Component {
     this.props.sync()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.location.search !== this.props.location.search) {
+  componentDidUpdate(prevProps) {
+    if (this.props.location.search !== prevProps.location.search) {
       this.props.sync()
     }
   }

@@ -64,8 +64,8 @@ class Report extends React.Component {
     this.props.sync()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.location.query !== this.props.location.query) {
+  componentDidUpdate(prevProps) {
+    if (this.props.location.query !== prevProps.location.query) {
       this.props.sync()
     }
   }
