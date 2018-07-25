@@ -57,7 +57,7 @@ test_latest:
 
 
 .image: &image_deploy_jobs
-  image: debian:latest
+  image: grewn0uille/deploy-tools:latest
 
 deploy_test:
   <<: *image_deploy_jobs
