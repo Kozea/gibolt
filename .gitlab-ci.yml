@@ -65,8 +65,6 @@ deploy_test:
     PROJECT_NAME: ${CI_PROJECT_NAME,,}
     BRANCH_NAME: $(echo ${CI_COMMIT_RED_NAME} | tr -cd "[[:alnum:]]")
   stage: deploy_test
-  before_script:
-    - apt-get update && apt-get install -y wget make
   script:
     - make deploy-test
   dependencies: []
@@ -77,8 +75,6 @@ deploy_test:
 deploy_prod:
   <<: *image_deploy_jobs
   stage: deploy_prod
-  before_script:
-    - apt-get update && apt-get install -y wget make
   script:
     - make deploy-prod
   dependencies: []
