@@ -21,3 +21,4 @@ database.db
 *.old
 .pytest_cache/
 .venv/
+.idea/
