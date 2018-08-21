@@ -16,9 +16,9 @@ function SelectUser({ type, query, users, values, onChangeUser }) {
       onChange={e => onChangeUser(e.target.value, type, query)}
     >
       <option value="">Anybody</option>
-      {users.map(({ userId, userName }) => (
-        <option key={userId} value={userName}>
-          {userName}
+      {users.map(user => (
+        <option key={user.user_id} value={user.user_name}>
+          {user.user_name}
         </option>
       ))}
     </select>
