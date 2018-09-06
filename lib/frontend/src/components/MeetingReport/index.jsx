@@ -150,7 +150,9 @@ class MeetingsReport extends React.Component {
               )}
               <span className={b('head')}>
                 {isCreation
-                  ? circle ? circle.circle_name : ''
+                  ? circle
+                    ? circle.circle_name
+                    : ''
                   : meeting.circle && meeting.circle.length > 0
                     ? meeting.circle[0].circle_name
                     : ''}{' '}
@@ -403,7 +405,7 @@ export default withRouter(
         ]
         if (isCreation) {
           promises.push(dispatch(setLoading('circle')))
-          promises.push(dispatch(fetchCircle()))
+          promises.push(dispatch(fetchCircle(null, false, false, true)))
         }
         Promise.all(promises).then(() => {
           if (

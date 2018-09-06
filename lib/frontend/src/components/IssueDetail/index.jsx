@@ -388,7 +388,7 @@ export default connect(
   dispatch => ({
     getCircle: labelId => {
       const param = labelId === '' ? '' : `?label_id=${labelId}`
-      dispatch(fetchCircle(param, true, true))
+      dispatch(fetchCircle(param, true, true, true))
     },
     getMilestones: repoName => {
       dispatch(changeMilestoneSelect(repoName))
