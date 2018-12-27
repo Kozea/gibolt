@@ -1004,8 +1004,12 @@ def timeline():
 
     def super_if(milestone):
         return ((
-            milestone.get('due_on') and
-            date_from_iso(start) <= milestone['due_on'] < date_from_iso(stop)
+            milestone.get('due_on')
+            and (
+                    date_from_iso(start)
+                    <= milestone['due_on']
+                    < date_from_iso(stop)
+            )
         )  # noqa
                 or (
                     without_due_date  # noqa
