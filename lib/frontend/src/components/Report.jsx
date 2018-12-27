@@ -92,7 +92,8 @@ class Report extends React.Component {
             type="date"
             value={range.stop}
             onChange={e => onDateChange(e.target.value, 'stop', query)}
-          />.
+          />
+          .
         </h1>
         {loading && <Loading />}
         {error && (
@@ -112,9 +113,11 @@ class Report extends React.Component {
                   .map(({ repository, issues }) => (
                     <li key={repository.id} className={b('item')}>
                       <span className={b('repo')}>
-                        {repository.name} ({Math.round(
+                        {repository.name} (
+                        {Math.round(
                           100 * (issues.length / monthIssues.length)
-                        ).toFixed()}%)
+                        ).toFixed()}
+                        %)
                       </span>
                     </li>
                   ))}
@@ -136,9 +139,11 @@ class Report extends React.Component {
                       .map(({ repository, issues }) => (
                         <li key={repository.id} className={b('item')}>
                           <span className={b('repo')}>
-                            {repository.name} ({Math.round(
+                            {repository.name} (
+                            {Math.round(
                               100 * (issues.length / monthIssues.length)
-                            ).toFixed()}%)
+                            ).toFixed()}
+                            %)
                           </span>
                           <ul className={b('issues')}>
                             {issues.map(issue => (
