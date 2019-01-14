@@ -96,7 +96,7 @@ def post_role_focus_user(payload, role_focus_user_id=None):
         session.add(new_focus_user)
         session.commit()
 
-    except (exc.IntegrityError) as e:
+    except (exc.IntegrityError):
         session.rollback()
         rest.raise_error(400, 'Invalid payload.')
 
@@ -165,7 +165,7 @@ def post_role_focus(payload, role_focus_id=None):
         session.add(new_focus_user)
         session.commit()
 
-    except (exc.IntegrityError, AttributeError) as e:
+    except (exc.IntegrityError, AttributeError):
         session.rollback()
         rest.raise_error(400, 'Invalid payload.')
     return role_focuses.get({}, role_focus_id=new_role_focus.role_focus_id)
@@ -236,7 +236,7 @@ def post_roles(payload, role_id=None):
             session.add(new_role_focus)
         session.commit()
 
-    except (exc.IntegrityError) as e:
+    except (exc.IntegrityError):
         session.rollback()
         rest.raise_error(400, 'Invalid payload.')
     return roles.get({}, role_id=new_role.role_id)
@@ -368,7 +368,7 @@ def post_report(payload, report_id=None):
             session.flush()
 
         session.commit()
-    except (exc.IntegrityError) as e:
+    except (exc.IntegrityError):
         session.rollback()
         rest.raise_error(400, 'Invalid payload.')
     return report_unrest.get({}, report_id=new_report.report_id)
@@ -470,7 +470,7 @@ def update_report(payload, report_id):
         session.flush()
         report_tables(payload, report_id)
         session.commit()
-    except (exc.IntegrityError) as e:
+    except (exc.IntegrityError):
         session.rollback()
         rest.raise_error(400, 'Invalid payload.')
 
@@ -532,7 +532,7 @@ def add_priority():
             'primary_keys': ['priority_id'],
         }
         return jsonify(objects)
-    except (exc.IntegrityError) as e:
+    except (exc.IntegrityError):
         session.rollback()
         # in this case, the associated label must be deleted
         # to ensure there are no priority labels w/o priority
@@ -540,7 +540,7 @@ def add_priority():
         session.commit()
         response_object = {'status': 'error', 'message': 'Invalid payload.'}
         return jsonify(response_object), 400
-    except (exc.OperationalError, ValueError) as e:
+    except (exc.OperationalError, ValueError):
         session.rollback()
         response_object = {
             'status': 'error',
@@ -575,7 +575,7 @@ def update_priority(priority_id):
             'primary_keys': ['priority_id'],
         }
         return jsonify(objects)
-    except (exc.IntegrityError, exc.OperationalError, ValueError) as e:
+    except (exc.IntegrityError, exc.OperationalError, ValueError):
         session.rollback()
         response_object = {
             'status': 'error',
@@ -633,7 +633,7 @@ def update_milestones_circles(repo_name, milestone_number):
         session.commit()
         return get_a_milestone(repo_name, milestone_number)
 
-    except (exc.IntegrityError, exc.OperationalError, ValueError) as e:
+    except (exc.IntegrityError, exc.OperationalError, ValueError):
         session.rollback()
         response_object = {
             'status': 'error',
