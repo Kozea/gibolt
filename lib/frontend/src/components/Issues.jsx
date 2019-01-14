@@ -36,7 +36,7 @@ import Loading from './Loading'
 import Progress from './Progress'
 
 function checkboxState(issues) {
-  var selectedIssues = issues.filter(issue => issue.selected).length
+  const selectedIssues = issues.filter(issue => issue.selected).length
   if (selectedIssues === 0) {
     return 'unchecked'
   }
@@ -137,7 +137,7 @@ class Issues extends React.Component {
           {grouper !== 'nogroup' && `grouped by ${grouper}`}{' '}
           <input
             type="checkbox"
-            checked={checkboxState(issues) === 'checked'}
+            defaultChecked={checkboxState(issues) === 'checked'}
             ref={elem =>
               elem &&
               (elem.indeterminate = checkboxState(issues) === 'indeterminate')
@@ -195,7 +195,7 @@ class Issues extends React.Component {
         <div className={b('check')}>
           <label htmlFor="checkbox">
             <input
-              checked={this.state.hideAllGroups}
+              defaultChecked={this.state.hideAllGroups}
               id="checkbox"
               onClick={e => this.setCheckBox(e.target.checked)}
               type="checkbox"
@@ -215,7 +215,7 @@ class Issues extends React.Component {
               {group} <sup>({issues.length})</sup>{' '}
               <input
                 type="checkbox"
-                checked={checkboxState(issues) === 'checked'}
+                defaultChecked={checkboxState(issues) === 'checked'}
                 ref={elem =>
                   elem &&
                   (elem.indeterminate =
@@ -239,13 +239,12 @@ class Issues extends React.Component {
                   Create issue
                 </button>
               )}
-              {issuesState === 'all' &&
-                grouper !== 'state' && (
-                  <Progress
-                    val={issues.filter(i => i.state === 'closed').length}
-                    total={issues.length}
-                  />
-                )}
+              {issuesState === 'all' && grouper !== 'state' && (
+                <Progress
+                  val={issues.filter(i => i.state === 'closed').length}
+                  total={issues.length}
+                />
+              )}
             </h2>
             <ul
               className={b(

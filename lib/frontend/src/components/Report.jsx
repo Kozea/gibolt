@@ -92,7 +92,8 @@ class Report extends React.Component {
             type="date"
             value={range.stop}
             onChange={e => onDateChange(e.target.value, 'stop', query)}
-          />.
+          />
+          .
         </h1>
         {loading && <Loading />}
         {error && (
@@ -109,12 +110,14 @@ class Report extends React.Component {
               <ul>
                 {groupByRepository(monthIssues)
                   .sort((x, y) => y.issues.length - x.issues.length)
-                  .map(({ repoId, repository, issues }) => (
-                    <li key={repoId} className={b('item')}>
+                  .map(({ repository, issues }) => (
+                    <li key={repository.id} className={b('item')}>
                       <span className={b('repo')}>
-                        {repository.name} ({Math.round(
+                        {repository.name} (
+                        {Math.round(
                           100 * (issues.length / monthIssues.length)
-                        ).toFixed()}%)
+                        ).toFixed()}
+                        %)
                       </span>
                     </li>
                   ))}
@@ -127,18 +130,20 @@ class Report extends React.Component {
           <article key={id} className={b('user')}>
             <h2>{user.login}</h2>
             {groupByMonth(userIssues).map(
-              ({ monthId, month, issues: monthIssues }) => (
-                <article key={monthId} className={b('month')}>
+              ({ id, month, issues: monthIssues }) => (
+                <article key={id} className={b('month')}>
                   <h3>{month.format('LL')}</h3>
                   <ul>
                     {groupByRepository(monthIssues)
                       .sort((x, y) => y.issues.length - x.issues.length)
-                      .map(({ issueId, repository, issues }) => (
-                        <li key={issueId} className={b('item')}>
+                      .map(({ repository, issues }) => (
+                        <li key={repository.id} className={b('item')}>
                           <span className={b('repo')}>
-                            {repository.name} ({Math.round(
+                            {repository.name} (
+                            {Math.round(
                               100 * (issues.length / monthIssues.length)
-                            ).toFixed()}%)
+                            ).toFixed()}
+                            %)
                           </span>
                           <ul className={b('issues')}>
                             {issues.map(issue => (
