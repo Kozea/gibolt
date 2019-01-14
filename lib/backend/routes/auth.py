@@ -46,6 +46,6 @@ def get_allowed_repos():
         'orgs/{0}/repos?type=all&per_page=100'.format(
             app.config['ORGANISATION']
         ),
-        all_pages=True
+        all_pages=True,
     )
     return [repo['name'] for repo in repos]

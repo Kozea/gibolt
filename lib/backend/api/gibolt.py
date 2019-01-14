@@ -8,9 +8,21 @@ from .. import app, session_unrest
 from ..routes.auth import needlogin
 from ..routes.github import get_a_milestone
 from .models import (
-    Circle, Item, Label, Milestone_circle, Priority, Report, Report_agenda,
-    Report_attendee, Report_checklist, Report_indicator, Report_milestone,
-    Role, Role_focus, Role_focus_user, label_types
+    Circle,
+    Item,
+    Label,
+    Milestone_circle,
+    Priority,
+    Report,
+    Report_agenda,
+    Report_attendee,
+    Report_checklist,
+    Report_indicator,
+    Report_milestone,
+    Role,
+    Role_focus,
+    Role_focus_user,
+    label_types,
 )
 
 # Declare rest endpoints for gibolt Database
@@ -28,17 +40,19 @@ role_focus_users = rest(
         else True,
         and_(
             request.values.get('active_focus_user') == True,
-            or_(func.DATE(Role_focus_user.end_date) == None,
-                func.DATE(Role_focus_user.end_date) >= date.today()),
+            or_(
+                func.DATE(Role_focus_user.end_date) == None,
+                func.DATE(Role_focus_user.end_date) >= date.today(),
+            ),
         )
         if request.values.get('active_focus_user')
-        else True
+        else True,
     ).order_by(
         Role_focus_user.end_date.desc(),
         Role_focus_user.start_date.desc(),
         Role_focus_user.role_focus_user_id.desc(),
     ),
-    auth=needlogin
+    auth=needlogin,
 )
 
 
@@ -46,22 +60,30 @@ role_focus_users = rest(
 def post_role_focus_user(payload, role_focus_user_id=None):
     role_focus_id = payload.get('role_focus_id')
 
-    future_focus_user = session.query(Role_focus_user).filter(
-        Role_focus_user.role_focus_id == role_focus_id,
-        func.DATE(Role_focus_user.start_date) > date.today(),
-    ).first()
+    future_focus_user = (
+        session.query(Role_focus_user)
+        .filter(
+            Role_focus_user.role_focus_id == role_focus_id,
+            func.DATE(Role_focus_user.start_date) > date.today(),
+        )
+        .first()
+    )
     if future_focus_user:
         rest.raise_error(400, 'A valid focus user alredy exists.')
 
     start_date = datetime.strptime(payload.get('start_date'), '%Y-%m-%d')
     try:
-        existing_focus_users = session.query(Role_focus_user).filter(
-            Role_focus_user.role_focus_id == role_focus_id,
-            or_(
-                func.DATE(Role_focus_user.end_date) == None,
-                func.DATE(Role_focus_user.end_date) >= date.today()
-            ),
-        ).all()
+        existing_focus_users = (
+            session.query(Role_focus_user)
+            .filter(
+                Role_focus_user.role_focus_id == role_focus_id,
+                or_(
+                    func.DATE(Role_focus_user.end_date) == None,
+                    func.DATE(Role_focus_user.end_date) >= date.today(),
+                ),
+            )
+            .all()
+        )
         for user in existing_focus_users:
             user.end_date = start_date if start_date else date.today()
             session.flush()
@@ -90,9 +112,9 @@ rest(
     query=lambda query: query.filter(
         Item.role_focus_id == (request.values.get('role_focus_id'))
         if request.values.get('role_focus_id')
-        else True,
+        else True
     ),
-    auth=needlogin
+    auth=needlogin,
 )
 
 
@@ -103,15 +125,21 @@ role_focuses = rest(
     relationships={
         'role_focus_users': role_focus_users,
         'items': rest(Item),
-        'role': rest(Role, relationships={'circle': rest(
-            Circle, relationships={'circle_parent': rest(Circle)})}),
+        'role': rest(
+            Role,
+            relationships={
+                'circle': rest(
+                    Circle, relationships={'circle_parent': rest(Circle)}
+                )
+            },
+        ),
     },
     query=lambda query: query.filter(
         Role_focus.role_id == (request.values.get('role_id'))
         if request.values.get('role_id')
-        else True,
+        else True
     ),
-    auth=needlogin
+    auth=needlogin,
 )
 
 
@@ -130,7 +158,8 @@ def post_role_focus(payload, role_focus_id=None):
         new_focus_user = Role_focus_user(
             role_focus_id=new_role_focus.role_focus_id,
             start_date=datetime.strptime(start_date, '%Y-%m-%d')
-            if start_date else None,
+            if start_date
+            else None,
             user_id=payload.get('user_id'),
         )
         session.add(new_focus_user)
@@ -146,16 +175,13 @@ only_role_focuses = rest(
     Role_focus,
     methods=['GET'],
     name='only_role_focuses',
-    relationships={
-        'role_focus_users': role_focus_users,
-        'items': rest(Item),
-    },
+    relationships={'role_focus_users': role_focus_users, 'items': rest(Item)},
     query=lambda query: query.filter(
         Role_focus.role_id == (request.values.get('role_id'))
         if request.values.get('role_id')
-        else True,
+        else True
     ),
-    auth=needlogin
+    auth=needlogin,
 )
 
 
@@ -163,9 +189,7 @@ roles = rest(
     Role,
     methods=['GET', 'PATCH', 'PUT', 'DELETE'],
     name='roles',
-    relationships={
-        'role_focuses': only_role_focuses,
-    },
+    relationships={'role_focuses': only_role_focuses},
     query=lambda query: query.filter(
         Role.circle_id == (request.values.get('circle_id'))
         if request.values.get('circle_id')
@@ -174,7 +198,7 @@ roles = rest(
         if request.values.get('is_active')
         else True,
     ),
-    auth=needlogin
+    auth=needlogin,
 )
 
 
@@ -205,7 +229,8 @@ def post_roles(payload, role_id=None):
             new_role_focus = Role_focus_user(
                 role_focus_id=new_focus.role_focus_id,
                 start_date=datetime.strptime(start_date, '%Y-%m-%d')
-                if start_date else None,
+                if start_date
+                else None,
                 user_id=payload.get('user_id'),
             )
             session.add(new_role_focus)
@@ -225,15 +250,15 @@ rest(
         'circle_children': rest(Circle, relationships={'roles': roles}),
         'roles': roles,
         'circle_milestones': rest(Milestone_circle),
-        'label': rest(Label)
+        'label': rest(Label),
     },
     name='circles',
     query=lambda query: query.filter(
         Circle.label_id == (request.values.get('label_id'))
         if request.values.get('label_id')
-        else True,
+        else True
     ),
-    auth=needlogin
+    auth=needlogin,
 )
 
 
@@ -259,15 +284,14 @@ report_unrest = rest(
         Report.report_id <= int(request.values.get('from_id'))
         if request.values.get('from_id')
         else True,
-    ).order_by(
-        Report.created_at.desc(),
-        Report.report_id.desc()
-    ).limit(
+    )
+    .order_by(Report.created_at.desc(), Report.report_id.desc())
+    .limit(
         int(request.values.get('limit'))
         if request.values.get('limit')
         else None
     ),
-    auth=needlogin
+    auth=needlogin,
 )
 
 
@@ -289,7 +313,7 @@ def post_report(payload, report_id=None):
             report_type=report_type,
             author_id=author_id,
             content=content,
-            is_submitted=is_submitted
+            is_submitted=is_submitted,
         )
         session.add(new_report)
         session.flush()
@@ -299,7 +323,7 @@ def post_report(payload, report_id=None):
                 report_id=new_report.report_id,
                 user_id=attendee.get('user_id'),
                 user=attendee.get('user'),
-                checked=attendee.get('checked')
+                checked=attendee.get('checked'),
             )
             session.add(new_attendee)
             session.flush()
@@ -309,7 +333,7 @@ def post_report(payload, report_id=None):
                 report_id=new_report.report_id,
                 item_id=action.get('item_id'),
                 content=action.get('content'),
-                checked=action.get('checked')
+                checked=action.get('checked'),
             )
             session.add(new_action)
             session.flush()
@@ -319,7 +343,7 @@ def post_report(payload, report_id=None):
                 report_id=new_report.report_id,
                 item_id=indicator.get('item_id'),
                 content=indicator.get('content'),
-                value=indicator.get('value')
+                value=indicator.get('value'),
             )
             session.add(new_indicator)
             session.flush()
@@ -329,7 +353,7 @@ def post_report(payload, report_id=None):
                 report_id=new_report.report_id,
                 milestone_number=project.get('number'),
                 repo_name=project.get('repo'),
-                milestone=project
+                milestone=project,
             )
             session.add(new_project)
             session.flush()
@@ -338,7 +362,7 @@ def post_report(payload, report_id=None):
             new_ticket = Report_agenda(
                 report_id=new_report.report_id,
                 ticket_id=ticket.get('ticket_id'),
-                ticket=ticket
+                ticket=ticket,
             )
             session.add(new_ticket)
             session.flush()
@@ -358,50 +382,70 @@ def report_tables(payload, report_id):
     tickets = payload.get('agenda')
 
     for attendee in attendees:
-        report_attendee = session.query(Report_attendee).filter(
-            Report_attendee.report_id == report_id,
-            Report_attendee.user_id == attendee.get('user_id'),
-        ).first()
+        report_attendee = (
+            session.query(Report_attendee)
+            .filter(
+                Report_attendee.report_id == report_id,
+                Report_attendee.user_id == attendee.get('user_id'),
+            )
+            .first()
+        )
         if report_attendee:
             report_attendee.user = attendee.get('user')
             report_attendee.checked = attendee.get('checked')
         session.flush()
 
     for action in actions:
-        report_checklist = session.query(Report_checklist).filter(
-            Report_checklist.report_id == report_id,
-            Report_checklist.item_id == action.get('item_id'),
-        ).first()
+        report_checklist = (
+            session.query(Report_checklist)
+            .filter(
+                Report_checklist.report_id == report_id,
+                Report_checklist.item_id == action.get('item_id'),
+            )
+            .first()
+        )
         if report_checklist:
             report_checklist.content = action.get('content')
             report_checklist.checked = action.get('checked')
         session.flush()
 
     for indicator in indicators:
-        report_indicator = session.query(Report_indicator).filter(
-            Report_indicator.report_id == report_id,
-            Report_indicator.item_id == indicator.get('item_id'),
-        ).first()
+        report_indicator = (
+            session.query(Report_indicator)
+            .filter(
+                Report_indicator.report_id == report_id,
+                Report_indicator.item_id == indicator.get('item_id'),
+            )
+            .first()
+        )
         if report_indicator:
             report_indicator.content = indicator.get('content')
             report_indicator.value = indicator.get('value')
         session.flush()
 
     for project in projects:
-        report_milestone = session.query(Report_milestone).filter(
-            Report_milestone.report_id == report_id,
-            Report_milestone.milestone_number == project.get('number'),
-            Report_milestone.repo_name == project.get('repo'),
-        ).first()
+        report_milestone = (
+            session.query(Report_milestone)
+            .filter(
+                Report_milestone.report_id == report_id,
+                Report_milestone.milestone_number == project.get('number'),
+                Report_milestone.repo_name == project.get('repo'),
+            )
+            .first()
+        )
         if report_milestone:
             report_milestone.milestone = project
         session.flush()
 
     for ticket in tickets:
-        report_agenda = session.query(Report_agenda).filter(
-            Report_agenda.report_id == report_id,
-            Report_agenda.ticket_id == ticket.get('ticket_id'),
-        ).first()
+        report_agenda = (
+            session.query(Report_agenda)
+            .filter(
+                Report_agenda.report_id == report_id,
+                Report_agenda.ticket_id == ticket.get('ticket_id'),
+            )
+            .first()
+        )
         if report_agenda:
             report_agenda.ticket = ticket
         session.flush()
@@ -413,8 +457,9 @@ def update_report(payload, report_id):
     if not report_id:
         rest.raise_error(400, 'Invalid payload.')
 
-    report = session.query(Report).filter(Report.report_id == report_id
-                                          ).first()
+    report = (
+        session.query(Report).filter(Report.report_id == report_id).first()
+    )
     if not report:
         rest.raise_error(400, 'Invalid payload.')
 
@@ -438,8 +483,9 @@ def labels():
     labels_list = {}
     for label_type in label_types:
         labels_list[label_type] = []
-        labels = session.query(Label).filter(Label.label_type == label_type
-                                             ).all()
+        labels = (
+            session.query(Label).filter(Label.label_type == label_type).all()
+        )
 
         for label in labels:
             labels_data = {
@@ -459,7 +505,7 @@ rest(
     methods=['PUT', 'POST', 'PATCH', 'DELETE'],
     relationships={'priorities': rest(Priority)},
     name='labels',
-    auth=needlogin
+    auth=needlogin,
 )
 
 
@@ -473,15 +519,17 @@ def add_priority():
         new_priority = Priority(label_id=label_id, value=value)
         session.add(new_priority)
         session.commit()
-        response = [{
-            'priority_id': new_priority.priority_id,
-            'label_id': new_priority.label_id,
-            'value': new_priority.value
-        }]
+        response = [
+            {
+                'priority_id': new_priority.priority_id,
+                'label_id': new_priority.label_id,
+                'value': new_priority.value,
+            }
+        ]
         objects = {
             'objects': response,
             'occurences': 1,
-            'primary_keys': ['priority_id']
+            'primary_keys': ['priority_id'],
         }
         return jsonify(objects)
     except (exc.IntegrityError) as e:
@@ -496,7 +544,7 @@ def add_priority():
         session.rollback()
         response_object = {
             'status': 'error',
-            'message': 'Error. Please try again or contact the administrator.'
+            'message': 'Error. Please try again or contact the administrator.',
         }
         return jsonify(response_object), 500
 
@@ -507,42 +555,50 @@ def update_priority(priority_id):
     data = request.get_json()
     new_value = data.get('value')
     try:
-        priority = session.query(Priority).filter(
-            Priority.priority_id == priority_id
-        ).first()
+        priority = (
+            session.query(Priority)
+            .filter(Priority.priority_id == priority_id)
+            .first()
+        )
         priority.value = new_value
         session.commit()
-        response = [{
-            'priority_id': priority.priority_id,
-            'label_id': priority.label_id,
-            'value': priority.value
-        }]
+        response = [
+            {
+                'priority_id': priority.priority_id,
+                'label_id': priority.label_id,
+                'value': priority.value,
+            }
+        ]
         objects = {
             'objects': response,
             'occurences': 1,
-            'primary_keys': ['priority_id']
+            'primary_keys': ['priority_id'],
         }
         return jsonify(objects)
     except (exc.IntegrityError, exc.OperationalError, ValueError) as e:
         session.rollback()
         response_object = {
             'status': 'error',
-            'message': 'Error. Please try again or contact the administrator.'
+            'message': 'Error. Please try again or contact the administrator.',
         }
         return jsonify(response_object), 500
 
 
 @app.route(
     '/api/milestone_circles/<string:repo_name>/<int:milestone_number>',
-    methods=['POST']
+    methods=['POST'],
 )
 @needlogin
 def update_milestones_circles(repo_name, milestone_number):
     circles_list = request.get_json()
-    existing_milestones_circles = session.query(Milestone_circle).filter(
-        Milestone_circle.milestone_number == milestone_number,
-        Milestone_circle.repo_name == repo_name
-    ).all()
+    existing_milestones_circles = (
+        session.query(Milestone_circle)
+        .filter(
+            Milestone_circle.milestone_number == milestone_number,
+            Milestone_circle.repo_name == repo_name,
+        )
+        .all()
+    )
 
     try:
         # deletion
@@ -551,22 +607,26 @@ def update_milestones_circles(repo_name, milestone_number):
                 session.query(Milestone_circle).filter(
                     Milestone_circle.milestone_number == milestone_number,
                     Milestone_circle.repo_name == repo_name,
-                    Milestone_circle.circle_id == existing_assoc.circle_id
+                    Milestone_circle.circle_id == existing_assoc.circle_id,
                 ).delete()
 
         # creation
         for circle in circles_list:
             circle_id = circle.get("circle_id")
-            milestone_circle = session.query(Milestone_circle).filter(
-                Milestone_circle.milestone_number == milestone_number,
-                Milestone_circle.repo_name == repo_name,
-                Milestone_circle.circle_id == circle_id
-            ).first()
+            milestone_circle = (
+                session.query(Milestone_circle)
+                .filter(
+                    Milestone_circle.milestone_number == milestone_number,
+                    Milestone_circle.repo_name == repo_name,
+                    Milestone_circle.circle_id == circle_id,
+                )
+                .first()
+            )
             if not milestone_circle:
                 new_milestone_circle = Milestone_circle(
                     circle_id=circle_id,
                     milestone_number=milestone_number,
-                    repo_name=repo_name
+                    repo_name=repo_name,
                 )
                 session.add(new_milestone_circle)
 
@@ -577,7 +637,7 @@ def update_milestones_circles(repo_name, milestone_number):
         session.rollback()
         response_object = {
             'status': 'error',
-            'message': 'Error during Milestone_circle table update.'
+            'message': 'Error during Milestone_circle table update.',
         }
         code = 400
 
@@ -588,23 +648,25 @@ rest(
     Milestone_circle,
     methods=['DELETE'],
     name='milestone_circles',
-    auth=needlogin
+    auth=needlogin,
 )
 
 rest(
     Report_milestone,
     methods=['DELETE'],
     name='report_milestones',
-    auth=needlogin
+    auth=needlogin,
 )
 
 
 @app.route('/api/meetingsTypes', methods=['GET'])
 @needlogin
 def get_meetings_types():
-    return jsonify({
-        'objects': [{
-            'type_id': type_id,
-            'type_name': type_name
-        } for type_id, type_name in app.config['MEETINGS_TYPES']]
-    })
+    return jsonify(
+        {
+            'objects': [
+                {'type_id': type_id, 'type_name': type_name}
+                for type_id, type_name in app.config['MEETINGS_TYPES']
+            ]
+        }
+    )

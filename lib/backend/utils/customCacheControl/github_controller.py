@@ -28,14 +28,14 @@ class GitHubController(CacheController):
         # typical assumptions.
         # the big change is here as flask_github check for content_type we want
         # to keep the original content-type
-        excluded_headers = [
-            'content-length',
-            'content-type',
-        ]
+        excluded_headers = ['content-length', 'content-type']
 
         cached_response.headers.update(
-            dict((k, v) for k, v in response.headers.items()
-                 if k.lower() not in excluded_headers)
+            dict(
+                (k, v)
+                for k, v in response.headers.items()
+                if k.lower() not in excluded_headers
+            )
         )
 
         # we want a 200 b/c we have content via the cache
@@ -43,8 +43,7 @@ class GitHubController(CacheController):
 
         # update our cache
         self.cache.set(
-            cache_url,
-            self.serializer.dumps(request, cached_response),
+            cache_url, self.serializer.dumps(request, cached_response)
         )
 
         return cached_response

@@ -1,8 +1,15 @@
 import datetime
 
 from sqlalchemy import (
-    Boolean, Column, DateTime, ForeignKey, Integer, Numeric, String, Text,
-    UniqueConstraint
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    Numeric,
+    String,
+    Text,
+    UniqueConstraint,
 )
 from sqlalchemy.event import listens_for
 from sqlalchemy.ext.declarative import declarative_base
@@ -23,7 +30,7 @@ role_types = ['leadlink', 'elected', 'assigned']
 
 class Label(Base):
     __tablename__ = 'label'
-    __table_args__ = (UniqueConstraint('text', name='text'), )
+    __table_args__ = (UniqueConstraint('text', name='text'),)
     label_id = Column(
         Integer, autoincrement=True, primary_key=True, nullable=False
     )
@@ -34,19 +41,19 @@ class Label(Base):
 
 class Priority(Base):
     __tablename__ = 'priority'
-    __table_args__ = (UniqueConstraint('value', name='value_unique'), )
+    __table_args__ = (UniqueConstraint('value', name='value_unique'),)
     priority_id = Column(
         Integer, autoincrement=True, primary_key=True, nullable=False
     )
     label_id = Column(
         Integer,
         ForeignKey('label.label_id', name='fk_priority_label'),
-        nullable=False
+        nullable=False,
     )
     value = Column(Integer)
     labels = relationship(
         Label,
-        backref=backref('priorities', cascade='all,delete', uselist=False)
+        backref=backref('priorities', cascade='all,delete', uselist=False),
     )
 
 
@@ -61,7 +68,7 @@ class Circle(Base):
     label_id = Column(
         Integer,
         ForeignKey('label.label_id', name='fk_circle_label'),
-        nullable=True
+        nullable=True,
     )
     circle_name = Column(String, unique=True)
     circle_purpose = Column(String)
@@ -73,7 +80,7 @@ class Circle(Base):
     )
     circle_milestones = relationship(
         'Milestone_circle',
-        backref=backref('milestone_circle', remote_side=[circle_id])
+        backref=backref('milestone_circle', remote_side=[circle_id]),
     )
     circle_parent = relationship(
         'Circle', backref='circle', remote_side=[circle_id], lazy='subquery'
@@ -96,7 +103,7 @@ class Role(Base):
     circle_id = Column(
         Integer,
         ForeignKey('circle.circle_id', name='fk_role_circle'),
-        nullable=False
+        nullable=False,
     )
     role_name = Column(String)
     role_purpose = Column(String)
@@ -115,7 +122,7 @@ class Role_focus(Base):
     role_id = Column(
         Integer,
         ForeignKey('role.role_id', name='fk_focus_role'),
-        nullable=False
+        nullable=False,
     )
     focus_name = Column(String, default='', nullable=False)
     duration = Column(Integer)
@@ -132,14 +139,14 @@ class Role_focus_user(Base):
     role_focus_id = Column(
         Integer,
         ForeignKey('role_focus.role_focus_id', name='fk_user_focus'),
-        nullable=False
+        nullable=False,
     )
     user_id = Column(Integer)
     start_date = Column(DateTime)
     end_date = Column(DateTime)
     role_focus = relationship(
         Role_focus,
-        backref=backref('role_focus_users', cascade='all, delete-orphan')
+        backref=backref('role_focus_users', cascade='all, delete-orphan'),
     )
 
 
@@ -151,7 +158,7 @@ class Item(Base):
     role_focus_id = Column(
         Integer,
         ForeignKey('role_focus.role_focus_id', name='fk_item_rolefocus'),
-        nullable=False
+        nullable=False,
     )
     item_type = Column(Enum(*item_types))
     content = Column(Text)
