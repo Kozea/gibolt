@@ -6,7 +6,6 @@ import ReactModal from 'react-modal'
 
 import {
   fetchResults,
-  setError,
   setLoading,
   setModal,
   setParams,
@@ -163,14 +162,18 @@ class Issues extends React.Component {
               onModalClose={() => onModalClose(modal.refresh)}
             />
           ) : (
-            <span>
-              <IssueDetail
-                issue={
-                  issues.filter(iss => iss.ticket_id === modal.data.issueId)[0]
-                }
-                onModalClose={() => onModalClose(modal.refresh)}
-              />
-            </span>
+            modal.data.issueId && (
+              <span>
+                <IssueDetail
+                  issue={
+                    issues.filter(
+                      iss => iss.ticket_id === modal.data.issueId
+                    )[0]
+                  }
+                  onModalClose={() => onModalClose(modal.refresh)}
+                />
+              </span>
+            )
           )}
         </ReactModal>
         {loading && <Loading />}
@@ -312,13 +315,13 @@ export default connect(
       issuesState: issuesStateFromState(state),
       error: state.issues.error,
       modal: state.modal,
+      currentIssue: state.issues.results.currentIssue,
     }
   },
   dispatch => ({
     onModalClose: refresh => {
       dispatch(setModal(false, false, {}))
       dispatch(updateCurrentIssue({}))
-      dispatch(setError(null, 'issueForm'))
       if (refresh) {
         dispatch(setLoading('issues'))
         dispatch(fetchIssues())
