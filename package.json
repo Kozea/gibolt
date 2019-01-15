@@ -31,11 +31,6 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@babel/plugin-proposal-export-default-from": "^7.2.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/plugin-transform-runtime": "^7.2.0",
-    "@babel/runtime": "^7.2.0",
-    "babel-plugin-add-react-static-displayname": "^0.0.2",
     "bemboo": "^2.0.0",
     "date-fns": "^1.29.0",
     "deep-equal": "1.0.1",
@@ -66,20 +61,22 @@
     "redux": "4.0.1",
     "redux-http-status": "^0.0.11",
     "redux-thunk": "2.3.0",
-    "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-cli": "^3.0.3",
-    "webpack-manifest-plugin": "^2.0.4",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-cli": "^3.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.42",
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.42",
     "@babel/plugin-proposal-decorators": "^7.0.0-beta.42",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.42",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.0.0-beta.42",
     "@babel/preset-react": "^7.0.0-beta.42",
     "@babel/register": "^7.0.0-beta.42",
+    "@babel/runtime": "^7.2.0",
     "babel-core": "^7.0.0-0",
+    "babel-plugin-add-react-static-displayname": "^0.0.2",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
     "babel-loader": "^8.0.0-beta.2",
@@ -102,6 +99,10 @@
     "url-loader": "1.1.2",
     "webpack": "4.28.4",
     "webpack-dev-server": "3.1.14",
-    "webpackozea": "0.3.1"
+    "webpack-bundle-analyzer": "^3.0.3",
+    "webpack-cli": "^3.0.3",
+    "webpack-manifest-plugin": "^2.0.4",
+    "webpack-node-externals": "^1.7.2",
+    "webpackozea": "^0.3.1"
   }
 }
