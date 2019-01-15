@@ -1,5 +1,6 @@
 import './IssueDetail.sass'
 
+import block from 'bemboo'
 import { format } from 'date-fns'
 import React from 'react'
 import Octicon from 'react-component-octicons'
@@ -14,15 +15,15 @@ import {
   updateATicket,
   updateLabelsList,
 } from '../../actions/issues'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 import IssueStatusIcon from './../Utils/IssueStatusIcon'
 import LabelMultiSelect from './../Utils/LabelMultiSelect'
 import MarkdownEditor from './../Utils/MarkdownEditor'
 import IssueForm from './IssueForm'
 
-const b = block('IssueDetail')
-var ReactMarkdown = require('react-markdown')
+const ReactMarkdown = require('react-markdown')
 
+@block
 class IssueDetail extends React.Component {
   constructor(props, context) {
     super(props, context)
@@ -58,7 +59,7 @@ class IssueDetail extends React.Component {
     this.setState({ isInEdition: value })
   }
 
-  render() {
+  render(b) {
     const {
       error,
       errorIssues,
@@ -73,9 +74,9 @@ class IssueDetail extends React.Component {
     const { isInEdition, issue, options, issuesLabels } = this.state
 
     return (
-      <section className={b()}>
+      <section className={b}>
         <span
-          className={b({
+          className={b.m({
             status: issue.state,
             'pull-request': issue.pull_request !== null,
           })}
@@ -83,7 +84,7 @@ class IssueDetail extends React.Component {
           <span className="close" onClick={onModalClose}>
             &times;
           </span>
-          <span className={b('ttl')}>
+          <span className={b.e('ttl')}>
             <a href={issue.html_url} target="_blank" rel="noopener noreferrer">
               #{issue.ticket_number}
             </a>{' '}
@@ -98,7 +99,7 @@ class IssueDetail extends React.Component {
               />
             ) : (
               <span>
-                <span className={b('title')}>{issue.ticket_title} </span>
+                <span className={b.e('title')}>{issue.ticket_title} </span>
                 <span onClick={() => this.updateEditionStatus('title')}>
                   <i className="fa fa-pencil faTop" title="edit title" />
                 </span>
@@ -109,7 +110,7 @@ class IssueDetail extends React.Component {
                 {issue.assignees.map(user => (
                   <img
                     key={user.user_id}
-                    className={b('avatar')}
+                    className={b.e('avatar')}
                     src={user.avatar_url}
                     alt="avatar"
                     title={user.user_name}
@@ -134,11 +135,11 @@ class IssueDetail extends React.Component {
             </span>
           )}
           {(error || errorIssues) && (
-            <article className={b('date', { error: true })}>
+            <article className={b.e('date', { error: true })}>
               <code>ERROR: {error ? error : errorIssues}</code>
             </article>
           )}
-          <span className={b('infos')}>
+          <span className={b.e('infos')}>
             <IssueStatusIcon issue={issue} />
             {issue.user.user_name} opened this issue, last update:{' '}
             {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm:ss')}
@@ -146,7 +147,7 @@ class IssueDetail extends React.Component {
               issue.nb_comments === 1 ? '' : 's'
             }`}
           </span>
-          <span className={b('infos')}>
+          <span className={b.e('infos')}>
             <Octicon name="repo" className="githubIcons" />
             {issue.repo_name}
             {isInEdition === 'labels' ? (
@@ -173,15 +174,15 @@ class IssueDetail extends React.Component {
                 </button>
               </form>
             ) : (
-              <span className={b('labels')}>
+              <span className={b.e('labels')}>
                 {issue.labels.length === 0 ? (
                   '· No Labels '
                 ) : (
                   <span>
                     {issue.labels.map(label => (
-                      <span key={label.label_name} className={b('label')}>
+                      <span key={label.label_name} className={b.e('label')}>
                         <span
-                          className={b('bullet')}
+                          className={b.e('bullet')}
                           style={{
                             backgroundColor: `#${label.label_color}`,
                           }}
@@ -197,7 +198,7 @@ class IssueDetail extends React.Component {
               </span>
             )}
           </span>
-          <span className={b('infos')}>
+          <span className={b.e('infos')}>
             <br />
             <Octicon name="milestone" className="githubIcons" />
             {isInEdition === 'milestones' ? (
@@ -234,9 +235,9 @@ class IssueDetail extends React.Component {
               updateEditionStatusToNull={() => this.updateEditionStatus(null)}
             />
           ) : (
-            <div className={b('body')}>
+            <div className={b.e('body')}>
               <span
-                className={b('infos')}
+                className={b.e('infos')}
                 onClick={() => {
                   this.updateEditionStatus('body')
                 }}
@@ -244,7 +245,7 @@ class IssueDetail extends React.Component {
                 <i className="fa fa-pencil faRight" title="edit body" />
               </span>
               <ReactMarkdown
-                className={b('commentDetail')}
+                className={b.e('commentDetail').toString()}
                 source={issue.body ? issue.body : 'No description provided.'}
               />
             </div>
@@ -277,11 +278,11 @@ class IssueDetail extends React.Component {
                         </button>
                       </form>
                     ) : (
-                      <div className={b('comment')} key={comment.comment_id}>
-                        <span className={b('infos')}>
+                      <div className={b.e('comment')} key={comment.comment_id}>
+                        <span className={b.e('infos')}>
                           <img
                             key={comment.user.user_id}
-                            className={b('avatar')}
+                            className={b.e('avatar')}
                             src={comment.user.avatar_url}
                             alt="avatar"
                             title={comment.user.user_name}
@@ -305,7 +306,7 @@ class IssueDetail extends React.Component {
                           </span>
                         </span>
                         <ReactMarkdown
-                          className={b('commentDetail')}
+                          className={b.e('commentDetail').toString()}
                           source={comment.body}
                         />
                       </div>

@@ -1,11 +1,12 @@
 import './Circle.sass'
 
+import block from 'bemboo'
 import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 
 const b = block('Circle')
 
@@ -22,7 +23,7 @@ class CircleMeetings extends React.Component {
           <h3>Meetings</h3>
           {meetingsTypes.map(type => (
             <Link
-              className={b('link')}
+              className={b.e('link')}
               key={type.type_id}
               to={{
                 pathname: '/createReport',
@@ -46,7 +47,7 @@ class CircleMeetings extends React.Component {
           <article>
             <br />
             <Link
-              className={b('link')}
+              className={b.e('link')}
               to={{
                 pathname: '/meetings',
                 search: stringify({

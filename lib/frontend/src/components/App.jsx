@@ -1,10 +1,11 @@
 import './App.sass'
 
+import block from 'bemboo'
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
 import { Route, Switch } from 'react-router-dom'
 
-import { block, connect } from '../utils'
+import { connect } from '../utils'
 import Admin from './Admin'
 import Circle from './Circle'
 import Circles from './Circles'
@@ -22,18 +23,17 @@ import Role from './Role'
 import RoleFocus from './RoleFocus'
 import Timeline from './Timeline'
 
-const b = block('App')
-
+@block
 class App extends Component {
   constructor(props) {
     super(props)
     this.props = props
   }
 
-  render() {
+  render(b) {
     const { location } = this.props
     return (
-      <main className={b()}>
+      <main className={b}>
         <Helmet>
           <title>Gibolt</title>
         </Helmet>

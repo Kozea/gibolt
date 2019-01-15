@@ -1,5 +1,6 @@
 import './AdminLabels.sass'
 
+import block from 'bemboo'
 import React from 'react'
 
 import { fetchResults, setLoading } from '../../actions'
@@ -11,17 +12,16 @@ import {
   labelSubmit,
   updateSelectedLabelType,
 } from '../../actions/labels'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 import AddLabel from './AddLabel'
 import Loading from './../Loading'
-
-const b = block('AdminLabels')
 
 function isLabelAssociatedToCircle(labelId, circles) {
   return circles.filter(circle => circle.label_id === labelId).length > 0
 }
 
-class Labels extends React.Component {
+@block
+class AdminLabels extends React.Component {
   constructor(props) {
     super(props)
     this.checkPriorityUniqueness = checkPriorityUniqueness.bind(this)
@@ -31,7 +31,7 @@ class Labels extends React.Component {
     this.props.sync()
   }
 
-  render() {
+  render(b) {
     const {
       circles,
       error,
@@ -46,11 +46,11 @@ class Labels extends React.Component {
     } = this.props
     const labelTypes = ['ack', 'circle', 'priority', 'qualifier']
     return (
-      <section className={b()}>
-        <article className={b('adminLabels')}>
+      <section className={b}>
+        <article className={b.e('adminLabels')}>
           <h3>Labels</h3>
           {error && (
-            <article className={b('group', { error: true })}>
+            <article className={b.e('group').m({ error: true })}>
               <code>ERROR: {error}</code>
             </article>
           )}
@@ -76,16 +76,16 @@ class Labels extends React.Component {
             {labels[selectedLabelType] &&
               labels[selectedLabelType].map(label => (
                 <li
-                  className={b('item')}
+                  className={b.e('item')}
                   key={label.label_id}
                   style={{
                     color: label.color,
                   }}
                 >
-                  <span className={b('text')}>
+                  <span className={b.e('text')}>
                     {label.isLabelInEdition ? (
                       <form
-                        className={b('labelEdition')}
+                        className={b.e('labelEdition')}
                         onSubmit={event =>
                           onSubmit(event, selectedLabelType, 'edition', label)
                         }
@@ -145,7 +145,7 @@ class Labels extends React.Component {
                             label.label_id,
                             circles
                           ) && (
-                            <span className={b('association')}>
+                            <span className={b.e('association')}>
                               {`associated to '${circles
                                 .filter(
                                   circle => circle.label_id === label.label_id
@@ -224,4 +224,4 @@ export default connect(
       dispatch(fetchResults('circles'))
     },
   })
-)(Labels)
+)(AdminLabels)

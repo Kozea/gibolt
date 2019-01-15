@@ -1,5 +1,6 @@
 import './AdminRepositories.sass'
 
+import block from 'bemboo'
 import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
@@ -11,17 +12,16 @@ import {
   updateRepoList,
   updateReposLabels,
 } from '../../actions'
-import { block, connect, getMissingAndOverlyLabelsForARepo } from '../../utils'
+import { connect, getMissingAndOverlyLabelsForARepo } from '../../utils'
 import Loading from './../Loading'
 
-const b = block('Repositories')
-
+@block
 class Repositories extends React.Component {
   componentDidMount() {
     this.props.sync()
   }
 
-  render() {
+  render(b) {
     const {
       labels,
       loading,
@@ -42,13 +42,13 @@ class Repositories extends React.Component {
       repo.overlyLabels = wrongLabels.overlyLabels
     })
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>Gibolt - Repositories</title>
         </Helmet>
-        <article className={b('topRepositories')}>
+        <article className={b.e('topRepositories')}>
           <span>
-            <h1 className={b('head')}>Repositories</h1>
+            <h1 className={b.e('head')}>Repositories</h1>
             <button
               disabled={selectedRepositories.length === 0}
               onClick={() => onUpdateRepo()}
@@ -57,7 +57,7 @@ class Repositories extends React.Component {
               Update labels for selected repositories
             </button>
             {selectedRepositories.length > 0 && (
-              <span className={b('unlink')}>
+              <span className={b.e('unlink')}>
                 Selected repositories:
                 {selectedRepositories
                   .map(repo => ` ${repo.repo_name}`)
@@ -67,16 +67,16 @@ class Repositories extends React.Component {
           </span>
           {loading && <Loading />}
           {error && (
-            <article className={b('date', { error: true })}>
+            <article className={b.e('date').m({ error: true })}>
               <h2>Error during report fetch</h2>
               <code>{error}</code>
             </article>
           )}
         </article>
-        <article className={b('repositories')}>
+        <article className={b.e('repositories')}>
           <ul>
             {repositories.map(repository => (
-              <li key={repository.repo_id} className={b('item')}>
+              <li key={repository.repo_id} className={b.e('item')}>
                 <div>
                   {repository.missingLabels.length > 0 ||
                   repository.overlyLabels.length > 0 ? (
@@ -92,10 +92,10 @@ class Repositories extends React.Component {
                       }
                     />
                   ) : (
-                    <span className={b('space')} />
+                    <span className={b.e('space')} />
                   )}
                   <Link
-                    className={b('link')}
+                    className={b.e('link')}
                     to={{
                       pathname: '/admin/repository',
                       search: stringify({ name: repository.repo_name }),
@@ -105,7 +105,7 @@ class Repositories extends React.Component {
                     {(repository.missingLabels.length > 0 ||
                       repository.overlyLabels.length > 0) && (
                       <span
-                        className={b('unlink')}
+                        className={b.e('unlink')}
                         title={(repository.missingLabels.length > 0
                           ? `Missing labels: ${repository.missingLabels
                               .map(lab => ` ${lab.text}`)
@@ -137,7 +137,7 @@ class Repositories extends React.Component {
             Update labels for selected repositories
           </button>
           {selectedRepositories.length > 0 && (
-            <span className={b('unlink')}>
+            <span className={b.e('unlink')}>
               Selected repositories:
               {selectedRepositories
                 .map(repo => ` ${repo.repo_name}`)

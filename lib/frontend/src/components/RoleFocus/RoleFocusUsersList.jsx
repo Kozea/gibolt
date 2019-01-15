@@ -1,7 +1,6 @@
+import block from 'bemboo'
 import { format } from 'date-fns'
 import React from 'react'
-
-import { block } from '../../utils'
 
 const b = block('RoleFocus')
 
@@ -19,7 +18,7 @@ export default function RoleFocusUsersList(props) {
               <li key={user.user_id}>
                 {user.avatar_url && (
                   <img
-                    className={b('avatar')}
+                    className={b.e('avatar')}
                     src={user.avatar_url}
                     alt="avatar"
                     title={user.user_name}

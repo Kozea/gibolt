@@ -1,12 +1,13 @@
 import './Circle.sass'
 
+import block from 'bemboo'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
 import { fetchCircle } from '../../actions/circle'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 import Loading from './../Loading'
 import CircleDetails from './CircleDetails'
 import CircleMeetings from './CircleMeetings'
@@ -14,8 +15,7 @@ import CircleMilestones from './CircleMilestones'
 import CircleRoles from './CircleRoles'
 import CircleSubCircles from './CircleSubCircles'
 
-const b = block('Circle')
-
+@block
 class Circle extends React.Component {
   componentDidMount() {
     if (this.props.location.pathname === '/circle') {
@@ -34,7 +34,7 @@ class Circle extends React.Component {
     }
   }
 
-  render() {
+  render(b) {
     const {
       circle,
       error,
@@ -44,7 +44,7 @@ class Circle extends React.Component {
       onGoBack,
     } = this.props
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>
             Gibolt - {circle.circle_name ? circle.circle_name : 'Circle'}
@@ -52,13 +52,13 @@ class Circle extends React.Component {
         </Helmet>
         {loading && <Loading />}
         {error && (
-          <article className={b('group', { error: true })}>
+          <article className={b.e('group').m({ error: true })}>
             <h2>Error during circle fetch/update</h2>
             {typeof error === 'object' ? (
               <ul>
                 {error.map(err => (
                   <li key={err.id}>
-                    <span className={b('bullet')} />
+                    <span className={b.e('bullet')} />
                     {err.value}
                   </li>
                 ))}
@@ -68,7 +68,7 @@ class Circle extends React.Component {
             )}
           </article>
         )}
-        <article className={b('circle')}>
+        <article className={b.e('circle')}>
           {circle.circle_name && (
             <div>
               <CircleDetails />

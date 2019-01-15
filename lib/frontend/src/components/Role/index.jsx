@@ -1,21 +1,21 @@
 import './Role.sass'
 
+import block from 'bemboo'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
 import { disableRole, editRole, fetchRole } from '../../actions/roles'
-import { block, connect, roleTypes } from '../../utils'
+import { connect, roleTypes } from '../../utils'
 import Loading from './../Loading'
 import BreadCrumbs from './../Utils/BreadCrumbs'
 import RoleForm from './../Utils/RoleForm'
 import RoleFocuses from './RoleFocuses'
 
-var ReactMarkdown = require('react-markdown')
+const ReactMarkdown = require('react-markdown')
 
-const b = block('Role')
-
+@block
 class Role extends React.Component {
   componentDidMount() {
     this.props.sync()
@@ -32,7 +32,7 @@ class Role extends React.Component {
     }
   }
 
-  render() {
+  render(b) {
     const {
       circles,
       editClick,
@@ -45,18 +45,18 @@ class Role extends React.Component {
       users,
     } = this.props
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>Gibolt - Role</title>
         </Helmet>
         {loading && <Loading />}
-        <article className={b('role')}>
+        <article className={b.e('role')}>
           <BreadCrumbs
             circle={circles.find(circle => circle.circle_id === role.circle_id)}
             role={role}
           />
           {error ? (
-            <article className={b('date', { error: true })}>
+            <article className={b.e('date').m({ error: true })}>
               <h2>Error during role fetch</h2>
               {typeof error === 'object' ? (
                 <ul>

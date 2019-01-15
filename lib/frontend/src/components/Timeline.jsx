@@ -1,5 +1,6 @@
 import './Timeline.sass'
 
+import block from 'bemboo'
 import { format, startOfMonth } from 'date-fns'
 import { parse, stringify } from 'query-string'
 import React from 'react'
@@ -7,12 +8,11 @@ import { Helmet } from 'react-helmet'
 import { push } from 'react-router-redux'
 
 import { fetchResults, setLoading } from '../actions'
-import { block, connect, timelineRangeFromState, values } from '../utils'
+import { connect, timelineRangeFromState, values } from '../utils'
 import Loading from './Loading'
 import Milestone from './Milestone'
 
-const b = block('Timeline')
-
+@block
 class Timeline extends React.Component {
   componentDidMount() {
     this.props.sync()
@@ -24,7 +24,7 @@ class Timeline extends React.Component {
     }
   }
 
-  render() {
+  render(b) {
     const {
       circles,
       labels,
@@ -68,11 +68,11 @@ class Timeline extends React.Component {
     )
     milestonesByMonth = milestonesByMonth.sort((a, c) => a.month - c.month)
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>Gibolt - Timeline</title>
         </Helmet>
-        <h1 className={b('head')}>
+        <h1 className={b.e('head')}>
           Timeline from
           <input
             type="date"
@@ -91,13 +91,13 @@ class Timeline extends React.Component {
             onChange={event => onCheckboxChange(event, query)}
             checked={range.withoutDueDate === 'true'}
           />
-          <label className={b('check')} htmlFor="checkbox">
+          <label className={b.e('check')} htmlFor="checkbox">
             display milestones without due date
           </label>
         </h1>
         {loading && <Loading />}
         {error && (
-          <article className={b('date', { error: true })}>
+          <article className={b.e('date', { error: true })}>
             <h2>Error during timeline fetch</h2>
             <code>{error}</code>
           </article>
@@ -105,7 +105,7 @@ class Timeline extends React.Component {
         {milestonesByMonth
           .filter(mil => mil.month !== 'No Due Date')
           .map(({ id, month, milestones }) => (
-            <article key={id} className={b('date')}>
+            <article key={id} className={b.e('date')}>
               <h2>
                 {format(month, 'MMMM YYYY')} <sup>({milestones.length})</sup>
               </h2>
@@ -135,7 +135,7 @@ class Timeline extends React.Component {
           milestonesByMonth
             .filter(mil => mil.month === 'No Due Date')
             .map(({ id, milestones }) => (
-              <article key={id} className={b('date')}>
+              <article key={id} className={b.e('date')}>
                 <h2>
                   {'Open milestones without due date'}{' '}
                   <sup>({milestones.length})</sup>

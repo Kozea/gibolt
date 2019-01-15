@@ -1,10 +1,10 @@
 import './Role.sass'
 
+import block from 'bemboo'
 import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { block } from '../../utils'
 import RoleFocusEndDate from './../Utils/RoleFocusEndDate'
 
 const b = block('Role')
@@ -21,7 +21,7 @@ export default function RoleFocusUser(props) {
       >
         {focusUser.avatar_url && (
           <img
-            className={b('avatar')}
+            className={b.e('avatar')}
             src={focusUser.avatar_url}
             alt="avatar"
             title={focusUser.user_name}

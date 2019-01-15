@@ -1,8 +1,7 @@
+import block from 'bemboo'
 import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
-
-import { block } from '../../utils'
 
 const b = block('Circle')
 
@@ -13,7 +12,7 @@ export default function CircleSubCircles(props) {
       <ul>
         {props.circle.circle_children.map(child => (
           <li key={child.circle_id}>
-            <span className={b('bullet')} />
+            <span className={b.e('bullet')} />
             <Link
               to={{
                 pathname: '/circle',

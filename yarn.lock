@@ -1473,10 +1473,12 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bem-cn@2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/bem-cn/-/bem-cn-2.1.3.tgz#1e2145bc0f1106085de5563b6611c79644e71c2c"
-  integrity sha1-HiFFvA8RBghd5VY7ZhHHlkTnHCw=
+bemboo@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/bemboo/-/bemboo-2.0.0.tgz#8da05350850b7315519d57f3cac0639316b6c63d"
+  integrity sha512-4EAbufUmTnCsg221ciS+/gZZiTdzmRtir7PaIC4K2Sav1mSEBI2yxzVRbHscq4Osu77D888lYDwFzO3Ck3p6QA==
+  dependencies:
+    shallowequal "^1.1.0"
 
 bfj@^6.1.1:
   version "6.1.1"
@@ -7841,7 +7843,7 @@ shallow-clone@^1.0.0:
     kind-of "^5.0.0"
     mixin-object "^2.0.1"
 
-shallowequal@^1.0.1:
+shallowequal@^1.0.1, shallowequal@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
   integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==

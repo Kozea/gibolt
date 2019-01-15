@@ -1,10 +1,11 @@
 import './MeetingReport.sass'
 
+import block from 'bemboo'
 import { format } from 'date-fns'
 import React from 'react'
 
 import { updateMeetingAgenda } from '../../actions/meetings'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 
 const b = block('MeetingReport')
 
@@ -17,7 +18,7 @@ function ReportAgenda(props) {
         <ul>
           {issues.map(issue => (
             <li key={issue.ticket_id} title={issue.body}>
-              <span className={b(`bullet ${issue.state}`)} />
+              <span className={b.e(`bullet ${issue.state}`)} />
               <a
                 href={issue.html_url}
                 target="_blank"
@@ -26,7 +27,7 @@ function ReportAgenda(props) {
                 #{issue.ticket_number}
               </a>{' '}
               {issue.ticket_title},
-              <span className={b('lighter')}>
+              <span className={b.e('lighter')}>
                 {issue.closed_at && (
                   <span>
                     closed:{' '}
@@ -40,7 +41,7 @@ function ReportAgenda(props) {
               {issue.assignees.map(user => (
                 <img
                   key={user.user_id}
-                  className={b('avatar')}
+                  className={b.e('avatar')}
                   src={user.avatar_url}
                   alt="avatar"
                   title={user.user_name}

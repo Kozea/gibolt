@@ -1,5 +1,6 @@
 import './AdminRepository.sass'
 
+import block from 'bemboo'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
@@ -10,17 +11,16 @@ import {
   fetchResults,
   setLoading,
 } from '../../actions'
-import { block, connect, repositoryNameFromState } from '../../utils'
+import { connect, repositoryNameFromState } from '../../utils'
 import Loading from './../Loading'
 
-const b = block('Repository')
-
+@block
 class Repository extends React.Component {
   componentDidMount() {
     this.props.sync()
   }
 
-  render() {
+  render(b) {
     const {
       history,
       loading,
@@ -31,7 +31,7 @@ class Repository extends React.Component {
       onGoBack,
     } = this.props
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>Gibolt - Repository</title>
         </Helmet>
@@ -53,7 +53,7 @@ class Repository extends React.Component {
             <ul>
               {results.errors.map(error => (
                 <li key={error.id}>
-                  <span className={b('bullet')} />
+                  <span className={b.e('bullet')} />
                   {error.value}
                 </li>
               ))}
@@ -65,9 +65,9 @@ class Repository extends React.Component {
           <h2>Current labels</h2>
           <ul>
             {results.labels.map(label => (
-              <li key={label.label_id} className={b('label')}>
+              <li key={label.label_id} className={b.e('label')}>
                 <span
-                  className={b('bullet')}
+                  className={b.e('bullet')}
                   style={{ backgroundColor: `#${label.color}` }}
                 />
                 {label.label_name}
@@ -79,9 +79,9 @@ class Repository extends React.Component {
           <h2>Missing labels</h2>
           <ul>
             {results.missingLabels.map(label => (
-              <li key={label.text} className={b('label')}>
+              <li key={label.text} className={b.e('label')}>
                 <span
-                  className={b('bullet')}
+                  className={b.e('bullet')}
                   style={{ backgroundColor: `#${label}` }}
                 />
                 {label.text}
@@ -90,7 +90,7 @@ class Repository extends React.Component {
           </ul>
           {results.missingLabels.length > 0 ? (
             results.repository.permissions.push ? (
-              <article className={b('action')}>
+              <article className={b.e('action')}>
                 <button type="submit" onClick={() => onCreateLabels(results)}>
                   Add missing labels
                 </button>
@@ -109,9 +109,9 @@ class Repository extends React.Component {
           <h2>Unconfigured labels</h2>
           <ul>
             {results.overlyLabels.map(label => (
-              <li key={label.label_id} className={b('label')}>
+              <li key={label.label_id} className={b.e('label')}>
                 <span
-                  className={b('bullet')}
+                  className={b.e('bullet')}
                   style={{ backgroundColor: `#${label}` }}
                 />
                 {label.label_name}
@@ -120,7 +120,7 @@ class Repository extends React.Component {
           </ul>
           {results.overlyLabels.length > 0 ? (
             results.repository.permissions.push ? (
-              <article className={b('action')}>
+              <article className={b.e('action')}>
                 <button type="submit" onClick={() => onDeleteLabels(results)}>
                   Delete Unconfigured labels
                 </button>

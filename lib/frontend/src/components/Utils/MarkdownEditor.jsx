@@ -3,20 +3,21 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 import './MarkdownEditor.sass'
 
+import block from 'bemboo'
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import { mdToDraftjs, draftjsToMd } from 'draftjs-md-converter'
 import React from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 
 import { updateMeetingContent } from '../../actions/meetings'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 
-const b = block('MarkdownEditor')
 const myMdDict = {
   UNDERLINE: '__',
   CODE: '```',
 }
 
+@block
 class MarkdownEditor extends React.Component {
   constructor(props, context) {
     super(props, context)
@@ -47,16 +48,16 @@ class MarkdownEditor extends React.Component {
     }
   }
 
-  render() {
+  render(b) {
     const { editorState } = this.state
     const editorName = this.props.editorName ? this.props.editorName : 'body'
     return (
-      <div className={b()}>
+      <div className={b}>
         <Editor
           editorState={editorState}
-          wrapperClassName={b('wrapper')}
-          editorClassName={b('editor')}
-          toolbarClassName={b('toolbar')}
+          wrapperClassName={b.e('wrapper').toString()}
+          editorClassName={b.e('editor').toString()}
+          toolbarClassName={b.e('toolbar').toString()}
           onEditorStateChange={state => this.handleEditorStateChange(state)}
           toolbar={{
             options: [

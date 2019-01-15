@@ -1,19 +1,18 @@
 import './Search.sass'
 
+import block from 'bemboo'
 import React from 'react'
 
 import { search } from '../actions'
 import { fetchIssues } from '../actions/issues'
-import { block, connect } from '../utils'
+import { connect } from '../utils'
 
-const b = block('Search')
-
-function Search({ keywords, onSearchChange }) {
+function Search(b, { keywords, onSearchChange }) {
   return (
-    <div className={b()}>
+    <div className={b}>
       <input
         type="text"
-        className={b('input')}
+        className={b.e('input')}
         value={keywords}
         onChange={e => onSearchChange(e.target.value)}
       />
@@ -29,4 +28,4 @@ export default connect(
       dispatch(fetchIssues())
     },
   })
-)(Search)
+)(block(Search))

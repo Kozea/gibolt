@@ -1,22 +1,22 @@
 import './Labels.sass'
 
+import block from 'bemboo'
 import { parse, stringify } from 'query-string'
 import React from 'react'
 
 import { fetchResults, setLoading } from '../actions'
-import { block, connect, labelsFromState } from '../utils'
+import { connect, labelsFromState } from '../utils'
 import Label from './Label'
 import User from './User'
 
-const b = block('Labels')
-
+@block
 class Labels extends React.Component {
   componentDidMount() {
     const { loadLabels } = this.props
     loadLabels()
   }
 
-  render() {
+  render(b) {
     const { labels, location, queryLabels, modifiers } = this.props
     const query = parse(location.search)
     const makeQuery = (label, type) => {
@@ -53,9 +53,9 @@ class Labels extends React.Component {
     }
 
     return (
-      <aside className={b()}>
+      <aside className={b}>
         {['circle', 'priority', 'ack', 'qualifier'].map(type => (
-          <ul key={type} className={b('set', { type })}>
+          <ul key={type} className={b.e('set').m({ type })}>
             {labels[type].map(label => (
               <Label
                 key={label.text}

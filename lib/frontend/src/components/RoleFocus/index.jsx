@@ -1,5 +1,6 @@
 import './RoleFocus.sass'
 
+import block from 'bemboo'
 import { addDays, format, isFuture } from 'date-fns'
 import React from 'react'
 import { Helmet } from 'react-helmet'
@@ -12,7 +13,7 @@ import {
   editRoleFocus,
   fetchRoleFocus,
 } from '../../actions/rolefocus'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 import Loading from './../Loading'
 import BreadCrumbs from './../Utils/BreadCrumbs'
 import RoleFocusEndDate from './../Utils/RoleFocusEndDate'
@@ -20,9 +21,9 @@ import RoleFocusForm from './RoleFocusForm'
 import RoleFocusItems from './RoleFocusItems'
 import RoleFocusUsersList from './RoleFocusUsersList'
 
-const b = block('RoleFocus')
 
-class Role extends React.Component {
+@block
+class RoleFocus extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
@@ -33,7 +34,7 @@ class Role extends React.Component {
     this.props.sync()
   }
 
-  render() {
+  render(b) {
     const {
       error,
       history,
@@ -56,15 +57,15 @@ class Role extends React.Component {
       ? roleFocus.role_focus_users[0]
       : null
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>Gibolt - Role Focus</title>
         </Helmet>
         {loading && <Loading />}
-        <article className={b('roleFocus')}>
+        <article className={b.e('roleFocus')}>
           <BreadCrumbs circle={circle} role={role} focus={roleFocus} />
           {error ? (
-            <article className={b('date', { error: true })}>
+            <article className={b.e('date').m({ error: true })}>
               <h2>Error during role focus fetch</h2>
               <code>{error}</code>
             </article>
@@ -120,11 +121,11 @@ class Role extends React.Component {
                 focusUser && (
                   <span>
                     <p>
-                      <span className={b('focusLabel')}>Role: </span>
+                      <span className={b.e('focusLabel')}>Role: </span>
                       {role.role_name}
                     </p>
                     <p>
-                      <span className={b('focusLabel')}>
+                      <span className={b.e('focusLabel')}>
                         Duration (in days):{' '}
                       </span>
                       {roleFocus.duration
@@ -132,23 +133,23 @@ class Role extends React.Component {
                         : 'No duration defined'}
                     </p>
                     <p>
-                      <span className={b('focusLabel')}>Filled by: </span>
+                      <span className={b.e('focusLabel')}>Filled by: </span>
                       {focusUser.user_name}{' '}
                       <img
-                        className={b('avatar')}
+                        className={b.e('avatar')}
                         src={focusUser.avatar_url}
                         alt="avatar"
                         title={focusUser.user_name}
                       />
                     </p>
                     <p>
-                      <span className={b('focusLabel')}>From: </span>
+                      <span className={b.e('focusLabel')}>From: </span>
                       {focusUser.start_date
                         ? format(new Date(focusUser.start_date), 'DD/MM/YYYY')
                         : 'No start date defined'}
                     </p>
                     <p>
-                      <span className={b('focusLabel')}>Until: </span>
+                      <span className={b.e('focusLabel')}>Until: </span>
                       {focusUser.end_date
                         ? format(new Date(focusUser.end_date), 'DD/MM/YYYY')
                         : focusUser.start_date && roleFocus.duration
@@ -201,7 +202,7 @@ class Role extends React.Component {
                           <label>
                             User :
                             <select
-                              className={b('long')}
+                              className={b.e('long')}
                               defaultValue=""
                               name="user_id"
                               required
@@ -216,7 +217,7 @@ class Role extends React.Component {
                           </label>
                           <label>
                             Start date:
-                            <span className={b('duration')}>
+                            <span className={b.e('duration')}>
                               <input
                                 defaultValue=""
                                 name="start_date"
@@ -288,5 +289,5 @@ export default withRouter(
         })
       },
     })
-  )(Role)
+  )(RoleFocus)
 )

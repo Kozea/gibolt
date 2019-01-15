@@ -1,22 +1,22 @@
 import './User.sass'
 
+import block from 'bemboo'
 import React from 'react'
 
 import { fetchResults, setLoading } from '../actions'
-import { block, connect } from '../utils'
+import { connect } from '../utils'
 import SelectUser from './SelectUser'
 
-const b = block('User')
-
+@block
 class User extends React.Component {
   componentDidMount() {
     const { loadUsers } = this.props
     loadUsers()
   }
 
-  render() {
+  render(b) {
     return (
-      <div className={b()}>
+      <div className={b}>
         <h3>Assignee</h3>
         <SelectUser type="assignee" />
         <h3>Involves</h3>

@@ -1,21 +1,21 @@
 import './Presets.sass'
 
+import block from 'bemboo'
 import React from 'react'
 
-import { block, connect } from '../utils'
+import { connect } from '../utils'
 import Preset from './Preset'
 
-const b = block('Presets')
-function Presets({ location }) {
+function Presets(b, { location }) {
   return (
-    <header className={b()}>
-      <h1 className={b('title')}>
-        <a href="" className={b('ttl')}>
+    <header className={b}>
+      <h1 className={b.e('title')}>
+        <a href="" className={b.e('ttl')}>
           Gibolt
         </a>
       </h1>
       <nav>
-        <ul className={b('nav')}>
+        <ul className={b.e('nav')}>
           <Preset action={{ pathname: '/' }} active={location.pathname === '/'}>
             Tickets
           </Preset>
@@ -39,4 +39,4 @@ function Presets({ location }) {
 
 export default connect(state => ({
   user: state.user,
-}))(Presets)
+}))(block(Presets))

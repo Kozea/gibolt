@@ -1,16 +1,15 @@
 import './IssuesState.sass'
 
+import block from 'bemboo'
 import { parse } from 'query-string'
 import React from 'react'
 
-import { block, connect, issuesStateFromState } from '../utils'
+import { connect, issuesStateFromState } from '../utils'
 import StatusItem from './StatusItem'
 
-const b = block('IssuesState')
-
-function IssuesState({ issuesState, query }) {
+function IssuesState(b, { issuesState, query }) {
   return (
-    <ul className={b()}>
+    <ul className={b}>
       <StatusItem
         action="open"
         type="state"
@@ -42,4 +41,4 @@ function IssuesState({ issuesState, query }) {
 export default connect(state => ({
   issuesState: issuesStateFromState(state),
   query: parse(state.router.location.search),
-}))(IssuesState)
+}))(block(IssuesState))

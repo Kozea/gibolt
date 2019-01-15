@@ -1,11 +1,11 @@
 import './Circle.sass'
 
+import block from 'bemboo'
 import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 import RoleFocusUser from '../Role/RoleFocusUser'
-import { block } from '../../utils'
 
 const b = block('Circle')
 
@@ -17,8 +17,8 @@ export default function CircleRolesType(props) {
   )
 
   return (
-    <div className={b('roleFocus')}>
-      <span className={b('roleFocusType')}>{roleTypeName}</span>
+    <div className={b.e('roleFocus')}>
+      <span className={b.e('roleFocusType')}>{roleTypeName}</span>
       {filteredSortedRoles.length > 0 ? (
         <ul>
           {sortedRoles
@@ -30,8 +30,8 @@ export default function CircleRolesType(props) {
             )
             .map(role => (
               <span key={role.role_id}>
-                <li className={b('role')}>
-                  <span className={b('bullet')} />
+                <li className={b.e('role')}>
+                  <span className={b.e('bullet')} />
                   <Link
                     to={{
                       pathname: '/role',

@@ -1,5 +1,6 @@
 import './IssueCreationDetail.sass'
 
+import block from 'bemboo'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 
@@ -14,12 +15,11 @@ import {
   updateProject,
   updateTitle,
 } from '../actions/issueForm'
-import { block, connect, sortRepos } from '../utils'
+import { connect, sortRepos } from '../utils'
 import Loading from './Loading'
 import MarkdownEditor from './Utils/MarkdownEditor'
 
-const b = block('IssueCreationDetail')
-
+@block
 class IssueCreationDetail extends React.Component {
   componentDidMount() {
     this.props.sync(this.props.circleId, this.props.params)
@@ -62,7 +62,7 @@ class IssueCreationDetail extends React.Component {
     return value
   }
 
-  render() {
+  render(b) {
     const {
       circles,
       error,
@@ -86,14 +86,14 @@ class IssueCreationDetail extends React.Component {
       repos = sortRepos(repositories)
     }
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>Gibolt - Create an issue</title>
         </Helmet>
         <h2>Create an issue</h2>
         {loading && <Loading />}
         {error && (
-          <article className={b('date', { error: true })}>
+          <article className={b.e('date').m({ error: true })}>
             <h3>Error during issue creation</h3>
             <code>{error}</code>
             <br />
@@ -201,7 +201,7 @@ class IssueCreationDetail extends React.Component {
             <MarkdownEditor initValue="" />
           </label>
           <br />
-          <article className={b('action')}>
+          <article className={b.e('action')}>
             <button
               type="submit"
               onClick={event => onSubmit(event)}

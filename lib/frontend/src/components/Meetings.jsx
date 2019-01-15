@@ -1,5 +1,6 @@
 import './Meetings.sass'
 
+import block from 'bemboo'
 import { format } from 'date-fns'
 import { parse, stringify } from 'query-string'
 import React from 'react'
@@ -8,11 +9,10 @@ import { Link, withRouter } from 'react-router-dom'
 
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import { updateReportsList } from '../actions/meetings'
-import { block, connect } from '../utils'
+import { connect } from '../utils'
 import Loading from './Loading'
 
-const b = block('Meetings')
-
+@block
 class Meetings extends React.Component {
   componentDidMount() {
     this.updateData(this.props.location.search, this.props.sync)
@@ -35,7 +35,7 @@ class Meetings extends React.Component {
     })
   }
 
-  render() {
+  render(b) {
     const {
       circles,
       history,
@@ -50,12 +50,12 @@ class Meetings extends React.Component {
       (a, c) => c.report_id - a.report_id
     )
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>Gibolt - Meetings</title>
         </Helmet>
         {(circles.error || meetingsTypes.error) && (
-          <article className={b('group', { error: true })}>
+          <article className={b.e('group').m({ error: true })}>
             <h2>Error during fetch</h2>
             <code>
               {circles.error
@@ -65,7 +65,7 @@ class Meetings extends React.Component {
           </article>
         )}
         {(circles.loading || meetingsTypes.loading) && <Loading />}
-        <article className={b('meetings')}>
+        <article className={b.e('meetings')}>
           <h2>Meetings reports</h2>
           <form onSubmit={event => event.preventDefault()}>
             <label>
@@ -101,7 +101,7 @@ class Meetings extends React.Component {
               </select>
             </label>
             <Link
-              className={b('link')}
+              className={b.e('link')}
               to={{
                 pathname: '/createReport',
                 search: stringify({
@@ -129,7 +129,7 @@ class Meetings extends React.Component {
               {sortedMeetings.map(meeting => (
                 <li
                   key={meeting.report_id}
-                  className={b('item')}
+                  className={b.e('item')}
                   style={{
                     color: `${labels
                       .filter(
@@ -140,19 +140,19 @@ class Meetings extends React.Component {
                   }}
                 >
                   <Link
-                    className={b('link')}
+                    className={b.e('link')}
                     to={{
                       pathname: '/meeting',
                       search: stringify({ report_id: meeting.report_id }),
                     }}
                   >
-                    <span className={b('unlink')}>
+                    <span className={b.e('unlink')}>
                       {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
                       {' - '}
                       {meeting.circle[0].circle_name} -{' '}
                     </span>
                     {meeting.report_type}
-                    <span className={b('unlink')}>
+                    <span className={b.e('unlink')}>
                       {meeting.attendees.length > 0 &&
                         !meeting.is_submitted &&
                         ' (Draft)'}

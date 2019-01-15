@@ -1,5 +1,6 @@
 import './MilestoneDisplay.sass'
 
+import block from 'bemboo'
 import { format } from 'date-fns'
 import React from 'react'
 
@@ -7,12 +8,11 @@ import {
   closeMilestone,
   deleteMilestoneCircles,
 } from '../../actions/milestones'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 import Progress from './../Progress'
 
-const b = block('MilestoneDisplay')
 
-function MilestoneDisplay(props) {
+function MilestoneDisplay(b, props) {
   const {
     circleId,
     displayProgress,
@@ -24,15 +24,15 @@ function MilestoneDisplay(props) {
   return (
     <span>
       <a
-        className={b('unlink')}
+        className={b.e('unlink')}
         href={milestone.html_url}
         target="_blank"
         rel="noopener noreferrer"
       >
-        <span className={b(`bullet ${milestone.state}`)} />
+        <span className={b.e(`bullet ${milestone.state}`)} />
         {milestone.repo}
         {' - '}
-        <span className={b('lab')}>{milestone.title}</span>
+        <span className={b.e('lab')}>{milestone.title}</span>
       </a>
       {displayProgress && (
         <span>
@@ -43,7 +43,7 @@ function MilestoneDisplay(props) {
           />
         </span>
       )}
-      <span className={b('due-date')}>
+      <span className={b.e('due-date')}>
         {' ('}
         {milestone.due_on
           ? `due on: ${format(new Date(milestone.due_on), 'DD/MM/YYYY')}`
@@ -53,7 +53,7 @@ function MilestoneDisplay(props) {
       {isInEdition && (
         <span>
           <span
-            className={b('unlinkMilestone')}
+            className={b.e('unlinkMilestone')}
             title="Unlink the milestone"
             onClick={() =>
               onMilestoneUpdate(milestone, circleId, target, false)
@@ -105,4 +105,4 @@ export default connect(
       )
     },
   })
-)(MilestoneDisplay)
+)(block(MilestoneDisplay))

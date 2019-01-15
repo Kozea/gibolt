@@ -1,10 +1,11 @@
 import './Role.sass'
 
+import block from 'bemboo'
 import { addDays, format } from 'date-fns'
 import React from 'react'
 
 import { addFocus } from '../../actions/roles'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 import RoleFocusUser from './RoleFocusUser'
 
 const b = block('Role')
@@ -32,7 +33,7 @@ class RoleFocuses extends React.Component {
           Focus{' '}
           {isActive && (
             <span
-              className={b('unlink')}
+              className={b.e('unlink')}
               onClick={() => this.setState({ displayForm: true })}
               title="Add focus"
             >
@@ -44,7 +45,7 @@ class RoleFocuses extends React.Component {
           <ul>
             {focuses.map(focus => (
               <li key={focus.role_focus_id}>
-                <span className={b('bullet')} />
+                <span className={b.e('bullet')} />
                 <RoleFocusUser
                   duration={focus.duration}
                   focusName={focus.focus_name}
@@ -61,7 +62,7 @@ class RoleFocuses extends React.Component {
           <span>
             <h4>Add a focus</h4>
             <form
-              className={b('createFocusForm')}
+              className={b.e('createFocusForm')}
               onSubmit={e => {
                 e.preventDefault()
                 onSubmit(e, roleId)
@@ -71,7 +72,7 @@ class RoleFocuses extends React.Component {
               <label>
                 Role focus :
                 <input
-                  className={b('long')}
+                  className={b.e('long')}
                   defaultValue=""
                   name="focus_name"
                 />
@@ -79,7 +80,7 @@ class RoleFocuses extends React.Component {
               <label>
                 User :<br />
                 <select
-                  className={b('long')}
+                  className={b.e('long')}
                   defaultValue=""
                   name="user_id"
                   required
@@ -95,7 +96,7 @@ class RoleFocuses extends React.Component {
               <label>
                 Duration (in days) :
                 <input
-                  className={b('long')}
+                  className={b.e('long')}
                   defaultValue=""
                   min="0"
                   name="duration"
@@ -107,7 +108,7 @@ class RoleFocuses extends React.Component {
               </label>
               <label>
                 Start date:
-                <span className={b('duration')}>
+                <span className={b.e('duration')}>
                   <input
                     defaultValue=""
                     name="start_date"
@@ -116,7 +117,7 @@ class RoleFocuses extends React.Component {
                     }}
                     type="date"
                   />
-                  <span className={b('endDate')}>
+                  <span className={b.e('endDate')}>
                     {endDate && (
                       <span>
                         <br />

@@ -1,12 +1,13 @@
 import './MeetingReport.sass'
 
+import block from 'bemboo'
 import { format } from 'date-fns'
 import React from 'react'
 
 import { setModal } from '../../actions'
 import { updateIssueParams } from '../../actions/issues'
 import { updateMeetingProjects } from '../../actions/meetings'
-import { block, connect, sortProjects } from '../../utils'
+import { connect, sortProjects } from '../../utils'
 import MilestoneDisplay from './../Utils/MilestoneDisplay'
 
 const b = block('MeetingReport')
@@ -38,7 +39,7 @@ function ReportProjects(props) {
               />
               {milestone.state === 'open' && (
                 <span
-                  className={b('newTicket')}
+                  className={b.e('newTicket')}
                   onClick={() =>
                     onModalCreation(
                       'milestone',
@@ -57,7 +58,7 @@ function ReportProjects(props) {
                 0 && (
                 <span>
                   <span
-                    className={b('lighter')}
+                    className={b.e('lighter')}
                     onClick={() => onMilestoneClick(milestone.id)}
                   >
                     show/hide closed issues since last report
@@ -65,12 +66,12 @@ function ReportProjects(props) {
                   {milestone.is_expanded && (
                     <span>
                       <br />
-                      <ul className={b('tickets')}>
+                      <ul className={b.e('tickets')}>
                         {milestone.issues
                           .filter(issue => !issue.pull_request)
                           .map(issue => (
                             <li key={issue.ticket_id} title={issue.body}>
-                              <span className={b(`bullet ${issue.state}`)} />
+                              <span className={b.e(`bullet ${issue.state}`)} />
                               <a
                                 href={issue.html_url}
                                 target="_blank"
@@ -79,7 +80,7 @@ function ReportProjects(props) {
                                 #{issue.ticket_number}
                               </a>{' '}
                               {issue.ticket_title},
-                              <span className={b('lighter')}>
+                              <span className={b.e('lighter')}>
                                 closed:{' '}
                                 {format(
                                   new Date(issue.closed_at),
@@ -94,7 +95,7 @@ function ReportProjects(props) {
                               {issue.assignees.map(user => (
                                 <img
                                   key={user.user_id}
-                                  className={b('avatar')}
+                                  className={b.e('avatar')}
                                   src={user.avatar_url}
                                   alt="avatar"
                                   title={user.user_name}

@@ -1,5 +1,6 @@
 import './Circle.sass'
 
+import block from 'bemboo'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 
@@ -12,11 +13,11 @@ import {
   updateCircle,
 } from '../../actions/circle'
 import { getUnusedCircleLabels } from '../../actions/labels'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 import BreadCrumbs from './../Utils/BreadCrumbs'
 import MarkdownEditor from './../Utils/MarkdownEditor'
 
-var ReactMarkdown = require('react-markdown')
+const ReactMarkdown = require('react-markdown')
 
 const b = block('Circle')
 
@@ -149,7 +150,7 @@ function CircleDetails({
                 .map(label => (
                   <span
                     key={label.label_id}
-                    className={b('tag')}
+                    className={b.e('tag')}
                     style={{
                       borderColor: label.color,
                     }}

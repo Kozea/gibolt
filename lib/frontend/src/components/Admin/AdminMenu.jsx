@@ -1,25 +1,24 @@
 import './AdminMenu.sass'
 
+import block from 'bemboo'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
-
-import { block } from '../../utils'
 
 const b = block('AdminMenu')
 
 export default function AdminMenu() {
   return (
-    <section className={b()}>
+    <section className={b}>
       <Helmet>
         <title>Gibolt - Admin</title>
       </Helmet>
-      <article className={b('adminMenu')}>
+      <article className={b.e('adminMenu')}>
         <h2>Administration</h2>
         <ul>
-          <li className={b('item')}>
+          <li className={b.e('item')}>
             <Link
-              className={b('link')}
+              className={b.e('link')}
               to={{
                 pathname: '/admin/labels',
               }}
@@ -27,9 +26,9 @@ export default function AdminMenu() {
               Labels
             </Link>
           </li>
-          <li className={b('item')}>
+          <li className={b.e('item')}>
             <Link
-              className={b('link')}
+              className={b.e('link')}
               to={{
                 pathname: '/admin/repositories',
               }}
