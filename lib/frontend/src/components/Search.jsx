@@ -7,7 +7,9 @@ import { search } from '../actions'
 import { fetchIssues } from '../actions/issues'
 import { connect } from '../utils'
 
-function Search(b, { keywords, onSearchChange }) {
+const b = block('Search')
+
+function Search({ keywords, onSearchChange }) {
   return (
     <div className={b}>
       <input
@@ -28,4 +30,4 @@ export default connect(
       dispatch(fetchIssues())
     },
   })
-)(block(Search))
+)(Search)

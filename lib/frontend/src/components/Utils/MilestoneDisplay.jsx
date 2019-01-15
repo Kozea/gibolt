@@ -11,7 +11,9 @@ import {
 import { connect } from '../../utils'
 import Progress from './../Progress'
 
-function MilestoneDisplay(b, props) {
+const b = block('MilestoneDisplay')
+
+function MilestoneDisplay(props) {
   const {
     circleId,
     displayProgress,
@@ -103,4 +105,4 @@ export default connect(
       )
     },
   })
-)(block(MilestoneDisplay))
+)(MilestoneDisplay)

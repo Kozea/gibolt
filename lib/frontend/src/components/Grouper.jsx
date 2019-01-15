@@ -7,7 +7,9 @@ import React from 'react'
 import { connect, grouperFromState } from '../utils'
 import StatusItem from './StatusItem'
 
-function Grouper(b, { grouper, query }) {
+const b = block('Grouper')
+
+function Grouper({ grouper, query }) {
   return (
     <ul className={b}>
       <StatusItem
@@ -57,4 +59,4 @@ function Grouper(b, { grouper, query }) {
 export default connect(state => ({
   grouper: grouperFromState(state),
   query: parse(state.router.location.search),
-}))(block(Grouper))
+}))(Grouper)

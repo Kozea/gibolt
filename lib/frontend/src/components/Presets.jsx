@@ -6,7 +6,9 @@ import React from 'react'
 import { connect } from '../utils'
 import Preset from './Preset'
 
-function Presets(b, { location }) {
+const b = block('Presets')
+
+function Presets({ location }) {
   return (
     <header className={b}>
       <h1 className={b.e('title')}>
@@ -39,4 +41,4 @@ function Presets(b, { location }) {
 
 export default connect(state => ({
   user: state.user,
-}))(block(Presets))
+}))(Presets)

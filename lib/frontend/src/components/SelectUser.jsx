@@ -7,7 +7,9 @@ import { push } from 'react-router-redux'
 
 import { connect, usersFromState } from '../utils'
 
-function SelectUser(b, { type, query, users, values, onChangeUser }) {
+const b = block('SelectUser')
+
+function SelectUser({ type, query, users, values, onChangeUser }) {
   return (
     <select
       className={b.m({ type: type })}
@@ -44,4 +46,4 @@ export default connect(
       )
     },
   })
-)(block(SelectUser))
+)(SelectUser)

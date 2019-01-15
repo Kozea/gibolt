@@ -15,7 +15,9 @@ import { connect } from '../utils'
 import Progress from './Progress'
 import LabelMultiSelect from './Utils/LabelMultiSelect'
 
-function Milestone(b, props) {
+const b = block('Milestone')
+
+function Milestone(props) {
   const allValues = getOptionsCircleLabels(
     props.assoc_circles,
     props.circles,
@@ -118,4 +120,4 @@ export default connect(
       )
     },
   })
-)(block(Milestone))
+)(Milestone)

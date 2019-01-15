@@ -48,8 +48,9 @@ const PRESETS = ({ login }) => ({
     assignee: '',
   },
 })
+const b = block('IssuesPresets')
 
-function IssuesPresets(b, { location, user }) {
+function IssuesPresets({ location, user }) {
   const userPreset = PRESETS(user)
   const query = parse(location.search)
   return (
@@ -116,4 +117,4 @@ function IssuesPresets(b, { location, user }) {
 
 export default connect(state => ({
   user: state.user,
-}))(block(IssuesPresets))
+}))(IssuesPresets)
