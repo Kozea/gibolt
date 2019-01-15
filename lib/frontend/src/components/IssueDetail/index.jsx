@@ -250,70 +250,68 @@ class IssueDetail extends React.Component {
               />
             </div>
           )}
-          {issue.nb_comments > 0 &&
-            issue.comments_expanded && (
-              <div>
-                {issue.comments.map(
-                  comment =>
-                    isInEdition === `comment|${comment.comment_id}` ? (
-                      <form
-                        key={comment.comment_id}
-                        onSubmit={e => {
-                          e.preventDefault()
-                          onUpdateComment(
-                            { body: e.target.body.value },
-                            issue,
-                            comment.comment_id
+          {issue.nb_comments > 0 && issue.comments_expanded && (
+            <div>
+              {issue.comments.map(comment =>
+                isInEdition === `comment|${comment.comment_id}` ? (
+                  <form
+                    key={comment.comment_id}
+                    onSubmit={e => {
+                      e.preventDefault()
+                      onUpdateComment(
+                        { body: e.target.body.value },
+                        issue,
+                        comment.comment_id
+                      )
+                      this.updateEditionStatus(null)
+                    }}
+                  >
+                    <MarkdownEditor initValue={comment.body} />
+                    <button type="submit">Update comment</button>
+                    <button
+                      type="button"
+                      onClick={() => this.updateEditionStatus(null)}
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                ) : (
+                  <div className={b.e('comment')} key={comment.comment_id}>
+                    <span className={b.e('infos')}>
+                      <img
+                        key={comment.user.user_id}
+                        className={b.e('avatar')}
+                        src={comment.user.avatar_url}
+                        alt="avatar"
+                        title={comment.user.user_name}
+                      />{' '}
+                      last update:{' '}
+                      {format(
+                        new Date(comment.updated_at),
+                        'DD/MM/YYYY HH:mm:ss'
+                      )}
+                      <span
+                        onClick={() => {
+                          this.updateEditionStatus(
+                            `comment|${comment.comment_id}`
                           )
-                          this.updateEditionStatus(null)
                         }}
                       >
-                        <MarkdownEditor initValue={comment.body} />
-                        <button type="submit">Update comment</button>
-                        <button
-                          type="button"
-                          onClick={() => this.updateEditionStatus(null)}
-                        >
-                          Cancel
-                        </button>
-                      </form>
-                    ) : (
-                      <div className={b.e('comment')} key={comment.comment_id}>
-                        <span className={b.e('infos')}>
-                          <img
-                            key={comment.user.user_id}
-                            className={b.e('avatar')}
-                            src={comment.user.avatar_url}
-                            alt="avatar"
-                            title={comment.user.user_name}
-                          />{' '}
-                          last update:{' '}
-                          {format(
-                            new Date(comment.updated_at),
-                            'DD/MM/YYYY HH:mm:ss'
-                          )}
-                          <span
-                            onClick={() => {
-                              this.updateEditionStatus(
-                                `comment|${comment.comment_id}`
-                              )
-                            }}
-                          >
-                            <i
-                              className="fa fa-pencil faTop"
-                              title="edit comment"
-                            />
-                          </span>
-                        </span>
-                        <ReactMarkdown
-                          className={b.e('commentDetail').toString()}
-                          source={comment.body}
+                        <i
+                          className="fa fa-pencil faTop"
+                          title="edit comment"
                         />
-                      </div>
-                    )
-                )}
-              </div>
-            )}
+                      </span>
+                    </span>
+                    <ReactMarkdown
+                      className={b.e('commentDetail').toString()}
+                      source={comment.body}
+                    />
+                  </div>
+                )
+              )}
+            </div>
+          )}
         </span>
         {isInEdition === 'addComment' && (
           <span>

@@ -11,7 +11,6 @@ import {
 import { connect } from '../../utils'
 import Progress from './../Progress'
 
-
 function MilestoneDisplay(b, props) {
   const {
     circleId,
@@ -61,17 +60,16 @@ function MilestoneDisplay(b, props) {
           >
             <i className="fa fa-chain-broken" aria-hidden="true" />
           </span>
-          {target === 'circle' &&
-            milestone.state === 'open' && (
-              <span
-                title="Close and dissociate Milestone"
-                onClick={() =>
-                  onMilestoneUpdate(milestone, circleId, target, true)
-                }
-              >
-                <i className="fa fa-times-circle" aria-hidden="true" />
-              </span>
-            )}
+          {target === 'circle' && milestone.state === 'open' && (
+            <span
+              title="Close and dissociate Milestone"
+              onClick={() =>
+                onMilestoneUpdate(milestone, circleId, target, true)
+              }
+            >
+              <i className="fa fa-times-circle" aria-hidden="true" />
+            </span>
+          )}
         </span>
       )}
     </span>

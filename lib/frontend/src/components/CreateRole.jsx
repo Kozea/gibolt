@@ -33,16 +33,15 @@ class CreateRole extends React.Component {
               <code>{error}</code>
             </article>
           )}
-          {circle.circle_id &&
-            circles.length > 0 && (
-              <RoleForm
-                circleId={circle.circle_id}
-                circles={circles}
-                isCreation
-                role={{}}
-                users={users}
-              />
-            )}
+          {circle.circle_id && circles.length > 0 && (
+            <RoleForm
+              circleId={circle.circle_id}
+              circles={circles}
+              isCreation
+              role={{}}
+              users={users}
+            />
+          )}
         </div>
       </article>
     )

@@ -211,14 +211,12 @@ function CircleDetails({
                   {'You cannot delete this circle, please first: '}
                   {circle.roles.length > 0 && (
                     <span>
-                      <br />
-                      - delete the roles
+                      <br />- delete the roles
                     </span>
                   )}
                   {circle.circle_milestones.length > 0 && (
                     <span>
-                      <br />
-                      - dissociate milestones
+                      <br />- dissociate milestones
                     </span>
                   )}
                 </code>

@@ -34,7 +34,9 @@ class RoleFocusForm extends React.Component {
     const duration =
       this.state.duration === null
         ? roleFocus.duration
-        : this.state.duration === '' ? null : this.state.duration
+        : this.state.duration === ''
+        ? null
+        : this.state.duration
     const startDate = this.state.startDate
       ? this.state.startDate
       : roleFocus.role_focus_users[0].start_date
@@ -63,11 +65,13 @@ class RoleFocusForm extends React.Component {
               required
             >
               <option value="" />
-              {roles.filter(rol => rol.is_active).map(rol => (
-                <option key={rol.role_id} value={rol.role_id}>
-                  {rol.role_name}
-                </option>
-              ))}
+              {roles
+                .filter(rol => rol.is_active)
+                .map(rol => (
+                  <option key={rol.role_id} value={rol.role_id}>
+                    {rol.role_name}
+                  </option>
+                ))}
             </select>
           </label>
           <label>

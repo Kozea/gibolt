@@ -13,8 +13,8 @@ export default function RoleFocusEndDate(props) {
   const endDate = focusUser.end_date
     ? focusUser.end_date
     : duration && focusUser.start_date
-      ? addDays(new Date(focusUser.start_date), duration)
-      : null
+    ? addDays(new Date(focusUser.start_date), duration)
+    : null
   const distance = differenceInDays(new Date(endDate), new Date())
   return (
     <span className={b}>

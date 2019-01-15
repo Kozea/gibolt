@@ -21,7 +21,6 @@ import RoleFocusForm from './RoleFocusForm'
 import RoleFocusItems from './RoleFocusItems'
 import RoleFocusUsersList from './RoleFocusUsersList'
 
-
 @block
 class RoleFocus extends React.Component {
   constructor(props, context) {
@@ -86,162 +85,155 @@ class RoleFocus extends React.Component {
             <span>
               <h1>
                 {roleFocus.focus_name ? roleFocus.focus_name : 'No focus name'}
-                {role &&
-                  role.is_active && (
-                    <span>
-                      <span onClick={() => onEdition()} title="Edit role focus">
-                        <i
-                          className="fa fa-pencil-square-o"
-                          aria-hidden="true"
-                        />
-                      </span>
-                      <span
-                        onClick={e => {
-                          e.preventDefault()
-                          onDelete(roleFocus, history)
-                        }}
-                        title="Delete Focus"
-                      >
-                        <i className="fa fa-trash" aria-hidden="true" />
-                      </span>
-                      {!isFuture(new Date(focusUser.start_date)) && (
-                        <span
-                          onClick={() => {
-                            this.setState({ displayForm: true })
-                          }}
-                          title="Add user"
-                        >
-                          <i className="fa fa-plus-circle" aria-hidden="true" />
-                        </span>
-                      )}
-                    </span>
-                  )}
-              </h1>
-              {roleFocus &&
-                focusUser && (
+                {role && role.is_active && (
                   <span>
-                    <p>
-                      <span className={b.e('focusLabel')}>Role: </span>
-                      {role.role_name}
-                    </p>
-                    <p>
-                      <span className={b.e('focusLabel')}>
-                        Duration (in days):{' '}
-                      </span>
-                      {roleFocus.duration
-                        ? roleFocus.duration
-                        : 'No duration defined'}
-                    </p>
-                    <p>
-                      <span className={b.e('focusLabel')}>Filled by: </span>
-                      {focusUser.user_name}{' '}
-                      <img
-                        className={b.e('avatar')}
-                        src={focusUser.avatar_url}
-                        alt="avatar"
-                        title={focusUser.user_name}
-                      />
-                    </p>
-                    <p>
-                      <span className={b.e('focusLabel')}>From: </span>
-                      {focusUser.start_date
-                        ? format(new Date(focusUser.start_date), 'DD/MM/YYYY')
-                        : 'No start date defined'}
-                    </p>
-                    <p>
-                      <span className={b.e('focusLabel')}>Until: </span>
-                      {focusUser.end_date
-                        ? format(new Date(focusUser.end_date), 'DD/MM/YYYY')
-                        : focusUser.start_date && roleFocus.duration
-                          ? `${format(
-                              addDays(
-                                new Date(focusUser.start_date),
-                                roleFocus.duration
-                              ),
-                              'DD/MM/YYYY'
-                            )}  (calculated)`
-                          : '∞'}
-                      <RoleFocusEndDate
-                        displayDate={false}
-                        duration={roleFocus.duration}
-                        focusUser={focusUser}
-                      />
-                    </p>
-                    <br />
-                    <RoleFocusItems
-                      items={roleFocus.actions}
-                      itemType="checklist"
-                      title="Recurrent actions"
-                      roleFocus={roleFocus}
-                      roles={roles}
-                    />
-                    <br />
-                    <RoleFocusItems
-                      items={roleFocus.indicators}
-                      itemType="indicator"
-                      title="Indicators"
-                      roleFocus={roleFocus}
-                      roles={roles}
-                    />
-                    <br />
-                    <RoleFocusUsersList
-                      currentUserId={focusUser.role_focus_user_id}
-                      roleFocusUsers={roleFocus.role_focus_users}
-                    />
-                    <br />
-                    {displayForm && (
-                      <span>
-                        <h4>Add a user</h4>
-                        <form
-                          onSubmit={e => {
-                            e.preventDefault()
-                            onAddUser(e, roleFocus.role_focus_id)
-                            this.setState({ displayForm: false })
-                          }}
-                        >
-                          <label>
-                            User :
-                            <select
-                              className={b.e('long')}
-                              defaultValue=""
-                              name="user_id"
-                              required
-                            >
-                              <option value="" />
-                              {users.map(user => (
-                                <option key={user.user_id} value={user.user_id}>
-                                  {user.user_name}
-                                </option>
-                              ))}
-                            </select>
-                          </label>
-                          <label>
-                            Start date:
-                            <span className={b.e('duration')}>
-                              <input
-                                defaultValue=""
-                                name="start_date"
-                                onChange={e => {
-                                  this.setState({ startDate: e.target.value })
-                                }}
-                                type="date"
-                              />
-                            </span>
-                          </label>
-                          <button type="submit">Add</button>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              this.setState({ displayForm: false })
-                            }
-                          >
-                            Cancel
-                          </button>
-                        </form>
+                    <span onClick={() => onEdition()} title="Edit role focus">
+                      <i className="fa fa-pencil-square-o" aria-hidden="true" />
+                    </span>
+                    <span
+                      onClick={e => {
+                        e.preventDefault()
+                        onDelete(roleFocus, history)
+                      }}
+                      title="Delete Focus"
+                    >
+                      <i className="fa fa-trash" aria-hidden="true" />
+                    </span>
+                    {!isFuture(new Date(focusUser.start_date)) && (
+                      <span
+                        onClick={() => {
+                          this.setState({ displayForm: true })
+                        }}
+                        title="Add user"
+                      >
+                        <i className="fa fa-plus-circle" aria-hidden="true" />
                       </span>
                     )}
                   </span>
                 )}
+              </h1>
+              {roleFocus && focusUser && (
+                <span>
+                  <p>
+                    <span className={b.e('focusLabel')}>Role: </span>
+                    {role.role_name}
+                  </p>
+                  <p>
+                    <span className={b.e('focusLabel')}>
+                      Duration (in days):{' '}
+                    </span>
+                    {roleFocus.duration
+                      ? roleFocus.duration
+                      : 'No duration defined'}
+                  </p>
+                  <p>
+                    <span className={b.e('focusLabel')}>Filled by: </span>
+                    {focusUser.user_name}{' '}
+                    <img
+                      className={b.e('avatar')}
+                      src={focusUser.avatar_url}
+                      alt="avatar"
+                      title={focusUser.user_name}
+                    />
+                  </p>
+                  <p>
+                    <span className={b.e('focusLabel')}>From: </span>
+                    {focusUser.start_date
+                      ? format(new Date(focusUser.start_date), 'DD/MM/YYYY')
+                      : 'No start date defined'}
+                  </p>
+                  <p>
+                    <span className={b.e('focusLabel')}>Until: </span>
+                    {focusUser.end_date
+                      ? format(new Date(focusUser.end_date), 'DD/MM/YYYY')
+                      : focusUser.start_date && roleFocus.duration
+                      ? `${format(
+                          addDays(
+                            new Date(focusUser.start_date),
+                            roleFocus.duration
+                          ),
+                          'DD/MM/YYYY'
+                        )}  (calculated)`
+                      : '∞'}
+                    <RoleFocusEndDate
+                      displayDate={false}
+                      duration={roleFocus.duration}
+                      focusUser={focusUser}
+                    />
+                  </p>
+                  <br />
+                  <RoleFocusItems
+                    items={roleFocus.actions}
+                    itemType="checklist"
+                    title="Recurrent actions"
+                    roleFocus={roleFocus}
+                    roles={roles}
+                  />
+                  <br />
+                  <RoleFocusItems
+                    items={roleFocus.indicators}
+                    itemType="indicator"
+                    title="Indicators"
+                    roleFocus={roleFocus}
+                    roles={roles}
+                  />
+                  <br />
+                  <RoleFocusUsersList
+                    currentUserId={focusUser.role_focus_user_id}
+                    roleFocusUsers={roleFocus.role_focus_users}
+                  />
+                  <br />
+                  {displayForm && (
+                    <span>
+                      <h4>Add a user</h4>
+                      <form
+                        onSubmit={e => {
+                          e.preventDefault()
+                          onAddUser(e, roleFocus.role_focus_id)
+                          this.setState({ displayForm: false })
+                        }}
+                      >
+                        <label>
+                          User :
+                          <select
+                            className={b.e('long')}
+                            defaultValue=""
+                            name="user_id"
+                            required
+                          >
+                            <option value="" />
+                            {users.map(user => (
+                              <option key={user.user_id} value={user.user_id}>
+                                {user.user_name}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <label>
+                          Start date:
+                          <span className={b.e('duration')}>
+                            <input
+                              defaultValue=""
+                              name="start_date"
+                              onChange={e => {
+                                this.setState({ startDate: e.target.value })
+                              }}
+                              type="date"
+                            />
+                          </span>
+                        </label>
+                        <button type="submit">Add</button>
+                        <button
+                          type="button"
+                          onClick={() => this.setState({ displayForm: false })}
+                        >
+                          Cancel
+                        </button>
+                      </form>
+                    </span>
+                  )}
+                </span>
+              )}
             </span>
           )}
         </article>

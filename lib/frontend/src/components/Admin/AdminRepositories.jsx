@@ -34,7 +34,9 @@ class Repositories extends React.Component {
     repositories.sort(function(a, c) {
       return a.repo_name.toLowerCase() > c.repo_name.toLowerCase()
         ? 1
-        : c.repo_name.toLowerCase() > a.repo_name.toLowerCase() ? -1 : 0
+        : c.repo_name.toLowerCase() > a.repo_name.toLowerCase()
+        ? -1
+        : 0
     })
     repositories.map(repo => {
       const wrongLabels = getMissingAndOverlyLabelsForARepo(labels, repo.labels)

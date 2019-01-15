@@ -49,16 +49,16 @@ class IssueCreationDetail extends React.Component {
       pos === 0
         ? splitValue
         : splitValue === 'No milestone'
-          ? ''
-          : this.props.issueForm.milestonesSelect.length > 0
-            ? this.props.issueForm.milestonesSelect.filter(
-                milestone => milestone.milestone_number === +splitValue
-              )[0]
-              ? this.props.issueForm.milestonesSelect.filter(
-                  milestone => milestone.milestone_number === +splitValue
-                )[0].milestone_number
-              : ''
-            : ''
+        ? ''
+        : this.props.issueForm.milestonesSelect.length > 0
+        ? this.props.issueForm.milestonesSelect.filter(
+            milestone => milestone.milestone_number === +splitValue
+          )[0]
+          ? this.props.issueForm.milestonesSelect.filter(
+              milestone => milestone.milestone_number === +splitValue
+            )[0].milestone_number
+          : ''
+        : ''
     return value
   }
 
@@ -149,11 +149,13 @@ class IssueCreationDetail extends React.Component {
               value={issueForm.circleId}
             >
               <option value="" />
-              {circles.filter(circle => circle.label_id).map(circle => (
-                <option key={circle.circle_id} value={circle.circle_id}>
-                  {circle.circle_name}
-                </option>
-              ))}
+              {circles
+                .filter(circle => circle.label_id)
+                .map(circle => (
+                  <option key={circle.circle_id} value={circle.circle_id}>
+                    {circle.circle_name}
+                  </option>
+                ))}
             </select>
           </label>
           <br />
@@ -188,7 +190,8 @@ class IssueCreationDetail extends React.Component {
           </label>
           <br />
           <label>
-            Title (required):<br />
+            Title (required):
+            <br />
             <input
               id="title"
               name="title"
