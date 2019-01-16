@@ -1,9 +1,10 @@
 import './StatusItem.sass'
 
 import block from 'bemboo'
-import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
+
+import { stringify } from '../utils/querystring'
 
 const b = block('StatusItem')
 

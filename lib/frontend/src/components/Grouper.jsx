@@ -1,10 +1,10 @@
 import './Grouper.sass'
 
 import block from 'bemboo'
-import { parse } from 'query-string'
 import React from 'react'
 
 import { connect, grouperFromState } from '../utils'
+import { parse } from '../utils/querystring'
 import StatusItem from './StatusItem'
 
 const b = block('Grouper')

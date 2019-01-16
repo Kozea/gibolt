@@ -2,7 +2,6 @@ import './Meetings.sass'
 
 import block from 'bemboo'
 import { format } from 'date-fns'
-import { parse, stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link, withRouter } from 'react-router-dom'
@@ -10,6 +9,7 @@ import { Link, withRouter } from 'react-router-dom'
 import { fetchResults, goBack, setLoading, setParams } from '../actions'
 import { updateReportsList } from '../actions/meetings'
 import { connect } from '../utils'
+import { parse, stringify } from '../utils/querystring'
 import Loading from './Loading'
 
 @block

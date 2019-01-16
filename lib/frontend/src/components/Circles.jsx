@@ -1,7 +1,6 @@
 import './Circles.sass'
 
 import block from 'bemboo'
-import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
@@ -9,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { fetchResults, setLoading } from '../actions'
 import { createCircle } from '../actions/circle'
 import { connect, sortGroupCircles } from '../utils'
+import { stringify } from '../utils/querystring'
 import Loading from './Loading'
 
 @block

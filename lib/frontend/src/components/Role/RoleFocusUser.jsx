@@ -1,10 +1,10 @@
 import './Role.sass'
 
 import block from 'bemboo'
-import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import { stringify } from '../../utils/querystring'
 import RoleFocusEndDate from './../Utils/RoleFocusEndDate'
 
 const b = block('Role')

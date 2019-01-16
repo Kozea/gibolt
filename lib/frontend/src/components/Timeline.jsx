@@ -2,13 +2,13 @@ import './Timeline.sass'
 
 import block from 'bemboo'
 import { format, startOfMonth } from 'date-fns'
-import { parse, stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { push } from 'connected-react-router'
 
 import { fetchResults, setLoading } from '../actions'
 import { connect, timelineRangeFromState, values } from '../utils'
+import { parse, stringify } from '../utils/querystring'
 import Loading from './Loading'
 import Milestone from './Milestone'
 

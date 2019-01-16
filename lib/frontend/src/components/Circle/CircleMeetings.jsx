@@ -1,12 +1,12 @@
 import './Circle.sass'
 
 import block from 'bemboo'
-import { stringify } from 'query-string'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { fetchResults, setLoading } from '../../actions'
 import { connect } from '../../utils'
+import { stringify } from '../../utils/querystring'
 
 const b = block('Circle')
 

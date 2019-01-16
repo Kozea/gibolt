@@ -1,11 +1,11 @@
 import './Labels.sass'
 
 import block from 'bemboo'
-import { parse, stringify } from 'query-string'
 import React from 'react'
 
 import { fetchResults, setLoading } from '../actions'
 import { connect, labelsFromState } from '../utils'
+import { parse, stringify } from '../utils/querystring'
 import Label from './Label'
 import User from './User'
 

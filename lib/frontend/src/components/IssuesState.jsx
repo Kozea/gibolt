@@ -1,10 +1,10 @@
 import './IssuesState.sass'
 
 import block from 'bemboo'
-import { parse } from 'query-string'
 import React from 'react'
 
 import { connect, issuesStateFromState } from '../utils'
+import { parse } from '../utils/querystring'
 import StatusItem from './StatusItem'
 
 const b = block('IssuesState')

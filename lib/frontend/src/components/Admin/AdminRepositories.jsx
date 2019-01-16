@@ -1,7 +1,6 @@
 import './AdminRepositories.sass'
 
 import block from 'bemboo'
-import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
@@ -13,6 +12,7 @@ import {
   updateReposLabels,
 } from '../../actions'
 import { connect, getMissingAndOverlyLabelsForARepo } from '../../utils'
+import { stringify } from '../../utils/querystring'
 import Loading from './../Loading'
 
 @block

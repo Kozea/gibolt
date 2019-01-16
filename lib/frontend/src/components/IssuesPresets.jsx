@@ -2,10 +2,10 @@ import './IssuesPresets.sass'
 
 import block from 'bemboo'
 import equal from 'deep-equal'
-import { parse, stringify } from 'query-string'
 import React from 'react'
 
 import { connect } from '../utils'
+import { parse, stringify } from '../utils/querystring'
 import Preset from './Preset'
 
 const PRESETS = ({ login }) => ({

@@ -2,7 +2,6 @@ import './MeetingReport.sass'
 
 import block from 'bemboo'
 import { format } from 'date-fns'
-import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import ReactModal from 'react-modal'
@@ -22,6 +21,7 @@ import {
   updateMeetingAttendees,
 } from '../../actions/meetings'
 import { connect } from '../../utils'
+import { parse } from '../../utils/querystring'
 import IssueCreationDetail from './../IssueCreationDetail'
 import Loading from './../Loading'
 import MarkdownEditor from './../Utils/MarkdownEditor'
