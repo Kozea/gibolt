@@ -412,6 +412,11 @@
       "node": {
         "extensions": [".js", ".jsx"]
       }
+    },
+    "react": {
+      "createClass": "createReactClass",
+      "pragma": "React",
+      "version": "detect"
     }
   }
 }

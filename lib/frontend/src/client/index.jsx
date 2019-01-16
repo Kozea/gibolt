@@ -1,7 +1,7 @@
 import { createBrowserHistory } from 'history'
 import React from 'react'
 import { hydrate, render } from 'react-dom'
-import { routerMiddleware } from 'react-router-redux'
+import { routerMiddleware } from 'connected-react-router'
 import RedBox from 'redbox-react'
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
@@ -9,12 +9,13 @@ import thunk from 'redux-thunk'
 import { setModifier, setUser } from '../actions'
 import App from '../components/App'
 import Root from '../components/Root'
-import reducer from '../reducer'
+import createRootReducer from '../reducer'
 // import autoLoadMiddleware from './autoLoadMiddleware'
 
 export const rootNode = document.getElementById('root')
 
 export const history = createBrowserHistory()
+const reducer = createRootReducer(history)
 
 export const store = createStore(
   reducer,

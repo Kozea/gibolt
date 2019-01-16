@@ -3,13 +3,12 @@ import './NotFound.sass'
 import block from 'bemboo'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { NotFound as HttpNotFound } from 'redux-http-status'
 
 const b = block('NotFound')
 
 export default function NotFound() {
   return (
-    <HttpNotFound>
+    <>
       <Helmet>
         <title>Gibolt - 404</title>
       </Helmet>
@@ -19,6 +18,6 @@ export default function NotFound() {
           You lost yourself in the gibolt.
         </div>
       </section>
-    </HttpNotFound>
+    </>
   )
 }

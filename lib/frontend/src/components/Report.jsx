@@ -5,7 +5,7 @@ import moment from 'moment'
 import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { push } from 'react-router-redux'
+import { push } from 'connected-react-router'
 
 import { fetchResults, setLoading } from '../actions'
 import { connect, reportRangeFromState, values } from '../utils'

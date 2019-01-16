@@ -3,7 +3,7 @@ import './SelectUser.sass'
 import block from 'bemboo'
 import { parse, stringify } from 'query-string'
 import React from 'react'
-import { push } from 'react-router-redux'
+import { push } from 'connected-react-router'
 
 import { connect, usersFromState } from '../utils'
 
