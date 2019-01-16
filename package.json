@@ -47,7 +47,7 @@
     "react-component-octicons": "^1.5.0",
     "react-dom": "16.7.0",
     "react-draft-wysiwyg": "^1.12.11",
-    "react-helmet": "^5.2.0",
+    "react-helmet": "^6.0.0-beta",
     "react-key-index": "^0.1.1",
     "react-markdown": "4.0.6",
     "react-modal": "^3.3.2",
