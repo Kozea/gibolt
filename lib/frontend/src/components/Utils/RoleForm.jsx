@@ -14,9 +14,11 @@ import MarkdownEditor from '../Utils/MarkdownEditor'
 class RoleForm extends React.Component {
   constructor(props, context) {
     super(props, context)
+    const { role } = props
     this.state = {
       duration: null,
       focus: '',
+      selectedRoleType: role ? role.role_type : null,
       startDate: null,
       user: '',
     }
@@ -34,12 +36,14 @@ class RoleForm extends React.Component {
       role,
       users,
     } = this.props
+    const { duration, selectedRoleType, startDate } = this.state
+    const roleNameOptions = selectedRoleType
+      ? roleTypes.filter(roleType => roleType.value === selectedRoleType)[0]
+          .labels
+      : []
     const endDate =
-      this.state.duration > 0 && this.state.startDate
-        ? format(
-            addDays(new Date(this.state.startDate), this.state.duration),
-            'DD/MM/YYYY (dddd)'
-          )
+      duration > 0 && startDate
+        ? format(addDays(new Date(startDate), duration), 'DD/MM/YYYY (dddd)')
         : null
     return (
       <article className={b}>
@@ -72,6 +76,9 @@ class RoleForm extends React.Component {
               className={b.e('long')}
               defaultValue={role.role_type ? role.role_type : ''}
               name="role_type"
+              onChange={e => {
+                this.setState({ selectedRoleType: e.target.value })
+              }}
               required
             >
               <option value="" />
@@ -84,12 +91,28 @@ class RoleForm extends React.Component {
           </label>
           <label>
             Role name :
-            <input
-              name="role_name"
-              className={b.e('long')}
-              defaultValue={role.role_name ? role.role_name : ''}
-              required
-            />
+            {roleNameOptions.length > 0 ? (
+              <select
+                className={b.e('long')}
+                defaultValue={role.role_name ? role.role_name : ''}
+                name="role_name"
+                required
+              >
+                {roleNameOptions.length !== 1 && <option value="" />}
+                {roleNameOptions.map(roleName => (
+                  <option key={roleName} value={roleName}>
+                    {roleName}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                name="role_name"
+                className={b.e('long')}
+                defaultValue={role.role_name ? role.role_name : ''}
+                required
+              />
+            )}
           </label>
 
           {isCreation && (

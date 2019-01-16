@@ -42,6 +42,7 @@ class Circle extends React.Component {
       isCircleInEdition,
       loading,
       onGoBack,
+      users,
     } = this.props
     return (
       <section className={b}>
@@ -78,7 +79,7 @@ class Circle extends React.Component {
                   <CircleMilestones circle={circle} />
                   <CircleRoles circle={circle} />
                   {circle.circle_children.length > 0 ? (
-                    <CircleSubCircles circle={circle} />
+                    <CircleSubCircles circle={circle} users={users} />
                   ) : (
                     ''
                   )}
@@ -104,6 +105,7 @@ export default withRouter(
       loading: state.circle.loading,
       location: state.router.location,
       isCircleInEdition: state.circle.is_in_edition,
+      users: state.users.results,
     }),
     dispatch => ({
       onGoBack: history => {
