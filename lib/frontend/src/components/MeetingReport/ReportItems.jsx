@@ -171,13 +171,21 @@ function ReportItems(props) {
                   )}
                 </th>
                 <th>
-                  {currentMeeting.report_id && (
-                    <span>
+                  {currentMeeting.report_id ? (
+                    <>
                       {`#${currentMeeting.report_id}`}
                       <br />
-                    </span>
+                      {`${format(
+                        new Date(currentMeeting.created_at),
+                        'DD/MM/YYYY'
+                      )}`}
+                    </>
+                  ) : (
+                    <>
+                      <br />
+                      {`${format(new Date(), 'DD/MM/YYYY')}`}
+                    </>
                   )}
-                  {`${format(new Date(), 'DD/MM/YYYY')}`}
                 </th>
                 <th>Trend</th>
               </tr>
