@@ -555,6 +555,7 @@ def get_repo_tickets(repo_name):
             'repos/{0}/{1}/issues?{2}'.format(
                 app.config['ORGANISATION'], repo_name, query
             ),
+            all_pages=True,
         )
     except GitHubError as e:
         return e.response.content, e.response.status_code
