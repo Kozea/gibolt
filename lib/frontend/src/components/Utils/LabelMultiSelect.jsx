@@ -1,7 +1,29 @@
-import 'react-select/dist/react-select.css'
-
 import React from 'react'
 import Select from 'react-select'
+
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    color: state.data.color,
+  }),
+  multiValue: styles => ({
+    ...styles,
+    border: '1px solid #b3d8ff',
+    backgroundColor: '#ebf5ff',
+  }),
+  multiValueLabel: (styles, { data }) => ({
+    ...styles,
+    color: data.color,
+  }),
+  multiValueRemove: (styles, { data }) => ({
+    ...styles,
+    color: data.color,
+    ':hover': {
+      backgroundColor: data.color,
+      color: 'white',
+    },
+  }),
+}
 
 export default class LabelMultiSelect extends React.Component {
   constructor(props, context) {
@@ -32,21 +54,18 @@ export default class LabelMultiSelect extends React.Component {
     })
   }
 
-  renderValue(option) {
-    return <strong style={{ color: option.color }}>{option.label}</strong>
-  }
-
   render() {
     return (
       <Select
-        closeOnSelect={this.props.closeOnSelect}
-        multi
+        className="Select-control"
+        closeMenuOnSelect={this.props.closeOnSelect}
+        hideSelectedOptions={this.props.removeSelected}
+        isMulti
         name="labelMultiSelect"
-        options={this.state.options}
-        removeSelected={this.props.removeSelected}
         onChange={v => this.handleSelectChange(v)}
+        options={this.state.options}
+        styles={customStyles}
         value={this.state.value}
-        valueRenderer={this.renderValue}
       />
     )
   }
