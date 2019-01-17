@@ -7,16 +7,6 @@ import RoleFocusUser from '../Role/RoleFocusUser'
 
 const b = block('Circle')
 
-const updateRoleFocus = (focusUser, users) => {
-  const [user] = users.filter(u => u.user_id === focusUser.user_id)
-  if (user) {
-    focusUser.avatar_url = user.avatar_url
-    focusUser.user_name = user.user_name
-  }
-  focusUser.end_date = null
-  return focusUser
-}
-
 export default function CircleSubCircles(props) {
   return (
     <article>
@@ -54,10 +44,7 @@ export default function CircleSubCircles(props) {
                             key={roleFocus.role_focus_id}
                             focusId={roleFocus.role_focus_id}
                             focusName={roleFocus.focus_name}
-                            focusUser={updateRoleFocus(
-                              roleFocus.role_focus_users[0],
-                              props.users
-                            )}
+                            focusUser={roleFocus.role_focus_users[0]}
                           />
                         ))}
                       </>
