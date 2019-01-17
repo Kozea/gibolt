@@ -23,17 +23,15 @@ export default function MeetingRolesExpiration(props) {
               <li key={focus.role_focus_id}>
                 <span className={b.e('bullet')} />
                 {focus.role_name}
-                {focus.role_focus_users.map(focusUser => (
-                  <span key={focusUser.user_id}>
-                    <RoleFocusUser
-                      key={focusUser.user_id}
-                      focusName={focus.focus_name}
-                      focusId={focus.role_focus_id}
-                      duration={focus.duration}
-                      focusUser={focusUser}
-                    />
-                  </span>
-                ))}
+                {focus.role_focus_users[0] && (
+                  <RoleFocusUser
+                    key={focus.role_focus_users[0].user_id}
+                    focusName={focus.focus_name}
+                    focusId={focus.role_focus_id}
+                    duration={focus.duration}
+                    focusUser={focus.role_focus_users[0]}
+                  />
+                )}
               </li>
             ))}
           </ul>

@@ -218,6 +218,7 @@ class RoleFocus extends React.Component {
                               onChange={e => {
                                 this.setState({ startDate: e.target.value })
                               }}
+                              required
                               type="date"
                             />
                           </span>

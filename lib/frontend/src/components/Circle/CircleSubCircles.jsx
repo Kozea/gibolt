@@ -35,7 +35,7 @@ export default function CircleSubCircles(props) {
             </Link>
             {child.roles &&
               child.roles
-                .filter(role => role.role_name === 'Second lien')
+                .filter(role => role.role_name.match('Second lien'))
                 .map(role => (
                   <div className={b.e('secondLink')} key={role.role_id}>
                     <span className={b.e('bullet')} />
