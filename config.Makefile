@@ -9,7 +9,7 @@ export SERVER = $(HOST):$(SERVER_PORT)
 export FLASK_APP ?= $(PWD)/lib/backend/__init__.py
 export FLASK_CONFIG ?= $(PWD)/lib/backend/application.cfg
 export FLASK_TEST_CONFIG ?= $(PWD)/lib/backend/application-test.cfg
-export FLASK_DEBUG ?= 1
+export FLASK_ENV ?= development
 
 # Python env
 PYTHON_VERSION ?= python

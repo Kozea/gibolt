@@ -1,11 +1,12 @@
 import './Circle.sass'
 
-import { stringify } from 'query-string'
+import block from 'bemboo'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 import CircleRolesType from './CircleRolesType'
-import { block, sortRoles, roleTypes } from '../../utils'
+import { sortRoles, roleTypes } from '../../utils'
+import { stringify } from '../../utils/querystring'
 
 const b = block('Circle')
 
@@ -33,7 +34,7 @@ export default class CircleRoles extends React.Component {
               }}
             >
               <span
-                className={b('unlink')}
+                className={b.e('unlink')}
                 disabled={!circle.is_active}
                 title="Add role"
               >
@@ -44,7 +45,7 @@ export default class CircleRoles extends React.Component {
         </h3>
         {sortedRoles && sortedRoles.length > 0 ? (
           <span>
-            <span className={b('check')}>
+            <span className={b.e('check')}>
               <label
                 htmlFor="checkbox"
                 onChange={e =>

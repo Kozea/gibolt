@@ -1,13 +1,14 @@
 import './Report.sass'
 
+import block from 'bemboo'
 import moment from 'moment'
-import { stringify } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { push } from 'react-router-redux'
+import { push } from 'connected-react-router'
 
 import { fetchResults, setLoading } from '../actions'
-import { block, connect, reportRangeFromState, values } from '../utils'
+import { connect, reportRangeFromState, values } from '../utils'
+import { stringify } from '../utils/querystring'
 import Loading from './Loading'
 
 const groupByMonth = issues =>
@@ -57,8 +58,7 @@ const groupByRepository = issues =>
     }, {})
   ).sort((a, b) => a.user - b.user)
 
-const b = block('Report')
-
+@block
 class Report extends React.Component {
   componentDidMount() {
     this.props.sync()
@@ -70,17 +70,17 @@ class Report extends React.Component {
     }
   }
 
-  render() {
+  render(b) {
     const { range, query, loading, error, issues, onDateChange } = this.props
     const issuesByMonth = groupByMonth(issues)
     const issuesByUser = groupByUser(issues)
 
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>Gibolt - Report</title>
         </Helmet>
-        <h1 className={b('head')}>
+        <h1 className={b.e('head')}>
           Report from
           <input
             type="date"
@@ -92,29 +92,32 @@ class Report extends React.Component {
             type="date"
             value={range.stop}
             onChange={e => onDateChange(e.target.value, 'stop', query)}
-          />.
+          />
+          .
         </h1>
         {loading && <Loading />}
         {error && (
-          <article className={b('date', { error: true })}>
+          <article className={b.e('date').m({ error: true })}>
             <h2>Error during report fetch</h2>
             <code>{error}</code>
           </article>
         )}
-        <article className={b('user')}>
+        <article className={b.e('user')}>
           <h2>Overall</h2>
           {issuesByMonth.map(({ id, month, issues: monthIssues }) => (
-            <article key={id} className={b('month')}>
+            <article key={id} className={b.e('month')}>
               <h3>{month.format('LL')}</h3>
               <ul>
                 {groupByRepository(monthIssues)
                   .sort((x, y) => y.issues.length - x.issues.length)
-                  .map(({ repoId, repository, issues }) => (
-                    <li key={repoId} className={b('item')}>
-                      <span className={b('repo')}>
-                        {repository.name} ({Math.round(
+                  .map(({ repository, issues }) => (
+                    <li key={repository.id} className={b.e('item')}>
+                      <span className={b.e('repo')}>
+                        {repository.name} (
+                        {Math.round(
                           100 * (issues.length / monthIssues.length)
-                        ).toFixed()}%)
+                        ).toFixed()}
+                        %)
                       </span>
                     </li>
                   ))}
@@ -124,23 +127,25 @@ class Report extends React.Component {
         </article>
 
         {issuesByUser.map(({ id, user, issues: userIssues }) => (
-          <article key={id} className={b('user')}>
+          <article key={id} className={b.e('user')}>
             <h2>{user.login}</h2>
             {groupByMonth(userIssues).map(
-              ({ monthId, month, issues: monthIssues }) => (
-                <article key={monthId} className={b('month')}>
+              ({ id, month, issues: monthIssues }) => (
+                <article key={id} className={b.e('month')}>
                   <h3>{month.format('LL')}</h3>
                   <ul>
                     {groupByRepository(monthIssues)
                       .sort((x, y) => y.issues.length - x.issues.length)
-                      .map(({ issueId, repository, issues }) => (
-                        <li key={issueId} className={b('item')}>
-                          <span className={b('repo')}>
-                            {repository.name} ({Math.round(
+                      .map(({ repository, issues }) => (
+                        <li key={repository.id} className={b.e('item')}>
+                          <span className={b.e('repo')}>
+                            {repository.name} (
+                            {Math.round(
                               100 * (issues.length / monthIssues.length)
-                            ).toFixed()}%)
+                            ).toFixed()}
+                            %)
                           </span>
-                          <ul className={b('issues')}>
+                          <ul className={b.e('issues')}>
                             {issues.map(issue => (
                               <li key={issue.id}>{issue.title}</li>
                             ))}

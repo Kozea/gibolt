@@ -1,18 +1,18 @@
 import './StatusItem.sass'
 
-import { stringify } from 'query-string'
+import block from 'bemboo'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { block } from '../utils'
+import { stringify } from '../utils/querystring'
 
 const b = block('StatusItem')
 
 export default function StatusItem({ active, action, type, query, children }) {
   return (
-    <li className={b({ active: active })}>
+    <li className={b.m({ active })}>
       <Link
-        className={b('link')}
+        className={b.e('link')}
         to={{
           pathname: '/',
           search: stringify({

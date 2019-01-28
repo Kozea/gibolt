@@ -1,15 +1,14 @@
 import './Issue.sass'
 
+import block from 'bemboo'
 import React from 'react'
-
-import { block } from '../utils'
 
 const b = block('Issue')
 
 export default function Issue(props) {
   return (
     <li
-      className={b({
+      className={b.m({
         status: props.state,
         'pull-request': props.pull_request !== null,
       })}
@@ -22,20 +21,20 @@ export default function Issue(props) {
       {props.users.map(user => (
         <img
           key={user.user_id}
-          className={b('avatar')}
+          className={b.e('avatar')}
           src={user.avatar_url}
           alt="avatar"
           title={user.user_name}
         />
       ))}
-      <span className={b('link')} onClick={props.onModalDisplay}>
-        <span className={b('title')}>{props.title}</span>
-        <span className={b('id')}>#{props.id}</span>
-        <span className={b('project')}>{props.project}</span>
+      <span className={b.e('link')} onClick={props.onModalDisplay}>
+        <span className={b.e('title')}>{props.title}</span>
+        <span className={b.e('id')}>#{props.id}</span>
+        <span className={b.e('project')}>{props.project}</span>
         {props.labels.map(label => (
-          <span key={label.label_name} className={b('label')}>
+          <span key={label.label_name} className={b.e('label')}>
             <span
-              className={b('bullet')}
+              className={b.e('bullet')}
               style={{ backgroundColor: `#${label.label_color}` }}
             />
             {label.label_name}
@@ -44,7 +43,7 @@ export default function Issue(props) {
       </span>
       <div>
         <a
-          className={b('view')}
+          className={b.e('view')}
           href={props.url}
           target="_blank"
           rel="noopener noreferrer"

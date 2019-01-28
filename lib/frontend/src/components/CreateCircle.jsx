@@ -1,5 +1,6 @@
 import './CreateCircle.sass'
 
+import block from 'bemboo'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
@@ -11,13 +12,12 @@ import {
   labelSubmit,
   updateSelectedLabel,
 } from '../actions/labels'
-import { block, connect } from '../utils'
+import { connect } from '../utils'
 import AddLabel from './Admin/AddLabel'
 import Loading from './Loading'
 import MarkdownEditor from './Utils/MarkdownEditor'
 
-const b = block('CreateCircle')
-
+@block
 class CreateCircle extends React.Component {
   constructor(props) {
     super(props)
@@ -39,7 +39,7 @@ class CreateCircle extends React.Component {
     this.props.onLabelChange(labelSelectValue)
   }
 
-  render() {
+  render(b) {
     const {
       circles,
       circleLabels,
@@ -53,11 +53,11 @@ class CreateCircle extends React.Component {
     const unusedLabels = getUnusedCircleLabels(circles, circleLabels)
 
     return (
-      <article className={b()}>
+      <article className={b}>
         <Helmet>
           <title>Gibolt - Create a circle</title>
         </Helmet>
-        <div className={b('createCircle')}>
+        <div className={b.e('createCircle')}>
           {loading && <Loading />}
           <h2>Create a new circle :</h2>
           {selectedLabel === 'AddLabel' && (

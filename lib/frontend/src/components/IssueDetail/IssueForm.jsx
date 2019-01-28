@@ -1,8 +1,9 @@
+import block from 'bemboo'
 import React from 'react'
 
 import { setRefresh } from '../../actions'
 import { updateATicket } from '../../actions/issues'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 import MarkdownEditor from './../Utils/MarkdownEditor'
 
 const b = block('IssueDetail')
@@ -47,7 +48,7 @@ class IssueForm extends React.Component {
       case 'milestone':
         return (
           <select
-            className={b('milestoneSelect')}
+            className={b.e('milestoneSelect')}
             defaultValue={issue.milestone_number ? issue.milestone_number : ''}
             id="milestone"
             name="data"

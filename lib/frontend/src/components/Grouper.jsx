@@ -1,16 +1,17 @@
 import './Grouper.sass'
 
-import { parse } from 'query-string'
+import block from 'bemboo'
 import React from 'react'
 
-import { block, connect, grouperFromState } from '../utils'
+import { connect, grouperFromState } from '../utils'
+import { parse } from '../utils/querystring'
 import StatusItem from './StatusItem'
 
 const b = block('Grouper')
 
 function Grouper({ grouper, query }) {
   return (
-    <ul className={b()}>
+    <ul className={b}>
       <StatusItem
         action="nogroup"
         type="grouper"

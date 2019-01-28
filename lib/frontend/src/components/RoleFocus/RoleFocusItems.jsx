@@ -1,3 +1,4 @@
+import block from 'bemboo'
 import React from 'react'
 
 import {
@@ -7,11 +8,11 @@ import {
   editClickItem,
   updateItem,
 } from '../../actions/rolefocus'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 
 const b = block('RoleFocus')
 
-class Items extends React.Component {
+class RoleFocusItems extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
@@ -41,7 +42,7 @@ class Items extends React.Component {
           {title}{' '}
           <span
             onClick={() => this.onDisplayForm(true)}
-            className={b('unlink')}
+            className={b.e('unlink')}
             title="Add item"
           >
             <i className="fa fa-plus-circle" aria-hidden="true" />
@@ -52,7 +53,7 @@ class Items extends React.Component {
             <ul>
               {items.map(item => (
                 <li key={item.item_id}>
-                  <span className={b('bullet')} />
+                  <span className={b.e('bullet')} />
                   {item.editItem ? (
                     <div>
                       <form
@@ -66,7 +67,7 @@ class Items extends React.Component {
                             item :{' '}
                             <input
                               name="content"
-                              className={b('item')}
+                              className={b.e('item')}
                               defaultValue={item.content}
                               required
                             />
@@ -75,7 +76,7 @@ class Items extends React.Component {
                             role :{' '}
                             <select
                               name="role_focus_id"
-                              className={b('item')}
+                              className={b.e('item')}
                               defaultValue={item.role_focus_id}
                             >
                               {roles.map(role =>
@@ -141,7 +142,7 @@ class Items extends React.Component {
               }}
             >
               <label>New item:</label>{' '}
-              <input name="content" className={b('item')} required />
+              <input name="content" className={b.e('item')} required />
               <button type="submit">Send</button>
               <button type="button" onClick={() => this.onDisplayForm(false)}>
                 Cancel
@@ -183,4 +184,4 @@ export default connect(
       dispatch(addItem(formChecklist))
     },
   })
-)(Items)
+)(RoleFocusItems)

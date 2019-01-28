@@ -1,10 +1,11 @@
 import './IssuesPresets.sass'
 
+import block from 'bemboo'
 import equal from 'deep-equal'
-import { parse, stringify } from 'query-string'
 import React from 'react'
 
-import { block, connect } from '../utils'
+import { connect } from '../utils'
+import { parse, stringify } from '../utils/querystring'
 import Preset from './Preset'
 
 const PRESETS = ({ login }) => ({
@@ -47,13 +48,13 @@ const PRESETS = ({ login }) => ({
     assignee: '',
   },
 })
-
 const b = block('IssuesPresets')
+
 function IssuesPresets({ location, user }) {
   const userPreset = PRESETS(user)
   const query = parse(location.search)
   return (
-    <span className={b()}>
+    <span className={b}>
       <ul>
         <Preset
           action={{ pathname: '/', search: stringify(userPreset.urgent) }}

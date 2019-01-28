@@ -23,7 +23,7 @@ app.config.from_envvar('FLASK_CONFIG')
 
 engine = create_engine(
     app.config['SQLALCHEMY_DATABASE_URI'],
-    connect_args={'check_same_thread': False}
+    connect_args={'check_same_thread': False},
 )
 
 github = GitHub(app)
@@ -34,7 +34,7 @@ adapter = CacheControlAdapter(
 custom_adapter = CacheControlAdapter(
     heuristic=ZeroSecondsHeuristic(),
     cache=file_cache,
-    controller_class=GitHubController
+    controller_class=GitHubController,
 )
 github.session = requests.Session()
 github.session.mount('http://', adapter)

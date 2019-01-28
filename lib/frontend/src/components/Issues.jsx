@@ -1,11 +1,11 @@
 import './Issues.sass'
 
+import block from 'bemboo'
 import React from 'react'
 import ReactModal from 'react-modal'
 
 import {
   fetchResults,
-  setError,
   setLoading,
   setModal,
   setParams,
@@ -19,7 +19,6 @@ import {
   updateIssues,
 } from '../actions/issues'
 import {
-  block,
   connect,
   filterIssuesOnLabels,
   filterIssuesOnState,
@@ -36,7 +35,7 @@ import Loading from './Loading'
 import Progress from './Progress'
 
 function checkboxState(issues) {
-  var selectedIssues = issues.filter(issue => issue.selected).length
+  const selectedIssues = issues.filter(issue => issue.selected).length
   if (selectedIssues === 0) {
     return 'unchecked'
   }
@@ -46,8 +45,7 @@ function checkboxState(issues) {
   return 'indeterminate'
 }
 
-const b = block('Issues')
-
+@block
 class Issues extends React.Component {
   constructor(props, context) {
     super(props, context)
@@ -105,7 +103,7 @@ class Issues extends React.Component {
     this.setState({ hideAllGroups: checked, hiddenGroups: [] })
   }
 
-  render() {
+  render(b) {
     const {
       labelFilteredIssues,
       issues,
@@ -127,8 +125,8 @@ class Issues extends React.Component {
     ).length
 
     return (
-      <section className={b()}>
-        <h1 className={b('head')}>
+      <section className={b}>
+        <h1 className={b.e('head')}>
           {issues.length} {issuesState === 'all' ? ' ' : ` ${issuesState} `}
           issues{' '}
           {issuesState === 'all'
@@ -137,7 +135,7 @@ class Issues extends React.Component {
           {grouper !== 'nogroup' && `grouped by ${grouper}`}{' '}
           <input
             type="checkbox"
-            checked={checkboxState(issues) === 'checked'}
+            defaultChecked={checkboxState(issues) === 'checked'}
             ref={elem =>
               elem &&
               (elem.indeterminate = checkboxState(issues) === 'indeterminate')
@@ -152,8 +150,8 @@ class Issues extends React.Component {
           <Progress val={closedLen} total={labelFilteredIssues.length} />
         </h1>
         <ReactModal
-          className={b('modal')}
-          overlayClassName={b('modal-overlay')}
+          className={b.e('modal').toString()}
+          overlayClassName={b.e('modal-overlay').toString()}
           isOpen={!!modal.display}
           onRequestClose={() => onModalClose(modal.refresh)}
           shouldCloseOnOverlayClick
@@ -164,25 +162,29 @@ class Issues extends React.Component {
               onModalClose={() => onModalClose(modal.refresh)}
             />
           ) : (
-            <span>
-              <IssueDetail
-                issue={
-                  issues.filter(iss => iss.ticket_id === modal.data.issueId)[0]
-                }
-                onModalClose={() => onModalClose(modal.refresh)}
-              />
-            </span>
+            modal.data.issueId && (
+              <span>
+                <IssueDetail
+                  issue={
+                    issues.filter(
+                      iss => iss.ticket_id === modal.data.issueId
+                    )[0]
+                  }
+                  onModalClose={() => onModalClose(modal.refresh)}
+                />
+              </span>
+            )
           )}
         </ReactModal>
         {loading && <Loading />}
         {error && (
-          <article className={b('group', { error: true })}>
+          <article className={b.e('group').m({ error: true })}>
             <h2>Error during issue fetch</h2>
             {typeof error === 'object' ? (
               <ul>
                 {error.map(err => (
                   <li key={err.id}>
-                    <span className={b('bullet')} />
+                    <span className={b.e('bullet')} />
                     {err.value}
                   </li>
                 ))}
@@ -192,10 +194,10 @@ class Issues extends React.Component {
             )}
           </article>
         )}
-        <div className={b('check')}>
+        <div className={b.e('check')}>
           <label htmlFor="checkbox">
             <input
-              checked={this.state.hideAllGroups}
+              defaultChecked={this.state.hideAllGroups}
               id="checkbox"
               onClick={e => this.setCheckBox(e.target.checked)}
               type="checkbox"
@@ -204,10 +206,10 @@ class Issues extends React.Component {
           </label>
         </div>
         {issuesByGroup.map(({ id, group, issues }) => (
-          <article key={id} className={b('group')}>
+          <article key={id} className={b.e('group')}>
             <h2>
               <button
-                className={b('accordion')}
+                className={b.e('accordion')}
                 onClick={() => this.updateAccordion(group, issuesByGroup)}
               >
                 {this.isHidden(group) ? '+' : '-'}
@@ -215,7 +217,7 @@ class Issues extends React.Component {
               {group} <sup>({issues.length})</sup>{' '}
               <input
                 type="checkbox"
-                checked={checkboxState(issues) === 'checked'}
+                defaultChecked={checkboxState(issues) === 'checked'}
                 ref={elem =>
                   elem &&
                   (elem.indeterminate =
@@ -233,24 +235,22 @@ class Issues extends React.Component {
                   (issues[0].milestone_state === 'open' ||
                     group.split(' ⦔ ')[1] === 'No milestone'))) && (
                 <button
-                  className={b('newTicket')}
+                  className={b.e('newTicket')}
                   onClick={() => onModalCreation(grouper, group, id)}
                 >
                   Create issue
                 </button>
               )}
-              {issuesState === 'all' &&
-                grouper !== 'state' && (
-                  <Progress
-                    val={issues.filter(i => i.state === 'closed').length}
-                    total={issues.length}
-                  />
-                )}
+              {issuesState === 'all' && grouper !== 'state' && (
+                <Progress
+                  val={issues.filter(i => i.state === 'closed').length}
+                  total={issues.length}
+                />
+              )}
             </h2>
             <ul
-              className={b(
-                'panel',
-                this.isHidden(group) ? 'hidden' : 'display'
+              className={b.e(
+                `panel__${this.isHidden(group) ? 'hidden' : 'display'}`
               )}
             >
               {sortIssues(issues, grouper).map(issue => (
@@ -282,7 +282,7 @@ class Issues extends React.Component {
             </ul>
           </article>
         ))}
-        <article className={b('action')}>
+        <article className={b.e('action')}>
           <button type="submit" onClick={() => onChangeTickets('increment')}>
             Increment priority
           </button>
@@ -315,13 +315,13 @@ export default connect(
       issuesState: issuesStateFromState(state),
       error: state.issues.error,
       modal: state.modal,
+      currentIssue: state.issues.results.currentIssue,
     }
   },
   dispatch => ({
     onModalClose: refresh => {
       dispatch(setModal(false, false, {}))
       dispatch(updateCurrentIssue({}))
-      dispatch(setError(null, 'issueForm'))
       if (refresh) {
         dispatch(setLoading('issues'))
         dispatch(fetchIssues())

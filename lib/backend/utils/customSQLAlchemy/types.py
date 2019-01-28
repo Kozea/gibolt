@@ -13,11 +13,14 @@ class SQLiteJson(TypeDecorator):
         def __getitem__(self, index):
             if isinstance(index, tuple):
                 index = "$%s" % (
-                    "".join([
-                        "[%s]" % elem
-                        if isinstance(elem, int) else '."%s"' % elem
-                        for elem in index
-                    ])
+                    "".join(
+                        [
+                            "[%s]" % elem
+                            if isinstance(elem, int)
+                            else '."%s"' % elem
+                            for elem in index
+                        ]
+                    )
                 )
             elif isinstance(index, int):
                 index = "$[%s]" % index

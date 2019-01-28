@@ -1,5 +1,6 @@
 import './MeetingReport.sass'
 
+import block from 'bemboo'
 import { format } from 'date-fns'
 import React from 'react'
 import { Sparklines, SparklinesLine } from 'react-sparklines'
@@ -8,7 +9,7 @@ import {
   updateMeetingActions,
   updateMeetingIndicators,
 } from '../../actions/meetings'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
 
 const b = block('MeetingReport')
 
@@ -124,7 +125,7 @@ function ReportItems(props) {
       )}
       <h3>Indicators:</h3>
       {indicators.length > 0 ? (
-        <div className={b('itemTable')}>
+        <div className={b.e('itemTable')}>
           <table>
             <thead>
               <tr>
@@ -170,13 +171,21 @@ function ReportItems(props) {
                   )}
                 </th>
                 <th>
-                  {currentMeeting.report_id && (
-                    <span>
+                  {currentMeeting.report_id ? (
+                    <>
                       {`#${currentMeeting.report_id}`}
                       <br />
-                    </span>
+                      {`${format(
+                        new Date(currentMeeting.created_at),
+                        'DD/MM/YYYY'
+                      )}`}
+                    </>
+                  ) : (
+                    <>
+                      <br />
+                      {`${format(new Date(), 'DD/MM/YYYY')}`}
+                    </>
                   )}
-                  {`${format(new Date(), 'DD/MM/YYYY')}`}
                 </th>
                 <th>Trend</th>
               </tr>
@@ -184,7 +193,7 @@ function ReportItems(props) {
             <tbody>
               {indicators.map(indicator => (
                 <tr key={indicator.item_id}>
-                  <td className={b('itemContent')}>{indicator.content}</td>
+                  <td className={b.e('itemContent')}>{indicator.content}</td>
                   <td>
                     {meetings[1] &&
                       meetings[1].indicators

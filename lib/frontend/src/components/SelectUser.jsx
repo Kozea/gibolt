@@ -1,17 +1,18 @@
 import './SelectUser.sass'
 
-import { parse, stringify } from 'query-string'
+import block from 'bemboo'
 import React from 'react'
-import { push } from 'react-router-redux'
+import { push } from 'connected-react-router'
 
-import { block, connect, usersFromState } from '../utils'
+import { connect, usersFromState } from '../utils'
+import { parse, stringify } from '../utils/querystring'
 
 const b = block('SelectUser')
 
 function SelectUser({ type, query, users, values, onChangeUser }) {
   return (
     <select
-      className={b({ type: type })}
+      className={b.m({ type: type })}
       value={values[type][0]}
       onChange={e => onChangeUser(e.target.value, type, query)}
     >

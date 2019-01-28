@@ -1,5 +1,6 @@
 import './Milestone.sass'
 
+import block from 'bemboo'
 import { format } from 'date-fns'
 import React from 'react'
 
@@ -10,7 +11,7 @@ import {
   milestoneOnEdition,
   updateMilestoneCircles,
 } from '../actions/milestones'
-import { block, connect } from '../utils'
+import { connect } from '../utils'
 import Progress from './Progress'
 import LabelMultiSelect from './Utils/LabelMultiSelect'
 
@@ -23,14 +24,14 @@ function Milestone(props) {
     props.labels
   )
   return (
-    <li className={b({ status: props.state })}>
-      <span className={b('day')}>
+    <li className={b.m({ status: props.state })}>
+      <span className={b.e('day')}>
         {props.due_on
           ? format(new Date(props.due_on), 'DD/MM/YYYY')
           : 'no due date'}
       </span>
-      <span className={b('repo')}>{props.repo}</span>
-      <a className={b('link')} href={props.html_url}>
+      <span className={b.e('repo')}>{props.repo}</span>
+      <a className={b.e('link')} href={props.html_url}>
         {props.title}
       </a>
       <Progress
@@ -52,7 +53,7 @@ function Milestone(props) {
           />
           <button
             type="submit"
-            className={b('btn')}
+            className={b.e('btn')}
             onClick={event =>
               props.onSave(props.milestone_number, props.repo, event)
             }
@@ -61,7 +62,7 @@ function Milestone(props) {
           </button>
           <button
             type="button"
-            className={b('btn')}
+            className={b.e('btn')}
             onClick={() => props.onChangeMilestoneEdition(props.milestone_id)}
           >
             Cancel
@@ -72,7 +73,7 @@ function Milestone(props) {
           {allValues.milestoneCirclesValues.map(circle => (
             <span
               key={circle.value}
-              className={b('tag')}
+              className={b.e('tag')}
               style={{
                 borderColor: circle.color,
               }}
@@ -80,7 +81,7 @@ function Milestone(props) {
               {circle.label}
             </span>
           ))}
-          <span className={b('unlink')} title="Add to a circle">
+          <span className={b.e('unlink')} title="Add to a circle">
             <i
               className="fa fa-edit"
               aria-hidden="true"
@@ -88,7 +89,7 @@ function Milestone(props) {
             />
           </span>
           {props.state === 'open' && (
-            <span className={b('unlink')} title="Close Milestone">
+            <span className={b.e('unlink')} title="Close Milestone">
               <i
                 className="fa fa-times-circle"
                 aria-hidden="true"

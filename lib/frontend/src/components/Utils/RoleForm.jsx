@@ -1,28 +1,30 @@
 import './RoleForm.sass'
 
+import block from 'bemboo'
 import { addDays, format } from 'date-fns'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 
 import { goBack } from '../../actions'
 import { createRole, fetchRole, updateRole } from '../../actions/roles'
-import { block, connect, roleTypes } from '../../utils'
+import { connect, roleTypes } from '../../utils'
 import MarkdownEditor from '../Utils/MarkdownEditor'
 
-const b = block('RoleForm')
-
+@block
 class RoleForm extends React.Component {
   constructor(props, context) {
     super(props, context)
+    const { role } = props
     this.state = {
       duration: null,
       focus: '',
+      selectedRoleType: role ? role.role_type : null,
       startDate: null,
       user: '',
     }
   }
 
-  render() {
+  render(b) {
     const {
       circleId,
       circles,
@@ -34,15 +36,17 @@ class RoleForm extends React.Component {
       role,
       users,
     } = this.props
+    const { duration, selectedRoleType, startDate } = this.state
+    const roleNameOptions = selectedRoleType
+      ? roleTypes.filter(roleType => roleType.value === selectedRoleType)[0]
+          .labels
+      : []
     const endDate =
-      this.state.duration > 0 && this.state.startDate
-        ? format(
-            addDays(new Date(this.state.startDate), this.state.duration),
-            'DD/MM/YYYY (dddd)'
-          )
+      duration > 0 && startDate
+        ? format(addDays(new Date(startDate), duration), 'DD/MM/YYYY (dddd)')
         : null
     return (
-      <article className={b()}>
+      <article className={b}>
         <form
           onSubmit={e => {
             e.preventDefault()
@@ -52,7 +56,7 @@ class RoleForm extends React.Component {
           <label>
             Circle :
             <select
-              className={b('long')}
+              className={b.e('long')}
               disabled={isCreation}
               defaultValue={circleId}
               name="circle_id"
@@ -69,9 +73,12 @@ class RoleForm extends React.Component {
           <label>
             Role type :
             <select
-              className={b('long')}
+              className={b.e('long')}
               defaultValue={role.role_type ? role.role_type : ''}
               name="role_type"
+              onChange={e => {
+                this.setState({ selectedRoleType: e.target.value })
+              }}
               required
             >
               <option value="" />
@@ -84,12 +91,28 @@ class RoleForm extends React.Component {
           </label>
           <label>
             Role name :
-            <input
-              name="role_name"
-              className={b('long')}
-              defaultValue={role.role_name ? role.role_name : ''}
-              required
-            />
+            {roleNameOptions.length > 0 ? (
+              <select
+                className={b.e('long')}
+                defaultValue={role.role_name ? role.role_name : ''}
+                name="role_name"
+                required
+              >
+                {roleNameOptions.length !== 1 && <option value="" />}
+                {roleNameOptions.map(roleName => (
+                  <option key={roleName} value={roleName}>
+                    {roleName}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                name="role_name"
+                className={b.e('long')}
+                defaultValue={role.role_name ? role.role_name : ''}
+                required
+              />
+            )}
           </label>
 
           {isCreation && (
@@ -97,7 +120,7 @@ class RoleForm extends React.Component {
               <label>
                 Role focus :
                 <input
-                  className={b('long')}
+                  className={b.e('long')}
                   defaultValue=""
                   name="focus_name"
                   onChange={e => {
@@ -108,7 +131,7 @@ class RoleForm extends React.Component {
               <label>
                 User :
                 <select
-                  className={b('long')}
+                  className={b.e('long')}
                   defaultValue=""
                   name="user_id"
                   onChange={e => {
@@ -124,10 +147,10 @@ class RoleForm extends React.Component {
                   ))}
                 </select>
               </label>
-              <span className={b('date')}>
+              <span className={b.e('date')}>
                 <label>
                   Duration (in days) :
-                  <span className={b('duration')}>
+                  <span className={b.e('duration')}>
                     <input
                       defaultValue={role.duration ? role.duration : ''}
                       disabled={this.state.user === ''}
@@ -142,7 +165,7 @@ class RoleForm extends React.Component {
                 </label>
                 <label>
                   Start date:
-                  <span className={b('duration')}>
+                  <span className={b.e('duration')}>
                     <input
                       defaultValue=""
                       disabled={this.state.user === ''}
@@ -152,7 +175,7 @@ class RoleForm extends React.Component {
                       }}
                       type="date"
                     />
-                    <span className={b('endDate')}>
+                    <span className={b.e('endDate')}>
                       {endDate && `until ${endDate}`}
                     </span>
                   </span>
@@ -164,7 +187,7 @@ class RoleForm extends React.Component {
             Purpose :
             <input
               name="role_purpose"
-              className={b('long')}
+              className={b.e('long')}
               defaultValue={role.role_purpose ? role.role_purpose : ''}
               required
             />

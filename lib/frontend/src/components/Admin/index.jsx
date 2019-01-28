@@ -1,10 +1,10 @@
 import './Admin.sass'
 
+import block from 'bemboo'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Route, Switch } from 'react-router-dom'
 
-import { block } from '../../utils'
 import AdminLabels from './AdminLabels'
 import AdminMenu from './AdminMenu'
 import NotFound from './../NotFound'
@@ -15,7 +15,7 @@ const b = block('Admin')
 
 export default function Admin() {
   return (
-    <section className={b()}>
+    <section className={b}>
       <Helmet>
         <title>Gibolt - Admin</title>
       </Helmet>

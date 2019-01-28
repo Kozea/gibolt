@@ -1,18 +1,18 @@
 import './BreadCrumbs.sass'
 
-import { stringify } from 'query-string'
+import block from 'bemboo'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import { block } from '../../utils'
+import { stringify } from '../../utils/querystring'
 
 const b = block('BreadCrumbs')
 
 export default function BreadCrumbs(props) {
   const { circle, role, focus } = props
   return (
-    <article className={b()}>
-      <span className={b('breadcrumbs')}>
+    <article className={b}>
+      <span className={b.e('breadcrumbs')}>
         {circle && (
           <span>
             {circle.circle_parent[0] && (

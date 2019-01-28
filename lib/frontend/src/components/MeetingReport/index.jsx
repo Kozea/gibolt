@@ -1,7 +1,7 @@
 import './MeetingReport.sass'
 
+import block from 'bemboo'
 import { format } from 'date-fns'
-import { parse } from 'query-string'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import ReactModal from 'react-modal'
@@ -20,7 +20,8 @@ import {
   submitOrUpdateReport,
   updateMeetingAttendees,
 } from '../../actions/meetings'
-import { block, connect } from '../../utils'
+import { connect } from '../../utils'
+import { parse } from '../../utils/querystring'
 import IssueCreationDetail from './../IssueCreationDetail'
 import Loading from './../Loading'
 import MarkdownEditor from './../Utils/MarkdownEditor'
@@ -29,14 +30,14 @@ import ReportAgenda from './ReportAgenda'
 import ReportItems from './ReportItems'
 import ReportProjects from './ReportProjects'
 
-const b = block('MeetingReport')
-var ReactMarkdown = require('react-markdown')
+const ReactMarkdown = require('react-markdown')
 
 function clearTimer(meetingReport) {
   meetingReport.setState({ timer: null })
 }
 
-class MeetingsReport extends React.Component {
+@block
+class MeetingReport extends React.Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
@@ -76,7 +77,7 @@ class MeetingsReport extends React.Component {
     }
   }
 
-  render() {
+  render(b) {
     const {
       circle,
       errors,
@@ -102,15 +103,15 @@ class MeetingsReport extends React.Component {
     const circleId = isCreation ? params.circle_id : meeting.circle_id
     const meetingType = isCreation ? params.meeting_name : meeting.report_type
     return (
-      <section className={b()}>
+      <section className={b}>
         <Helmet>
           <title>{`Gibolt - ${
             meeting.report_id ? 'Create a report' : 'Meeting'
           }`}</title>
         </Helmet>
         <ReactModal
-          className={b('modal')}
-          overlayClassName={b('modal-overlay')}
+          className={b.e('modal').toString()}
+          overlayClassName={b.e('modal-overlay').toString()}
           isOpen={!!modal.display}
           onRequestClose={() => onModalClose()}
           shouldCloseOnOverlayClick
@@ -121,19 +122,18 @@ class MeetingsReport extends React.Component {
           />
         </ReactModal>
         {loading !== 0 && <Loading />}
-        <article className={b('meetings')}>
+        <article className={b.e('meetings')}>
           <h2>{isCreation ? 'Create a report' : 'Meeting'}</h2>
           {errors.circle || errors.labels || errors.users ? (
-            <article className={b('group', { error: true })}>
+            <article className={b.e('group').m({ error: true })}>
               <h2>Error during fetch</h2>
               <code>
-                {Object.keys(errors).map(
-                  key =>
-                    errors[key] === null ? (
-                      ''
-                    ) : (
-                      <div>{`${key}: ${errors[key]} `}</div>
-                    )
+                {Object.keys(errors).map(key =>
+                  errors[key] === null ? (
+                    ''
+                  ) : (
+                    <div>{`${key}: ${errors[key]} `}</div>
+                  )
                 )}
               </code>
               <br />
@@ -141,35 +141,35 @@ class MeetingsReport extends React.Component {
           ) : (
             <span>
               {errors.meeting && (
-                <article className={b('group', { error: true })}>
+                <article className={b.e('group').m({ error: true })}>
                   <h3>Error during fetch</h3>
                   <code>{`Error: ${errors.meeting}`}</code>
                   <br />
                   <br />
                 </article>
               )}
-              <span className={b('head')}>
+              <span className={b.e('head')}>
                 {isCreation
                   ? circle
                     ? circle.circle_name
                     : ''
                   : meeting.circle && meeting.circle.length > 0
-                    ? meeting.circle[0].circle_name
-                    : ''}{' '}
+                  ? meeting.circle[0].circle_name
+                  : ''}{' '}
                 - {meetingType}
                 {!meeting.is_submitted &&
                   meeting.attendees.length > 0 &&
                   ' (DRAFT)'}
                 {meeting.report_id && ` - #${meeting.report_id}`}
               </span>
-              <div className={b('meetingInfos')}>
+              <div className={b.e('meetingInfos')}>
                 {meeting.report_id && (
                   <span>
                     created by:{' '}
                     {users
                       .filter(user => user.user_id === meeting.author_id)
                       .map(user => user.user_name)}{' '}
-                    <span className={b('date')}>
+                    <span className={b.e('date')}>
                       <i className="fa fa-clock-o" aria-hidden="true" />
                       {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
                     </span>
@@ -179,7 +179,7 @@ class MeetingsReport extends React.Component {
                           ' (Old version, not editable)'
                         ) : (
                           <span
-                            className={b('unlink')}
+                            className={b.e('unlink')}
                             title="Edit report"
                             onClick={() => onEditClick()}
                           >
@@ -193,11 +193,12 @@ class MeetingsReport extends React.Component {
                     )}
                     {meeting.modified_at && (
                       <span>
-                        <br />modified by:{' '}
+                        <br />
+                        modified by:{' '}
                         {users
                           .filter(user => user.user_id === meeting.modified_by)
                           .map(user => user.user_name)}{' '}
-                        <span className={b('date')}>
+                        <span className={b.e('date')}>
                           <i className="fa fa-clock-o" aria-hidden="true" />
                           {format(
                             new Date(meeting.modified_at),
@@ -209,13 +210,13 @@ class MeetingsReport extends React.Component {
                   </span>
                 )}
               </div>
-              <div className={b('content')}>
+              <div className={b.e('content')}>
                 {!oldReport && (
                   <span>
                     <span>
                       <h3>Presents:</h3>
                       {attendees.length > 0 ? (
-                        <ul className={b('attendees')}>
+                        <ul className={b.e('attendees')}>
                           {attendees.map(user => (
                             <li key={user.user_name}>
                               <label>
@@ -282,10 +283,10 @@ class MeetingsReport extends React.Component {
                   </span>
                 )}
                 <h3>Report content:</h3>
-                <div className={b('reportContent')}>
+                <div className={b.e('reportContent')}>
                   {isEditionDisabled ? (
                     <ReactMarkdown
-                      className={`${b('markdownContent').toString()}${
+                      className={`${b.e('markdownContent')}${
                         isEditionDisabled ? '__disabled' : ''
                       }`}
                       source={meeting.content === '' ? 'RAS' : meeting.content}
@@ -300,7 +301,7 @@ class MeetingsReport extends React.Component {
                 </div>
               </div>
               {isEditionDisabled ? (
-                <article className={b('action')}>
+                <article className={b.e('action')}>
                   <button
                     type="submit"
                     onClick={() => onGoBack(circleId, history)}
@@ -309,7 +310,7 @@ class MeetingsReport extends React.Component {
                   </button>
                 </article>
               ) : (
-                <article className={b('action')}>
+                <article className={b.e('action')}>
                   <button
                     type="submit"
                     disabled={attendees.length === 0}
@@ -424,5 +425,5 @@ export default withRouter(
         })
       },
     })
-  )(MeetingsReport)
+  )(MeetingReport)
 )

@@ -1,16 +1,17 @@
 import './IssuesState.sass'
 
-import { parse } from 'query-string'
+import block from 'bemboo'
 import React from 'react'
 
-import { block, connect, issuesStateFromState } from '../utils'
+import { connect, issuesStateFromState } from '../utils'
+import { parse } from '../utils/querystring'
 import StatusItem from './StatusItem'
 
 const b = block('IssuesState')
 
 function IssuesState({ issuesState, query }) {
   return (
-    <ul className={b()}>
+    <ul className={b}>
       <StatusItem
         action="open"
         type="state"
