@@ -110,7 +110,9 @@ class Timeline extends React.Component {
                 {format(month, 'MMMM YYYY')} <sup>({milestones.length})</sup>
               </h2>
               <ul>
-                {milestones.map(milestone => (
+                {milestones
+                 .sort((a, b) => a.due_on > b.due_on)
+                 .map(milestone => (
                   <Milestone
                     key={milestone.id}
                     milestone_id={milestone.id}
