@@ -1,12 +1,12 @@
-import pkg_resources
-from flask import Flask
-from flask_github import GitHub
 import os
-import requests
 from urllib.parse import urlparse
 
+import pkg_resources
+import requests
 from cachecontrol import CacheControlAdapter
 from cachecontrol.caches.file_cache import FileCache
+from flask import Flask
+from flask_github import GitHub
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
