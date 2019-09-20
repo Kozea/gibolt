@@ -23,7 +23,7 @@ stages:
       - .venv/
 
 
-image: paradoxxxzero/python-node-yarn-postgresql:latest
+image: kozea/python-node-yarn-postgresql:latest
 
 install_latest:
   stage: install
@@ -57,7 +57,7 @@ test_latest:
 
 
 .image: &image_deploy_jobs
-  image: grewn0uille/deploy-tools:latest
+  image: kozea/deploy-tools:latest
 
 deploy_test:
   <<: *image_deploy_jobs
