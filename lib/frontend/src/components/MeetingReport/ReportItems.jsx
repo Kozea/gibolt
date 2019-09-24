@@ -143,7 +143,7 @@ function ReportItems(props) {
                       <br />
                       {`${format(
                         new Date(meetings[1].created_at),
-                        'DD/MM/YYYY'
+                        'dd/MM/yyyy'
                       )}`}
                     </span>
                   ) : (
@@ -163,7 +163,7 @@ function ReportItems(props) {
                       <br />
                       {`${format(
                         new Date(meetings[0].created_at),
-                        'DD/MM/YYYY'
+                        'dd/MM/yyyy'
                       )}`}
                     </span>
                   ) : (
@@ -177,13 +177,13 @@ function ReportItems(props) {
                       <br />
                       {`${format(
                         new Date(currentMeeting.created_at),
-                        'DD/MM/YYYY'
+                        'dd/MM/yyyy'
                       )}`}
                     </>
                   ) : (
                     <>
                       <br />
-                      {`${format(new Date(), 'DD/MM/YYYY')}`}
+                      {`${format(new Date(), 'dd/MM/yyyy')}`}
                     </>
                   )}
                 </th>

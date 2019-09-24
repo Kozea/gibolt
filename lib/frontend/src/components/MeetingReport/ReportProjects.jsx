@@ -84,12 +84,12 @@ function ReportProjects(props) {
                                 closed:{' '}
                                 {format(
                                   new Date(issue.closed_at),
-                                  'DD/MM/YYYY HH:mm'
+                                  'dd/MM/yyyy HH:mm'
                                 )}
                                 , last update:{' '}
                                 {format(
                                   new Date(issue.updated_at),
-                                  'DD/MM/YYYY HH:mm'
+                                  'dd/MM/yyyy HH:mm'
                                 )}
                               </span>
                               {issue.assignees.map(user => (

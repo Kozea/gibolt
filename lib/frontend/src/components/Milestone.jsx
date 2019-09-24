@@ -27,7 +27,7 @@ function Milestone(props) {
     <li className={b.m({ status: props.state })}>
       <span className={b.e('day')}>
         {props.due_on
-          ? format(new Date(props.due_on), 'DD/MM/YYYY')
+          ? format(new Date(props.due_on), 'dd/MM/yyyy')
           : 'no due date'}
       </span>
       <span className={b.e('repo')}>{props.repo}</span>

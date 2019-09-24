@@ -142,7 +142,7 @@ class IssueDetail extends React.Component {
           <span className={b.e('infos')}>
             <IssueStatusIcon issue={issue} />
             {issue.user.user_name} opened this issue, last update:{' '}
-            {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm:ss')}
+            {format(new Date(issue.updated_at), 'dd/MM/yyyy HH:mm:ss')}
             {` · ${issue.nb_comments} comment${
               issue.nb_comments === 1 ? '' : 's'
             }`}
@@ -288,7 +288,7 @@ class IssueDetail extends React.Component {
                       last update:{' '}
                       {format(
                         new Date(comment.updated_at),
-                        'DD/MM/YYYY HH:mm:ss'
+                        'dd/MM/yyyy HH:mm:ss'
                       )}
                       <span
                         onClick={() => {

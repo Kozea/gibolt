@@ -11,11 +11,10 @@ export default function Html({
 }) {
   // Normalize
   scripts = scripts.map(s => (typeof s === 'object' ? s : { src: s }))
-  links = links.map(
-    l =>
-      typeof l === 'object'
-        ? { rel: 'stylesheet', ...l }
-        : { rel: 'stylesheet', href: l }
+  links = links.map(l =>
+    typeof l === 'object'
+      ? { rel: 'stylesheet', ...l }
+      : { rel: 'stylesheet', href: l }
   )
 
   return (
@@ -32,7 +31,9 @@ export default function Html({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {helmet.meta.toComponent()}
         {helmet.base.toString() ? helmet.base.toComponent() : <base href="/" />}
-        {links.map(attrs => <link key={attrs.href} {...attrs} />)}
+        {links.map(attrs => (
+          <link key={attrs.href} {...attrs} />
+        ))}
         {helmet.link.toComponent()}
         {helmet.style.toComponent()}
         {helmet.script.toComponent()}
@@ -58,7 +59,9 @@ export default function Html({
             }}
           />
         )}
-        {scripts.map(attrs => <script key={attrs.src} {...attrs} />)}
+        {scripts.map(attrs => (
+          <script key={attrs.src} {...attrs} />
+        ))}
         {extraScript && (
           <script
             // eslint-disable-next-line react/no-danger

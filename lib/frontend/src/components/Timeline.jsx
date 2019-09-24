@@ -1,7 +1,7 @@
 import './Timeline.sass'
 
 import block from 'bemboo'
-import { format, startOfMonth } from 'date-fns'
+import { format, startOfMonth, parseISO } from 'date-fns'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import { push } from 'connected-react-router'
@@ -43,8 +43,8 @@ class Timeline extends React.Component {
           return months
         }
         if (milestone.due_on) {
-          month = startOfMonth(milestone.due_on)
-          monthStr = format(month, 'YYYY-MM')
+          month = startOfMonth(parseISO(milestone.due_on))
+          monthStr = format(month, 'yyyy-MM')
           if (months[monthStr] === void 0) {
             months[monthStr] = {
               month: month,
@@ -107,29 +107,29 @@ class Timeline extends React.Component {
           .map(({ id, month, milestones }) => (
             <article key={id} className={b.e('date')}>
               <h2>
-                {format(month, 'MMMM YYYY')} <sup>({milestones.length})</sup>
+                {format(month, 'MMMM yyyy')} <sup>({milestones.length})</sup>
               </h2>
               <ul>
                 {milestones
-                 .sort((a, b) => a.due_on > b.due_on)
-                 .map(milestone => (
-                  <Milestone
-                    key={milestone.id}
-                    milestone_id={milestone.id}
-                    milestone_number={milestone.number}
-                    state={milestone.state}
-                    due_on={milestone.due_on}
-                    repo={milestone.repo}
-                    html_url={milestone.html_url}
-                    title={milestone.title}
-                    open_issues={milestone.open_issues}
-                    closed_issues={milestone.closed_issues}
-                    is_in_edition={milestone.is_in_edition}
-                    assoc_circles={milestone.circles}
-                    circles={circles}
-                    labels={labels}
-                  />
-                ))}
+                  .sort((a, b) => a.due_on > b.due_on)
+                  .map(milestone => (
+                    <Milestone
+                      key={milestone.id}
+                      milestone_id={milestone.id}
+                      milestone_number={milestone.number}
+                      state={milestone.state}
+                      due_on={milestone.due_on}
+                      repo={milestone.repo}
+                      html_url={milestone.html_url}
+                      title={milestone.title}
+                      open_issues={milestone.open_issues}
+                      closed_issues={milestone.closed_issues}
+                      is_in_edition={milestone.is_in_edition}
+                      assoc_circles={milestone.circles}
+                      circles={circles}
+                      labels={labels}
+                    />
+                  ))}
               </ul>
             </article>
           ))}

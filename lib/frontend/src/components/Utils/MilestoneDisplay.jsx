@@ -47,7 +47,7 @@ function MilestoneDisplay(props) {
       <span className={b.e('due-date')}>
         {' ('}
         {milestone.due_on
-          ? `due on: ${format(new Date(milestone.due_on), 'DD/MM/YYYY')}`
+          ? `due on: ${format(new Date(milestone.due_on), 'dd/MM/yyyy')}`
           : 'no due date'}
         {')'}
       </span>

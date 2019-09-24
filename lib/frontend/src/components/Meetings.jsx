@@ -147,7 +147,7 @@ class Meetings extends React.Component {
                     }}
                   >
                     <span className={b.e('unlink')}>
-                      {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
+                      {format(new Date(meeting.created_at), 'dd/MM/yyyy HH:mm')}
                       {' - '}
                       {meeting.circle[0].circle_name} -{' '}
                     </span>

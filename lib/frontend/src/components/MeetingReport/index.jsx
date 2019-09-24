@@ -171,7 +171,7 @@ class MeetingReport extends React.Component {
                       .map(user => user.user_name)}{' '}
                     <span className={b.e('date')}>
                       <i className="fa fa-clock-o" aria-hidden="true" />
-                      {format(new Date(meeting.created_at), 'DD/MM/YYYY HH:mm')}
+                      {format(new Date(meeting.created_at), 'dd/MM/yyyy HH:mm')}
                     </span>
                     {!isCreation && (
                       <span>
@@ -202,7 +202,7 @@ class MeetingReport extends React.Component {
                           <i className="fa fa-clock-o" aria-hidden="true" />
                           {format(
                             new Date(meeting.modified_at),
-                            'DD/MM/YYYY HH:mm'
+                            'dd/MM/yyyy HH:mm'
                           )}
                         </span>
                       </span>

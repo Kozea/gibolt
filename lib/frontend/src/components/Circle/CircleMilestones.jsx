@@ -15,8 +15,8 @@ const sortMilestones = milestones => {
       ? 1
       : `${b.milestone.repo.toLowerCase()}-${b.milestone.due_on}` >
         `${a.milestone.repo.toLowerCase()}-${a.milestone.due_on}`
-        ? -1
-        : 0
+      ? -1
+      : 0
   })
   return milestones
 }

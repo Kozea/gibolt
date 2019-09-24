@@ -43,7 +43,7 @@ class RoleForm extends React.Component {
       : []
     const endDate =
       duration > 0 && startDate
-        ? format(addDays(new Date(startDate), duration), 'DD/MM/YYYY (dddd)')
+        ? format(addDays(new Date(startDate), duration), 'dd/MM/yyyy (EEEE)')
         : null
     return (
       <article className={b}>

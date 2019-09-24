@@ -42,7 +42,7 @@ class RoleFocusForm extends React.Component {
       : roleFocus.role_focus_users[0].start_date
     const endDate =
       duration > 0 && startDate
-        ? format(addDays(new Date(startDate), duration), 'DD/MM/YYYY (dddd)')
+        ? format(addDays(new Date(startDate), duration), 'dd/MM/yyyy (EEEE)')
         : null
     return (
       <article className={b}>
@@ -120,7 +120,7 @@ class RoleFocusForm extends React.Component {
               <input
                 defaultValue={
                   roleFocusUser.start_date
-                    ? format(new Date(roleFocusUser.start_date), 'YYYY-MM-DD')
+                    ? format(new Date(roleFocusUser.start_date), 'yyyy-MM-dd')
                     : ''
                 }
                 name="start_date"
@@ -137,7 +137,7 @@ class RoleFocusForm extends React.Component {
               <input
                 defaultValue={
                   roleFocusUser.end_date
-                    ? format(new Date(roleFocusUser.end_date), 'YYYY-MM-DD')
+                    ? format(new Date(roleFocusUser.end_date), 'yyyy-MM-dd')
                     : ''
                 }
                 name="end_date"

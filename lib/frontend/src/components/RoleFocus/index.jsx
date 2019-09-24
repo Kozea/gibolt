@@ -139,20 +139,20 @@ class RoleFocus extends React.Component {
                   <p>
                     <span className={b.e('focusLabel')}>From: </span>
                     {focusUser.start_date
-                      ? format(new Date(focusUser.start_date), 'DD/MM/YYYY')
+                      ? format(new Date(focusUser.start_date), 'dd/MM/yyyy')
                       : 'No start date defined'}
                   </p>
                   <p>
                     <span className={b.e('focusLabel')}>Until: </span>
                     {focusUser.end_date
-                      ? format(new Date(focusUser.end_date), 'DD/MM/YYYY')
+                      ? format(new Date(focusUser.end_date), 'dd/MM/yyyy')
                       : focusUser.start_date && roleFocus.duration
                       ? `${format(
                           addDays(
                             new Date(focusUser.start_date),
                             roleFocus.duration
                           ),
-                          'DD/MM/YYYY'
+                          'dd/MM/yyyy'
                         )}  (calculated)`
                       : '∞'}
                     <RoleFocusEndDate

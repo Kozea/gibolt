@@ -31,12 +31,12 @@ function ReportAgenda(props) {
                 {issue.closed_at && (
                   <span>
                     closed:{' '}
-                    {format(new Date(issue.closed_at), 'DD/MM/YYYY HH:mm')}
+                    {format(new Date(issue.closed_at), 'dd/MM/yyyy HH:mm')}
                     {', '}
                   </span>
                 )}
                 last update:{' '}
-                {format(new Date(issue.updated_at), 'DD/MM/YYYY HH:mm')}
+                {format(new Date(issue.updated_at), 'dd/MM/yyyy HH:mm')}
               </span>
               {issue.assignees.map(user => (
                 <img

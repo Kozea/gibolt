@@ -20,7 +20,7 @@ export default function RoleFocusEndDate(props) {
     <span className={b}>
       {endDate && (
         <span className={b.e('lighter')}>
-          {displayDate && `until: ${format(endDate, 'DD/MM/YYYY')}`}
+          {displayDate && `until: ${format(endDate, 'dd/MM/yyyy')}`}
           {distance < 0 ? (
             <span className={b.e('inactive')}>{' (this focus expired)'}</span>
           ) : distance < daysBeforeExpiration ? (
