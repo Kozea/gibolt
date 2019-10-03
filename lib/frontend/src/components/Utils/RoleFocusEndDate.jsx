@@ -11,7 +11,7 @@ const b = block('RoleFocusEndDate')
 export default function RoleFocusEndDate(props) {
   const { displayDate, duration, focusUser } = props
   const endDate = focusUser.end_date
-    ? focusUser.end_date
+    ? new Date(focusUser.end_date)
     : duration && focusUser.start_date
     ? addDays(new Date(focusUser.start_date), duration)
     : null

@@ -171,7 +171,9 @@ export default withRouter(
         const formRoleFocusUser = [].slice.call(e.target.elements).reduce(
           function(map, obj) {
             if (obj.name === 'start_date' || obj.name === 'end_date') {
-              map[obj.name] = obj.value ? format(new Date(obj.value)) : null
+              map[obj.name] = obj.value
+                ? format(new Date(obj.value), 'yyyy-MM-dd')
+                : null
             } else if (obj.name === 'focus_name' || obj.name === 'role_id') {
               formRoleFocus[obj.name] = obj.value
             } else if (obj.name === 'duration') {
