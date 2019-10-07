@@ -26,7 +26,7 @@ export default function RoleFocusUsersList(props) {
                 )}{' '}
                 {` ${user.user_name} (${
                   user.start_date
-                    ? `from ${format(user.start_date, 'dd/MM/yyyy')} `
+                    ? `from ${format(new Date(user.start_date), 'dd/MM/yyyy')} `
                     : ''
                 }until ${format(new Date(user.end_date), 'dd/MM/yyyy')})`}
               </li>
