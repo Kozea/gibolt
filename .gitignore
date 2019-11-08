@@ -22,3 +22,4 @@ database.db
 .pytest_cache/
 .venv/
 .idea/
+.vscode/
