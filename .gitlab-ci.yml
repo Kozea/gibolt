@@ -15,7 +15,7 @@ stages:
 .artifacts: &artifacts
   artifacts:
     paths:
-      - .env/
+      - .venv/
 
 install:
   <<: *artifacts
