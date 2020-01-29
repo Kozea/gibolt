@@ -1,0 +1,56 @@
+{% extends '_layout.jinja2' %}
+
+{% block title %}Réunion de {{ report.report_type | lower }} − {{ super() }}{% endblock title %}
+
+{% block content %}
+  <h2>Réunion de {{ report.report_type | lower }}</h2>
+
+  <aside>
+    <p>Créé par {{ session.users.get(report.author_id | string).login }} le {{ report.created_at.strftime('%d %B %Y') }}.</p>
+  </aside>
+
+  <form method="post">
+    <article>
+      <h3>Présents</h3>
+      {% for attendee in report.attendees %}
+        <label>
+          <input type="checkbox" name="attendee-{{ attendee.report_id }}-{{ attendee.user_id }}" {{ 'checked' if attendee.checked }} />
+          {{ attendee.user.login or attendee.user.user_name or '<em>Inconnu</em>' }}
+        </label>
+      {% endfor %}
+    </article>
+
+    {% if report.report_type == 'Triage' %}
+      <article>
+        <h3>Action récurrentes</h3>
+        {% for action in report.actions %}
+          <label>
+            <input type="checkbox" name="action-{{ action.report_id }}-{{ action.item_id }}" {{ 'checked' if action.checked }} />
+            {{ action.content }}
+          </label>
+        {% endfor %}
+      </article>
+
+      <article>
+        <h3>Indicateurs</h3>
+        {% for indicator in report.indicators %}
+          <label>
+            {{ indicator.content }}
+            <input type="number" step="0.01" name="indicator-{{ indicator.report_id }}-{{ indicator.item_id }}" value="{{ (indicator.value | indicator) or '' }}" />
+          </label>
+        {% endfor %}
+      </article>
+
+      <article>
+        <h3>Projets</h3>
+        {{ display_milestones(report.projects | map(attribute='milestone'), report=report) }}
+      </article>
+    {% endif %}
+
+    <article>
+      <h3>Ordre du jour</h3>
+      <textarea name="content">{{ report.content or '' }}</textarea>
+      <input type="submit" />
+    </article>
+  </form>
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends '_layout.jinja2' %}
+
+{% block title %}Étapes − {{ super() }}{% endblock title %}
+
+{% block content %}
+  <h2>Étapes</h2>
+
+  {% for month_string, month_milestones in milestones | selectattr('due_on') | groupby('due_on_month') %}
+    <article>
+      <h3>{{ month_string | month | title }}</h3>
+      {{ display_milestones(month_milestones, circles) }}
+    </article>
+  {% endfor %}
+{% endblock content %}

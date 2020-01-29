@@ -1,0 +1,177 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700&display=swap");
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: Lato, sans;
+  margin: 0;
+  min-height: 100vh; }
+
+h1 {
+  color: white;
+  font-family: Montserrat, sans;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 3rem;
+  margin: 0 1em;
+  position: absolute; }
+
+h2 {
+  margin: 2rem 1rem; }
+
+[class^="circle-"] {
+  border-left: 0.5em solid;
+  padding-left: 0.5em; }
+
+a {
+  color: #2c3249; }
+
+time {
+  background: #888;
+  border-radius: 0.5em;
+  color: white;
+  float: right;
+  font-size: 0.7em;
+  padding: 0.25em 0.5em; }
+
+progress {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  display: block;
+  height: 3px;
+  margin-top: 0.25em;
+  width: 100%; }
+
+aside {
+  padding: 0 1em; }
+
+nav {
+  background: #2c3249; }
+  nav ul {
+    display: flex;
+    justify-content: flex-end;
+    list-style: none;
+    margin: 0;
+    min-height: 3rem;
+    padding: 0;
+    text-transform: uppercase; }
+    nav ul li.active a {
+      background-color: #6fa1fe; }
+    nav ul a {
+      color: white;
+      display: block;
+      font-weight: bold;
+      padding: 1em;
+      text-decoration: inherit;
+      transition: 0.3s background-color; }
+      nav ul a:hover, nav ul a:focus {
+        background-color: #6fa1fe; }
+
+main {
+  background: #f0f5f9;
+  flex: 1; }
+  main article {
+    margin: 2em 1em; }
+    main article label {
+      display: block;
+      padding: 0.25em; }
+    main article textarea, main article input:not([type="checkbox"]) {
+      border: 1px solid #888;
+      box-sizing: border-box;
+      display: block;
+      padding: 0.2em;
+      width: 100%; }
+    main article input[type="color"] {
+      height: 2em;
+      padding: 0;
+      width: 3em; }
+    main article textarea {
+      height: 8em; }
+    main article section {
+      background: white;
+      border: 1px solid #dee9f2;
+      margin: 0.5em;
+      padding: 1em; }
+      main article section a {
+        text-decoration: inherit; }
+        main article section a:hover, main article section a:focus {
+          text-decoration: underline; }
+      main article section.open {
+        border-left: 3px solid #0fbb0f; }
+      main article section.closed {
+        border-left: 3px solid #f54e40; }
+
+.circles {
+  font-size: 0.7em;
+  line-height: 2.5em;
+  min-height: 2.5em; }
+  .circles input, .circles label {
+    display: initial; }
+  .circles input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #888;
+    border-radius: 1em;
+    display: inline-block;
+    height: 0.8em;
+    margin: 0.6em 0 0 0.4em;
+    position: absolute;
+    width: 0.8em;
+    z-index: 1; }
+    .circles input:checked {
+      background-color: #6fa1fe; }
+  .circles:not(:hover) input, .circles:not(:hover) input:not(:checked) + label {
+    display: none; }
+  .circles:not(:hover) label {
+    margin-left: 0;
+    padding-left: 0.5em; }
+  .circles label {
+    border-radius: 0.2em;
+    border-style: solid;
+    border-width: 1px;
+    padding: 0.25em 0.5em 0.25em 1.75em; }
+
+.avatar {
+  border-radius: .25em;
+  display: inline-block;
+  margin-right: 0.5em;
+  width: 2em; }
+
+.role {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap; }
+  .role ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    width: 100%; }
+    .role ul li {
+      align-items: center;
+      display: flex;
+      margin: 1em 1em 0 0; }
+
+.links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  .links a {
+    margin-right: 1em; }
+  .links input:not([type="checkbox"]) {
+    background: transparent;
+    border: 0;
+    color: #2c3249;
+    cursor: pointer;
+    display: inline;
+    font-size: 1em;
+    margin: 0 1em 0 0;
+    text-decoration: underline;
+    padding: 0; }
+
+.focus {
+  display: flex; }
+
+/*# sourceMappingURL=style.css.map */

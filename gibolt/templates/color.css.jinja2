@@ -1,0 +1,3 @@
+{% for circle in circles %}
+  .circle-{{ circle.circle_id }} { border-color: {{ circle.label.color }} }
+{% endfor %}

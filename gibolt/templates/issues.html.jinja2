@@ -1,0 +1,22 @@
+{% extends '_layout.jinja2' %}
+
+{% block title %}Tickets − {{ super() }}{% endblock title %}
+
+{% block content %}
+  <h2>Tickets</h2>
+
+  {% for repository_name, repository_issues in issues | groupby('repository.name') %}
+    <article>
+      <h3>{{ repository_name }}</h3>
+      {% for issue in repository_issues %}
+        <section>
+          <a href="{{ issue.html_url }}">{{ issue.title }}</a>
+        </section>
+      {% endfor %}
+    </article>
+  {% else %}
+    <article>
+      <p>Pas de ticket</p>
+    </article>
+  {% endfor %}
+{% endblock content %}

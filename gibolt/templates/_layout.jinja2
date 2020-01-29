@@ -1,0 +1,64 @@
+{% macro display_milestones(milestones, circles=None, report=None) %}
+  {% for milestone in milestones | selectattr('due_on') | sort(attribute='due_on') %}
+    {% set percentage = milestone.open_issues / ((milestone.open_issues + milestone.closed_issues) or 1) %}
+    <section class="{{ milestone.state }}">
+      <time datetime="{{ milestone.due_on }}">{{ milestone.due_on | day }}</time>
+      <a href="{{ milestone.html_url }}">{{ milestone.repository_name or milestone.repo }} − {{ milestone.title }}</a>
+      {% if circles %}
+        <form class="circles">
+          {% for circle in circles %}
+            <input
+              name="circle-{{ circle.circle_id }}"
+              id="circle-{{ circle.circle_id }}"
+              onchange="
+                var xhttp = new XMLHttpRequest();
+                xhttp.open('POST', '{{ url_for('set_milestone_circle', milestone_number=milestone.number, repository_name=milestone.repository_name) }}');
+                xhttp.setRequestHeader('Content-type', 'application/json');
+                xhttp.send(JSON.stringify({ {{ circle.circle_id }}: this.checked }));
+              "
+              type="checkbox" {{ 'checked' if circle.circle_id in (milestone.circles | map(attribute='circle_id')) }}
+              />
+            <label class="circle-{{ circle.circle_id }}" for="circle-{{ circle.circle_id }}">{{ circle.circle_name }}</label>
+          {% endfor %}
+        </form>
+      {% endif %}
+      <progress value="{{ percentage }}" title="{{ milestone.open_issues }} / {{ milestone.open_issues + milestone.closed_issues }} ({{ (percentage * 100) | int }} %)">{{ (percentage * 100) | int }} %</progress>
+      {% if report %}
+        {% set report_milestones = (report.projects | selectattr('milestone_number', 'eq', milestone.number) | list) %}
+        <input name="milestone-{{ report.report_id }}-{{ milestone.number }}-{{ milestone.repository_name or milestone.repo }}" value="{{ report_milestones[0].milestone.comment if report_milestones else '' }}" />
+      {% endif %}
+    </section>
+  {% else %}
+    <section>
+      <p>Pas d’étape</p>
+    </section>
+  {% endfor %}
+{% endmacro -%}
+
+<!DOCTYPE html>
+<html id="page-{{ request.endpoint.replace('_', '-') if request.endpoint else 'error' }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Kozea" />
+    <title>{% block title %}Gibolt{% endblock title %}</title>
+    <link type="image/png" rel="icon" href="{{ url_for('static', filename='images/favicon.png') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('color_css') }}" />
+  </head>
+
+  <body>
+    <h1>Gibolt</h1>
+
+    <nav>
+      <ul>
+        <li class="{{ 'active' if request.endpoint.startswith('issue') }}"><a href="{{ url_for('issues') }}">Tickets</a></li>
+        <li class="{{ 'active' if request.endpoint.startswith('milestone') }}"><a href="{{ url_for('milestones') }}">Étapes</a></li>
+        <li class="{{ 'active' if request.endpoint.startswith('circle') }}"><a href="{{ url_for('circles') }}">Cercles</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      {% block content %}{% endblock content %}
+    </main>
+  </body>
+</html>

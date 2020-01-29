@@ -1,0 +1,63 @@
+{% extends '_layout.jinja2' %}
+
+{% block title %}Role {{ role.role_name }} − {{ super() }}{% endblock title %}
+
+{% block content %}
+  <h2>{{ role.role_name }}</h2>
+
+  <article>
+    <h3>Raison d’être</h3>
+    {{ role.role_purpose | markdown }}
+  </article>
+
+  <article>
+    <h3>Domaines</h3>
+    {{ role.role_domain | markdown }}
+  </article>
+
+  <article>
+    <h3>Redevabilités</h3>
+    {{ role.role_accountabilities | markdown }}
+  </article>
+
+  <article>
+    <h3>Focus</h3>
+    <form method="post">
+      {% if role.role_type == 'elected' %}
+        {% set focus = role.role_focuses[-1] %}
+        {% for focus_user in focus.role_focus_users %}
+          <section class="focus">
+            <label>
+              Du <input type="date" name="start-{{ focus_user.role_focus_user_id }}" value="{{ focus_user.start_date.strftime('%Y-%m-%d') if focus_user.start_date }}" />
+            </label>
+            <label>
+              au <input type="date" name="end-{{ focus_user.role_focus_user_id }}" value="{{ focus_user.end_date.strftime('%Y-%m-%d') if focus_user.end_date }}" />
+            </label>
+            <select name="user-{{ focus_user.role_focus_user_id }}">
+              <option></option>
+              {% for id, user in session.users.items() %}
+                <option value="{{ user.login }}" {{ 'selected' if focus_user.user_id == (id | int) }}>{{ user.login }}</option>
+              {% endfor %}
+            </select>
+            <button name="delete" value="{{ focus_user.role_focus_user_id }}">Supprimer</button>
+          </section>
+        {% endfor %}
+      {% else %}
+        {% for focus in role.role_focuses %}
+          <section class="focus">
+            <input type="{{ 'hidden' if (loop.first and loop.last) else 'text' }}" name="name-{{ focus.role_focus_id }}" value="{{ focus.focus_name if not (loop.first and loop.last) else '' }}" />
+            <select name="user-{{ focus.role_focus_id }}">
+              <option></option>
+              {% for id, user in session.users.items() %}
+                <option value="{{ user.login }}" {{ 'selected' if focus.latest_user.user_id == (id | int) }}>{{ user.login }}</option>
+              {% endfor %}
+            </select>
+            <button name="delete" value="{{ focus.role_focus_id }}">Supprimer</button>
+          </section>
+        {% endfor %}
+      {% endif %}
+      <button name="add">Ajouter</button>
+      <input type="submit" />
+    </form>
+  </article>
+{% endblock content %}

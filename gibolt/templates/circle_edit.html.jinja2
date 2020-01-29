@@ -1,0 +1,33 @@
+{% extends '_layout.jinja2' %}
+
+{% block title %}Cercle {{ circle.circle_name }} − {{ super() }}{% endblock title %}
+
+{% block content %}
+  <h2 class="circle-{{ circle.circle_id }}">{{ circle.circle_name }}</h2>
+
+  <article>
+    <form method="post">
+      <label>
+        Nom
+        <input name="circle_name" value="{{ circle.circle_name }}" />
+      </label>
+      <label>
+        Raison d’être
+        <textarea name="circle_purpose">{{ circle.circle_purpose }}</textarea>
+      </label>
+      <label>
+        Domaines
+        <textarea name="circle_domain">{{ circle.circle_domain }}</textarea>
+      </label>
+      <label>
+        Redevabilités
+        <textarea name="circle_accountabilities">{{ circle.circle_accountabilities }}</textarea>
+      </label>
+      <label>
+        Couleur
+        <input name="color" type="color" value="{{ circle.label.color }}" />
+      </label>
+      <input type="submit" />
+    </form>
+  </article>
+{% endblock content %}
