@@ -2,7 +2,6 @@ include:
   - remote: 'https://gitlab.com/Kozea/ci-master/raw/master/.variables-images.yml'
   - remote: 'https://gitlab.com/Kozea/ci-master/raw/master/.ci-install.yml'
   - remote: 'https://gitlab.com/Kozea/ci-master/raw/master/.ci-lint.yml'
-  - remote: 'https://gitlab.com/Kozea/ci-master/raw/master/.ci-test.yml'
   - remote: 'https://gitlab.com/Kozea/ci-master/raw/master/.ci-deploy-test.yml'
   - remote: 'https://gitlab.com/Kozea/ci-master/raw/master/.ci-deploy-prod.yml'
   
