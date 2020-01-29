@@ -12,6 +12,7 @@ VENV = $(PWD)/.venv
 PYTEST = $(VENV)/bin/pytest
 export PIPENV_VENV_IN_PROJECT = 1
 
-URL_PROD = https://gibolt.kozea.fr
+URL_PROD = https://gibolt.kozea.fr/color.css
+URL_PROD_API = https://gibolt.kozea.fr/color.css
 URL_TEST = $(URL_PROD)/color.css
 URL_TEST_API = $(URL_PROD)/color.css
