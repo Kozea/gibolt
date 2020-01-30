@@ -12,7 +12,7 @@ VENV = $(PWD)/.venv
 PYTEST = $(VENV)/bin/pytest
 export PIPENV_VENV_IN_PROJECT = 1
 
-URL_PROD = $URL_PROD/color.css
+URL_PROD := $(URL_PROD)/color.css
 URL_PROD_API = $(URL_PROD)
-URL_TEST = $URL_TEST/color.css
+URL_TEST := $(URL_TEST)/color.css
 URL_TEST_API = $(URL_TEST)
