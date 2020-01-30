@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700&display=swap");
 body {
+  color: black;
   display: flex;
   flex-direction: column;
   font-family: Lato, sans;
