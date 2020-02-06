@@ -186,7 +186,10 @@ class RoleFocus(Base):
         for user in users:
             if user.end_date is None:
                 return user
-        return user if users else None
+            else:
+                start, end = user.start_date.date(), user.end_date.date()
+                if start <= datetime.date.today() <= end:
+                    return user
 
 
 class RoleFocusUser(Base):
