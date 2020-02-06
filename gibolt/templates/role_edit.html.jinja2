@@ -8,16 +8,20 @@
   <article>
     <form method="post">
       <label>
+        Nom
+        <input name="role_name" value="{{ role.role_name }}" />
+      </label>
+      <label>
         Raison d’être
-        <textarea name="role_purpose">{{ role.role_purpose }}</textarea>
+        <textarea name="role_purpose">{{ role.role_purpose or '' }}</textarea>
       </label>
       <label>
         Domaines
-        <textarea name="role_domain">{{ role.role_domain }}</textarea>
+        <textarea name="role_domain">{{ role.role_domain or '' }}</textarea>
       </label>
       <label>
         Redevabilités
-        <textarea name="role_accountabilities">{{ role.role_accountabilities }}</textarea>
+        <textarea name="role_accountabilities">{{ role.role_accountabilities or '' }}</textarea>
       </label>
       <input type="submit" />
     </form>

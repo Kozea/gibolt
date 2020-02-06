@@ -60,5 +60,8 @@
     {% else %}
       <p>Pas de rôle</p>
     {% endfor %}
+    <form method="post" action="{{ url_for('circle_role_add', circle_id=circle.circle_id) }}">
+      <input type="submit" value="Ajouter" />
+    </form>
   </article>
 {% endblock content %}

@@ -13,15 +13,15 @@
       </label>
       <label>
         Raison d’être
-        <textarea name="circle_purpose">{{ circle.circle_purpose }}</textarea>
+        <textarea name="circle_purpose">{{ circle.circle_purpose or '' }}</textarea>
       </label>
       <label>
         Domaines
-        <textarea name="circle_domain">{{ circle.circle_domain }}</textarea>
+        <textarea name="circle_domain">{{ circle.circle_domain or '' }}</textarea>
       </label>
       <label>
         Redevabilités
-        <textarea name="circle_accountabilities">{{ circle.circle_accountabilities }}</textarea>
+        <textarea name="circle_accountabilities">{{ circle.circle_accountabilities or '' }}</textarea>
       </label>
       <label>
         Couleur

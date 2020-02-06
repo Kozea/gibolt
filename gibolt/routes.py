@@ -298,11 +298,21 @@ def circle_role(role_id):
 def circle_role_edit(role_id):
     role = db.query(Role).get(role_id)
     if request.method == "POST":
-        for key in ("purpose", "domain", "accountabilities"):
+        for key in ("name", "purpose", "domain", "accountabilities"):
             setattr(role, f"role_{key}", request.form[f"role_{key}"])
         db.commit()
         return redirect(url_for("circle_role", role_id=role_id))
     return render_template("role_edit.html.jinja2", role=role)
+
+
+@app.route("/circles/<int:circle_id>/roles/add", methods=("post",))
+@need_login
+def circle_role_add(circle_id):
+    role = Role(
+        circle_id=circle_id, role_name="Nouveau rôle", role_type="assigned")
+    db.add(role)
+    db.commit()
+    return redirect(url_for("circle_role_edit", role_id=role.role_id))
 
 
 @app.route("/roles/<int:role_id>/delete", methods=("get", "post"))
