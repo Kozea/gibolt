@@ -1,0 +1,25 @@
+{% extends '_layout.jinja2' %}
+
+{% block title %}Cercle {{ role.role_name }} − {{ super() }}{% endblock title %}
+
+{% block content %}
+  <h2>{{ role.role_name }}</h2>
+
+  <article>
+    <form method="post">
+      <label>
+        Raison d’être
+        <textarea name="role_purpose">{{ role.role_purpose }}</textarea>
+      </label>
+      <label>
+        Domaines
+        <textarea name="role_domain">{{ role.role_domain }}</textarea>
+      </label>
+      <label>
+        Redevabilités
+        <textarea name="role_accountabilities">{{ role.role_accountabilities }}</textarea>
+      </label>
+      <input type="submit" />
+    </form>
+  </article>
+{% endblock content %}

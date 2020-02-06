@@ -5,6 +5,12 @@
 {% block content %}
   <h2>{{ role.role_name }}</h2>
 
+  <aside>
+    <ul class="links">
+      <li><a href="{{ url_for('circle_role_edit', role_id=role.role_id) }}">Éditer</a></li>
+    </ul>
+  </aside>
+
   <article>
     <h3>Raison d’être</h3>
     {{ role.role_purpose | markdown }}
@@ -23,6 +29,7 @@
   <article>
     <h3>Focus</h3>
     <form method="post">
+      <button name="add">Ajouter</button>
       {% if role.role_type == 'elected' %}
         {% set focus = role.role_focuses[-1] %}
         {% for focus_user in focus.role_focus_users %}
@@ -56,7 +63,6 @@
           </section>
         {% endfor %}
       {% endif %}
-      <button name="add">Ajouter</button>
       <input type="submit" />
     </form>
   </article>

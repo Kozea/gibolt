@@ -77,12 +77,18 @@ main {
     main article label {
       display: block;
       padding: 0.25em; }
-    main article textarea, main article input:not([type="checkbox"]) {
+    main article textarea, main article button, main article input:not([type="checkbox"]) {
+      background: white;
       border: 1px solid #888;
       box-sizing: border-box;
+      color: black;
       display: block;
       padding: 0.2em;
       width: 100%; }
+    main article button {
+      display: inline-block;
+      padding: 0.2em 1em;
+      width: auto; }
     main article input[type="color"] {
       height: 2em;
       padding: 0;
@@ -174,5 +180,8 @@ main {
 
 .focus {
   display: flex; }
+  .focus input:not([type="checkbox"]) {
+    display: inline-block;
+    width: auto; }
 
 /*# sourceMappingURL=style.css.map */

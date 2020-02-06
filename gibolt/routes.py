@@ -236,25 +236,28 @@ def circle_role(role_id):
                     RoleFocusUser.role_focus_user_id
                     == int(request.form["delete"])
                 ).delete()
-            else:
-                for key, value in request.form.items():
-                    focus_user_type, focus_user_id = key.split("-")
-                    focus_user = db.query(RoleFocusUser).get(
-                        int(focus_user_id)
+            for key, value in request.form.items():
+                if key in ("add", "delete"):
+                    continue
+                focus_user_type, focus_user_id = key.split("-")
+                focus_user = db.query(RoleFocusUser).get(
+                    int(focus_user_id)
+                )
+                if focus_user is None:
+                    continue
+                if focus_user_type == "start" and value:
+                    focus_user.start_date = datetime.strptime(
+                        value, "%Y-%m-%d"
                     )
-                    if focus_user_type == "start" and value:
-                        focus_user.start_date = datetime.strptime(
-                            value, "%Y-%m-%d"
-                        )
-                    elif focus_user_type == "end" and value:
-                        focus_user.end_date = datetime.strptime(
-                            value, "%Y-%m-%d"
-                        )
-                    elif focus_user_type == "user":
-                        for user_id, user in session["users"].items():
-                            if user["login"] == value:
-                                focus_user.user_id = int(user_id)
-                                break
+                elif focus_user_type == "end" and value:
+                    focus_user.end_date = datetime.strptime(
+                        value, "%Y-%m-%d"
+                    )
+                elif focus_user_type == "user":
+                    for user_id, user in session["users"].items():
+                        if user["login"] == value:
+                            focus_user.user_id = int(user_id)
+                            break
         else:
             if "add" in request.form:
                 db.add(RoleFocus(role=role))
@@ -262,26 +265,44 @@ def circle_role(role_id):
                 db.query(RoleFocus).filter(
                     RoleFocus.role_focus_id == int(request.form["delete"])
                 ).delete()
-            else:
-                for key, value in request.form.items():
-                    focus_type, focus_id = key.split("-")
-                    focus = db.query(RoleFocus).get(int(focus_id))
-                    if focus_type == "name":
-                        focus.focus_name = value
-                    elif focus_type == "user":
-                        for user_id, user in session["users"].items():
-                            if user["login"] == value:
-                                latest_user = focus.latest_user
-                                if latest_user is None:
-                                    latest_user = RoleFocusUser(
-                                        role_focus_id=focus.role_focus_id
-                                    )
-                                    db.add(latest_user)
-                                latest_user.user_id = int(user_id)
-                                break
+            for key, value in request.form.items():
+                if key in ("add", "delete"):
+                    continue
+                focus_type, focus_id = key.split("-")
+                focus = db.query(RoleFocus).get(int(focus_id))
+                if focus is None:
+                    continue
+                if focus_type == "name":
+                    focus.focus_name = value
+                elif focus_type == "user":
+                    for user_id, user in session["users"].items():
+                        if user["login"] == value:
+                            latest_user = focus.latest_user
+                            if latest_user is None:
+                                latest_user = RoleFocusUser(
+                                    role_focus_id=focus.role_focus_id
+                                )
+                                db.add(latest_user)
+                            latest_user.user_id = int(user_id)
+                            break
+        db.commit()
+        if "add" in request.form or "delete" in request.form:
+            return redirect(url_for("circle_role", role_id=role_id))
+        else:
+            return redirect(url_for("circle", circle_id=role.circle_id))
+    return render_template("role.html.jinja2", role=role)
+
+
+@app.route("/roles/<int:role_id>/edit", methods=("get", "post"))
+@need_login
+def circle_role_edit(role_id):
+    role = db.query(Role).get(role_id)
+    if request.method == "POST":
+        for key in ("purpose", "domain", "accountabilities"):
+            setattr(role, f"role_{key}", request.form[f"role_{key}"])
         db.commit()
         return redirect(url_for("circle_role", role_id=role_id))
-    return render_template("role.html.jinja2", role=role)
+    return render_template("role_edit.html.jinja2", role=role)
 
 
 @app.route("/circles/<int:circle_id>/edit", methods=("get", "post"))

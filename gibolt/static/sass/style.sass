@@ -85,12 +85,19 @@ main
       display: block
       padding: 0.25em
 
-    textarea, input:not([type="checkbox"])
+    textarea, button, input:not([type="checkbox"])
+      background: white
       border: 1px solid #888
       box-sizing: border-box
+      color: black
       display: block
       padding: 0.2em
       width: 100%
+
+    button
+      display: inline-block
+      padding: 0.2em 1em
+      width: auto
 
     input[type="color"]
       height: 2em
@@ -200,3 +207,7 @@ main
 
 .focus
   display: flex
+
+  input:not([type="checkbox"])
+    display: inline-block
+    width: auto
