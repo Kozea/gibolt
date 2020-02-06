@@ -305,6 +305,19 @@ def circle_role_edit(role_id):
     return render_template("role_edit.html.jinja2", role=role)
 
 
+@app.route("/roles/<int:role_id>/delete", methods=("get", "post"))
+@need_login
+def circle_role_delete(role_id):
+    role = db.query(Role).get(role_id)
+    if request.method == "POST":
+        if "delete" in request.form:
+            db.query(RoleFocus).filter(RoleFocus.role_id == role_id).delete()
+            db.query(Role).filter(Role.role_id == role_id).delete()
+            db.commit()
+        return redirect(url_for("circle", circle_id=role.circle_id))
+    return render_template("role_delete.html.jinja2", role=role)
+
+
 @app.route("/circles/<int:circle_id>/edit", methods=("get", "post"))
 @need_login
 def circle_edit(circle_id):

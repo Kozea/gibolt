@@ -1,0 +1,15 @@
+{% extends '_layout.jinja2' %}
+
+{% block title %}Role {{ role.role_name }} − {{ super() }}{% endblock title %}
+
+{% block content %}
+  <h2>Suppression du rôle {{ role.role_name }}</h2>
+
+  <article>
+    <h3>Voulez-vous réellement supprimer ce rôle ?</h3>
+    <form method="post">
+      <button name="cancel">Annuler</button>
+      <button name="delete">Supprimer</button>
+    </form>
+  </article>
+{% endblock content %}
