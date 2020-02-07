@@ -3,7 +3,7 @@
     {% set percentage = milestone.closed_issues / ((milestone.open_issues + milestone.closed_issues) or 1) %}
     <section class="{{ milestone.state }}">
       <time datetime="{{ milestone.due_on }}">{{ milestone.due_on | day }}</time>
-      <a href="{{ milestone.html_url }}">{{ milestone.repository_name or milestone.repo }} − {{ milestone.title }}</a>
+      <a href="{{ milestone.html_url }}"><span class="project">{{ milestone.repository_name or milestone.repo }}</span> {{ milestone.title }}</a>
       {% if circles %}
         <form class="circles">
           {% for circle in circles %}

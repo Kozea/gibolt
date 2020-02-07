@@ -39,11 +39,22 @@ time
 progress
   appearance: none
   -webkit-appearance: none
+  background: #2c324911
   border: 0
+  color: #2c3249bb
   display: block
-  height: 3px
-  margin-top: 0.25em
-  width: 100%
+  height: 2px
+  margin: 0.75em -1em -1em
+  width: calc(100% + 2em)
+
+  &::-moz-progress-bar
+    background: #2c3249bb
+
+  &::-webkit-progress-bar
+    background: #2c324911
+
+  &::-webkit-progress-value
+    background: #2c3249bb
 
 aside
   padding: 0 1em
@@ -119,16 +130,17 @@ main
         &:hover, &:focus
           text-decoration: underline
 
-      &.open
-        border-left: 3px solid #0fbb0f
+      &.closed time
+        background: #0fbb0f
 
-      &.closed
-        border-left: 3px solid #f54e40
+      &.open time
+        background: #f54e40
 
 .circles
   font-size: 0.7em
   line-height: 2.5em
   min-height: 2.5em
+  margin: 0.5em 0 -0.25em
 
   input, label
     display: initial
@@ -211,3 +223,8 @@ main
   input:not([type="checkbox"])
     display: inline-block
     width: auto
+
+.project
+  padding-right: 0.75em
+  opacity: 0.7
+
