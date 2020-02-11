@@ -22,11 +22,11 @@
           {% endfor %}
         </form>
       {% endif %}
-      <progress value="{{ percentage }}" title="{{ milestone.closed_issues }} / {{ milestone.open_issues + milestone.closed_issues }} ({{ (percentage * 100) | int }} %)">{{ (percentage * 100) | int }} %</progress>
       {% if report %}
         {% set report_milestones = (report.projects | selectattr('milestone_number', 'eq', milestone.number) | list) %}
         <input name="milestone-{{ report.report_id }}-{{ milestone.number }}-{{ milestone.repository_name or milestone.repo }}" value="{{ report_milestones[0].milestone.comment if report_milestones else '' }}" />
       {% endif %}
+      <progress value="{{ percentage }}" title="{{ milestone.closed_issues }} / {{ milestone.open_issues + milestone.closed_issues }} ({{ (percentage * 100) | int }} %)">{{ (percentage * 100) | int }} %</progress>
     </section>
   {% else %}
     <section>
