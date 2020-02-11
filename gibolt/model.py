@@ -294,6 +294,7 @@ class ReportChecklist(Base):
     item_id = Column(Integer, ForeignKey("item.item_id"), primary_key=True)
     content = Column(String)
     checked = Column(Boolean, default=False, nullable=False)
+    item = relationship(Item)
 
 
 class ReportIndicator(Base):

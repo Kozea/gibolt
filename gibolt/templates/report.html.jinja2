@@ -26,6 +26,13 @@
         {% for action in report.actions %}
           <label>
             <input type="checkbox" name="action-{{ action.report_id }}-{{ action.item_id }}" {{ 'checked' if action.checked }} />
+            {% if action.item %}
+              {{ action.item.role_focus.role.role_name }}
+              {% if action.item.role_focus.focus_name %}
+                ({{ action.item.role_focus.focus_name }})
+              {% endif %}
+              −
+            {% endif %}
             {{ action.content }}
           </label>
         {% endfor %}
