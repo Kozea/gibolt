@@ -353,7 +353,19 @@ def circle_report_create(circle_id, report_type):
         author_id=session["user_id"],
         modified_by=session["user_id"],
     )
-    for user_id in circle.user_ids:
+
+    attendees = set(circle.user_ids)
+    for child in circle.circle_children:
+        for role in child.roles:
+            lead_link = role.role_type == "leadlink"
+            second_link = role.role_name == "Second lien"
+            if lead_link or second_link:
+                for focus in role.role_focuses:
+                    if focus.latest_user:
+                        attendees.add(focus.latest_user.user_id)
+                        break
+
+    for user_id in attendees:
         db.add(
             ReportAttendee(
                 report=report,
@@ -361,6 +373,7 @@ def circle_report_create(circle_id, report_type):
                 user=session["users"].get(str(user_id)),
             )
         )
+
     if report_type == "Triage":
         for role in circle.roles:
             if role.is_active:
