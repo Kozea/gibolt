@@ -18,6 +18,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from . import app, db, github
 from .model import (
     Circle,
+    Item,
     MilestoneCircle,
     Report,
     ReportAttendee,
@@ -222,7 +223,17 @@ def circle(circle_id):
 @need_login
 def circle_actions(circle_id):
     circle = db.query(Circle).get(circle_id)
-    return render_template("circle/actions.html.jinja2", circle=circle)
+
+    actions = db.query(Item).filter(Item.item_type == "checklist").all()
+
+    circle_actions = [
+        a
+        for a in actions
+        if a.role_focus is not None and a.role_focus.role.circle == circle
+    ]
+    return render_template(
+        "circle/actions.html.jinja2", circle=circle, actions=circle_actions
+    )
 
 
 @app.route("/circles/<int:circle_id>/indicators")

@@ -1,0 +1,13 @@
+{% extends 'circle/_circle.html.jinja2' %}
+
+{% block circle_content %}
+<article>
+  <ul class="links">
+    {% for _, report_type in config.MEETINGS_TYPES %}
+      <li><form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id, report_type=report_type) }}"><input type="submit" value="Réunion de {{ report_type | lower }}" /></form></li>
+    {% endfor %}
+  </ul>
+  <h3>Rapports</h3>
+  <p>Tableau des rapports</p>
+</article>
+{% endblock circle_content %}

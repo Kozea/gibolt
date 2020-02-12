@@ -1,0 +1,38 @@
+{% extends 'circle/_circle.html.jinja2' %}
+
+{% block circle_content %}
+  <article>
+    <h3>Rôles</h3>
+    {% for role_type, roles in circle.roles | selectattr('is_active') | groupby('role_type') | reverse %}
+      <h4>{{ {'leadlink': 'Premier lien', 'elected': 'Rôles élus', 'assigned': 'Rôles assignés'}[role_type] }}</h4>
+      {% for role in roles | sort(attribute='role_name') %}
+        <section class="role">
+          {% if role.role_focuses | map(attribute='focus_name') | join %}
+            <a href="{{ url_for('circle_role', role_id=role.role_id) }}">{{ role.role_name }}</a>
+            <ul>
+              {% for focus in role.role_focuses %}
+                {% set user = session.users.get(focus.latest_user.user_id | string) %}
+                <li>
+                  <img class="avatar" src="{{ user.avatar_url }}" title="{{ user.login }}" />
+                  {{ focus.focus_name }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            {% if role.role_focuses %}
+              {% set user = session.users.get(role.role_focuses[0].latest_user.user_id | string) %}
+              <img class="avatar" src="{{ user.avatar_url }}" title="{{ user.login }}" />
+            {% endif %}
+            <a href="{{ url_for('circle_role', role_id=role.role_id) }}">{{ role.role_name }}</a>
+          {% endif %}
+        </section>
+      {% endfor %}
+    {% else %}
+      <p>Pas de rôle</p>
+    {% endfor %}
+    <form method="post" action="{{ url_for('circle_role_add', circle_id=circle.circle_id) }}">
+      <input type="submit" value="Ajouter" />
+    </form>
+  </article>
+
+{% endblock circle_content %}

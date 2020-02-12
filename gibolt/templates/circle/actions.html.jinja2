@@ -1,0 +1,19 @@
+{% extends 'circle/_circle.html.jinja2' %}
+
+{% block circle_content %}
+  <article>
+    <h3>Liste des actions</h3>
+    <ul>
+    {% for action in actions %}
+      <li>
+        {{ action.role_focus.role.role_name }}
+          {% if action.role_focus.focus_name %}
+            ({{ action.role_focus.focus_name }})
+          {% endif %}
+          −
+        {{ action.content }}
+      </li>
+    {% endfor %}
+    </ul>
+  </article>
+{% endblock circle_content %}
