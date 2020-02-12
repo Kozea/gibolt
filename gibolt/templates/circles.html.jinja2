@@ -8,7 +8,7 @@
   {% for circle in circles %}
     <article>
       <h3 class="circle-{{ circle.circle_id }}">{{ circle.circle_name }}</h3>
-      <p>{{ circle.circle_purpose }}</p>
+      <p>{{ circle.circle_purpose | markdown }}</p>
       <ul class="links">
         <li><a href="{{ url_for('circle', circle_id=circle.circle_id) }}">Détails</a></li>
         {% for _, report_type in config.MEETINGS_TYPES %}
