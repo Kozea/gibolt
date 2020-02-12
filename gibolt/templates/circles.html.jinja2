@@ -7,14 +7,10 @@
 
   {% for circle in circles %}
     <article>
-      <h3 class="circle-{{ circle.circle_id }}">{{ circle.circle_name }}</h3>
+      <h3 class="circle-{{ circle.circle_id }}">
+        <a href="{{ url_for('circle', circle_id=circle.circle_id) }}">{{ circle.circle_name }}</a>
+      </h3>
       <p>{{ circle.circle_purpose | markdown }}</p>
-      <ul class="links">
-        <li><a href="{{ url_for('circle', circle_id=circle.circle_id) }}">Détails</a></li>
-        {% for _, report_type in config.MEETINGS_TYPES %}
-          <li><form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id, report_type=report_type) }}"><input type="submit" value="Réunion de {{ report_type | lower }}" /></form></li>
-        {% endfor %}
-      </ul>
     </article>
   {% endfor %}
 {% endblock content %}

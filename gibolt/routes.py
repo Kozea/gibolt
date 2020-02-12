@@ -117,7 +117,7 @@ def add_milestones(
     milestones.extend(repository_milestones)
 
 
-def circle_milestones(circle):
+def get_circle_milestones(circle):
     milestones = []
     with ThreadPoolExecutor(max_workers=50) as executor:
         for repository_name in session["repository_names"]:
@@ -215,11 +215,46 @@ def circles():
 @need_login
 def circle(circle_id):
     circle = db.query(Circle).get(circle_id)
+    return render_template("circle/infos.html.jinja2", circle=circle)
+
+
+@app.route("/circles/<int:circle_id>/actions")
+@need_login
+def circle_actions(circle_id):
+    circle = db.query(Circle).get(circle_id)
+    return render_template("circle/actions.html.jinja2", circle=circle)
+
+
+@app.route("/circles/<int:circle_id>/indicators")
+@need_login
+def circle_indicators(circle_id):
+    circle = db.query(Circle).get(circle_id)
+    return render_template("circle/indicators.html.jinja2", circle=circle)
+
+
+@app.route("/circles/<int:circle_id>/milestones")
+@need_login
+def circle_milestones(circle_id):
+    circle = db.query(Circle).get(circle_id)
     return render_template(
-        "circle.html.jinja2",
+        "circle/milestones.html.jinja2",
         circle=circle,
-        milestones=circle_milestones(circle),
+        milestones=get_circle_milestones(circle),
     )
+
+
+@app.route("/circles/<int:circle_id>/roles")
+@need_login
+def circle_roles(circle_id):
+    circle = db.query(Circle).get(circle_id)
+    return render_template("circle/roles.html.jinja2", circle=circle)
+
+
+@app.route("/circles/<int:circle_id>/reports")
+@need_login
+def circle_reports(circle_id):
+    circle = db.query(Circle).get(circle_id)
+    return render_template("circle/reports.html.jinja2", circle=circle)
 
 
 @app.route("/roles/<int:role_id>", methods=("get", "post"))
@@ -240,9 +275,7 @@ def circle_role(role_id):
                 if key in ("add", "delete"):
                     continue
                 focus_user_type, focus_user_id = key.split("-")
-                focus_user = db.query(RoleFocusUser).get(
-                    int(focus_user_id)
-                )
+                focus_user = db.query(RoleFocusUser).get(int(focus_user_id))
                 if focus_user is None:
                     continue
                 if focus_user_type == "start" and value:
@@ -250,9 +283,7 @@ def circle_role(role_id):
                         value, "%Y-%m-%d"
                     )
                 elif focus_user_type == "end" and value:
-                    focus_user.end_date = datetime.strptime(
-                        value, "%Y-%m-%d"
-                    )
+                    focus_user.end_date = datetime.strptime(value, "%Y-%m-%d")
                 elif focus_user_type == "user":
                     for user_id, user in session["users"].items():
                         if user["login"] == value:
@@ -309,7 +340,8 @@ def circle_role_edit(role_id):
 @need_login
 def circle_role_add(circle_id):
     role = Role(
-        circle_id=circle_id, role_name="Nouveau rôle", role_type="assigned")
+        circle_id=circle_id, role_name="Nouveau rôle", role_type="assigned"
+    )
     db.add(role)
     db.commit()
     return redirect(url_for("circle_role_edit", role_id=role.role_id))
@@ -338,7 +370,7 @@ def circle_edit(circle_id):
         circle.label.color = request.form["color"]
         db.commit()
         return redirect(url_for("circle", circle_id=circle_id))
-    return render_template("circle_edit.html.jinja2", circle=circle)
+    return render_template("circle/circle_edit.html.jinja2", circle=circle)
 
 
 @app.route(
@@ -395,7 +427,7 @@ def circle_report_create(circle_id, report_type):
                                     item_id=item.item_id,
                                 )
                             )
-        for milestone in circle_milestones(circle):
+        for milestone in get_circle_milestones(circle):
             db.add(
                 ReportMilestone(
                     report=report,

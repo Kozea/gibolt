@@ -71,6 +71,9 @@ Session.vim
 .\#*
 *~
 
+#####=== Emacs ===#####
+.vscode/
+
 #####=== Virtual environment ===#####
 .env
 .venv
