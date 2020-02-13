@@ -285,11 +285,12 @@ def circle_action(circle_id, action_id):
     all_roles = circle_roles_choices(circle)
 
     return render_template(
-        "circle/action.html.jinja2",
+        "circle/item.html.jinja2",
         circle=circle,
-        action=action,
+        item=action,
         all_roles=all_roles,
         role_id=role_id,
+        is_edit=True,
     )
 
 
@@ -310,10 +311,11 @@ def circle_action_add(circle_id):
     all_roles = circle_roles_choices(circle)
 
     return render_template(
-        "circle/action.html.jinja2",
+        "circle/item.html.jinja2",
         circle=circle,
         all_roles=all_roles,
-        add=True,
+        is_action=True,
+        is_edit=False,
     )
 
 
@@ -331,7 +333,7 @@ def circle_action_delete(circle_id, action_id):
         return redirect(url_for('circle_actions', circle_id=circle.circle_id))
 
     action = db.query(Item).get(action_id)
-    return render_template("circle/action_delete.html.jinja2", action=action)
+    return render_template("circle/item_delete.html.jinja2", item=action)
 
 
 @app.route("/circles/<int:circle_id>/indicators")
@@ -373,9 +375,9 @@ def circle_indicator(circle_id, indicator_id):
         return redirect(url_for('circle_indicators', circle_id=circle_id))
 
     return render_template(
-        "circle/indicator.html.jinja2",
+        "circle/item.html.jinja2",
         circle=circle,
-        indicator=indicator,
+        item=indicator,
         role_id=role_id,
         all_roles=all_roles,
         is_edit=True,
@@ -401,12 +403,13 @@ def circle_indicator_add(circle_id):
     all_roles = circle_roles_choices(circle)
 
     return render_template(
-        "circle/indicator.html.jinja2",
+        "circle/item.html.jinja2",
         circle=circle,
         all_roles=all_roles,
+        is_action=False,
         is_edit=False,
     )
-    return render_template("circle/indicator.html.jinja2", circle=circle)
+    return render_template("circle/item.html.jinja2", circle=circle)
 
 
 @app.route(
@@ -427,9 +430,7 @@ def circle_indicator_delete(circle_id, indicator_id):
 
     indicator = db.query(Item).get(indicator_id)
     return render_template(
-        "circle/indicator_delete.html.jinja2",
-        circle=circle,
-        indicator=indicator,
+        "circle/item_delete.html.jinja2", circle=circle, item=indicator
     )
 
 

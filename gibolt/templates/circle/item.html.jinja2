@@ -1,17 +1,22 @@
-
 {% extends 'circle/_circle.html.jinja2' %}
 
 {% block circle_content %}
 <article>
   {% if is_edit %}
-    <h3>Edition de {{ indicator.content }}</h3>
+    <h3>Edition de {{ item.content }}</h3>
   {% else %}
-    <h3>Ajout d'une indicator récurente</h3>
+    <h3>
+      Ajout {% if is_action %}
+          d'une actio récurente
+      {% else %}
+          d'un indicateur
+      {% endif %}
+    </h3>
   {% endif %}
   <form method="post">
     <label>
-      Indicateur
-      <input name="content" {% if is_edit %}value="{{ indicator.content }}"{% endif %} />
+      Action
+      <input name="content" {% if is_edit %}value="{{ item.content }}"{% endif %} />
     </label>
     <label>
      Role 
@@ -24,7 +29,11 @@
   <input type="submit" />
   </form>
   {% if is_edit %}
-    <a href="{{ url_for('circle_indicator_delete', circle_id=circle.circle_id, indicator_id=indicator.item_id)}}">
+    {% if item.item_type == 'checklist' %}
+      <a href="{{ url_for('circle_action_delete', circle_id=circle.circle_id, action_id=item.item_id)}}">
+    {% else %}
+      <a href="{{ url_for('circle_indicator_delete', circle_id=circle.circle_id, indicator_id=item.item_id)}}">
+    {% endif %}
       Supprimer
     </a>
   {% endif %}
