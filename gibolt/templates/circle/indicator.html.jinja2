@@ -1,0 +1,32 @@
+
+{% extends 'circle/_circle.html.jinja2' %}
+
+{% block circle_content %}
+<article>
+  {% if is_edit %}
+    <h3>Edition de {{ indicator.content }}</h3>
+  {% else %}
+    <h3>Ajout d'une indicator récurente</h3>
+  {% endif %}
+  <form method="post">
+    <label>
+      Indicateur
+      <input name="content" {% if is_edit %}value="{{ indicator.content }}"{% endif %} />
+    </label>
+    <label>
+     Role 
+      <select name="role_focus_id" {% if is_edit %}value="{{ role_id }}"{% endif %} />
+        {% for role in all_roles  %}
+            <option value="{{ role.id }}" {% if is_edit and role.id == role_id %}selected='selected'{% endif %}>{{ role.label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  <input type="submit" />
+  </form>
+  {% if is_edit %}
+    <a href="{{ url_for('circle_indicator_delete', circle_id=circle.circle_id, indicator_id=indicator.item_id)}}">
+      Supprimer
+    </a>
+  {% endif %}
+</article>
+{% endblock circle_content %}

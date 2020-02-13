@@ -1,5 +1,21 @@
 {% extends 'circle/_circle.html.jinja2' %}
 
 {% block circle_content %}
-  <p>Liste des indicateurs</p>
+  <article>
+    <aside>
+      <a href="{{ url_for('circle_indicator_add', circle_id=circle.circle_id)}}">
+        Ajouter un indicateur
+      </a>
+    </aside>
+    <h3>Liste des indicateurs</h3>
+    <ul>
+    {% for indicator in indicators %}
+    <li>
+      <a href="{{ url_for('circle_indicator', circle_id=circle.circle_id, indicator_id=indicator.item_id)}}">
+        {{ indicator.content }} - {{ indicator.role_focus.role.role_name }} {{ indicator.role_focus.focus_name }}
+      </a>
+    </li>
+    {% endfor %}
+    </ul>
+  </article>
 {% endblock circle_content %}
