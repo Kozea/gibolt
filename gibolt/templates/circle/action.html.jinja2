@@ -1,0 +1,31 @@
+{% extends 'circle/_circle.html.jinja2' %}
+
+{% block circle_content %}
+<article>
+  {% if add %}
+    <h3>Ajout d'une action récurente</h3>
+  {% else %}
+    <h3>Edition de {{ action.content }}</h3>
+  {% endif %}
+  <form method="post">
+    <label>
+      Action
+      <input name="content" {% if not add %}value="{{ action.content }}"{% endif %} />
+    </label>
+    <label>
+     Role 
+      <select name="role_focus_id" {% if not add %}value="{{ role_id }}"{% endif %} />
+        {% for role in all_roles  %}
+            <option value="{{ role.id }}" {% if not add and role.id == role_id %}selected='selected'{% endif %}>{{ role.label }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  <input type="submit" />
+  </form>
+  {% if not add %}
+    <a href="{{ url_for('circle_action_delete', circle_id=circle.circle_id, action_id=action.item_id)}}">
+      Supprimer
+    </a>
+  {% endif %}
+</article>
+{% endblock circle_content %}

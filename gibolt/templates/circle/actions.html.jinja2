@@ -2,18 +2,34 @@
 
 {% block circle_content %}
   <article>
-    <h3>Liste des actions</h3>
-    <ul>
-    {% for action in actions %}
-      <li>
-        {{ action.role_focus.role.role_name }}
-          {% if action.role_focus.focus_name %}
-            ({{ action.role_focus.focus_name }})
-          {% endif %}
-          −
-        {{ action.content }}
-      </li>
-    {% endfor %}
-    </ul>
+    <aside>
+      <a href="{{ url_for('circle_action_add', circle_id=circle.circle_id)}}">Ajouter une action récurrente</a>
+    </aside>
+    <h3>Actions récurrentes</h3>
+    <table>
+      <thead>
+      <tr>
+        <th>Actions</th>
+      {% for report in last_reports  %}
+        <th>{{ report.created_at.strftime('%d/%m/%Y') }}</th>
+      {% endfor %}
+      </tr>
+      </thead>
+      <tbody>
+      {% for action in actions %}
+        <tr>
+          <td>
+            <a href="{{ url_for('circle_action', circle_id=circle.circle_id, action_id=action.item_id)}}">{{ action.role_focus.focus_name }} {{ action.content }}
+            </a>
+          </td>
+          {% for report in last_reports  %}
+            <td>
+             <input type="checkbox" >
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
   </article>
 {% endblock circle_content %}

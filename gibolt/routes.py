@@ -13,6 +13,7 @@ from flask import (
     session,
     url_for,
 )
+from sqlalchemy import and_
 from sqlalchemy.orm.attributes import flag_modified
 
 from . import app, db, github
@@ -223,17 +224,116 @@ def circle(circle_id):
 @need_login
 def circle_actions(circle_id):
     circle = db.query(Circle).get(circle_id)
-
-    actions = db.query(Item).filter(Item.item_type == "checklist").all()
-
-    circle_actions = [
-        a
-        for a in actions
-        if a.role_focus is not None and a.role_focus.role.circle == circle
-    ]
-    return render_template(
-        "circle/actions.html.jinja2", circle=circle, actions=circle_actions
+    last_reports = (
+        db.query(Report)
+        .filter(Report.circle_id == circle.circle_id)
+        .order_by(Report.created_at.desc())
+        .limit(4)
+        .all()
     )
+    actions = (
+        db.query(Item)
+        .join(RoleFocus)
+        .join(Role)
+        .join(Circle)
+        .filter(
+            and_(
+                Item.item_type == 'checklist',
+                Circle.circle_id == circle.circle_id,
+            )
+        )
+        .all()
+    )
+
+    return render_template(
+        "circle/actions.html.jinja2",
+        circle=circle,
+        actions=actions,
+        last_reports=last_reports,
+    )
+
+
+@app.route(
+    "/circles/<int:circle_id>/actions/<int:action_id>", methods=('get', 'post')
+)
+@need_login
+def circle_action(circle_id, action_id):
+    action = db.query(Item).get(action_id)
+    circle = db.query(Circle).get(circle_id)
+
+    if request.method == 'POST':
+        action.content = request.form.get('content')
+        action.role_focus_id = request.form.get('role_focus_id')
+        db.commit()
+        return redirect(url_for('circle_actions', circle_id=circle.circle_id))
+
+    role_id = action.role_focus.role_focus_id
+
+    all_roles = []
+    for role in circle.roles:
+        for role_focus in role.role_focuses:
+            all_roles.append(
+                {
+                    'id': role_focus.role_focus_id,
+                    'label': f'{role.role_name} {role_focus.focus_name}',
+                }
+            )
+
+    return render_template(
+        "circle/action.html.jinja2",
+        circle=circle,
+        action=action,
+        all_roles=all_roles,
+        role_id=role_id,
+    )
+
+
+@app.route("/circles/<int:circle_id>/actions/add", methods=('get', 'post'))
+@need_login
+def circle_action_add(circle_id):
+    circle = db.query(Circle).get(circle_id)
+
+    if request.method == 'POST':
+        action = Item()
+        action.item_type = 'checklist'
+        action.content = request.form.get('content')
+        action.role_focus_id = request.form.get('role_focus_id')
+        db.add(action)
+        db.commit()
+        return redirect(url_for('circle_actions', circle_id=circle.circle_id))
+
+    all_roles = []
+    for role in circle.roles:
+        for role_focus in role.role_focuses:
+            all_roles.append(
+                {
+                    'id': role_focus.role_focus_id,
+                    'label': f'{role.role_name} {role_focus.focus_name}',
+                }
+            )
+
+    return render_template(
+        "circle/action.html.jinja2",
+        circle=circle,
+        all_roles=all_roles,
+        add=True,
+    )
+
+
+@app.route(
+    "/circles/<int:circle_id>/actions/<int:action_id>/delete",
+    methods=('get', 'post'),
+)
+@need_login
+def circle_action_delete(circle_id, action_id):
+    circle = db.query(Circle).get(circle_id)
+    if request.method == 'POST':
+        if "delete" in request.form:
+            db.query(Item).filter(Item.item_id == action_id).delete()
+        return redirect(url_for('circle_actions', circle_id=circle.circle_id))
+
+    action = db.query(Item).get(action_id)
+    return render_template("circle/action_delete.html.jinja2", action=action)
 
 
 @app.route("/circles/<int:circle_id>/indicators")

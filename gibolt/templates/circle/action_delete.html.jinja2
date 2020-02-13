@@ -1,0 +1,13 @@
+{% extends '_layout.jinja2' %}
+
+{% block content %}
+  <h2>Suppression de l'action {{ action.cotent }}</h2>
+
+  <article>
+    <h3>Voulez-vous réellement supprimer cette action ?</h3>
+    <form method="post">
+      <button name="cancel">Annuler</button>
+      <button name="delete">Supprimer</button>
+    </form>
+  </article>
+{% endblock content %}
