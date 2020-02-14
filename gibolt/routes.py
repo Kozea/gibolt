@@ -255,7 +255,8 @@ def circle_actions(circle_id):
 
 def circle_roles_choices(circle):
     choices = []
-    for role in circle.roles:
+    active_roles = [r for r in circle.roles if r.is_active]
+    for role in active_roles:
         for role_focus in role.role_focuses:
             choices.append(
                 {
