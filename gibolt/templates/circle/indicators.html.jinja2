@@ -2,18 +2,19 @@
 
 {% block circle_content %}
   <article>
+    <h3>Liste des indicateurs</h3>
     <aside>
       <a href="{{ url_for('circle_indicator_add', circle_id=circle.circle_id)}}">
         Ajouter un indicateur
       </a>
     </aside>
-    <h3>Liste des indicateurs</h3>
-    <ul>
+    <ul class="indicator">
     {% for indicator in indicators %}
     <li>
       <a href="{{ url_for('circle_indicator', circle_id=circle.circle_id, indicator_id=indicator.item_id)}}">
-        {{ indicator.content }} - {{ indicator.role_focus.role.role_name }} {{ indicator.role_focus.focus_name }}
+        {{ indicator.content }} 
       </a>
+      <small>{{ indicator.role_focus.role.role_name }} {{ indicator.role_focus.focus_name }}</small>
     </li>
     {% endfor %}
     </ul>

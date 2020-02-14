@@ -2,13 +2,16 @@
 
 {% block circle_content %}
 <article>
+  <h3>Créer une nouvelle réunion</h3>
+  <aside>
   <ul class="links">
     {% for _, report_type in config.MEETINGS_TYPES %}
-      <li><form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id, report_type=report_type) }}"><input type="submit" value="Nouvelle réunion de {{ report_type | lower }}" /></form></li>
+      <li><form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id, report_type=report_type) }}"><input type="submit" value="Réunion de {{ report_type | lower }}" /></form></li>
     {% endfor %}
   </ul>
-  <h3>Rapports</h3>
-  <table>
+  </aside>
+  <h3>Les rapports</h3>
+  <table class="reports">
     <tbody>
       {% for report in circle_reports %}
       <tr>

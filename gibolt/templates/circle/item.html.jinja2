@@ -13,7 +13,7 @@
       {% endif %}
     </h3>
   {% endif %}
-  <form method="post">
+  <form method="post" class="item">
     <label>
       Action
       <input name="content" {% if is_edit %}value="{{ item.content }}"{% endif %} />
@@ -30,11 +30,12 @@
   </form>
   {% if is_edit %}
     {% if item.item_type == 'checklist' %}
-      <a href="{{ url_for('circle_action_delete', circle_id=circle.circle_id, action_id=item.item_id)}}">
+      <a href="{{ url_for('circle_action_delete', circle_id=circle.circle_id, action_id=item.item_id)}}" class="delete">
+      Supprimer l'action récurrente
     {% else %}
-      <a href="{{ url_for('circle_indicator_delete', circle_id=circle.circle_id, indicator_id=item.item_id)}}">
+      <a href="{{ url_for('circle_indicator_delete', circle_id=circle.circle_id, indicator_id=item.item_id)}}" class="delete">
+      Supprimer l'indicateur
     {% endif %}
-      Supprimer
     </a>
   {% endif %}
 </article>
