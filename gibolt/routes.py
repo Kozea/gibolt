@@ -227,6 +227,7 @@ def circle_actions(circle_id):
     last_reports = (
         db.query(Report)
         .filter(Report.circle_id == circle.circle_id)
+        .filter(Report.report_type == 'Triage')
         .order_by(Report.created_at.desc())
         .limit(4)
         .all()
