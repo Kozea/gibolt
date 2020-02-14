@@ -8,27 +8,32 @@
     <h3>Actions récurrentes</h3>
     <table>
       <thead>
-      <tr>
-        <th>Actions</th>
-      {% for report in last_reports  %}
-        <th>{{ report.created_at.strftime('%d/%m/%Y') }}</th>
-      {% endfor %}
-      </tr>
-      </thead>
-      <tbody>
-      {% for action in actions %}
         <tr>
-          <td>
-            <a href="{{ url_for('circle_action', circle_id=circle.circle_id, action_id=action.item_id)}}">{{ action.role_focus.focus_name }} {{ action.content }}
-            </a>
-          </td>
-          {% for report in last_reports  %}
-            <td>
-             <input type="checkbox" >
-            </td>
+          <th>Actions</th>
+          {% for report in last_reports %}
+            <th>{{ report.created_at.strftime('%d/%m/%Y') }}</th>
           {% endfor %}
         </tr>
-      {% endfor %}
+      </thead>
+      <tbody>
+        {% for action in actions %}
+          <tr>
+            <td>
+              <a href="{{ url_for('circle_action', circle_id=circle.circle_id, action_id=action.item_id)}}">
+                {{ action.role_focus.focus_name }} {{ action.content }}
+              </a>
+            </td>
+            {% for report in last_reports %}
+              <td>
+                {% for report_action in report.actions %}
+                  {% if report_action.item_id == action.item_id %}
+                    <input type="checkbox" disabled {{ 'checked' if report_action.checked }} />
+                  {% endif %}
+                {% endfor %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </article>
