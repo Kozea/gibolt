@@ -1,4 +1,4 @@
-{% macro display_milestones(milestones, circles=None, report=None) %}
+{% macro display_milestones(milestones, circles=None, report=None, edit=True) %}
   {% for milestone in milestones | selectattr('due_on') | sort(attribute='due_on') %}
     {% set percentage = milestone.closed_issues / ((milestone.open_issues + milestone.closed_issues) or 1) %}
     <section class="{{ milestone.state }}">
@@ -24,7 +24,11 @@
       {% endif %}
       {% if report %}
         {% set report_milestones = (report.projects | selectattr('milestone_number', 'eq', milestone.number) | list) %}
-        <input name="milestone-{{ report.report_id }}-{{ milestone.number }}-{{ milestone.repository_name or milestone.repo }}" value="{{ report_milestones[0].milestone.comment if report_milestones else '' }}" />
+        <input 
+          name="milestone-{{ report.report_id }}-{{ milestone.number }}-{{ milestone.repository_name or milestone.repo }}"
+          value="{{ report_milestones[0].milestone.comment if report_milestones else '' }}"
+          {{ 'disabled' if not edit }}
+        />
       {% endif %}
       <progress value="{{ percentage }}" title="{{ milestone.closed_issues }} / {{ milestone.open_issues + milestone.closed_issues }} ({{ (percentage * 100) | int }} %)">{{ (percentage * 100) | int }} %</progress>
     </section>

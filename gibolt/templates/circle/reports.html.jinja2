@@ -4,10 +4,20 @@
 <article>
   <ul class="links">
     {% for _, report_type in config.MEETINGS_TYPES %}
-      <li><form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id, report_type=report_type) }}"><input type="submit" value="Réunion de {{ report_type | lower }}" /></form></li>
+      <li><form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id, report_type=report_type) }}"><input type="submit" value="Nouvelle réunion de {{ report_type | lower }}" /></form></li>
     {% endfor %}
   </ul>
   <h3>Rapports</h3>
-  <p>Tableau des rapports</p>
+  <table>
+    <tbody>
+      {% for report in circle_reports %}
+      <tr>
+        <td>{{ report.created_at.strftime('%d/%m/%Y') }}</td>
+        <td>Réunion de {{ report.report_type }}</td>
+        <td><a href="{{ url_for('circle_report', report_id=report.report_id) }}">Voir le rapport</a><td>
+      </tr> 
+      {% endfor %}
+    </tbody>
+  </table>
 </article>
 {% endblock circle_content %}

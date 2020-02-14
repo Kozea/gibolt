@@ -454,13 +454,6 @@ def circle_roles(circle_id):
     return render_template("circle/roles.html.jinja2", circle=circle)
 
 
-@app.route("/circles/<int:circle_id>/reports")
-@need_login
-def circle_reports(circle_id):
-    circle = db.query(Circle).get(circle_id)
-    return render_template("circle/reports.html.jinja2", circle=circle)
-
-
 @app.route("/roles/<int:role_id>", methods=("get", "post"))
 @need_login
 def circle_role(role_id):
@@ -577,6 +570,55 @@ def circle_edit(circle_id):
     return render_template("circle/circle_edit.html.jinja2", circle=circle)
 
 
+@app.route("/circles/<int:circle_id>/reports")
+@need_login
+def circle_reports(circle_id):
+    circle = db.query(Circle).get(circle_id)
+    circle_reports = (
+        db.query(Report)
+        .filter(Report.circle_id == circle_id)
+        .order_by(Report.created_at.desc())
+    )
+    return render_template(
+        "circle/reports.html.jinja2",
+        circle=circle,
+        circle_reports=circle_reports,
+    )
+
+
+@app.route("/circles/reports/<int:report_id>")
+@need_login
+def circle_report(report_id):
+    report = db.query(Report).get(report_id)
+    return render_template(
+        "report.html.jinja2", circle=circle, report=report, edit=False
+    )
+
+
+@app.route("/circles/reports/<int:report_id>/delete", methods=('get', 'post'))
+@need_login
+def circle_report_delete(report_id):
+    report = db.query(Report).get(report_id)
+    if request.method == "POST":
+        if "delete" in request.form:
+            db.query(Report).filter(Report.report_id == report_id).delete()
+            db.query(ReportAttendee).filter(
+                ReportAttendee.report_id == report_id
+            ).delete()
+            db.query(ReportChecklist).filter(
+                ReportChecklist.report_id == report_id
+            ).delete()
+            db.query(ReportIndicator).filter(
+                ReportIndicator.report_id == report_id
+            ).delete()
+            db.query(ReportMilestone).filter(
+                ReportMilestone.report_id == report_id
+            ).delete()
+            db.commit()
+        return redirect(url_for("circle_reports", circle_id=report.circle_id))
+    return render_template("report_delete.html.jinja2", report=report)
+
+
 @app.route(
     "/circles/<int:circle_id>/report/create/<report_type>", methods=("post",)
 )
@@ -650,6 +692,7 @@ def circle_report_create(circle_id, report_type):
 def circle_report_edit(report_id):
     report = db.query(Report).get(report_id)
     if request.method == "POST":
+        report.modified_by = session['user_id']
         for attendee in report.attendees:
             attendee.checked = False
         for action in report.actions:
@@ -673,5 +716,5 @@ def circle_report_edit(report_id):
                 value = None if value == "" else value
                 report.content = value
         db.commit()
-        return redirect(url_for("circles"))
+        return redirect(url_for("circle_reports", circle_id=report.circle_id))
     return render_template("report.html.jinja2", report=report, edit=True)

@@ -3,18 +3,30 @@
 {% block title %}Réunion de {{ report.report_type | lower }} − {{ super() }}{% endblock title %}
 
 {% block content %}
-  <h2>Réunion de {{ report.report_type | lower }}</h2>
-
-  <aside>
-    <p>Créé par {{ session.users.get(report.author_id | string).login }} le {{ report.created_at.strftime('%d %B %Y') }}.</p>
-  </aside>
+  {% if edit %}
+    <h2>Réunion de {{ report.report_type | lower }}</h2>
+    <aside>
+      <p>Créé par {{ session.users.get(report.author_id | string).login }} le {{ report.created_at.strftime('%d %B %Y') }}.</p>
+    </aside>
+  {% else %}
+    <h2>Rapport de la réunion de {{ report.report_type | lower }} du {{ report.created_at.strftime('%d/%m/%Y') }}</h2>
+    <aside>
+      {% if report.modified_at and report.modified_by %}
+        <p>Dernière modification le {{ report.modified_at.strftime('%d/%m/%Y') }} par {{ session.users.get(report.modified_by | string).login }}
+      {% endif %}
+      <ul>
+        <li><a href="{{ url_for('circle_report_edit', report_id=report.report_id) }}" >Editer le rapport</a></li>
+        <li><a href="{{ url_for('circle_report_delete', report_id=report.report_id) }}">Supprimer le rapport</a></li>
+      </ul>
+    </aside>
+  {% endif %}
 
   <form method="post">
     <article>
       <h3>Présents</h3>
       {% for attendee in report.attendees %}
         <label>
-          <input type="checkbox" name="attendee-{{ attendee.report_id }}-{{ attendee.user_id }}" {{ 'checked' if attendee.checked }} />
+          <input type="checkbox" name="attendee-{{ attendee.report_id }}-{{ attendee.user_id }}" {{ 'checked' if attendee.checked }} {{ 'disabled' if not edit }} />
           {{ attendee.user.login or attendee.user.user_name or '<em>Inconnu</em>' }}
         </label>
       {% endfor %}
@@ -25,7 +37,7 @@
         <h3>Action récurrentes</h3>
         {% for action in report.actions %}
           <label>
-            <input type="checkbox" name="action-{{ action.report_id }}-{{ action.item_id }}" {{ 'checked' if action.checked }} />
+            <input type="checkbox" name="action-{{ action.report_id }}-{{ action.item_id }}" {{ 'checked' if action.checked }} {{ 'disabled' if not edit }} />
             {% if action.item %}
               {{ action.item.role_focus.role.role_name }}
               {% if action.item.role_focus.focus_name %}
@@ -43,21 +55,23 @@
         {% for indicator in report.indicators %}
           <label>
             {{ indicator.content }}
-            <input type="number" step="0.01" name="indicator-{{ indicator.report_id }}-{{ indicator.item_id }}" value="{{ (indicator.value | indicator) or '' }}" />
+            <input type="number" step="0.01" name="indicator-{{ indicator.report_id }}-{{ indicator.item_id }}" value="{{ (indicator.value | indicator) or '' }}" {{ 'disabled' if not edit }} />
           </label>
         {% endfor %}
       </article>
 
       <article>
         <h3>Projets</h3>
-        {{ display_milestones(report.projects | map(attribute='milestone'), report=report) }}
+        {{ display_milestones(report.projects | map(attribute='milestone'), report=report, edit=edit) }}
       </article>
     {% endif %}
 
     <article>
       <h3>Ordre du jour</h3>
-      <textarea name="content">{{ report.content or '' }}</textarea>
-      <input type="submit" />
+      <textarea name="content" {{ 'disabled' if not edit }} >{{ report.content or '' }}</textarea>
+      {% if edit %}
+        <input type="submit" />
+      {% endif %}
     </article>
   </form>
 {% endblock content %}
