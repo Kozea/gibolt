@@ -168,6 +168,9 @@ main {
       align-items: center;
       display: flex;
       margin: 1em 1em 0 0; }
+  .role small {
+    padding-left: 0.5em;
+    color: red; }
 
 .links {
   display: flex;
