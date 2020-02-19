@@ -1,11 +1,9 @@
 {% extends 'circle/_circle.html.jinja2' %}
 
 {% block circle_content %}
-  <aside>
-    <ul class="links">
-      <li><a href="{{ url_for('circle_edit', circle_id=circle.circle_id) }}">Éditer</a></li>
-    </ul>
-  </aside>
+  <ul class="links">
+    <li><a href="{{ url_for('circle_edit', circle_id=circle.circle_id) }}">Éditer</a></li>
+  </ul>
 
   <article>
     <h3>Raison d’être</h3>

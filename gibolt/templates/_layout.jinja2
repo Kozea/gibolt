@@ -24,9 +24,9 @@
       {% endif %}
       {% if report %}
         {% set report_milestones = (report.projects | selectattr('milestone_number', 'eq', milestone.number) | list) %}
-        <input 
+        <input
           name="milestone-{{ report.report_id }}-{{ milestone.number }}-{{ milestone.repository_name or milestone.repo }}"
-          value="{{ report_milestones[0].milestone.comment if report_milestones else '' }}"
+          value="{{ (report_milestones[0].milestone.comment or '') if report_milestones else '' }}"
           {{ 'disabled' if not edit }}
         />
       {% endif %}

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700&display=swap");
 body {
@@ -23,9 +24,6 @@ h2 {
 [class^="circle-"] {
   border-left: 0.5em solid;
   padding-left: 0.5em; }
-
-h3 {
-  padding: 0 1em; }
 
 a {
   color: #2c3249; }
@@ -83,6 +81,14 @@ nav {
 main {
   background: #f0f5f9;
   flex: 1; }
+  main dl dt {
+    font-weight: bold;
+    margin: 1em 0 0.5em; }
+  main dl dd {
+    margin-left: 0.5em; }
+    main dl dd::before {
+      content: '•';
+      padding-right: 0.5em; }
   main article {
     margin: 2em 1em; }
     main article label {
@@ -120,34 +126,13 @@ main {
       main article section.open time {
         background: #f54e40; }
     main article table {
-      margin: 2em;
-      border-spacing: 0.5em; }
+      border-collapse: collapse; }
+      main article table tr {
+        border-bottom: 1px solid grey; }
+      main article table th, main article table td {
+        padding: 1em; }
       main article table tr {
         padding: 0.5em O; }
-      main article table th, main article table td:not(:nth-of-type(1)) {
-        text-align: center; }
-
-.item {
-  width: 50vw; }
-
-.delete {
-  display: block;
-  margin: 2em;
-  font-weight: bold; }
-
-.reports {
-  margin: 2em;
-  border-collapse: collapse; }
-  .reports tr {
-    border-bottom: 1px solid grey; }
-  .reports td {
-    padding: 1em; }
-
-.indicator li {
-  padding: 0.5em; }
-
-.indicator small {
-  display: block; }
 
 .circles {
   font-size: 0.7em;
@@ -204,7 +189,7 @@ main {
 .links {
   display: flex;
   list-style: none;
-  margin: 0;
+  margin: 0 1em;
   padding: 0; }
   .links a {
     margin-right: 1em; }
@@ -228,11 +213,5 @@ main {
 .project {
   padding-right: 0.75em;
   opacity: 0.7; }
-
-.menu-circle ul {
-  list-style: none;
-  display: flex;
-  justify-content: space-evenly;
-  text-transform: uppercase; }
 
 /*# sourceMappingURL=style.css.map */

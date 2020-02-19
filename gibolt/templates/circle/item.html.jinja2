@@ -1,42 +1,47 @@
 {% extends 'circle/_circle.html.jinja2' %}
 
 {% block circle_content %}
-<article>
   {% if is_edit %}
-    <h3>Edition de {{ item.content }}</h3>
-  {% else %}
-    <h3>
-      Ajout {% if is_action %}
-          d'une actio récurente
+    <ul class="links">
+      {% if item.item_type == 'checklist' %}
+        <a href="{{ url_for('circle_action_delete', circle_id=circle.circle_id, action_id=item.item_id)}}">
+          Supprimer l’action récurrente
+        </a>
       {% else %}
-          d'un indicateur
+        <a href="{{ url_for('circle_indicator_delete', circle_id=circle.circle_id, indicator_id=item.item_id)}}">
+          Supprimer l’indicateur
+        </a>
       {% endif %}
-    </h3>
+    </ul>
   {% endif %}
-  <form method="post" class="item">
-    <label>
-      Action
-      <input name="content" {% if is_edit %}value="{{ item.content }}"{% endif %} />
-    </label>
-    <label>
-     Role 
-      <select name="role_focus_id" {% if is_edit %}value="{{ role_id }}"{% endif %} />
-        {% for role in all_roles  %}
-            <option value="{{ role.id }}" {% if is_edit and role.id == role_id %}selected='selected'{% endif %}>{{ role.label }}</option>
-        {% endfor %}
-      </select>
-    </label>
-  <input type="submit" />
-  </form>
-  {% if is_edit %}
-    {% if item.item_type == 'checklist' %}
-      <a href="{{ url_for('circle_action_delete', circle_id=circle.circle_id, action_id=item.item_id)}}" class="delete">
-      Supprimer l'action récurrente
+
+  <article>
+    {% if is_edit %}
+      <h3>Édition de {{ item.content }}</h3>
     {% else %}
-      <a href="{{ url_for('circle_indicator_delete', circle_id=circle.circle_id, indicator_id=item.item_id)}}" class="delete">
-      Supprimer l'indicateur
+      <h3>
+        Ajout
+        {% if is_action %}
+          d’une action récurente
+        {% else %}
+          d’un indicateur
+        {% endif %}
+      </h3>
     {% endif %}
-    </a>
-  {% endif %}
-</article>
+    <form method="post">
+      <label>
+        Action
+        <input name="content" {% if is_edit %}value="{{ item.content }}"{% endif %} />
+      </label>
+      <label>
+        Role
+        <select name="role_focus_id" {% if is_edit %}value="{{ role_id }}"{% endif %}>
+          {% for role in all_roles  %}
+            <option value="{{ role.id }}" {% if is_edit and role.id == role_id %}selected='selected'{% endif %}>{{ role.label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <input type="submit" />
+    </form>
+  </article>
 {% endblock circle_content %}

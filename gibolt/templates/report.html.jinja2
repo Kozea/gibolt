@@ -10,15 +10,16 @@
     </aside>
   {% else %}
     <h2>Rapport de la réunion de {{ report.report_type | lower }} du {{ report.created_at.strftime('%d/%m/%Y') }}</h2>
-    <aside>
-      {% if report.modified_at and report.modified_by %}
+    <ul class="links">
+      <li><a href="{{ url_for('circle_report_edit', report_id=report.report_id) }}" >Éditer le rapport</a></li>
+      <li><a href="{{ url_for('circle_report_delete', report_id=report.report_id) }}">Supprimer le rapport</a></li>
+    </ul>
+
+    {% if report.modified_at and report.modified_by %}
+      <aside>
         <p>Dernière modification le {{ report.modified_at.strftime('%d/%m/%Y') }} par {{ session.users.get(report.modified_by | string).login }}
-      {% endif %}
-      <ul>
-        <li><a href="{{ url_for('circle_report_edit', report_id=report.report_id) }}" >Editer le rapport</a></li>
-        <li><a href="{{ url_for('circle_report_delete', report_id=report.report_id) }}">Supprimer le rapport</a></li>
-      </ul>
-    </aside>
+      </aside>
+    {% endif %}
   {% endif %}
 
   <form method="post">

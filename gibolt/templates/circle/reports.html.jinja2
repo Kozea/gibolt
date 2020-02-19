@@ -1,26 +1,31 @@
 {% extends 'circle/_circle.html.jinja2' %}
 
 {% block circle_content %}
-<article>
-  <h3>Créer une nouvelle réunion</h3>
-  <aside>
-  <ul class="links">
-    {% for _, report_type in config.MEETINGS_TYPES %}
-      <li><form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id, report_type=report_type) }}"><input type="submit" value="Réunion de {{ report_type | lower }}" /></form></li>
-    {% endfor %}
-  </ul>
-  </aside>
-  <h3>Les rapports</h3>
-  <table class="reports">
-    <tbody>
-      {% for report in circle_reports %}
-      <tr>
-        <td>{{ report.created_at.strftime('%d/%m/%Y') }}</td>
-        <td>Réunion de {{ report.report_type }}</td>
-        <td><a href="{{ url_for('circle_report', report_id=report.report_id) }}">Voir le rapport</a><td>
-      </tr> 
+  <form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id, report_type=report_type) }}">
+    <ul class="links">
+      {% for _, report_type in config.MEETINGS_TYPES %}
+        <li><input type="submit" value="Créer une réunion de {{ report_type | lower }}" /></li>
       {% endfor %}
-    </tbody>
-  </table>
-</article>
+    </ul>
+  </form>
+
+  <article>
+    <h3>Rapports</h3>
+    <table>
+      <tbody>
+        <thead>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Rapport</th>
+        </thead>
+        {% for report in circle_reports %}
+          <tr>
+            <td>{{ report.created_at.strftime('%d/%m/%Y') }}</td>
+            <td>Réunion de {{ report.report_type }}</td>
+            <td><a href="{{ url_for('circle_report', report_id=report.report_id) }}">Voir le rapport</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </article>
 {% endblock circle_content %}

@@ -1,11 +1,14 @@
 {% extends 'circle/_circle.html.jinja2' %}
 
 {% block circle_content %}
-  <article>
-    <h3>Les actions récurrentes</h3>
-    <aside>
+  <ul class="links">
+    <li>
       <a href="{{ url_for('circle_action_add', circle_id=circle.circle_id)}}">Ajouter une action récurrente</a>
-    </aside>
+    </li>
+  </ul>
+
+  <article>
+    <h3>Actions récurrentes</h3>
     <table>
       <thead>
         <tr>

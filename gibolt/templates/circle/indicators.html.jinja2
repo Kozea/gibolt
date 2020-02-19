@@ -1,22 +1,29 @@
 {% extends 'circle/_circle.html.jinja2' %}
 
 {% block circle_content %}
-  <article>
-    <h3>Liste des indicateurs</h3>
-    <aside>
+  <ul class="links">
+    <li>
       <a href="{{ url_for('circle_indicator_add', circle_id=circle.circle_id)}}">
         Ajouter un indicateur
       </a>
-    </aside>
-    <ul class="indicator">
-    {% for indicator in indicators %}
-    <li>
-      <a href="{{ url_for('circle_indicator', circle_id=circle.circle_id, indicator_id=indicator.item_id)}}">
-        {{ indicator.content }} 
-      </a>
-      <small>{{ indicator.role_focus.role.role_name }} {{ indicator.role_focus.focus_name }}</small>
     </li>
-    {% endfor %}
-    </ul>
+  </ul>
+
+  <article>
+    <h3>Liste des indicateurs</h3>
+    <dl>
+      {% for role_focus, indicators in indicators | groupby('role_focus_id') %}
+        <dt>
+          {{ indicators[0].role_focus.role.role_name }} {{ indicators[0].role_focus.focus_name }}
+        </dt>
+        {% for indicator in indicators %}
+          <dd>
+            <a href="{{ url_for('circle_indicator', circle_id=circle.circle_id, indicator_id=indicator.item_id) }}">
+              {{ indicator.content }}
+            </a>
+          </dd>
+        {% endfor %}
+      {% endfor %}
+    </dl>
   </article>
 {% endblock circle_content %}
