@@ -1,10 +1,10 @@
 {% extends 'circle/_circle.html.jinja2' %}
 
 {% block circle_content %}
-  <form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id, report_type=report_type) }}">
+  <form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id) }}">
     <ul class="links">
       {% for _, report_type in config.MEETINGS_TYPES %}
-        <li><input type="submit" value="Créer une réunion de {{ report_type | lower }}" /></li>
+        <li><button type="submit" value={{ report_type }} name="report_type">Créer une réunion de {{ report_type | lower }}</button></li>
       {% endfor %}
     </ul>
   </form>
@@ -12,12 +12,14 @@
   <article>
     <h3>Rapports</h3>
     <table>
-      <tbody>
-        <thead>
+      <thead>
+        <tr>
           <th>Date</th>
           <th>Type</th>
           <th>Rapport</th>
-        </thead>
+        </tr>
+      </thead>
+      <tbody>
         {% for report in circle_reports %}
           <tr>
             <td>{{ report.created_at.strftime('%d/%m/%Y') }}</td>

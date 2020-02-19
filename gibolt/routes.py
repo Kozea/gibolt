@@ -619,11 +619,10 @@ def circle_report_delete(report_id):
     return render_template("report_delete.html.jinja2", report=report)
 
 
-@app.route(
-    "/circles/<int:circle_id>/report/create/<report_type>", methods=("post",)
-)
+@app.route("/circles/<int:circle_id>/report/create", methods=("post",))
 @need_login
-def circle_report_create(circle_id, report_type):
+def circle_report_create(circle_id):
+    report_type = request.form.get('report_type')
     circle = db.query(Circle).get(circle_id)
     report = Report(
         circle_id=circle_id,
