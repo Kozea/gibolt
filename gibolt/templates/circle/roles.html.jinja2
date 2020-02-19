@@ -19,11 +19,16 @@
               {% endfor %}
             </ul>
           {% else %}
-            {% if role.role_focuses %}
-              {% set user = session.users.get(role.role_focuses[0].latest_user.user_id | string) %}
-              <img class="avatar" src="{{ user.avatar_url }}" title="{{ user.login }}" />
+            {% if role.role_focuses  %}
+              {% if role.role_focuses[0].latest_user %}
+                {% set user = session.users.get(role.role_focuses[0].latest_user.user_id | string) %}
+                <img class="avatar" src="{{ user.avatar_url }}" title="{{ user.login }}" />
+                <a href="{{ url_for('circle_role', role_id=role.role_id) }}">{{ role.role_name }}</a>
+              {% else %}
+                <a href="{{ url_for('circle_role', role_id=role.role_id) }}">{{ role.role_name }}</a>
+                <small>Rôle expiré</small>
+              {% endif %}
             {% endif %}
-            <a href="{{ url_for('circle_role', role_id=role.role_id) }}">{{ role.role_name }}</a>
           {% endif %}
         </section>
       {% endfor %}
