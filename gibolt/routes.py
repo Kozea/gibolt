@@ -165,7 +165,7 @@ def milestones():
     end = (date.today() + timedelta(days=60)).isoformat()
 
     with ThreadPoolExecutor(max_workers=50) as executor:
-        for repository_name in session["repository_names"][48:53]:
+        for repository_name in session["repository_names"]:
             executor.submit(
                 add_milestones,
                 repository_name,
