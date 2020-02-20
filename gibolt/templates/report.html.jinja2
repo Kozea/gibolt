@@ -63,7 +63,7 @@
 
       <article>
         <h3>Projets</h3>
-        {{ display_milestones(report.projects | map(attribute='milestone'), report=report, edit=edit) }}
+        {{ display_milestones(report.projects | map(attribute='milestone'), report=report, edit=edit, circle_id=report.circle_id) }}
       </article>
     {% endif %}
 

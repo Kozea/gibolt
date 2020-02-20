@@ -196,7 +196,7 @@ main {
   padding: 0; }
   .links a {
     margin-right: 1em; }
-  .links input:not([type="checkbox"]) {
+  .links input:not([type="checkbox"]), .links button {
     background: transparent;
     border: 0;
     color: #2c3249;
@@ -216,5 +216,9 @@ main {
 .project {
   padding-right: 0.75em;
   opacity: 0.7; }
+
+.delete-milestone {
+  float: right;
+  padding-right: 0.25em; }
 
 /*# sourceMappingURL=style.css.map */

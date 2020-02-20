@@ -447,6 +447,35 @@ def circle_milestones(circle_id):
     )
 
 
+@app.route(
+    (
+        "/circles/<int:circle_id>/milestones/<repo_name>"
+        "/<int:milestone_number>/delete"
+    ),
+    methods=('get', 'post'),
+)
+@need_login
+def circle_milestone_delete(circle_id, repo_name, milestone_number):
+    milestone = db.query(MilestoneCircle).get(
+        (circle_id, milestone_number, repo_name)
+    )
+
+    if request.method == 'POST':
+        if "delete" in request.form:
+            db.query(MilestoneCircle).filter(
+                and_(
+                    MilestoneCircle.circle_id == circle_id,
+                    MilestoneCircle.milestone_number == milestone_number,
+                )
+            ).delete()
+            db.commit()
+        return redirect(url_for('circle_milestones', circle_id=circle_id))
+
+    return render_template(
+        "circle/milestone_delete.html.jinja2", milestone=milestone
+    )
+
+
 @app.route("/circles/<int:circle_id>/roles")
 @need_login
 def circle_roles(circle_id):
@@ -590,9 +619,7 @@ def circle_reports(circle_id):
 @need_login
 def circle_report(report_id):
     report = db.query(Report).get(report_id)
-    return render_template(
-        "report.html.jinja2", circle=circle, report=report, edit=False
-    )
+    return render_template("report.html.jinja2", report=report, edit=False)
 
 
 @app.route("/circles/reports/<int:report_id>/delete", methods=('get', 'post'))

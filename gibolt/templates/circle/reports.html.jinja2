@@ -4,7 +4,7 @@
   <form method="post" action="{{ url_for('circle_report_create', circle_id=circle.circle_id) }}">
     <ul class="links">
       {% for _, report_type in config.MEETINGS_TYPES %}
-        <li><button type="submit" value={{ report_type }} name="report_type">Créer une réunion de {{ report_type | lower }}</button></li>
+        <li><button class="report-create" type="submit" value={{ report_type }} name="report_type">Créer une réunion de {{ report_type | lower }}</button></li>
       {% endfor %}
     </ul>
   </form>
