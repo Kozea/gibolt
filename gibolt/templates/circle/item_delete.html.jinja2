@@ -4,9 +4,9 @@
   <h2>
     Suppression de
     {% if item.item_type == 'checklist' %}
-      l'action récurrente {{ item.content }}
+      l'action récurrente <em>{{ item.content }}</em>
     {% else %}
-      l'indicateur {{ item.content }}
+      l'indicateur <em>{{ item.content }}</em>
     {% endif %}</h2>
 
   <article>
