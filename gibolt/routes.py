@@ -52,10 +52,10 @@ def authorized(oauth_token):
         return abort(403)
     session["token"] = oauth_token
     session["user_id"] = github.get("/user", access_token=oauth_token)["id"]
-    session["repository_names"] = {
+    session["repository_names"] = [
         repository["name"] for repository in get("orgs", "repos", oauth_token)
         if not repository["archived"]
-    }
+    ]
     users = github.get(
         f'/teams/{app.config["GITHUB_TEAM_ID"]}/members',
         access_token=oauth_token,
