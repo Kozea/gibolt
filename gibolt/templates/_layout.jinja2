@@ -2,11 +2,11 @@
   {% for milestone in milestones | selectattr('due_on') | sort(attribute='due_on') %}
     {% set percentage = milestone.closed_issues / ((milestone.open_issues + milestone.closed_issues) or 1) %}
     <section class="{{ milestone.state }}">
+      {% if can_delete %}
+        <a href="{{ url_for('circle_milestone_delete', circle_id=circle_id, milestone_number=milestone.number, repo_name=milestone.repository_name) }}" class="delete-milestone">Détacher</a>
+      {% endif %}
       <time datetime="{{ milestone.due_on }}">{{ milestone.due_on | day }}</time>
       <a href="{{ milestone.html_url }}"><span class="project">{{ milestone.repository_name or milestone.repo }}</span> {{ milestone.title }}</a>
-      {% if can_delete %}
-        <a href="{{ url_for('circle_milestone_delete', circle_id=circle_id, milestone_number=milestone.number, repo_name=milestone.repository_name) }}" class="delete-milestone">Supprimer</a>
-      {% endif %}
       {% if circles %}
         <form class="circles">
           {% for circle in circles %}

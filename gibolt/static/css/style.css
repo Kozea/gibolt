@@ -89,6 +89,8 @@ main {
     main dl dd::before {
       content: '•';
       padding-right: 0.5em; }
+  main nav ul {
+    text-transform: lowercase; }
   main article {
     margin: 2em 1em; }
     main article label {
@@ -219,6 +221,13 @@ main {
 
 .delete-milestone {
   float: right;
+  font-size: 0;
   padding-right: 0.25em; }
+  .delete-milestone:before {
+    border-radius: 1em;
+    content: "×";
+    display: inline-block;
+    font-size: 1rem;
+    margin-left: 0.5em; }
 
 /*# sourceMappingURL=style.css.map */

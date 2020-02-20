@@ -101,6 +101,9 @@ main
         content: '•'
         padding-right: 0.5em
 
+  nav ul
+    text-transform: lowercase
+
   article
     margin: 2em 1em
 
@@ -220,9 +223,9 @@ main
       align-items: center
       display: flex
       margin: 1em 1em 0 0
-  
+
   small
-    padding-left: 0.5em 
+    padding-left: 0.5em
     color: red
 
 .links
@@ -258,4 +261,13 @@ main
 
 .delete-milestone
   float: right
+  font-size: 0;
   padding-right: 0.25em
+
+  &:before
+    border-radius: 1em
+    content: "×"
+    display: inline-block
+    font-size: 1rem
+    margin-left: 0.5em
+
