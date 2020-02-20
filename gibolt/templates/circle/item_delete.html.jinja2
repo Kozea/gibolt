@@ -4,15 +4,15 @@
   <h2>
     Suppression de
     {% if item.item_type == 'checklist' %}
-      l'action récurente {{ item.content }} 
+      l'action récurrente {{ item.content }}
     {% else %}
-      l'indicateur {{ item.cotent }}
+      l'indicateur {{ item.content }}
     {% endif %}</h2>
 
   <article>
     <h3>Voulez-vous réellement supprimer
     {% if item.item_type == 'checklist' %}
-      cette action récurente ?
+      cette action récurrente ?
     {% else %}
      cet indicateur ?
     {% endif %}</h3>

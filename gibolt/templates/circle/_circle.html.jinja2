@@ -6,7 +6,7 @@
   <nav>
     <ul>
       <li{{ ' class="active"' if request.endpoint == 'circle' }}><a href="{{ url_for('circle', circle_id=circle.circle_id)}}">Informations</a></li>
-      <li{{ ' class="active"' if request.endpoint == 'circle_actions' }}><a href="{{ url_for('circle_actions', circle_id=circle.circle_id)}}">Actions récurentes</a></li>
+      <li{{ ' class="active"' if request.endpoint == 'circle_actions' }}><a href="{{ url_for('circle_actions', circle_id=circle.circle_id)}}">Actions récurrentes</a></li>
       <li{{ ' class="active"' if request.endpoint == 'circle_indicators' }}><a href="{{ url_for('circle_indicators', circle_id=circle.circle_id)}}">Indicateurs</a></li>
       <li{{ ' class="active"' if request.endpoint == 'circle_milestones' }}><a href="{{ url_for('circle_milestones', circle_id=circle.circle_id)}}">Étapes</a></li>
       <li{{ ' class="active"' if request.endpoint == 'circle_roles' }}><a href="{{ url_for('circle_roles', circle_id=circle.circle_id)}}">Rôles</a></li>
