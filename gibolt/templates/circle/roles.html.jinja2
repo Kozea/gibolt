@@ -7,7 +7,7 @@
       <h4>{{ {'leadlink': 'Premier lien', 'elected': 'Rôles élus', 'assigned': 'Rôles assignés'}[role_type] }}</h4>
       {% for role in roles | sort(attribute='role_name') %}
         <section class="role">
-          {% if role.role_focuses | map(attribute='focus_name') | join %}
+          {% if role.role_focuses | length > 1 %}
             <a href="{{ url_for('circle_role', role_id=role.role_id) }}">{{ role.role_name }}</a>
             <ul>
               {% for focus in role.role_focuses %}
