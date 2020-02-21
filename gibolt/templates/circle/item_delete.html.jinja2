@@ -1,0 +1,24 @@
+{% extends '_layout.jinja2' %}
+
+{% block content %}
+  <h2>
+    Suppression de
+    {% if item.item_type == 'checklist' %}
+      l'action récurrente <em>{{ item.content }}</em>
+    {% else %}
+      l'indicateur <em>{{ item.content }}</em>
+    {% endif %}</h2>
+
+  <article>
+    <h3>Voulez-vous réellement supprimer
+    {% if item.item_type == 'checklist' %}
+      cette action récurrente ?
+    {% else %}
+     cet indicateur ?
+    {% endif %}</h3>
+    <form method="post">
+      <button name="cancel">Annuler</button>
+      <button name="delete">Supprimer</button>
+    </form>
+  </article>
+{% endblock content %}

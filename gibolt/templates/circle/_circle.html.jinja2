@@ -1,0 +1,19 @@
+{% extends '_layout.jinja2' %}
+
+{% block title %}{{ circle.circle_name }} − {{ super() }}{% endblock title %}
+
+{% block content %}
+  <nav>
+    <ul>
+      <li{{ ' class="active"' if request.endpoint == 'circle' }}><a href="{{ url_for('circle', circle_id=circle.circle_id)}}">Informations</a></li>
+      <li{{ ' class="active"' if request.endpoint == 'circle_actions' }}><a href="{{ url_for('circle_actions', circle_id=circle.circle_id)}}">Actions récurrentes</a></li>
+      <li{{ ' class="active"' if request.endpoint == 'circle_indicators' }}><a href="{{ url_for('circle_indicators', circle_id=circle.circle_id)}}">Indicateurs</a></li>
+      <li{{ ' class="active"' if request.endpoint == 'circle_milestones' }}><a href="{{ url_for('circle_milestones', circle_id=circle.circle_id)}}">Étapes</a></li>
+      <li{{ ' class="active"' if request.endpoint == 'circle_roles' }}><a href="{{ url_for('circle_roles', circle_id=circle.circle_id)}}">Rôles</a></li>
+      <li{{ ' class="active"' if request.endpoint == 'circle_reports' }}><a href="{{ url_for('circle_reports', circle_id=circle.circle_id)}}">Réunions</a></li>
+    </ul>
+  </nav>
+  <h2 class="circle-{{ circle.circle_id }}">{{ circle.circle_name }}</h2>
+  {% block circle_content %}
+  {% endblock circle_content %}
+{% endblock content %}

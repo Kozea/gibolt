@@ -1,36 +1,6 @@
-{% extends '_layout.jinja2' %}
+{% extends 'circle/_circle.html.jinja2' %}
 
-{% block title %}{{ circle.circle_name }} − {{ super() }}{% endblock title %}
-
-{% block content %}
-  <h2 class="circle-{{ circle.circle_id }}">{{ circle.circle_name }}</h2>
-
-  <aside>
-    <ul class="links">
-      <li><a href="{{ url_for('circle_edit', circle_id=circle.circle_id) }}">Éditer</a></li>
-    </ul>
-  </aside>
-
-  <article>
-    <h3>Raison d’être</h3>
-    {{ circle.circle_purpose | markdown }}
-  </article>
-
-  <article>
-    <h3>Domaines</h3>
-    {{ circle.circle_domain | markdown }}
-  </article>
-
-  <article>
-    <h3>Redevabilités</h3>
-    {{ circle.circle_accountabilities | markdown }}
-  </article>
-
-  <article>
-    <h3>Étapes</h3>
-    {{ display_milestones(milestones) }}
-  </article>
-
+{% block circle_content %}
   <article>
     <h3>Rôles</h3>
     {% for role_type, roles in circle.roles | selectattr('is_active') | groupby('role_type') | reverse %}
@@ -69,4 +39,5 @@
       <input type="submit" value="Ajouter" />
     </form>
   </article>
-{% endblock content %}
+
+{% endblock circle_content %}

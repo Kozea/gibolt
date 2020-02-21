@@ -1,0 +1,15 @@
+{% extends '_layout.jinja2' %}
+
+{% block title %}Milestone {{ milestone.repo_name }} - {{ super() }}{% endblock title %}
+
+{% block content %}
+  <h2>Détachement de l’étape</h2>
+
+  <article>
+    <h3>Voulez-vous réellement détacher cette étape du cercle ?</h3>
+    <form method="post">
+      <button name="cancel">Annuler</button>
+      <button name="delete">Détacher</button>
+    </form>
+  </article>
+{% endblock content %}

@@ -1,0 +1,8 @@
+{% extends 'circle/_circle.html.jinja2' %}
+
+{% block circle_content %}
+  <article>
+    <h3>Étapes</h3>
+    {{ display_milestones(milestones, can_delete=True, circle_id=circle.circle_id) }}
+  </article>
+{% endblock circle_content %}
