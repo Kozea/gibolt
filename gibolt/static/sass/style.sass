@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap')
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap')
+// @import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap')
+@import url('https://fonts.googleapis.com/css?family=Hind:400,700&display=swap')
+
+$primary: #161d88
 
 body
   color: black
   display: flex
   flex-direction: column
-  font-family: Lato, sans
+  // font-family: Lato, sans
+  font-family: 'Hind', sans-serif
   margin: 0
   min-height: 100vh
 
@@ -20,13 +24,15 @@ h1
 
 h2
   margin: 2rem 1rem
+  display: none
 
 [class^="circle-"]
-  border-left: 0.5em solid
-  padding-left: 0.5em
+  // border-left: 0.5em solid
+  // padding-left: 0.5em
 
 a
   color: #2c3249
+  text-decoration: none
 
 time
   background: #888
@@ -60,7 +66,8 @@ aside
   padding: 0 1em
 
 nav
-  background: #2c3249
+  // background: #2c3249
+  background: #203990
 
   ul
     display: flex
@@ -86,7 +93,8 @@ nav
         background-color: #6fa1fe
 
 main
-  background: #f0f5f9
+  // background: #f0f5f9
+  background: #f9f8ff
   flex: 1
 
   dl
@@ -105,7 +113,15 @@ main
     text-transform: lowercase
 
   article
+    background: white
     margin: 2em 1em
+    padding: 1em
+
+    h3
+      font-size: 1.75em
+      // padding: .75em
+      margin: 0
+      // border-bottom: 1px solid blue
 
     label
       display: block
@@ -134,10 +150,12 @@ main
       height: 8em
 
     section
-      background: white
-      border: 1px solid #dee9f2
-      margin: 0.5em
-      padding: 1em
+      // background: white
+      background: #fff
+      // border: 1px solid #dee9f2
+      // border-bottom: 1px solid #dee9f2
+      // margin: 0.5em
+      padding: .75em
 
       a
         text-decoration: inherit
@@ -270,4 +288,3 @@ main
     display: inline-block
     font-size: 1rem
     margin-left: 0.5em
-
