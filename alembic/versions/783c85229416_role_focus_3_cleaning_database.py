@@ -14,7 +14,6 @@ down_revision = "d681d95ed44b"
 branch_labels = None
 depends_on = None
 
-connection = op.get_bind()
 
 focus_helper = sa.Table(
     "tmp_role_focus",
@@ -27,6 +26,8 @@ focus_helper = sa.Table(
 
 
 def upgrade():
+    connection = op.get_bind()
+
     op.drop_table("role")
     op.rename_table("tmp_role", "role")
     op.rename_table("role_focus", "tmp_role_focus")
@@ -60,6 +61,8 @@ def upgrade():
 
 
 def downgrade():
+    connection = op.get_bind()
+
     op.rename_table("role", "tmp_role")
     op.rename_table("role_focus", "tmp_role_focus")
 
