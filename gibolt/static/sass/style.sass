@@ -30,25 +30,29 @@ h3
   &:hover a
     color: $action
 
+  &.circle-2 a
+    // color: red
+
 [class^="circle-"]
   // border-left: 0.5em solid
   // padding-left: 0.5em
 
   a
-    color: $primary
+    // color: $primary
+    color: inherit
     text-decoration: none
 
     &::after
       // content: '→'
       content: '\203A'
       display: inline-block
+      margin-left: .5em
 
     &:hover
       color: blue
 
 time
   background: #888
-  // border-radius: 0.5em
   border-radius: 1em
   color: white
   float: right
@@ -59,22 +63,22 @@ time
 progress
   appearance: none
   -webkit-appearance: none
-  background: #2c324911
+  background: #5f76fe11
   border: 0
   color: #2c3249bb
   display: block
-  height: 2px
+  height: 1px
   margin: 0.75em -1em -1em
   width: calc(100% + 2em)
 
   &::-moz-progress-bar
-    background: #2c3249bb
+    background: #5f76febb
 
   &::-webkit-progress-bar
-    background: #2c324911
+    background: #5f76fe11
 
   &::-webkit-progress-value
-    background: #2c3249bb
+    background: #5f76febb
 
 aside
   padding: 0 1em
@@ -215,42 +219,38 @@ main
         padding: 0.5em O
 
 .circles
-  font-size: 0.7em
+  font-size: 0.8em
+  font-weight: 500
   line-height: 2.5em
   min-height: 2.5em
   margin: 0.5em 0 -0.25em
 
   input, label
+    color: lighten($primary, 25%)
     display: initial
 
   input
     appearance: none
     -webkit-appearance: none
-    background-color: #888
-    border-radius: 1em
+    background-color: $primary
+    border-radius: 100%
     display: inline-block
-    height: 0.8em
-    margin: 0.6em 0 0 0.4em
-    position: absolute
-    width: 0.8em
+    height: 5px
+    vertical-align: middle
+    width: 5px
     z-index: 1
 
     &:checked
-      background-color: #6fa1fe
+      background-color: $action
 
   &:not(:hover)
     input, input:not(:checked) + label
       display: none
 
     label
+      color: lighten($primary, 25%)
       margin-left: 0
-      padding-left: 0.5em
-
-  label
-    border-radius: 0.2em
-    border-style: solid
-    border-width: 1px
-    padding: 0.25em 0.5em 0.25em 1.75em
+      padding-left: 0
 
 .avatar
   border-radius: .25em
@@ -336,6 +336,7 @@ main
 #page-circles
   article
     background: white
+    border: 1px solid #e3e5eb
     margin-top: 1em
     padding: 1em
 
