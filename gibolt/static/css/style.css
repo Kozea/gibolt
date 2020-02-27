@@ -26,19 +26,20 @@ h3:hover a {
   color: #5f76fe; }
 
 [class^="circle-"] a {
-  color: black;
+  color: #464555;
   text-decoration: none; }
   [class^="circle-"] a::after {
-    content: '→';
+    content: '›';
     display: inline-block; }
 
 time {
   background: #888;
-  border-radius: 0.5em;
+  border-radius: 1em;
   color: white;
   float: right;
   font-size: 0.7em;
-  padding: 0.25em 0.5em; }
+  font-weight: 700;
+  padding: .5em 1em; }
 
 progress {
   appearance: none;
@@ -85,7 +86,7 @@ nav {
       transition: 0.3s color; }
 
 main {
-  background: #f0f5f9;
+  background: #f2f5f8;
   flex: 1; }
   main dl dt {
     font-weight: bold;
@@ -101,12 +102,9 @@ main {
       font-size: .9rem;
       text-transform: lowercase; }
   main article {
-    background: white;
-    margin: 2em 1em; }
+    margin: 0 1em; }
     main article h3 {
-      font-size: 1.5em;
-      margin: 0;
-      padding: 1em 0 0 1em; }
+      font-size: 1.5em; }
     main article label {
       display: block;
       padding: 0.25em; }
@@ -129,17 +127,22 @@ main {
     main article textarea {
       height: 8em; }
     main article section {
-      border-bottom: 3px solid #f0f5f9;
+      background: white;
+      border: 1px solid #e3e5eb;
+      margin: .5em 0;
       padding: 1em; }
       main article section a {
-        color: black;
+        color: #464555;
+        font-weight: 500;
         text-decoration: inherit; }
         main article section a:hover, main article section a:focus {
           color: #5f76fe; }
       main article section.closed time {
-        background: #079507; }
+        background: #f2fded;
+        color: #23c000; }
       main article section.open time {
-        background: #464555; }
+        background: #f0edff;
+        color: #464555; }
     main article table {
       border-collapse: collapse; }
       main article table tr {
@@ -234,8 +237,12 @@ main {
     width: auto; }
 
 .project {
-  padding-right: 0.75em;
-  opacity: 0.7; }
+  color: #5f76fe;
+  display: block;
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  width: 100%; }
 
 .delete-milestone {
   float: right;
@@ -247,5 +254,12 @@ main {
     display: inline-block;
     font-size: 1rem;
     margin-left: 0.5em; }
+
+#page-circles article {
+  background: white;
+  margin-top: 1em;
+  padding: 1em; }
+  #page-circles article h3 {
+    margin: 0; }
 
 /*# sourceMappingURL=style.css.map */

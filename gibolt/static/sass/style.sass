@@ -35,11 +35,12 @@ h3
   // padding-left: 0.5em
 
   a
-    color: black
+    color: $primary
     text-decoration: none
 
     &::after
-      content: '→'
+      // content: '→'
+      content: '\203A'
       display: inline-block
 
     &:hover
@@ -47,11 +48,13 @@ h3
 
 time
   background: #888
-  border-radius: 0.5em
+  // border-radius: 0.5em
+  border-radius: 1em
   color: white
   float: right
   font-size: 0.7em
-  padding: 0.25em 0.5em
+  font-weight: 700
+  padding: .5em 1em
 
 progress
   appearance: none
@@ -109,7 +112,8 @@ nav
         // color: #5f76fe
 
 main
-  background: #f0f5f9
+  // background: #f0f5f9
+  background: #f2f5f8
   // background: #f9f8ff
   flex: 1
 
@@ -137,14 +141,14 @@ main
         // padding: .25em 1em
 
   article
-    background: white
-    margin: 2em 1em
+    // background: white
+    margin: 0 1em
     // padding: 1em
 
     h3
       font-size: 1.5em
-      margin: 0
-      padding: 1em 0 0 1em
+      // margin: 0
+      // padding: 1em 0 0 1em
 
     label
       display: block
@@ -173,21 +177,30 @@ main
       height: 8em
 
     section
-      border-bottom: 3px solid #f0f5f9
+      background: white
+      border: 1px solid #e3e5eb
+      // border-bottom: 3px solid #f0f5f9
+      margin: .5em 0
       padding: 1em
 
       a
-        color: black
+        color: $primary
+        font-weight: 500
         text-decoration: inherit
 
         &:hover, &:focus
           color: $action
 
       &.closed time
-        background: #079507
+        // background: #079507
+        background: #f2fded
+        color: #23c000
+
 
       &.open time
-        background: $primary
+        // background: $primary
+        background: #f0edff
+        color: $primary
 
     table
       border-collapse: collapse
@@ -299,8 +312,14 @@ main
     width: auto
 
 .project
-  padding-right: 0.75em
-  opacity: 0.7
+  // padding-right: 0.75em
+  // opacity: 0.7
+  color: $action
+  display: block
+  font-size: .8rem
+  font-weight: 700
+  text-transform: uppercase
+  width: 100%
 
 .delete-milestone
   float: right
@@ -313,3 +332,12 @@ main
     display: inline-block
     font-size: 1rem
     margin-left: 0.5em
+
+#page-circles
+  article
+    background: white
+    margin-top: 1em
+    padding: 1em
+
+    h3
+      margin: 0
