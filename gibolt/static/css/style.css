@@ -85,10 +85,34 @@ nav {
       padding: 1em;
       text-decoration: inherit;
       transition: 0.3s color; }
+      nav ul a:hover, nav ul a:focus {
+        color: #5f76fe; }
 
 main {
   background: #f2f5f8;
   flex: 1; }
+  main button[name="delete"], main button[name="add"] {
+    background: none;
+    border: none;
+    color: #5f76fe;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: underline;
+    transition: color .3s;
+    width: auto; }
+    main button[name="delete"]:hover, main button[name="add"]:hover {
+      color: #788cfe; }
+  main button.report-create {
+    background: #5f76fe;
+    border-radius: 5px;
+    color: white;
+    font-family: 'Hind', sans-serif;
+    margin-right: 1em;
+    padding: .5em 1em;
+    text-decoration: none;
+    transition: background .3s; }
+    main button.report-create:hover {
+      background: #4660fe; }
   main dl dt {
     font-weight: bold;
     margin: 1em 0 0.5em; }
@@ -109,18 +133,33 @@ main {
     main article label {
       display: block;
       padding: 0.25em; }
-    main article textarea, main article button, main article input:not([type="checkbox"]) {
-      background: white;
-      border: 1px solid #888;
-      box-sizing: border-box;
-      color: black;
-      display: block;
-      padding: 0.2em;
+    main article input:not([type="submit"]):not([type="checkbox"]):not([name="color"]), main article textarea {
       width: 100%; }
-    main article button {
-      display: inline-block;
-      padding: 0.2em 1em;
-      width: auto; }
+    main article textarea, main article button, main article input:not([type="checkbox"]), main article select {
+      background: #f2f5f8;
+      border: 1px solid #c0cfdd;
+      border-radius: .2em;
+      box-sizing: border-box;
+      color: #464555;
+      display: block;
+      font-family: 'Hind', sans-serif;
+      outline: none;
+      padding: 1em; }
+      main article textarea:focus, main article button:focus, main article input:not([type="checkbox"]):focus, main article select:focus {
+        border-color: #5f76fe; }
+    main article input[type="submit"] {
+      background: #5f76fe;
+      border-radius: 5px;
+      color: white;
+      font-family: 'Hind', sans-serif;
+      margin-right: 1em;
+      padding: .5em 1em;
+      text-decoration: none;
+      transition: background .3s;
+      border: none;
+      margin-top: 1em; }
+      main article input[type="submit"]:hover {
+        background: #4660fe; }
     main article input[type="color"] {
       height: 2em;
       padding: 0;
@@ -145,13 +184,21 @@ main {
         background: #f0edff;
         color: #464555; }
     main article table {
+      background: white;
       border-collapse: collapse; }
       main article table tr {
-        border-bottom: 1px solid grey; }
+        border-bottom: 1px solid #f2f5f8;
+        text-align: left; }
       main article table th, main article table td {
         padding: 1em; }
       main article table tr {
         padding: 0.5em O; }
+      main article table tbody td a {
+        color: #5f76fe;
+        text-decoration: none;
+        transition: color .3s; }
+        main article table tbody td a:hover {
+          color: #788cfe; }
 
 .circles {
   font-size: 0.8em;
@@ -212,11 +259,15 @@ main {
   padding: 0; }
   .links a {
     background: #5f76fe;
+    border-radius: 5px;
     color: white;
-    text-decoration: none;
+    font-family: 'Hind', sans-serif;
     margin-right: 1em;
     padding: .5em 1em;
-    border-radius: 5px; }
+    text-decoration: none;
+    transition: background .3s; }
+    .links a:hover {
+      background: #4660fe; }
   .links input:not([type="checkbox"]), .links button {
     background: transparent;
     border: 0;
@@ -253,12 +304,18 @@ main {
     font-size: 1rem;
     margin-left: 0.5em; }
 
-#page-circles article {
+html:not(#page-issues):not(#page-milestones):not(#page-circle-milestones):not(#page-circle-roles) article {
   background: white;
   border: 1px solid #e3e5eb;
   margin-top: 1em;
   padding: 1em; }
-  #page-circles article h3 {
+  html:not(#page-issues):not(#page-milestones):not(#page-circle-milestones):not(#page-circle-roles) article h3 {
     margin: 0; }
+  html:not(#page-issues):not(#page-milestones):not(#page-circle-milestones):not(#page-circle-roles) article dl dd a {
+    color: #5f76fe;
+    text-decoration: none;
+    transition: color .3s; }
+    html:not(#page-issues):not(#page-milestones):not(#page-circle-milestones):not(#page-circle-roles) article dl dd a:hover {
+      color: #788cfe; }
 
 /*# sourceMappingURL=style.css.map */
