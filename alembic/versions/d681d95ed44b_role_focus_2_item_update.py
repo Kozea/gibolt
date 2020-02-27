@@ -14,8 +14,6 @@ down_revision = "b588680b9f75"
 branch_labels = None
 depends_on = None
 
-connection = op.get_bind()
-
 item_helper = sa.Table(
     "item",
     sa.MetaData(),
@@ -36,6 +34,8 @@ item_helper2 = sa.Table(
 
 
 def upgrade():
+    connection = op.get_bind()
+
     tmp_item = op.create_table(
         "tmp_item",
         sa.Column("item_id", sa.Integer(), nullable=False),
@@ -68,6 +68,8 @@ def upgrade():
 
 
 def downgrade():
+    connection = op.get_bind()
+
     tmp_item = op.create_table(
         "tmp_item",
         sa.Column("item_id", sa.Integer(), nullable=False),

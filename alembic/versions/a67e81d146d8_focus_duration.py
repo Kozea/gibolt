@@ -27,10 +27,11 @@ focus_helper = sa.Table(
     sa.Column("role_id", sa.Integer(), nullable=False),
     sa.Column("duration", sa.Integer(), nullable=False),
 )
-connection = op.get_bind()
 
 
 def upgrade():
+    connection = op.get_bind()
+
     with op.batch_alter_table("role_focus", schema=None) as batch_op:
         batch_op.add_column(sa.Column("duration", sa.Integer(), nullable=True))
         batch_op.alter_column(
@@ -49,6 +50,8 @@ def upgrade():
 
 
 def downgrade():
+    connection = op.get_bind()
+
     with op.batch_alter_table("role", schema=None) as batch_op:
         batch_op.add_column(sa.Column("duration", sa.INTEGER(), nullable=True))
 
