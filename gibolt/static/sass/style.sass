@@ -276,23 +276,35 @@ main
   input
     appearance: none
     -webkit-appearance: none
-    background-color: $primary
-    border-radius: 100%
+    background-color: white
+    border: 2px solid #c8cdd2
+    border-radius: .2em
     display: inline-block
-    height: 5px
+    height: 1em
+    outline: none
     vertical-align: middle
-    width: 5px
+    width: 1em
     z-index: 1
 
     &:checked
       background-color: $action
+      border-color: $action
+      position: relative
+
+      &::after
+        color: white
+        content: '\2714'
+        left: 0
+        line-height: 1em
+        position: absolute
+        right: 0
+        top: 0
 
   &:not(:hover)
     input, input:not(:checked) + label
       display: none
 
     label
-      color: lighten($primary, 25%)
       margin-left: 0
       padding-left: 0
 

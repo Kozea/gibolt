@@ -222,19 +222,30 @@ main {
   .circles input {
     appearance: none;
     -webkit-appearance: none;
-    background-color: #464555;
-    border-radius: 100%;
+    background-color: white;
+    border: 2px solid #c8cdd2;
+    border-radius: .2em;
     display: inline-block;
-    height: 5px;
+    height: 1em;
+    outline: none;
     vertical-align: middle;
-    width: 5px;
+    width: 1em;
     z-index: 1; }
     .circles input:checked {
-      background-color: #5f76fe; }
+      background-color: #5f76fe;
+      border-color: #5f76fe;
+      position: relative; }
+      .circles input:checked::after {
+        color: white;
+        content: '\2714';
+        left: 0;
+        line-height: 1em;
+        position: absolute;
+        right: 0;
+        top: 0; }
   .circles:not(:hover) input, .circles:not(:hover) input:not(:checked) + label {
     display: none; }
   .circles:not(:hover) label {
-    color: #828199;
     margin-left: 0;
     padding-left: 0; }
 
