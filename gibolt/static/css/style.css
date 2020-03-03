@@ -25,13 +25,20 @@ h2 {
 h3:hover a {
   color: #5f76fe; }
 
-[class^="circle-"] a {
-  color: inherit;
-  text-decoration: none; }
-  [class^="circle-"] a::after {
-    content: '\203A';
-    display: inline-block;
-    margin-left: .5em; }
+[class^="circle-"] {
+  color: inherit; }
+  [class^="circle-"]:hover a {
+    color: inherit; }
+    [class^="circle-"]:hover a::after {
+      margin-left: 1.5em; }
+  [class^="circle-"] a {
+    color: inherit;
+    text-decoration: none; }
+    [class^="circle-"] a::after {
+      content: '\203A';
+      display: inline-block;
+      margin-left: .5em;
+      transition: .3s; }
 
 time {
   background: #888;
@@ -180,6 +187,10 @@ main {
       main article section.closed time {
         background: #f2fded;
         color: #23c000; }
+        main article section.closed time::before {
+          content: '\2714';
+          display: inline-block;
+          margin-right: .5em; }
       main article section.open time {
         background: #f0edff;
         color: #464555; }
@@ -207,7 +218,6 @@ main {
   min-height: 2.5em;
   margin: 0.5em 0 -0.25em; }
   .circles input, .circles label {
-    color: #828199;
     display: initial; }
   .circles input {
     appearance: none;

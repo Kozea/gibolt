@@ -64,25 +64,24 @@ h3
   &:hover a
     color: $action
 
-  &.circle-2 a
-    // color: red
-
 [class^="circle-"]
-  // border-left: 0.5em solid
-  // padding-left: 0.5em
+  color: inherit
+
+  &:hover a
+    color: inherit
+
+    &::after
+      margin-left: 1.5em
 
   a
     color: inherit
     text-decoration: none
 
     &::after
-      // content: '→'
       content: '\203A'
       display: inline-block
       margin-left: .5em
-
-    &:hover
-      color: blue
+      transition: .3s
 
 time
   background: #888
@@ -236,6 +235,11 @@ main
         background: #f2fded
         color: #23c000
 
+        &::before
+          content: '\2714'
+          display: inline-block
+          margin-right: .5em
+
 
       &.open time
         background: #f0edff
@@ -267,7 +271,6 @@ main
   margin: 0.5em 0 -0.25em
 
   input, label
-    color: lighten($primary, 25%)
     display: initial
 
   input
