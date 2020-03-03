@@ -61,18 +61,6 @@ h2
   margin: 2rem 1rem
 
 h3
-  &:hover a
-    color: $action
-
-[class^="circle-"]
-  color: inherit
-
-  &:hover a
-    color: inherit
-
-    &::after
-      margin-left: 1.5em
-
   a
     color: inherit
     text-decoration: none
@@ -82,6 +70,9 @@ h3
       display: inline-block
       margin-left: .5em
       transition: .3s
+
+    &:hover::after
+      margin-left: 1.5em
 
 time
   background: #888
@@ -154,6 +145,7 @@ main
     &[name="delete"],
     &[name="add"]
       +button-action-secondary
+
     &.report-create
       +button-action
 
@@ -240,7 +232,6 @@ main
           display: inline-block
           margin-right: .5em
 
-
       &.open time
         background: #f0edff
         color: $primary
@@ -267,8 +258,8 @@ main
   font-size: 0.8em
   font-weight: 500
   line-height: 2.5em
-  min-height: 2.5em
   margin: 0.5em 0 -0.25em
+  min-height: 2.5em
 
   input, label
     display: initial
@@ -381,7 +372,6 @@ main
     display: inline-block
     font-size: 1rem
     margin-left: 0.5em
-
 
 html:not(#page-issues):not(#page-milestones):not(#page-circle-milestones):not(#page-circle-roles)
   article

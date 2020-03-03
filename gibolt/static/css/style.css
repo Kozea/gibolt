@@ -22,23 +22,16 @@ h1 {
 h2 {
   margin: 2rem 1rem; }
 
-h3:hover a {
-  color: #5f76fe; }
-
-[class^="circle-"] {
-  color: inherit; }
-  [class^="circle-"]:hover a {
-    color: inherit; }
-    [class^="circle-"]:hover a::after {
-      margin-left: 1.5em; }
-  [class^="circle-"] a {
-    color: inherit;
-    text-decoration: none; }
-    [class^="circle-"] a::after {
-      content: '\203A';
-      display: inline-block;
-      margin-left: .5em;
-      transition: .3s; }
+h3 a {
+  color: inherit;
+  text-decoration: none; }
+  h3 a::after {
+    content: '\203A';
+    display: inline-block;
+    margin-left: .5em;
+    transition: .3s; }
+  h3 a:hover::after {
+    margin-left: 1.5em; }
 
 time {
   background: #888;
@@ -215,8 +208,8 @@ main {
   font-size: 0.8em;
   font-weight: 500;
   line-height: 2.5em;
-  min-height: 2.5em;
-  margin: 0.5em 0 -0.25em; }
+  margin: 0.5em 0 -0.25em;
+  min-height: 2.5em; }
   .circles input, .circles label {
     display: initial; }
   .circles input {
