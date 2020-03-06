@@ -134,6 +134,8 @@ class Circle(Base):
             if not role.is_active:
                 continue
             for focus in role.role_focuses:
+                if not focus.latest_user:
+                    continue
                 user_ids.add(focus.latest_user.user_id)
         return user_ids
 
