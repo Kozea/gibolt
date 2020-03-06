@@ -566,7 +566,7 @@ def circle_role(role_id):
             return redirect(url_for("circle_role", role_id=role_id))
         else:
             return redirect(url_for("circle_roles", circle_id=role.circle_id))
-    return render_template("role.html.jinja2", role=role)
+    return render_template("role.html.jinja2", role=role, circle=role.circle)
 
 
 @app.route("/roles/<int:role_id>/edit", methods=("get", "post"))
@@ -578,7 +578,9 @@ def circle_role_edit(role_id):
             setattr(role, f"role_{key}", request.form[f"role_{key}"])
         db.commit()
         return redirect(url_for("circle_role", role_id=role_id))
-    return render_template("role_edit.html.jinja2", role=role)
+    return render_template(
+        "role_edit.html.jinja2", role=role, circle=role.circle
+    )
 
 
 @app.route("/circles/<int:circle_id>/roles/add", methods=("post",))

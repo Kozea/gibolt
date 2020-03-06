@@ -1,8 +1,8 @@
-{% extends '_layout.jinja2' %}
+{% extends 'circle/_circle.html.jinja2' %}
 
-{% block title %}Cercle {{ role.role_name }} − {{ super() }}{% endblock title %}
+{% block title %}Rôle {{ role.role_name }} − {{ super() }}{% endblock title %}
 
-{% block content %}
+{% block circle_content %}
   <h2>{{ role.role_name }}</h2>
 
   <article>
@@ -26,4 +26,4 @@
       <input type="submit" />
     </form>
   </article>
-{% endblock content %}
+{% endblock circle_content %}
