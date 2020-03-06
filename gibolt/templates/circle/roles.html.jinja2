@@ -28,6 +28,9 @@
                 <a href="{{ url_for('circle_role', role_id=role.role_id) }}">{{ role.role_name }}</a>
                 <small>Rôle expiré</small>
               {% endif %}
+            {% else %}
+              <a href="{{ url_for('circle_role', role_id=role.role_id) }}">{{ role.role_name }}</a>
+              <small>Aucun focus</small>
             {% endif %}
           {% endif %}
         </section>
