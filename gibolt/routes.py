@@ -565,7 +565,7 @@ def circle_role(role_id):
         if "add" in request.form or "delete" in request.form:
             return redirect(url_for("circle_role", role_id=role_id))
         else:
-            return redirect(url_for("circle", circle_id=role.circle_id))
+            return redirect(url_for("circle_roles", circle_id=role.circle_id))
     return render_template("role.html.jinja2", role=role)
 
 
@@ -601,7 +601,7 @@ def circle_role_delete(role_id):
             db.query(RoleFocus).filter(RoleFocus.role_id == role_id).delete()
             db.query(Role).filter(Role.role_id == role_id).delete()
             db.commit()
-        return redirect(url_for("circle", circle_id=role.circle_id))
+        return redirect(url_for("circle_roles", circle_id=role.circle_id))
     return render_template("role_delete.html.jinja2", role=role)
 
 
