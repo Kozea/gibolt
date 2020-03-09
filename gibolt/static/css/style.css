@@ -332,4 +332,10 @@ html:not(#page-issues):not(#page-milestones):not(#page-circle-milestones):not(#p
     html:not(#page-issues):not(#page-milestones):not(#page-circle-milestones):not(#page-circle-roles) article dl dd a:hover {
       color: #788cfe; }
 
+dd {
+  display: flex;
+  align-items: center; }
+  dd figure {
+    font-size: 2em; }
+
 /*# sourceMappingURL=style.css.map */

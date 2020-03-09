@@ -30,6 +30,7 @@ from .model import (
     RoleFocus,
     RoleFocusUser,
 )
+from .utils import make_indicators_graph
 
 setlocale(LC_ALL, "fr_FR.utf-8")
 
@@ -53,7 +54,8 @@ def authorized(oauth_token):
     session["token"] = oauth_token
     session["user_id"] = github.get("/user", access_token=oauth_token)["id"]
     session["repository_names"] = [
-        repository["name"] for repository in get("orgs", "repos", oauth_token)
+        repository["name"]
+        for repository in get("orgs", "repos", oauth_token)
         if not repository["archived"]
     ]
     users = github.get(
@@ -343,6 +345,16 @@ def circle_action_delete(circle_id, action_id):
 @need_login
 def circle_indicators(circle_id):
     circle = db.query(Circle).get(circle_id)
+
+    last_reports = (
+        db.query(Report)
+        .filter(Report.circle_id == circle.circle_id)
+        .filter(Report.report_type == 'Triage')
+        .order_by(Report.created_at.desc())
+        .limit(8)
+        .all()
+    )
+
     indicators = (
         db.query(Item)
         .join(RoleFocus)
@@ -356,8 +368,14 @@ def circle_indicators(circle_id):
         )
         .all()
     )
+    charts = make_indicators_graph(
+        indicators, last_reports, circle.label.color
+    )
     return render_template(
-        "circle/indicators.html.jinja2", circle=circle, indicators=indicators
+        "circle/indicators.html.jinja2",
+        circle=circle,
+        indicators=indicators,
+        charts=charts,
     )
 
 
@@ -547,8 +565,8 @@ def circle_role(role_id):
         if "add" in request.form or "delete" in request.form:
             return redirect(url_for("circle_role", role_id=role_id))
         else:
-            return redirect(url_for("circle", circle_id=role.circle_id))
-    return render_template("role.html.jinja2", role=role)
+            return redirect(url_for("circle_roles", circle_id=role.circle_id))
+    return render_template("role.html.jinja2", role=role, circle=role.circle)
 
 
 @app.route("/roles/<int:role_id>/edit", methods=("get", "post"))
@@ -560,7 +578,9 @@ def circle_role_edit(role_id):
             setattr(role, f"role_{key}", request.form[f"role_{key}"])
         db.commit()
         return redirect(url_for("circle_role", role_id=role_id))
-    return render_template("role_edit.html.jinja2", role=role)
+    return render_template(
+        "role_edit.html.jinja2", role=role, circle=role.circle
+    )
 
 
 @app.route("/circles/<int:circle_id>/roles/add", methods=("post",))
@@ -583,7 +603,7 @@ def circle_role_delete(role_id):
             db.query(RoleFocus).filter(RoleFocus.role_id == role_id).delete()
             db.query(Role).filter(Role.role_id == role_id).delete()
             db.commit()
-        return redirect(url_for("circle", circle_id=role.circle_id))
+        return redirect(url_for("circle_roles", circle_id=role.circle_id))
     return render_template("role_delete.html.jinja2", role=role)
 
 

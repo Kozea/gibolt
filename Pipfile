@@ -1,22 +1,18 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 alembic = "*"
 cachecontrol = "*"
 flask = "*"
 github-flask = "*"
 sqlalchemy = "*"
 markdown2 = "*"
-
+pygal = "*"
 
 [dev-packages]
-
 pytest-cov = "*"
 pytest-flake8 = "*"
 pytest-isort = "*"
@@ -25,5 +21,4 @@ devcore = "*"
 libsass = "*"
 
 [requires]
-
 python_version = "3.7"

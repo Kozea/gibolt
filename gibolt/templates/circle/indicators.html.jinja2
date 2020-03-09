@@ -21,6 +21,13 @@
             <a href="{{ url_for('circle_indicator', circle_id=circle.circle_id, indicator_id=indicator.item_id) }}">
               {{ indicator.content }}
             </a>
+            {% for chart in charts %}
+            {% if chart.item_id == indicator.item_id %}
+            <figure>
+              {{ chart.chart|safe }}
+            </figure>
+            {% endif %}
+            {% endfor %}
           </dd>
         {% endfor %}
       {% endfor %}
