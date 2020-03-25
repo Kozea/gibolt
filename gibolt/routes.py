@@ -58,7 +58,7 @@ def authorized(oauth_token):
     )
     user_id = str(github.get("/user", access_token=oauth_token)["id"])
     authorized_ids = [str(user['id']) for user in users]
-    if is_team_member(user_id, oauth_token, authorized_ids) is False:
+    if is_team_member(user_id, authorized_ids) is False:
         flash("Authorization failed.")
         return abort(403)
     session['token'] = oauth_token
@@ -77,7 +77,7 @@ def authorized(oauth_token):
     return redirect(session.get("redirect_auth_url", url_for("issues")))
 
 
-def is_team_member(user_id, oauth_token, authorized_ids):
+def is_team_member(user_id, authorized_ids):
     if user_id in authorized_ids:
         return True
     return False
@@ -93,11 +93,7 @@ def need_login(function):
         # they already have a token
         # It should be removed after 27-04-2020
         if (
-            is_team_member(
-                session.get('user_id'),
-                session.get('token'),
-                session.get('users').keys(),
-            )
+            is_team_member(session.get('user_id'), session.get('users').keys())
             is False
         ):
             flash("Authorization failed.")
