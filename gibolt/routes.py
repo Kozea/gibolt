@@ -51,18 +51,23 @@ def authorized(oauth_token):
     if oauth_token is None:
         flash("Authorization failed.")
         return abort(403)
-    session["token"] = oauth_token
-    session["user_id"] = github.get("/user", access_token=oauth_token)["id"]
-    session["repository_names"] = [
-        repository["name"]
-        for repository in get("orgs", "repos", oauth_token)
-        if not repository["archived"]
-    ]
     users = github.get(
         f'/teams/{app.config["GITHUB_TEAM_ID"]}/members',
         access_token=oauth_token,
         all_pages=True,
     )
+    user_id = str(github.get("/user", access_token=oauth_token)["id"])
+    authorized_ids = [str(user['id']) for user in users]
+    if is_team_member(user_id, oauth_token, authorized_ids) is False:
+        flash("Authorization failed.")
+        return abort(403)
+    session['token'] = oauth_token
+    session["user_id"] = user_id
+    session["repository_names"] = [
+        repository["name"]
+        for repository in get("orgs", "repos", oauth_token)
+        if not repository["archived"]
+    ]
     session["users"] = {}
     for user in users:
         session["users"][user["id"]] = {
@@ -72,12 +77,31 @@ def authorized(oauth_token):
     return redirect(session.get("redirect_auth_url", url_for("issues")))
 
 
+def is_team_member(user_id, oauth_token, authorized_ids):
+    if user_id in authorized_ids:
+        return True
+    return False
+
+
 def need_login(function):
     @wraps(function)
     def decorated_function(*args, **kwargs):
         if session.get("token") is None:
             session["redirect_auth_url"] = request.url
             return redirect(url_for("login"))
+        # This prevents unauthorized users connection if
+        # they already have a token
+        # It should be removed after 27-04-2020
+        if (
+            is_team_member(
+                session.get('user_id'),
+                session.get('token'),
+                session.get('users').keys(),
+            )
+            is False
+        ):
+            flash("Authorization failed.")
+            return abort(403)
         return function(*args, **kwargs)
 
     return decorated_function
