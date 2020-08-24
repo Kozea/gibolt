@@ -3,12 +3,12 @@ include MakeCitron.Makefile
 
 install-db: ## install-db: Install gibolt database
 	$(LOG)
-	$(PIPENV) run flask dropdb
-	$(PIPENV) run alembic upgrade head
+	$(PYTHON_BINDIR)/flask dropdb
+	$(PYTHON_BINDIR)/alembic upgrade head
 
 upgrade-db: ## upgrade-db: Upgrade gibolt database
 	$(LOG)
-	$(PIPENV) run alembic upgrade head
+	$(PYTHON_BINDIR)/alembic upgrade head
 
 lint-python: ## lint-python: Lint python source
 	$(LOG)
