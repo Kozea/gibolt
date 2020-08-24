@@ -78,6 +78,9 @@ Session.vim
 .env
 .venv
 
+#####=== Pyenv ===#####
+.python-version
+
 #####=== Dependencies ===#####
 bower_components
 node_modules
