@@ -91,3 +91,4 @@ teepy/static/css/*.map
 
 base.Makefile
 database.db
+config.custom.Makefile

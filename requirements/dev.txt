@@ -38,10 +38,6 @@ flake8==3.8.4 \
 flask-wdb-hook==0.2.1 \
     --hash=sha256:056aa6f042738390c576bf7ab6f98f0263a2342a3dd4d8fd9bee1d376120e834 \
     # via devcore
-importlib-metadata==2.0.0 \
-    --hash=sha256:77a540690e24b0305878c37ffd421785a6f7e53c8b5720d211b211de8d0e95da \
-    --hash=sha256:cefa1a2f919b866c5beb7c9f7b0ebb4061f30a8a9bf16d609b000e2dfaceb9c3 \
-    # via flake8, pluggy, pytest
 importmagic3==0.2.0 \
     --hash=sha256:b4ab36e1a9003b01dfbbac97b78201df1ae413d7f4c8eaf09f40423c720f8b46 \
     # via devcore, wdb
@@ -165,10 +161,6 @@ xdis==5.0.4 \
     --hash=sha256:c2bcd4949a7e56878fa50ca91536ebfb071b5df26725a1ff422c10322aabaafd \
     --hash=sha256:ec67697b1176868bc5787b580fd706237641096ca13a2a82cfd4b93016495a1a \
     # via uncompyle6
-zipp==3.3.0 \
-    --hash=sha256:64ad89efee774d1897a58607895d80789c59778ea02185dd846ac38394a8642b \
-    --hash=sha256:eed8ec0b8d1416b2ca33516a37a08892442f3954dee131e92cfd92d8fe3e7066 \
-    # via importlib-metadata
 
 # WARNING: The following packages were not pinned, but pip requires them to be
 # pinned when the requirements file includes hashes. Consider using the --allow-unsafe flag.

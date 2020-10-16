@@ -7,7 +7,7 @@ export FLASK_CONFIG ?= $(PWD)/application.cfg
 
 # Python env
 PYTHON_ONLY = 1
-PIPENV ?= $(shell command -v pipenv 2> /dev/null)
+PYTHON = python38
 VENV = $(PWD)/.venv
 PYTEST = $(VENV)/bin/pytest
 export PIPENV_VENV_IN_PROJECT = 1
