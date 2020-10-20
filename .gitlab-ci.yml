@@ -5,6 +5,9 @@ include:
   - remote: 'https://gitlab.com/Kozea/ci-master/raw/master/.ci-deploy-test.yml'
   - remote: 'https://gitlab.com/Kozea/ci-master/raw/master/.ci-deploy-prod.yml'
   
+.image_test_jobs:
+  image: kozea/python-node-yarn-postgresql:latest
+
 stages:
   - install
   - test
