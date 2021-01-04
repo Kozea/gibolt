@@ -1,0 +1,6 @@
+# Revisions to ignore when using `git blame`
+# `git blame --ignore-revs-file .git-blame-ignore-revs`
+# `git config blame.ignoreRevsFile .git-blame-ignore-revs`
+
+# Reformat all files with Black
+53cd57c3dd1e14535e9ef8a5932b9842a56c171d
