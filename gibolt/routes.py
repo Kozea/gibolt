@@ -57,11 +57,11 @@ def authorized(oauth_token):
         all_pages=True,
     )
     user_id = str(github.get("/user", access_token=oauth_token)["id"])
-    authorized_ids = [str(user['id']) for user in users]
+    authorized_ids = [str(user["id"]) for user in users]
     if user_id not in authorized_ids:
         flash("Authorization failed.")
         return abort(403)
-    session['token'] = oauth_token
+    session["token"] = oauth_token
     session["user_id"] = user_id
     session["repository_names"] = [
         repository["name"]
@@ -235,7 +235,7 @@ def circle_actions(circle_id):
     last_reports = (
         db.query(Report)
         .filter(Report.circle_id == circle.circle_id)
-        .filter(Report.report_type == 'Triage')
+        .filter(Report.report_type == "Triage")
         .order_by(Report.created_at.desc())
         .limit(4)
         .all()
@@ -247,7 +247,7 @@ def circle_actions(circle_id):
         .join(Circle)
         .filter(
             and_(
-                Item.item_type == 'checklist',
+                Item.item_type == "checklist",
                 Circle.circle_id == circle.circle_id,
             )
         )
@@ -269,26 +269,26 @@ def circle_roles_choices(circle):
         for role_focus in role.role_focuses:
             choices.append(
                 {
-                    'id': role_focus.role_focus_id,
-                    'label': f'{role.role_name} {role_focus.focus_name}',
+                    "id": role_focus.role_focus_id,
+                    "label": f"{role.role_name} {role_focus.focus_name}",
                 }
             )
     return choices
 
 
 @app.route(
-    "/circles/<int:circle_id>/actions/<int:action_id>", methods=('get', 'post')
+    "/circles/<int:circle_id>/actions/<int:action_id>", methods=("get", "post")
 )
 @need_login
 def circle_action(circle_id, action_id):
     action = db.query(Item).get(action_id)
     circle = db.query(Circle).get(circle_id)
 
-    if request.method == 'POST':
-        action.content = request.form.get('content')
-        action.role_focus_id = request.form.get('role_focus_id')
+    if request.method == "POST":
+        action.content = request.form.get("content")
+        action.role_focus_id = request.form.get("role_focus_id")
         db.commit()
-        return redirect(url_for('circle_actions', circle_id=circle.circle_id))
+        return redirect(url_for("circle_actions", circle_id=circle.circle_id))
 
     role_id = action.role_focus.role_focus_id
 
@@ -304,19 +304,19 @@ def circle_action(circle_id, action_id):
     )
 
 
-@app.route("/circles/<int:circle_id>/actions/add", methods=('get', 'post'))
+@app.route("/circles/<int:circle_id>/actions/add", methods=("get", "post"))
 @need_login
 def circle_action_add(circle_id):
     circle = db.query(Circle).get(circle_id)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         action = Item()
-        action.item_type = 'checklist'
-        action.content = request.form.get('content')
-        action.role_focus_id = request.form.get('role_focus_id')
+        action.item_type = "checklist"
+        action.content = request.form.get("content")
+        action.role_focus_id = request.form.get("role_focus_id")
         db.add(action)
         db.commit()
-        return redirect(url_for('circle_actions', circle_id=circle.circle_id))
+        return redirect(url_for("circle_actions", circle_id=circle.circle_id))
 
     all_roles = circle_roles_choices(circle)
 
@@ -331,16 +331,16 @@ def circle_action_add(circle_id):
 
 @app.route(
     "/circles/<int:circle_id>/actions/<int:action_id>/delete",
-    methods=('get', 'post'),
+    methods=("get", "post"),
 )
 @need_login
 def circle_action_delete(circle_id, action_id):
     circle = db.query(Circle).get(circle_id)
-    if request.method == 'POST':
+    if request.method == "POST":
         if "delete" in request.form:
             db.query(Item).filter(Item.item_id == action_id).delete()
             db.commit()
-        return redirect(url_for('circle_actions', circle_id=circle.circle_id))
+        return redirect(url_for("circle_actions", circle_id=circle.circle_id))
 
     action = db.query(Item).get(action_id)
     return render_template("circle/item_delete.html.jinja2", item=action)
@@ -354,7 +354,7 @@ def circle_indicators(circle_id):
     last_reports = (
         db.query(Report)
         .filter(Report.circle_id == circle.circle_id)
-        .filter(Report.report_type == 'Triage')
+        .filter(Report.report_type == "Triage")
         .order_by(Report.created_at.desc())
         .limit(8)
         .all()
@@ -367,15 +367,13 @@ def circle_indicators(circle_id):
         .join(Circle)
         .filter(
             and_(
-                Item.item_type == 'indicator',
+                Item.item_type == "indicator",
                 Circle.circle_id == circle.circle_id,
             )
         )
         .all()
     )
-    charts = make_indicators_graph(
-        indicators, last_reports, circle.label.color
-    )
+    charts = make_indicators_graph(indicators, last_reports, circle.label.color)
     return render_template(
         "circle/indicators.html.jinja2",
         circle=circle,
@@ -386,7 +384,7 @@ def circle_indicators(circle_id):
 
 @app.route(
     "/circles/<int:circle_id>/indicators/<int:indicator_id>",
-    methods=('get', 'post'),
+    methods=("get", "post"),
 )
 @need_login
 def circle_indicator(circle_id, indicator_id):
@@ -394,11 +392,11 @@ def circle_indicator(circle_id, indicator_id):
     indicator = db.query(Item).get(indicator_id)
     role_id = indicator.role_focus.role_focus_id
     all_roles = circle_roles_choices(circle)
-    if request.method == 'POST':
-        indicator.content = request.form.get('content')
-        indicator.role_focus_id = request.form.get('role_focus_id')
+    if request.method == "POST":
+        indicator.content = request.form.get("content")
+        indicator.role_focus_id = request.form.get("role_focus_id")
         db.commit()
-        return redirect(url_for('circle_indicators', circle_id=circle_id))
+        return redirect(url_for("circle_indicators", circle_id=circle_id))
 
     return render_template(
         "circle/item.html.jinja2",
@@ -410,20 +408,20 @@ def circle_indicator(circle_id, indicator_id):
     )
 
 
-@app.route("/circles/<int:circle_id>/indicators/add", methods=('get', 'post'))
+@app.route("/circles/<int:circle_id>/indicators/add", methods=("get", "post"))
 @need_login
 def circle_indicator_add(circle_id):
     circle = db.query(Circle).get(circle_id)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         indicator = Item()
-        indicator.item_type = 'indicator'
-        indicator.content = request.form.get('content')
-        indicator.role_focus_id = request.form.get('role_focus_id')
+        indicator.item_type = "indicator"
+        indicator.content = request.form.get("content")
+        indicator.role_focus_id = request.form.get("role_focus_id")
         db.add(indicator)
         db.commit()
         return redirect(
-            url_for('circle_indicators', circle_id=circle.circle_id)
+            url_for("circle_indicators", circle_id=circle.circle_id)
         )
 
     all_roles = circle_roles_choices(circle)
@@ -440,18 +438,18 @@ def circle_indicator_add(circle_id):
 
 @app.route(
     "/circles/<int:circle_id>/indicators/<int:indicator_id>/delete",
-    methods=('get', 'post'),
+    methods=("get", "post"),
 )
 @need_login
 def circle_indicator_delete(circle_id, indicator_id):
     circle = db.query(Circle).get(circle_id)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         if "delete" in request.form:
             db.query(Item).filter(Item.item_id == indicator_id).delete()
             db.commit()
         return redirect(
-            url_for('circle_indicators', circle_id=circle.circle_id)
+            url_for("circle_indicators", circle_id=circle.circle_id)
         )
 
     indicator = db.query(Item).get(indicator_id)
@@ -476,7 +474,7 @@ def circle_milestones(circle_id):
         "/circles/<int:circle_id>/milestones/<repo_name>"
         "/<int:milestone_number>/delete"
     ),
-    methods=('get', 'post'),
+    methods=("get", "post"),
 )
 @need_login
 def circle_milestone_delete(circle_id, repo_name, milestone_number):
@@ -484,7 +482,7 @@ def circle_milestone_delete(circle_id, repo_name, milestone_number):
         (circle_id, milestone_number, repo_name)
     )
 
-    if request.method == 'POST':
+    if request.method == "POST":
         if "delete" in request.form:
             db.query(MilestoneCircle).filter(
                 and_(
@@ -493,7 +491,7 @@ def circle_milestone_delete(circle_id, repo_name, milestone_number):
                 )
             ).delete()
             db.commit()
-        return redirect(url_for('circle_milestones', circle_id=circle_id))
+        return redirect(url_for("circle_milestones", circle_id=circle_id))
 
     return render_template(
         "circle/milestone_delete.html.jinja2", milestone=milestone
@@ -529,9 +527,7 @@ def circle_role(role_id):
                 if focus_user is None:
                     continue
                 if focus_user_type == "start" and value:
-                    focus_user.start_date = datetime.strptime(
-                        value, "%Y-%m-%d"
-                    )
+                    focus_user.start_date = datetime.strptime(value, "%Y-%m-%d")
                 elif focus_user_type == "end" and value:
                     focus_user.end_date = datetime.strptime(value, "%Y-%m-%d")
                 elif focus_user_type == "user":
@@ -648,7 +644,7 @@ def circle_report(report_id):
     return render_template("report.html.jinja2", report=report, edit=False)
 
 
-@app.route("/circles/reports/<int:report_id>/delete", methods=('get', 'post'))
+@app.route("/circles/reports/<int:report_id>/delete", methods=("get", "post"))
 @need_login
 def circle_report_delete(report_id):
     report = db.query(Report).get(report_id)
@@ -675,7 +671,7 @@ def circle_report_delete(report_id):
 @app.route("/circles/<int:circle_id>/report/create", methods=("post",))
 @need_login
 def circle_report_create(circle_id):
-    report_type = request.form.get('report_type')
+    report_type = request.form.get("report_type")
     circle = db.query(Circle).get(circle_id)
     report = Report(
         circle_id=circle_id,
@@ -744,7 +740,7 @@ def circle_report_create(circle_id):
 def circle_report_edit(report_id):
     report = db.query(Report).get(report_id)
     if request.method == "POST":
-        report.modified_by = session['user_id']
+        report.modified_by = session["user_id"]
         for attendee in report.attendees:
             attendee.checked = False
         for action in report.actions:

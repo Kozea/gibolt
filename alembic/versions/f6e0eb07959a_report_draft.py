@@ -6,6 +6,7 @@ Create Date: 2018-03-08 10:09:45.220153
 
 """
 import sqlalchemy as sa
+
 from alembic import op
 
 # revision identifiers, used by Alembic.
@@ -20,10 +21,7 @@ def upgrade():
     with op.batch_alter_table("report", schema=None) as batch_op:
         batch_op.add_column(
             sa.Column(
-                "is_submitted",
-                sa.Boolean(),
-                server_default="0",
-                nullable=False,
+                "is_submitted", sa.Boolean(), server_default="0", nullable=False
             )
         )
 

@@ -1,17 +1,10 @@
 [tool.black]
-line-length = 79
-skip-string-normalization = true
-include = '\.py$'
-exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
+line-length = 80 
+
+[tool.isort]
+line_length = 80
+profile = "black"
+combine_as_imports = true
+
+[tool.pytest.ini_options]
+flake8-max-line-length = 80

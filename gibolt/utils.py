@@ -5,9 +5,9 @@ from pygal.style import Style
 def make_indicators_graph(indicators, reports, color):
     """Generate sparktext for all indicators."""
     style = Style(
-        background='transparent',
+        background="transparent",
         colors=(color,),
-        font_family='googlefont:Hindi',
+        font_family="googlefont:Hindi",
     )
     charts = []
     for indicator in indicators:
@@ -16,7 +16,7 @@ def make_indicators_graph(indicators, reports, color):
         values = []
 
         for report in reports:
-            labels.append(report.created_at.strftime('%d/%m'))
+            labels.append(report.created_at.strftime("%d/%m"))
             for report_indicator in report.indicators:
                 if report_indicator.item_id == indicator.item_id:
                     value = report_indicator.value or 0
@@ -25,13 +25,13 @@ def make_indicators_graph(indicators, reports, color):
         values.reverse()
 
         chart.x_labels = labels
-        chart.add('', values)
+        chart.add("", values)
         charts.append(
             {
-                'item_id': indicator.item_id,
-                'chart': chart.render_sparkline(
+                "item_id": indicator.item_id,
+                "chart": chart.render_sparkline(
                     width=400, show_x_labels=True, show_y_labels=True
-                ).decode('utf-8'),
+                ).decode("utf-8"),
             }
         )
     return charts

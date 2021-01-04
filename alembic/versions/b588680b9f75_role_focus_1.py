@@ -6,6 +6,7 @@ Create Date: 2018-03-12 10:44:03.040815
 
 """
 import sqlalchemy as sa
+
 from alembic import op
 
 # revision identifiers, used by Alembic.
@@ -54,9 +55,7 @@ def upgrade():
         sa.Column("role_focus_id", sa.Integer(), nullable=False),
         sa.Column("role_id", sa.Integer(), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=True),
-        sa.Column(
-            "focus_name", sa.String(), server_default="", nullable=False
-        ),
+        sa.Column("focus_name", sa.String(), server_default="", nullable=False),
         sa.ForeignKeyConstraint(
             ["role_id"], ["tmp_role.role_id"], name="fk_focus_role"
         ),

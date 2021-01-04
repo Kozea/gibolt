@@ -59,7 +59,7 @@ def day(day_string):
 
 @app.template_filter()
 def markdown(markdown_string):
-    return Markup(from_markdown(markdown_string or ''))
+    return Markup(from_markdown(markdown_string or ""))
 
 
 @app.template_filter()

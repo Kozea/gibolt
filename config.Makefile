@@ -4,12 +4,14 @@ API_PORT ?= 1520
 export FLASK_APP ?= $(PWD)/gibolt/__init__.py
 export FLASK_DEBUG ?= 1
 export FLASK_CONFIG ?= $(PWD)/application.cfg
+export FLASK_TEST_CONFIG ?= $(PWD)/application.cfg
 
 # Python env
 PYTHON_ONLY = 1
 PYTHON = python3.8
 VENV = $(PWD)/.venv
 PYTEST = $(VENV)/bin/pytest
+PYTHON_SRCDIR = gibolt
 
 URL_PROD = https://$(CI_PROJECT_NAME).kozea.fr/color.css
 URL_PROD_API = $(URL_PROD)

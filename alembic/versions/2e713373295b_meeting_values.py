@@ -9,9 +9,10 @@ Create Date: 2018-03-02 10:04:14.707386
 import json
 
 import sqlalchemy as sa
-from alembic import op
 from sqlalchemy import String, TypeDecorator, func
 from sqlalchemy.types import NullType
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "2e713373295b"
@@ -112,9 +113,7 @@ def upgrade():
                 "is_active", sa.Boolean(), server_default="1", nullable=False
             )
         )
-        batch_op.add_column(
-            sa.Column("value_type", sa.String(), nullable=True)
-        )
+        batch_op.add_column(sa.Column("value_type", sa.String(), nullable=True))
 
     with op.batch_alter_table("label", schema=None) as batch_op:
         batch_op.create_unique_constraint("text", ["text"])
