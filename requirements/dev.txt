@@ -12,9 +12,9 @@ attrs==20.3.0 \
     --hash=sha256:31b2eced602aa8423c2aea9c76a724617ed67cf9513173fd3a4f03e3a929c7e6 \
     --hash=sha256:832aa3cde19744e49938b91fea06d69ecb9e649c93ba974535d08ad92164f700 \
     # via black, pytest
-better-exceptions==0.2.2 \
-    --hash=sha256:bf79c87659bc849989d726bf0e4a2100edefe7eded112d201f54fe08467fdf63 \
-    --hash=sha256:c196cad849de615abb9f6eb67ca1b83f33b938818f0e2fe8fa157b22aeb7b992 \
+better-exceptions==0.3.3 \
+    --hash=sha256:9c70b1c61d5a179b84cd2c9d62c3324b667d74286207343645ed4306fdaad976 \
+    --hash=sha256:e4e6bc18444d5f04e6e894b10381e5e921d3d544240418162c7db57e9eb3453b \
     # via devcore
 black==18.9b0 \
     --hash=sha256:817243426042db1d36617910df579a54f1afd659adb96fc5032fcf4b36209739 \
@@ -45,13 +45,13 @@ iniconfig==1.1.1 \
     --hash=sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3 \
     --hash=sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32 \
     # via pytest
-isort==5.6.4 \
-    --hash=sha256:dcab1d98b469a12a1a624ead220584391648790275560e1a43e54c5dceae65e7 \
-    --hash=sha256:dcaeec1b5f0eca77faea2a35ab790b4f3680ff75590bfcb7145986905aab2f58 \
+isort==5.7.0 \
+    --hash=sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e \
+    --hash=sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc \
     # via devcore, pytest-isort
-jedi==0.17.2 \
-    --hash=sha256:86ed7d9b750603e4ba582ea8edc678657fb4007894a12bcf6f4bb97892f31d20 \
-    --hash=sha256:98cc583fa0f2f8304968199b01b6b4b94f469a1f4a74c1560506ca2a211378b5 \
+jedi==0.18.0 \
+    --hash=sha256:18456d83f65f400ab0c2d3319e48520420ef43b23a086fdc05dff34132f0fb93 \
+    --hash=sha256:92550a404bad8afed881a137ec9a461fed49eca661414be45059329614ed0707 \
     # via wdb
 libsass==0.20.1 \
     --hash=sha256:1521d2a8d4b397c6ec90640a1f6b5529077035efc48ef1c2e53095544e713d1b \
@@ -78,13 +78,13 @@ mccabe==0.6.1 \
     --hash=sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42 \
     --hash=sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f \
     # via flake8
-packaging==20.8 \
-    --hash=sha256:24e0da08660a87484d1602c30bb4902d74816b6985b93de36926f5bc95741858 \
-    --hash=sha256:78598185a7008a470d64526a8059de9aaa449238f280fc9eb6b13ba6c4109093 \
+packaging==20.9 \
+    --hash=sha256:5b327ac1320dc863dca72f4514ecc086f31186744b84a230374cc1fd776feae5 \
+    --hash=sha256:67714da7f7bc052e064859c05c595155bd1ee9f69f76557e21f051443c20947a \
     # via pytest
-parso==0.7.1 \
-    --hash=sha256:97218d9159b2520ff45eb78028ba8b50d2bc61dcc062a9682666f2dc4bd331ea \
-    --hash=sha256:caba44724b994a8a5e086460bb212abc5a8bc46951bf4a9a1210745953622eb9 \
+parso==0.8.1 \
+    --hash=sha256:15b00182f472319383252c18d5913b69269590616c947747bc50bf4ac768f410 \
+    --hash=sha256:8519430ad07087d4c997fda3a7918f7cfa27cb58972a8c89c2a0295a1c940e9e \
     # via jedi
 pluggy==0.13.1 \
     --hash=sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0 \
@@ -106,17 +106,17 @@ pyparsing==2.4.7 \
     --hash=sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1 \
     --hash=sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b \
     # via packaging
-pytest-flake8==1.0.6 \
-    --hash=sha256:1b82bb58c88eb1db40524018d3fcfd0424575029703b4e2d8e3ee873f2b17027 \
-    --hash=sha256:2e91578ecd9b200066f99c1e1de0f510fbb85bcf43712d46ea29fe47607cc234 \
+pytest-flake8==1.0.7 \
+    --hash=sha256:c28cf23e7d359753c896745fd4ba859495d02e16c84bac36caa8b1eec58f5bc1 \
+    --hash=sha256:f0259761a903563f33d6f099914afef339c085085e643bee8343eb323b32dd6b \
     # via -r requirements/dev.in
-pytest-isort==1.2.0 \
-    --hash=sha256:2c6a1d210e8c478e418ab25df2408c235c97b1b8958fb0b139d790d0ec246f58 \
-    --hash=sha256:f0fcf9674f3a627b36e07466d335e82b0f7c4f9e0f7ec39f2a1750b0189d5371 \
+pytest-isort==1.3.0 \
+    --hash=sha256:074255ad393088a2daee6ca7f2305b7b86358ff632f62302896d8d4b2b339107 \
+    --hash=sha256:46a12331a701e2f21d48548b2828c8b0a7956dbf1cd5347163f537deb24332dd \
     # via -r requirements/dev.in
-pytest==6.2.0 \
-    --hash=sha256:b12e09409c5bdedc28d308469e156127004a436b41e9b44f9bff6446cbab9152 \
-    --hash=sha256:d69e1a80b34fe4d596c9142f35d9e523d98a2838976f1a68419a8f051b24cec6 \
+pytest==6.2.2 \
+    --hash=sha256:9d1edf9e7d0b84d72ea3dbcdfd22b35fb543a5e8f2a60092dd578936bf63d7f9 \
+    --hash=sha256:b574b57423e818210672e07ca1fa90aaf194a4f63f3ab909a2c67ebb22913839 \
     # via -r requirements/dev.in, pytest-flake8
 python-magic==0.4.18 \
     --hash=sha256:356efa93c8899047d1eb7d3eb91e871ba2f5b1376edbaf4cc305e3c872207355 \
@@ -149,9 +149,9 @@ uncompyle6==3.7.4 \
 wdb==3.3.0 \
     --hash=sha256:a6ea079e905b5bc641ea292ca0350d2cd9b9a4fd6e4e9a0459d6a93ed857fe9a \
     # via devcore, flask-wdb-hook
-xdis==5.0.5 \
-    --hash=sha256:14a98414e0b02ba5dba3b64d5e40c4fe9398b492a01bc2c2803f7f58156a3715 \
-    --hash=sha256:f2e9300027cf5faf4182f4b643c589a13e4211488a48482459ddc88899f88dea \
+xdis==5.0.7 \
+    --hash=sha256:4de95534c1096609be6950061ea25ffb4ecb89dbaca7469de4f9e2e4ee46a0ca \
+    --hash=sha256:bee8f43124428a3cca89a598aef51a9fc5e744556d815507eb0ba65088b7f777 \
     # via uncompyle6
 
 # WARNING: The following packages were not pinned, but pip requires them to be
