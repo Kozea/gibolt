@@ -33,9 +33,9 @@ cutter==0.5.0 \
 devcore==0.1.5 \
     --hash=sha256:0067f627886496d44443e17cf72a3726eb370e6e97be063816dc1fe0eaa8afaf
     # via -r requirements/dev.in
-flake8==3.8.4 \
-    --hash=sha256:749dbbd6bfd0cf1318af27bf97a14e28e5ff548ef8e5b1566ccfb25a11e7c839 \
-    --hash=sha256:aadae8761ec651813c24be05c6f7b4680857ef6afaae4651a4eccaef97ce6c3b
+flake8==3.9.0 \
+    --hash=sha256:12d05ab02614b6aee8df7c36b97d1a3b2372761222b19b58621355e82acddcff \
+    --hash=sha256:78873e372b12b093da7b5e5ed302e8ad9e988b38b063b61ad937f26ca58fc5f0
     # via pytest-flake8
 flask-wdb-hook==0.2.1 \
     --hash=sha256:056aa6f042738390c576bf7ab6f98f0263a2342a3dd4d8fd9bee1d376120e834
@@ -49,9 +49,9 @@ iniconfig==1.1.1 \
     --hash=sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3 \
     --hash=sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32
     # via pytest
-isort==5.7.0 \
-    --hash=sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e \
-    --hash=sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc
+isort==5.8.0 \
+    --hash=sha256:0a943902919f65c5684ac4e0154b1ad4fac6dcaa5d9f3426b732f1c8b5419be6 \
+    --hash=sha256:2bb1680aad211e3c9944dbce1d4ba09a989f04e238296c87fe2139faa26d655d
     # via
     #   devcore
     #   pytest-isort
@@ -102,13 +102,13 @@ py==1.10.0 \
     --hash=sha256:21b81bda15b66ef5e1a777a21c4dcd9c20ad3efd0b3f817e7a809035269e1bd3 \
     --hash=sha256:3b80836aa6d1feeaa108e046da6423ab8f6ceda6468545ae8d02d9d58d18818a
     # via pytest
-pycodestyle==2.6.0 \
-    --hash=sha256:2295e7b2f6b5bd100585ebcb1f616591b652db8a741695b3d8f5d28bdc934367 \
-    --hash=sha256:c58a7d2815e0e8d7972bf1803331fb0152f867bd89adf8a01dfd55085434192e
+pycodestyle==2.7.0 \
+    --hash=sha256:514f76d918fcc0b55c6680472f0a37970994e07bbb80725808c17089be302068 \
+    --hash=sha256:c389c1d06bf7904078ca03399a4816f974a1d590090fecea0c63ec26ebaf1cef
     # via flake8
-pyflakes==2.2.0 \
-    --hash=sha256:0d94e0e05a19e57a99444b6ddcf9a6eb2e5c68d3ca1e98e90707af8152c90a92 \
-    --hash=sha256:35b2d75ee967ea93b55750aa9edbbf72813e06a66ba54438df2cfac9e3c27fc8
+pyflakes==2.3.1 \
+    --hash=sha256:7893783d01b8a89811dd72d7dfd4d84ff098e5eed95cfa8905b22bbffe52efc3 \
+    --hash=sha256:f5bc8ecabc05bb9d291eb5203d6810b49040f6ff446a756326104746cc00c1db
     # via flake8
 pyparsing==2.4.7 \
     --hash=sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1 \
@@ -163,9 +163,9 @@ wdb==3.3.0 \
     # via
     #   devcore
     #   flask-wdb-hook
-xdis==5.0.7 \
-    --hash=sha256:4de95534c1096609be6950061ea25ffb4ecb89dbaca7469de4f9e2e4ee46a0ca \
-    --hash=sha256:bee8f43124428a3cca89a598aef51a9fc5e744556d815507eb0ba65088b7f777
+xdis==5.0.8 \
+    --hash=sha256:532780af6841bee79e74cb4719e72077192eaf63946cfb4a570c124863a94001 \
+    --hash=sha256:acffe937f4ddf9b48ce08c94580f7b01b184d705df0dd41b2024a85afb81def1
     # via uncompyle6
 
 # WARNING: The following packages were not pinned, but pip requires them to be
