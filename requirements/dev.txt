@@ -25,7 +25,10 @@ black==18.9b0 \
 click==7.1.2 \
     --hash=sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a \
     --hash=sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc
-    # via black
+    # via
+    #   black
+    #   spark-parser
+    #   xdis
 cutter==0.5.0 \
     --hash=sha256:bee52938af41cd03676d9c001690d77d5a22e2e3fd66569003da9c0f7478ce6e \
     --hash=sha256:c386e12283f5293fac0e7919729655a0edf9a85ce12fd4ff6105d2a283461f2a
@@ -33,9 +36,9 @@ cutter==0.5.0 \
 devcore==0.1.5 \
     --hash=sha256:0067f627886496d44443e17cf72a3726eb370e6e97be063816dc1fe0eaa8afaf
     # via -r requirements/dev.in
-flake8==3.9.0 \
-    --hash=sha256:12d05ab02614b6aee8df7c36b97d1a3b2372761222b19b58621355e82acddcff \
-    --hash=sha256:78873e372b12b093da7b5e5ed302e8ad9e988b38b063b61ad937f26ca58fc5f0
+flake8==3.9.1 \
+    --hash=sha256:1aa8990be1e689d96c745c5682b687ea49f2e05a443aff1f8251092b0014e378 \
+    --hash=sha256:3b9f848952dddccf635be78098ca75010f073bfe14d2c6bda867154bea728d2a
     # via pytest-flake8
 flask-wdb-hook==0.2.1 \
     --hash=sha256:056aa6f042738390c576bf7ab6f98f0263a2342a3dd4d8fd9bee1d376120e834
@@ -118,9 +121,9 @@ pytest-flake8==1.0.7 \
     --hash=sha256:c28cf23e7d359753c896745fd4ba859495d02e16c84bac36caa8b1eec58f5bc1 \
     --hash=sha256:f0259761a903563f33d6f099914afef339c085085e643bee8343eb323b32dd6b
     # via -r requirements/dev.in
-pytest-isort==1.3.0 \
-    --hash=sha256:074255ad393088a2daee6ca7f2305b7b86358ff632f62302896d8d4b2b339107 \
-    --hash=sha256:46a12331a701e2f21d48548b2828c8b0a7956dbf1cd5347163f537deb24332dd
+pytest-isort==2.0.0 \
+    --hash=sha256:821a8c5c9c4f3a3c52cfa9c541fbe89ac9e28728125125af53724c4c3f129117 \
+    --hash=sha256:ab949c593213dad38ba75db32a0ce361fcddd11d4152be4a2c93b85104cc4376
     # via -r requirements/dev.in
 pytest==6.2.3 \
     --hash=sha256:671238a46e4df0f3498d1c3270e5deb9b32d25134c99b7d75370a68cfbe9b634 \
@@ -139,7 +142,9 @@ semver==2.13.0 \
 six==1.15.0 \
     --hash=sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259 \
     --hash=sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced
-    # via libsass
+    # via
+    #   libsass
+    #   xdis
 spark-parser==1.8.9 \
     --hash=sha256:0a6293d05e30a093273bf81eebb97443cb4b8e733c71ad6cc2b6a223b80f3aeb \
     --hash=sha256:0a96852dacfbe3a267bba6c9ebc1fcab8904158a5045107267e310e8d18919e5 \
@@ -163,9 +168,9 @@ wdb==3.3.0 \
     # via
     #   devcore
     #   flask-wdb-hook
-xdis==5.0.8 \
-    --hash=sha256:532780af6841bee79e74cb4719e72077192eaf63946cfb4a570c124863a94001 \
-    --hash=sha256:acffe937f4ddf9b48ce08c94580f7b01b184d705df0dd41b2024a85afb81def1
+xdis==5.0.9 \
+    --hash=sha256:3392a0fb61ac0e77a698787e74ae4641c943a52dacb126d043a4012a25800a49 \
+    --hash=sha256:ba217fbd7bfb24fdca4c124cf941e4ff8878eb45f07ff0d4730deeb01f79561b
     # via uncompyle6
 
 # WARNING: The following packages were not pinned, but pip requires them to be
