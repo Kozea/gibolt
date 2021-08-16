@@ -116,14 +116,11 @@ class Circle(Base):
     circle_accountabilities = Column(String)
     is_active = Column(Boolean, default=True, nullable=False)
     circle_children = relationship(
-        "Circle", backref=backref("parent", remote_side=[circle_id])
+        "Circle", backref=backref("circle_parent", remote_side=[circle_id])
     )
     circle_milestones = relationship(
         "MilestoneCircle",
         backref=backref("milestone_circle", remote_side=[circle_id]),
-    )
-    circle_parent = relationship(
-        "Circle", backref="circle", remote_side=[circle_id], lazy="subquery"
     )
     label = relationship(Label, backref="circle")
 
