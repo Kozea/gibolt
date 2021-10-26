@@ -1,7 +1,7 @@
 include config.Makefile
 -include config.custom.Makefile
 
-MAKE_CITRON_VERSION ?= piptools
+MAKE_CITRON_VERSION ?= v2
 MAKE_CITRON_ROOT ?= https://raw.githubusercontent.com/Kozea/MakeCitron/$(MAKE_CITRON_VERSION)/
 MAKE_CITRON_NAME := base.Makefile
 MAKE_CITRON_URL := $(MAKE_CITRON_ROOT)$(MAKE_CITRON_NAME)
