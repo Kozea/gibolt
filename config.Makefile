@@ -17,3 +17,8 @@ URL_PROD = https://$(CI_PROJECT_NAME).kozea.fr/color.css
 URL_PROD_API = $(URL_PROD)
 URL_TEST = https://test-$(CI_PROJECT_NAME)-$(BRANCH_NAME).kozea.fr/color.css
 URL_TEST_API = $(URL_TEST)
+
+CI_DB ?= /var/ci/mathilde/var/borg/gibolt.db
+CI_SERVER ?= mathilde
+CI_USER ?= datt
+LOCAL_CI_DB ?= gibolt-ci.db
