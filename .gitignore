@@ -90,5 +90,5 @@ node_modules
 teepy/static/css/*.map
 
 base.Makefile
-database.db
+*.db
 config.custom.Makefile
