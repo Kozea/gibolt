@@ -16,9 +16,9 @@ certifi==2021.10.8 \
     --hash=sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872 \
     --hash=sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569
     # via requests
-charset-normalizer==2.0.9 \
-    --hash=sha256:1eecaa09422db5be9e29d7fc65664e6c33bd06f9ced7838578ba40d58bdf3721 \
-    --hash=sha256:b0b883e8e874edfdece9c28f314e3dd5badf067342e42fb162203335ae61aa2c
+charset-normalizer==2.0.10 \
+    --hash=sha256:876d180e9d7432c5d1dfd4c5d26b72f099d503e8fcc0feb7532c9289be60fcbd \
+    --hash=sha256:cb957888737fc0bbcd78e3df769addb41fd1ff8cf950dc9e7ad7793f1bf44455
     # via requests
 click==8.0.3 \
     --hash=sha256:353f466495adaeb40b6b5f592f9f91cb22372351c84caeb068132442a4518ef3 \
@@ -94,9 +94,9 @@ idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
     # via requests
-importlib-metadata==4.10.0 \
-    --hash=sha256:92a8b58ce734b2a4494878e0ecf7d79ccd7a128b5fc6014c401e0b61f006f0f6 \
-    --hash=sha256:b7cf7d3fef75f1e4c80a96ca660efbd51473d7e8f39b5ab9210febc7809012a4
+importlib-metadata==4.10.1 \
+    --hash=sha256:899e2a40a8c4a1aec681feef45733de8a6c58f3f6a0dbed2eb6574b4387a77b6 \
+    --hash=sha256:951f0d8a5b7260e9db5e41d429285b5f451e928479f19d80818878527d36e95e
     # via alembic
 importlib-resources==5.4.0 \
     --hash=sha256:33a95faed5fc19b4bc16b29a6eeae248a3fe69dd55d4d229d2b480e23eeaad45 \
@@ -231,9 +231,9 @@ pygal==3.0.0 \
     --hash=sha256:2923f95d2e515930aa5a997219dccefbf3d92b7eaf5fc1c9febb95b09935fdb2 \
     --hash=sha256:9ae06e32dec1422f9cd0d606fe2728f78e0b5d644551137480d8d5806e2426f0
     # via -r requirements/base.in
-requests==2.26.0 \
-    --hash=sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24 \
-    --hash=sha256:b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7
+requests==2.27.1 \
+    --hash=sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61 \
+    --hash=sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d
     # via
     #   cachecontrol
     #   github-flask
@@ -277,9 +277,9 @@ sqlalchemy==1.4.29 \
     # via
     #   -r requirements/base.in
     #   alembic
-urllib3==1.26.7 \
-    --hash=sha256:4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece \
-    --hash=sha256:c4fdf4019605b6e5423637e01bc9fe4daef873709a7973e195ceba0a62bbc844
+urllib3==1.26.8 \
+    --hash=sha256:000ca7f471a233c2251c6c7023ee85305721bfdf18621ebff4fd17a8653427ed \
+    --hash=sha256:0e7c33d9a63e7ddfcb86780aac87befc2fbddf46c58dbb487e0855f7ceec283c
     # via requests
 werkzeug==2.0.2 \
     --hash=sha256:63d3dc1cf60e7b7e35e97fa9861f7397283b75d765afcaefd993d6046899de8f \
