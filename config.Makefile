@@ -22,5 +22,3 @@ CI_DB ?= /var/ci/mathilde/var/borg/gibolt.db
 CI_SERVER ?= mathilde
 CI_USER ?= datt
 LOCAL_CI_DB ?= gibolt-ci.db
-
-PYTHON_PKG_TOOLS ?= "pip<22" pip-tools setuptools wheel
