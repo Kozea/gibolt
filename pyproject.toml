@@ -6,5 +6,9 @@ line_length = 80
 profile = "black"
 combine_as_imports = true
 
+[tool.pyright]
+venv = ".venv"
+venvPath = "."
+
 [tool.pytest.ini_options]
 flake8-max-line-length = 80
