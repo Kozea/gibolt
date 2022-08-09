@@ -12,7 +12,6 @@ PYTHON = python3.8
 VENV = $(PWD)/.venv
 PYTEST = $(VENV)/bin/pytest
 PYTHON_SRCDIR = gibolt
-PYTHON_PKG_TOOLS ?= "pip<22.1" pip-tools setuptools wheel
 
 URL_PROD = https://$(CI_PROJECT_NAME).kozea.fr/color.css
 URL_PROD_API = $(URL_PROD)
