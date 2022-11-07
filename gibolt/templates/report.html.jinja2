@@ -71,7 +71,7 @@
       <h3>Ordre du jour</h3>
       <textarea name="content" {{ 'disabled' if not edit }} >{{ report.content or '' }}</textarea>
       {% if edit %}
-        <input type="submit" />
+        <input type="submit" value="Valider" />
       {% endif %}
     </article>
   </form>
