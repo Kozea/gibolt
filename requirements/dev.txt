@@ -37,9 +37,9 @@ devcore-k==0.1.7 \
     --hash=sha256:9fd95a521bc9594493692cc9170d5cd32d2d3a538b046263f4ff5f054b1af187 \
     --hash=sha256:a3fe7030a8e7b7b8bfbf3e7ffd8859705cae02df3cc12f0480b463919fea08a5
     # via -r requirements/dev.in
-exceptiongroup==1.0.1 \
-    --hash=sha256:4d6c0aa6dd825810941c792f53d7b8d71da26f5e5f84f20f9508e8f2d33b140a \
-    --hash=sha256:73866f7f842ede6cb1daa42c4af078e2035e5f7607f0e2c762cc51bb31bbe7b2
+exceptiongroup==1.0.4 \
+    --hash=sha256:542adf9dea4055530d6e1279602fa5cb11dab2395fa650b8674eaec35fc4a828 \
+    --hash=sha256:bd14967b79cd9bdb54d97323216f8fdf533e278df937aa2a90089e7d6e06e5ec
     # via pytest
 flake8==4.0.1 \
     --hash=sha256:479b1304f72536a55948cb40a32dce8bb0ffe3501e26eaf292c7e60eb5e0428d \
@@ -66,21 +66,16 @@ isort==5.10.1 \
     # via
     #   devcore-k
     #   pytest-isort
-jedi==0.18.1 \
-    --hash=sha256:637c9635fcf47945ceb91cd7f320234a7be540ded6f3e99a50cb6febdfd1ba8d \
-    --hash=sha256:74137626a64a99c8eb6ae5832d99b3bdd7d29a3850fe2aa80a4126b2a7d949ab
+jedi==0.18.2 \
+    --hash=sha256:203c1fd9d969ab8f2119ec0a3342e0b49910045abe6af0a3ae83a5764d54639e \
+    --hash=sha256:bae794c30d07f6d910d32a7048af09b5a39ed740918da923c6b780790ebac612
     # via wdb-k
-libsass==0.21.0 \
-    --hash=sha256:06c8776417fe930714bdc930a3d7e795ae3d72be6ac883ff72a1b8f7c49e5ffb \
-    --hash=sha256:12f39712de38689a8b785b7db41d3ba2ea1d46f9379d81ea4595802d91fa6529 \
-    --hash=sha256:1e25dd9047a9392d3c59a0b869e0404f2b325a03871ee45285ee33b3664f5613 \
-    --hash=sha256:659ae41af8708681fa3ec73f47b9735a6725e71c3b66ff570bfce78952f2314e \
-    --hash=sha256:6b984510ed94993708c0d697b4fef2d118929bbfffc3b90037be0f5ccadf55e7 \
-    --hash=sha256:a005f298f64624f313a3ac618ab03f844c71d84ae4f4a4aec4b68d2a4ffe75eb \
-    --hash=sha256:abc29357ee540849faf1383e1746d40d69ed5cb6d4c346df276b258f5aa8977a \
-    --hash=sha256:c9ec490609752c1d81ff6290da33485aa7cb6d7365ac665b74464c1b7d97f7da \
-    --hash=sha256:d5ba529d9ce668be9380563279f3ffe988f27bc5b299c5a28453df2e0b0fbaf2 \
-    --hash=sha256:e2b1a7d093f2e76dc694c17c0c285e846d0b0deb0e8b21dc852ba1a3a4e2f1d6
+libsass==0.22.0 \
+    --hash=sha256:081e256ab3c5f3f09c7b8dea3bf3bf5e64a97c6995fd9eea880639b3f93a9f9a \
+    --hash=sha256:3ab5ad18e47db560f4f0c09e3d28cf3bb1a44711257488ac2adad69f4f7f8425 \
+    --hash=sha256:65455a2728b696b62100eb5932604aa13a29f4ac9a305d95773c14aaa7200aaf \
+    --hash=sha256:89c5ce497fcf3aba1dd1b19aae93b99f68257e5f2026b731b00a872f13324c7f \
+    --hash=sha256:f1efc1b612299c88aec9e39d6ca0c266d360daa5b19d9430bdeaffffa86993f9
     # via -r requirements/dev.in
 log-colorizer-hook-k==2.0.0 \
     --hash=sha256:622c91a9659c2303472595e9c330d8be77c2b3300b5106e0e0d615e205c08b2a \
@@ -146,9 +141,7 @@ semver==2.13.0 \
 six==1.16.0 \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
-    # via
-    #   libsass
-    #   xdis
+    # via xdis
 spark-parser==1.8.9 \
     --hash=sha256:0a6293d05e30a093273bf81eebb97443cb4b8e733c71ad6cc2b6a223b80f3aeb \
     --hash=sha256:0a96852dacfbe3a267bba6c9ebc1fcab8904158a5045107267e310e8d18919e5 \
