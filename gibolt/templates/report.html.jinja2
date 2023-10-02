@@ -35,7 +35,7 @@
 
     {% if report.report_type == 'Triage' %}
       <article>
-        <h3>Action récurrentes</h3>
+        <h3>Actions récurrentes</h3>
         {% for action in report.actions %}
           <label>
             <input type="checkbox" name="action-{{ action.report_id }}-{{ action.item_id }}" {{ 'checked' if action.checked }} {{ 'disabled' if not edit }} />
