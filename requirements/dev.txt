@@ -64,9 +64,9 @@ isort==5.12.0 \
     # via
     #   devcore-k
     #   pytest-isort
-jedi==0.19.0 \
-    --hash=sha256:bcf9894f1753969cbac8022a8c2eaee06bfa3724e4192470aaffe7eb6272b0c4 \
-    --hash=sha256:cb8ce23fbccff0025e9386b5cf85e892f94c9b822378f8da49970471335ac64e
+jedi==0.19.1 \
+    --hash=sha256:cf0496f3651bc65d7174ac1b7d043eff454892c708a87d1b683e57b569927ffd \
+    --hash=sha256:e983c654fe5c02867aef4cdfce5a2fbb4a50adc0af145f70504238f18ef5e7e0
     # via wdb-k
 libsass==0.22.0 \
     --hash=sha256:081e256ab3c5f3f09c7b8dea3bf3bf5e64a97c6995fd9eea880639b3f93a9f9a \
@@ -89,9 +89,9 @@ mccabe==0.6.1 \
     --hash=sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42 \
     --hash=sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f
     # via flake8
-packaging==23.1 \
-    --hash=sha256:994793af429502c4ea2ebf6bf664629d07c1a9fe974af92966e4b8d2df7edc61 \
-    --hash=sha256:a392980d2b6cffa644431898be54b0045151319d1e7ec34f0cfed48767dd334f
+packaging==23.2 \
+    --hash=sha256:048fb0e9405036518eaaf48a55953c750c11e1a1b68e0dd1a9d62ed0c092cfc5 \
+    --hash=sha256:8c491190033a9af7e1d931d0b5dacc2ef47509b34dd0de67ed209b5203fc88c7
     # via pytest
 parso==0.8.3 \
     --hash=sha256:8c07be290bb59f03588915921e29e8a50002acaf2cdc5fa0e0114f91709fafa0 \
